@@ -1,0 +1,535 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>archive_action &#8212; rules_ll Documentation</title>
+
+  <link href="_static/css/theme.css" rel="stylesheet">
+  <link href="_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
+
+
+  <link rel="stylesheet"
+    href="_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+
+
+
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-book-theme.css?digest=84ace793992934648b4de8eed757e5a2" />
+
+  <link rel="preload" as="script" href="_static/js/index.be7d3bbb2ef33a8344ce.js">
+
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx-book-theme.9d8b4a8b9bb19db25eeaddc40d639ba2.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="LlInfo" href="providers.html" />
+    <link rel="prev" title="construct_default_args" href="args.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="None">
+
+
+    <!-- Google Analytics -->
+
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+
+    <div class="container-fluid" id="banner"></div>
+
+
+
+    <div class="container-xl">
+      <div class="row">
+
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<div class="col-12 col-md-3 bd-sidebar site-navigation " id="site-navigation">
+
+        <div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="index.html">
+
+
+
+      <h1 class="site-logo" id="site-title">rules_ll Documentation</h1>
+
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        <ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="ll.html">
+   ll_binary
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="deps.html">
+   rules_ll_dependencies
+  </a>
+ </li>
+</ul>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="args.html">
+   construct_default_args
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   archive_action
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="providers.html">
+   LlInfo
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="toolchain.html">
+   ll_bootstrap_toolchain
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="bootstrap_library.html">
+   ll_bootstrap_library
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav> <!-- To handle the deprecated key -->
+
+</div>
+
+
+
+
+
+
+<!-- This is an invisible pixel that we watch to see if we've scrolled. -->
+<div class="sbt-scroll-pixel-helper"></div>
+<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
+
+    <div class="topbar container-xl fixed-top">
+    <div class="topbar-contents row">
+        <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show"></div>
+        <div class="col pl-md-4 topbar-main">
+            <div class="topbar-left">
+
+                <label class="nav-toggle-button" for="__navigation">
+                    <div class="visually-hidden">Toggle navigation</div>
+                    <i class="fas fa-bars"></i>
+                </label>
+
+            </div>
+
+            <!-- Source interaction buttons -->
+
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
+        aria-label="Connect with source repository"><i class="fab fa-github"></i></button>
+    <div class="dropdown-buttons sourcebuttons">
+        <a class="repository-button"
+            href="https://github.com/qogecoin/rules_ll"><button type="button" class="btn btn-secondary topbarbtn"
+                data-toggle="tooltip" data-placement="left" title="Source repository"><i
+                    class="fab fa-github"></i>repository</button></a>
+
+
+    </div>
+</div>
+
+            <!-- Full screen (wrap in <a> to have style consistency -->
+
+            <!-- Launch buttons -->
+
+        </div>
+
+        <!-- Table of contents -->
+        <div class="d-none d-md-block col-md-2 bd-toc show noprint">
+
+            <div class="tocsection onthispage pt-5 pb-3">
+                <i class="fas fa-list"></i> Contents
+            </div>
+            <nav id="bd-toc-nav" aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#">
+   archive_action
+  </a>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#compile-objects">
+   compile_objects
+  </a>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#create-archive-library">
+   create_archive_library
+  </a>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#create-compile-inputs">
+   create_compile_inputs
+  </a>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#create-executable">
+   create_executable
+  </a>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#expose-headers">
+   expose_headers
+  </a>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#resolve-deps">
+   resolve_deps
+  </a>
+ </li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+    <div id="main-content" class="row">
+        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>archive_action</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#">
+   archive_action
+  </a>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#compile-objects">
+   compile_objects
+  </a>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#create-archive-library">
+   create_archive_library
+  </a>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#create-compile-inputs">
+   create_compile_inputs
+  </a>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#create-executable">
+   create_executable
+  </a>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#expose-headers">
+   expose_headers
+  </a>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#resolve-deps">
+   resolve_deps
+  </a>
+ </li>
+</ul>
+
+                        </nav>
+                    </div>
+                </div>
+            </div>
+
+              <div>
+
+  <!-- Generated with Stardoc: http://skydoc.bazel.build -->
+<p><a id="#archive_action"></a></p>
+<div class="section" id="archive-action">
+<h1>archive_action<a class="headerlink" href="#archive-action" title="Permalink to this headline">¶</a></h1>
+<pre>
+archive_action(<a href="#archive_action-ctx">ctx</a>, <a href="#archive_action-object_files">object_files</a>, <a href="#archive_action-libraries">libraries</a>, <a href="#archive_action-toolchain_type">toolchain_type</a>)
+</pre>
+<p><strong>PARAMETERS</strong></p>
+<table class="colwidths-auto table">
+<thead>
+<tr class="row-odd"><th class="text-left head"><p>Name</p></th>
+<th class="text-left head"><p>Description</p></th>
+<th class="text-left head"><p>Default Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-left"><p><a id="archive_action-ctx"></a>ctx</p></td>
+<td class="text-left"><p><p align="center"> - </p></p></td>
+<td class="text-left"><p>none</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><a id="archive_action-object_files"></a>object_files</p></td>
+<td class="text-left"><p><p align="center"> - </p></p></td>
+<td class="text-left"><p>none</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p><a id="archive_action-libraries"></a>libraries</p></td>
+<td class="text-left"><p><p align="center"> - </p></p></td>
+<td class="text-left"><p>none</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><a id="archive_action-toolchain_type"></a>toolchain_type</p></td>
+<td class="text-left"><p><p align="center"> - </p></p></td>
+<td class="text-left"><p>none</p></td>
+</tr>
+</tbody>
+</table>
+<p><a id="#compile_objects"></a></p>
+</div>
+<div class="section" id="compile-objects">
+<h1>compile_objects<a class="headerlink" href="#compile-objects" title="Permalink to this headline">¶</a></h1>
+<pre>
+compile_objects(<a href="#compile_objects-ctx">ctx</a>, <a href="#compile_objects-headers">headers</a>, <a href="#compile_objects-defines">defines</a>, <a href="#compile_objects-includes">includes</a>, <a href="#compile_objects-toolchain_type">toolchain_type</a>)
+</pre>
+<p><strong>PARAMETERS</strong></p>
+<table class="colwidths-auto table">
+<thead>
+<tr class="row-odd"><th class="text-left head"><p>Name</p></th>
+<th class="text-left head"><p>Description</p></th>
+<th class="text-left head"><p>Default Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-left"><p><a id="compile_objects-ctx"></a>ctx</p></td>
+<td class="text-left"><p><p align="center"> - </p></p></td>
+<td class="text-left"><p>none</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><a id="compile_objects-headers"></a>headers</p></td>
+<td class="text-left"><p><p align="center"> - </p></p></td>
+<td class="text-left"><p><code>[]</code></p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p><a id="compile_objects-defines"></a>defines</p></td>
+<td class="text-left"><p><p align="center"> - </p></p></td>
+<td class="text-left"><p><code>[]</code></p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><a id="compile_objects-includes"></a>includes</p></td>
+<td class="text-left"><p><p align="center"> - </p></p></td>
+<td class="text-left"><p><code>[]</code></p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p><a id="compile_objects-toolchain_type"></a>toolchain_type</p></td>
+<td class="text-left"><p><p align="center"> - </p></p></td>
+<td class="text-left"><p><code>”//ll:toolchain_type”</code></p></td>
+</tr>
+</tbody>
+</table>
+<p><a id="#create_archive_library"></a></p>
+</div>
+<div class="section" id="create-archive-library">
+<h1>create_archive_library<a class="headerlink" href="#create-archive-library" title="Permalink to this headline">¶</a></h1>
+<pre>
+create_archive_library(<a href="#create_archive_library-ctx">ctx</a>, <a href="#create_archive_library-headers">headers</a>, <a href="#create_archive_library-libraries">libraries</a>, <a href="#create_archive_library-defines">defines</a>, <a href="#create_archive_library-includes">includes</a>, <a href="#create_archive_library-toolchain_type">toolchain_type</a>)
+</pre>
+<p><strong>PARAMETERS</strong></p>
+<table class="colwidths-auto table">
+<thead>
+<tr class="row-odd"><th class="text-left head"><p>Name</p></th>
+<th class="text-left head"><p>Description</p></th>
+<th class="text-left head"><p>Default Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-left"><p><a id="create_archive_library-ctx"></a>ctx</p></td>
+<td class="text-left"><p><p align="center"> - </p></p></td>
+<td class="text-left"><p>none</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><a id="create_archive_library-headers"></a>headers</p></td>
+<td class="text-left"><p><p align="center"> - </p></p></td>
+<td class="text-left"><p><code>[]</code></p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p><a id="create_archive_library-libraries"></a>libraries</p></td>
+<td class="text-left"><p><p align="center"> - </p></p></td>
+<td class="text-left"><p><code>[]</code></p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><a id="create_archive_library-defines"></a>defines</p></td>
+<td class="text-left"><p><p align="center"> - </p></p></td>
+<td class="text-left"><p><code>[]</code></p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p><a id="create_archive_library-includes"></a>includes</p></td>
+<td class="text-left"><p><p align="center"> - </p></p></td>
+<td class="text-left"><p><code>[]</code></p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><a id="create_archive_library-toolchain_type"></a>toolchain_type</p></td>
+<td class="text-left"><p><p align="center"> - </p></p></td>
+<td class="text-left"><p><code>”//ll:toolchain_type”</code></p></td>
+</tr>
+</tbody>
+</table>
+<p><a id="#create_compile_inputs"></a></p>
+</div>
+<div class="section" id="create-compile-inputs">
+<h1>create_compile_inputs<a class="headerlink" href="#create-compile-inputs" title="Permalink to this headline">¶</a></h1>
+<pre>
+create_compile_inputs(<a href="#create_compile_inputs-ctx">ctx</a>)
+</pre>
+<p><strong>PARAMETERS</strong></p>
+<table class="colwidths-auto table">
+<thead>
+<tr class="row-odd"><th class="text-left head"><p>Name</p></th>
+<th class="text-left head"><p>Description</p></th>
+<th class="text-left head"><p>Default Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-left"><p><a id="create_compile_inputs-ctx"></a>ctx</p></td>
+<td class="text-left"><p><p align="center"> - </p></p></td>
+<td class="text-left"><p>none</p></td>
+</tr>
+</tbody>
+</table>
+<p><a id="#create_executable"></a></p>
+</div>
+<div class="section" id="create-executable">
+<h1>create_executable<a class="headerlink" href="#create-executable" title="Permalink to this headline">¶</a></h1>
+<pre>
+create_executable(<a href="#create_executable-ctx">ctx</a>, <a href="#create_executable-headers">headers</a>, <a href="#create_executable-libraries">libraries</a>, <a href="#create_executable-defines">defines</a>, <a href="#create_executable-includes">includes</a>, <a href="#create_executable-toolchain_type">toolchain_type</a>)
+</pre>
+<p><strong>PARAMETERS</strong></p>
+<table class="colwidths-auto table">
+<thead>
+<tr class="row-odd"><th class="text-left head"><p>Name</p></th>
+<th class="text-left head"><p>Description</p></th>
+<th class="text-left head"><p>Default Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-left"><p><a id="create_executable-ctx"></a>ctx</p></td>
+<td class="text-left"><p><p align="center"> - </p></p></td>
+<td class="text-left"><p>none</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><a id="create_executable-headers"></a>headers</p></td>
+<td class="text-left"><p><p align="center"> - </p></p></td>
+<td class="text-left"><p><code>[]</code></p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p><a id="create_executable-libraries"></a>libraries</p></td>
+<td class="text-left"><p><p align="center"> - </p></p></td>
+<td class="text-left"><p><code>[]</code></p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><a id="create_executable-defines"></a>defines</p></td>
+<td class="text-left"><p><p align="center"> - </p></p></td>
+<td class="text-left"><p><code>[]</code></p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p><a id="create_executable-includes"></a>includes</p></td>
+<td class="text-left"><p><p align="center"> - </p></p></td>
+<td class="text-left"><p><code>[]</code></p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><a id="create_executable-toolchain_type"></a>toolchain_type</p></td>
+<td class="text-left"><p><p align="center"> - </p></p></td>
+<td class="text-left"><p><code>”//ll:toolchain_type”</code></p></td>
+</tr>
+</tbody>
+</table>
+<p><a id="#expose_headers"></a></p>
+</div>
+<div class="section" id="expose-headers">
+<h1>expose_headers<a class="headerlink" href="#expose-headers" title="Permalink to this headline">¶</a></h1>
+<pre>
+expose_headers(<a href="#expose_headers-ctx">ctx</a>)
+</pre>
+<p><strong>PARAMETERS</strong></p>
+<table class="colwidths-auto table">
+<thead>
+<tr class="row-odd"><th class="text-left head"><p>Name</p></th>
+<th class="text-left head"><p>Description</p></th>
+<th class="text-left head"><p>Default Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-left"><p><a id="expose_headers-ctx"></a>ctx</p></td>
+<td class="text-left"><p><p align="center"> - </p></p></td>
+<td class="text-left"><p>none</p></td>
+</tr>
+</tbody>
+</table>
+<p><a id="#resolve_deps"></a></p>
+</div>
+<div class="section" id="resolve-deps">
+<h1>resolve_deps<a class="headerlink" href="#resolve-deps" title="Permalink to this headline">¶</a></h1>
+<pre>
+resolve_deps(<a href="#resolve_deps-ctx">ctx</a>)
+</pre>
+<p><strong>PARAMETERS</strong></p>
+<table class="colwidths-auto table">
+<thead>
+<tr class="row-odd"><th class="text-left head"><p>Name</p></th>
+<th class="text-left head"><p>Description</p></th>
+<th class="text-left head"><p>Default Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-left"><p><a id="resolve_deps-ctx"></a>ctx</p></td>
+<td class="text-left"><p><p align="center"> - </p></p></td>
+<td class="text-left"><p>none</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+
+
+              </div>
+
+
+                <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+    <a class='left-prev' id="prev-link" href="args.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">construct_default_args</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="providers.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">LlInfo</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+
+        </div>
+    </div>
+    <footer class="footer">
+  <p>
+
+      By The Qogecoin Authors<br/>
+
+        &copy; Copyright 2021, The Qogecoin Authors.<br/>
+  </p>
+</footer>
+</main>
+
+
+      </div>
+    </div>
+
+  <script src="_static/js/index.be7d3bbb2ef33a8344ce.js"></script>
+
+  </body>
+</html>

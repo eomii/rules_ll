@@ -1,0 +1,120 @@
+load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
+load("@io_bazel_stardoc//stardoc:stardoc.bzl", "stardoc")
+load(":toolchain.bzl", "ll_bootstrap_toolchain", "ll_toolchain")
+
+bzl_library(
+    name = "ll_bzl",
+    srcs = [
+        "args.bzl",
+        "bootstrap_library.bzl",
+        "deps.bzl",
+        "init.bzl",
+        "internal_functions.bzl",
+        "ll.bzl",
+        "providers.bzl",
+        "toolchain.bzl",
+    ],
+    deps = [
+        "@bazel_skylib//lib:paths",
+        "@bazel_tools//tools/build_defs/repo:http.bzl",
+        "@bazel_tools//tools/build_defs/repo:utils.bzl",
+    ],
+)
+
+stardoc(
+    name = "ll_docs",
+    out = "ll.md",
+    input = "ll.bzl",
+    deps = [":ll_bzl"],
+)
+
+stardoc(
+    name = "toolchain_docs",
+    out = "toolchain.md",
+    input = "toolchain.bzl",
+    deps = [":ll_bzl"],
+)
+
+stardoc(
+    name = "providers_docs",
+    out = "providers.md",
+    input = "providers.bzl",
+    deps = [":ll_bzl"],
+)
+
+stardoc(
+    name = "args_docs",
+    out = "args.md",
+    input = "args.bzl",
+    deps = [":ll_bzl"],
+)
+
+stardoc(
+    name = "internal_functions_docs",
+    out = "internal_functions.md",
+    input = "internal_functions.bzl",
+    deps = [":ll_bzl"],
+)
+
+stardoc(
+    name = "bootstrap_library_docs",
+    out = "bootstrap_library.md",
+    input = "bootstrap_library.bzl",
+    deps = [":ll_bzl"],
+)
+
+stardoc(
+    name = "deps_docs",
+    out = "deps.md",
+    input = "deps.bzl",
+    deps = [":ll_bzl"],
+)
+
+# stardoc(
+#     name = "init_docs",
+#     out = "init.md",
+#     input = "init.bzl",
+#     symbol_names = ["initialize_rules_ll"],
+#     deps = [":ll_bzl"],
+# )
+
+filegroup(
+    name = "docs",
+    srcs = [
+        ":args_docs",
+        ":bootstrap_library_docs",
+        ":deps_docs",
+        ":internal_functions_docs",
+        ":ll_docs",
+        ":providers_docs",
+        ":toolchain_docs",
+    ],
+)
+
+toolchain_type(name = "toolchain_type")
+
+toolchain_type(name = "bootstrap_toolchain_type")
+
+ll_bootstrap_toolchain(
+    name = "ll_bootstrap_toolchain_x86-64-unknown-linux-gnu",
+    visibility = ["//visibility:public"],
+)
+
+toolchain(
+    name = "ll_bootstrap_toolchain",
+    toolchain = "ll_bootstrap_toolchain_x86-64-unknown-linux-gnu",
+    toolchain_type = ":bootstrap_toolchain_type",
+    visibility = ["//visibility:public"],
+)
+
+ll_toolchain(
+    name = "ll_toolchain_x86-64-unknown-linux-gnu",
+    visibility = ["//visibility:public"],
+)
+
+toolchain(
+    name = "ll_toolchain",
+    toolchain = ":ll_toolchain_x86-64-unknown-linux-gnu",
+    toolchain_type = ":toolchain_type",
+    visibility = ["//visibility:public"],
+)

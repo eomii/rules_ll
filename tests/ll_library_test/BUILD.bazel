@@ -1,0 +1,34 @@
+load("@rules_ll//ll:defs.bzl", "ll_binary", "ll_library")
+
+ll_library(
+    name = "lib_1_library",
+    srcs = [
+        "lib_1.c",
+        "lib_1_additional_source.c",
+    ],
+    hdrs = ["lib_1_private.h"],
+    defines = ["A_LOCAL_DEFINE"],
+    transitive_defines = ["A_PUBLIC_DEFINE"],
+    transitive_hdrs = [
+        "lib_1_public.h",
+        "public_include/included_header.h",
+    ],
+)
+
+ll_library(
+    name = "lib_2",
+    srcs = [
+        "lib_2.c",
+    ],
+    hdrs = ["lib_2_private.h"],
+    transitive_hdrs = ["lib_2_public.h"],
+)
+
+ll_binary(
+    name = "ll_library_test",
+    srcs = ["executable.c"],
+    deps = [
+        ":lib_1_library",
+        ":lib_2",
+    ],
+)

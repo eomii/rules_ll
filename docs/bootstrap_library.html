@@ -1,0 +1,314 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ll_bootstrap_library &#8212; rules_ll Documentation</title>
+
+  <link href="_static/css/theme.css" rel="stylesheet">
+  <link href="_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
+
+
+  <link rel="stylesheet"
+    href="_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+
+
+
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-book-theme.css?digest=84ace793992934648b4de8eed757e5a2" />
+
+  <link rel="preload" as="script" href="_static/js/index.be7d3bbb2ef33a8344ce.js">
+
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx-book-theme.9d8b4a8b9bb19db25eeaddc40d639ba2.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="ll_bootstrap_toolchain" href="toolchain.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="None">
+
+
+    <!-- Google Analytics -->
+
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+
+    <div class="container-fluid" id="banner"></div>
+
+
+
+    <div class="container-xl">
+      <div class="row">
+
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<div class="col-12 col-md-3 bd-sidebar site-navigation " id="site-navigation">
+
+        <div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="index.html">
+
+
+
+      <h1 class="site-logo" id="site-title">rules_ll Documentation</h1>
+
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        <ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="ll.html">
+   ll_binary
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="deps.html">
+   rules_ll_dependencies
+  </a>
+ </li>
+</ul>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="args.html">
+   construct_default_args
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="internal_functions.html">
+   archive_action
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="providers.html">
+   LlInfo
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="toolchain.html">
+   ll_bootstrap_toolchain
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   ll_bootstrap_library
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav> <!-- To handle the deprecated key -->
+
+</div>
+
+
+
+
+
+
+<!-- This is an invisible pixel that we watch to see if we've scrolled. -->
+<div class="sbt-scroll-pixel-helper"></div>
+<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
+
+    <div class="topbar container-xl fixed-top">
+    <div class="topbar-contents row">
+        <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show"></div>
+        <div class="col pl-md-4 topbar-main">
+            <div class="topbar-left">
+
+                <label class="nav-toggle-button" for="__navigation">
+                    <div class="visually-hidden">Toggle navigation</div>
+                    <i class="fas fa-bars"></i>
+                </label>
+
+            </div>
+
+            <!-- Source interaction buttons -->
+
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
+        aria-label="Connect with source repository"><i class="fab fa-github"></i></button>
+    <div class="dropdown-buttons sourcebuttons">
+        <a class="repository-button"
+            href="https://github.com/qogecoin/rules_ll"><button type="button" class="btn btn-secondary topbarbtn"
+                data-toggle="tooltip" data-placement="left" title="Source repository"><i
+                    class="fab fa-github"></i>repository</button></a>
+
+
+    </div>
+</div>
+
+            <!-- Full screen (wrap in <a> to have style consistency -->
+
+            <!-- Launch buttons -->
+
+        </div>
+
+        <!-- Table of contents -->
+        <div class="d-none d-md-block col-md-2 bd-toc show noprint">
+
+        </div>
+    </div>
+</div>
+    <div id="main-content" class="row">
+        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>ll_bootstrap_library</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+
+                    </div>
+                </div>
+            </div>
+
+              <div>
+
+  <!-- Generated with Stardoc: http://skydoc.bazel.build -->
+<p><a id="#ll_bootstrap_library"></a></p>
+<div class="section" id="ll-bootstrap-library">
+<h1>ll_bootstrap_library<a class="headerlink" href="#ll-bootstrap-library" title="Permalink to this headline">¶</a></h1>
+<pre>
+ll_bootstrap_library(<a href="#ll_bootstrap_library-name">name</a>, <a href="#ll_bootstrap_library-compile_flags">compile_flags</a>, <a href="#ll_bootstrap_library-defines">defines</a>, <a href="#ll_bootstrap_library-deps">deps</a>, <a href="#ll_bootstrap_library-hdrs">hdrs</a>, <a href="#ll_bootstrap_library-includes">includes</a>, <a href="#ll_bootstrap_library-link_flags">link_flags</a>, <a href="#ll_bootstrap_library-proprietary">proprietary</a>,
+                     <a href="#ll_bootstrap_library-srcs">srcs</a>, <a href="#ll_bootstrap_library-transitive_defines">transitive_defines</a>, <a href="#ll_bootstrap_library-transitive_hdrs">transitive_hdrs</a>, <a href="#ll_bootstrap_library-transitive_includes">transitive_includes</a>)
+</pre>
+<p>Internal use only.</p>
+<p>Same as ll_library, but uses a different toolchain.</p>
+<p><strong>ATTRIBUTES</strong></p>
+<table class="colwidths-auto table">
+<thead>
+<tr class="row-odd"><th class="text-left head"><p>Name</p></th>
+<th class="text-left head"><p>Description</p></th>
+<th class="text-left head"><p>Type</p></th>
+<th class="text-left head"><p>Mandatory</p></th>
+<th class="text-left head"><p>Default</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-left"><p><a id="ll_bootstrap_library-name"></a>name</p></td>
+<td class="text-left"><p>A unique name for this target.</p></td>
+<td class="text-left"><p><a href="https://bazel.build/docs/build-ref.html#name">Name</a></p></td>
+<td class="text-left"><p>required</p></td>
+<td class="text-left"><p></p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><a id="ll_bootstrap_library-compile_flags"></a>compile_flags</p></td>
+<td class="text-left"><p>Additional flags for the compiler.<br><br>        A list of strings <code>[“-O3”, “-std=c++20”]</code> will be appended to the         compile command line arguments as <code>-O3 -std=c++20</code>.<br><br>        Only used for this target.</p></td>
+<td class="text-left"><p>List of strings</p></td>
+<td class="text-left"><p>optional</p></td>
+<td class="text-left"><p>[]</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p><a id="ll_bootstrap_library-defines"></a>defines</p></td>
+<td class="text-left"><p>Additional defines for this target.<br><br>        A list of strings <code>[“MYDEFINE_1”, “MYDEFINE_2”]</code> will add         <code>-DMYDEFINE_1 -DMYDEFINE_2</code> to the compile command line.<br><br>        Defines in this attribute are only used for the current target.</p></td>
+<td class="text-left"><p>List of strings</p></td>
+<td class="text-left"><p>optional</p></td>
+<td class="text-left"><p>[]</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><a id="ll_bootstrap_library-deps"></a>deps</p></td>
+<td class="text-left"><p>The dependencies for this target.<br><br>        Every dependency needs to be an <code>ll_library</code>.</p></td>
+<td class="text-left"><p><a href="https://bazel.build/docs/build-ref.html#labels">List of labels</a></p></td>
+<td class="text-left"><p>optional</p></td>
+<td class="text-left"><p>[]</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p><a id="ll_bootstrap_library-hdrs"></a>hdrs</p></td>
+<td class="text-left"><p>Header files for this target.<br><br>        Headers in this attribute will not be exported, i.e. any generated         include paths are only used for this target.<br><br>        When including header files as <code>#include “some/path/myheader.h”</code> their         include paths need to be specified in the <code>includes</code> attribute as well.</p></td>
+<td class="text-left"><p><a href="https://bazel.build/docs/build-ref.html#labels">List of labels</a></p></td>
+<td class="text-left"><p>optional</p></td>
+<td class="text-left"><p>[]</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><a id="ll_bootstrap_library-includes"></a>includes</p></td>
+<td class="text-left"><p>Additional include paths for this target.<br><br>        When including a header not via <code>#include “header.h”</code>, but via         <code>#include “subdir/header.h”</code>, the include path needs to be added here in         addition to making the header available in the <code>hdrs</code> attribute.</p></td>
+<td class="text-left"><p>List of strings</p></td>
+<td class="text-left"><p>optional</p></td>
+<td class="text-left"><p>[]</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p><a id="ll_bootstrap_library-link_flags"></a>link_flags</p></td>
+<td class="text-left"><p>Additional flags for the linker.<br><br>        This is the place for adding library search paths and external link         targets.<br><br>        Assuming you have a library <code>/some/path/libmylib.a</code> on your host system,         you can make <code>mylib.a</code> available to the linker by passing         <code>[“-L/some/path”, “-lmylib”]</code> to this attribute.<br><br>        Only used for this target. Only used by <code>ll_binary</code>, since <code>ll_library</code>         does not invoke the linker.</p></td>
+<td class="text-left"><p>List of strings</p></td>
+<td class="text-left"><p>optional</p></td>
+<td class="text-left"><p>[]</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><a id="ll_bootstrap_library-proprietary"></a>proprietary</p></td>
+<td class="text-left"><p>Setting this to True will disable static linking of glibc.<br><br>        This attribute will be removed as soon as <code>rules_ll</code> uses LLVM’s <code>libc</code>.</p></td>
+<td class="text-left"><p>Boolean</p></td>
+<td class="text-left"><p>optional</p></td>
+<td class="text-left"><p>False</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p><a id="ll_bootstrap_library-srcs"></a>srcs</p></td>
+<td class="text-left"><p>Compilable source files for this target.<br><br>        Only compilable files and object files <code>[“.o”, “.S”, “.c”, “.cpp”]</code> are         allowed here.<br><br>        Headers should be placed in the <code>hdrs</code> attribute.</p></td>
+<td class="text-left"><p><a href="https://bazel.build/docs/build-ref.html#labels">List of labels</a></p></td>
+<td class="text-left"><p>optional</p></td>
+<td class="text-left"><p>[]</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><a id="ll_bootstrap_library-transitive_defines"></a>transitive_defines</p></td>
+<td class="text-left"><p>Additional transitive defines for this target.<br><br>        These defines will be defined by all depending downstream targets.</p></td>
+<td class="text-left"><p>List of strings</p></td>
+<td class="text-left"><p>optional</p></td>
+<td class="text-left"><p>[]</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p><a id="ll_bootstrap_library-transitive_hdrs"></a>transitive_hdrs</p></td>
+<td class="text-left"><p>Transitive headers for this target.<br><br>        Any transitive headers will be exported (copied) to the build directory.<br><br>        Transitive headers are available to depending downstream targets.</p></td>
+<td class="text-left"><p><a href="https://bazel.build/docs/build-ref.html#labels">List of labels</a></p></td>
+<td class="text-left"><p>optional</p></td>
+<td class="text-left"><p>[]</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><a id="ll_bootstrap_library-transitive_includes"></a>transitive_includes</p></td>
+<td class="text-left"><p>Additional transitive include paths for this target.<br><br>        Includes in this attribute will be added to the compile command line         arguments for all downstream targets.</p></td>
+<td class="text-left"><p>List of strings</p></td>
+<td class="text-left"><p>optional</p></td>
+<td class="text-left"><p>[]</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+
+
+              </div>
+
+
+                <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+    <a class='left-prev' id="prev-link" href="toolchain.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">ll_bootstrap_toolchain</p>
+        </div>
+    </a>
+</div>
+
+        </div>
+    </div>
+    <footer class="footer">
+  <p>
+
+      By The Qogecoin Authors<br/>
+
+        &copy; Copyright 2021, The Qogecoin Authors.<br/>
+  </p>
+</footer>
+</main>
+
+
+      </div>
+    </div>
+
+  <script src="_static/js/index.be7d3bbb2ef33a8344ce.js"></script>
+
+  </body>
+</html>

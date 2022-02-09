@@ -1,0 +1,6 @@
+load("@rules_ll//ll:defs.bzl", "ll_binary")
+
+ll_binary(
+    name = "ll_binary_test",
+    srcs = ["hello_world.c"],
+)

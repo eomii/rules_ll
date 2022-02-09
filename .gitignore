@@ -1,0 +1,9 @@
+# Ignore bazel build directories.
+bazel-*
+
+# Sphinx generates various files which should not be tracked.
+docs/_static/__init__.py
+__pycache__/
+.doctrees/
+*.inv
+*.pickle

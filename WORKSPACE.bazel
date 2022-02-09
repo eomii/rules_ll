@@ -1,0 +1,45 @@
+workspace(name = "rules_ll")
+
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+
+load("@rules_ll//ll:deps.bzl", "rules_ll_dependencies")
+rules_ll_dependencies()
+
+# Install python requirements for pre-commit hooks and Sphinx.
+load("@rules_python//python:pip.bzl", "pip_install")
+pip_install(requirements = "//:requirements.txt")
+
+# Some internal functions require bazel_skylib.
+load("@bazel_skylib//:workspace.bzl", "bazel_skylib_workspace")
+bazel_skylib_workspace()
+
+# We use stardoc to autogenerate documentation.
+load("@io_bazel_stardoc//:setup.bzl", "stardoc_repositories")
+stardoc_repositories()
+
+# Initialize the LLVM repository.
+load("@rules_ll//ll:init.bzl", "initialize_rules_ll")
+initialize_rules_ll(
+    # Every contributor will need to change this.
+    local_crt_path = "/usr/lib64",
+)
+
+# Configure the LLVM Repository.
+load(
+    "@llvm-raw//utils/bazel:configure.bzl",
+    "llvm_configure",
+    "llvm_disable_optional_support_deps",
+)
+llvm_configure(
+    name = "llvm-project",
+    targets = [
+        "X86",
+    ],
+)
+llvm_disable_optional_support_deps()
+
+# The toolchains are only required to build test targets.
+register_toolchains(
+    "@rules_ll//ll:ll_bootstrap_toolchain",
+    "@rules_ll//ll:ll_toolchain"
+)

@@ -1,0 +1,35 @@
+repos:
+-   repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.1.0
+    hooks:
+    -   id: trailing-whitespace
+    -   id: end-of-file-fixer
+    -   id: fix-byte-order-marker
+    -   id: mixed-line-ending
+    -   id: check-yaml
+    -   id: check-case-conflict
+    -   id: detect-private-key
+
+-   repo: https://github.com/PyCQA/doc8
+    rev: 0.10.1
+    hooks:
+    -   id: doc8
+        name: doc8
+        description: This hook runs doc8 for linting docs
+        entry: python -m doc8
+        language: python
+        files: \.rst$
+
+-   repo: local
+    hooks:
+    -   id: flake8
+        name: flake8
+        description: wemake-python-styleguide
+        entry: flake8
+        args: ["--config=setup.cfg"]
+        language: python
+        types: [python]
+-   repo: https://github.com/jlebar/pre-commit-hooks.git
+    rev: fb5e481f35f5a9b32a06ccfc28b8d6dda4525f75
+    hooks:
+      -   id: bazel-buildifier
