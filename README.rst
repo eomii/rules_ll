@@ -9,7 +9,9 @@ The current ``ll_toolchain`` uses targets from the
 as well as custom overlays for ``libcxx``, ``libcxxabi``, ``libunwind`` and
 ``compiler-rt``.
 
-API documentation is available at `<https://qogecoin.github.io/rules_ll>`_.
+API Documentation: `<https://qogecoin.github.io/rules_ll>`_
+
+Discord: `<https://discord.gg/Ax67899n4y>`_
 
 ``WORKSPACE.bazel`` Quickstart
 ------------------------------
