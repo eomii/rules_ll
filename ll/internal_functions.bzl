@@ -2,6 +2,22 @@ load("@bazel_skylib//lib:paths.bzl", "paths")
 load("//ll:args.bzl", "construct_default_args")
 load("//ll:providers.bzl", "LlInfo")
 
+def llvm_target_directory_path(ctx):
+    """Returns the path to the `llvm-project` build output directory.
+
+    The path looks like `bazel-out/{cpu}-{mode}/bin/external/llvm-project`.
+
+    Args:
+        ctx: The rule context.
+
+    Returns:
+        A string.
+    """
+    return "bazel-out/{cpu}-{mode}/bin/external/llvm-project".format(
+        cpu = ctx.var["TARGET_CPU"],
+        mode = ctx.var["COMPILATION_MODE"],
+    )
+
 def resolve_deps(ctx):
     dep_headers = [dep[LlInfo].transitive_headers for dep in ctx.attr.deps]
     dep_libraries = [dep[LlInfo].libraries for dep in ctx.attr.deps]
@@ -112,8 +128,11 @@ def compile_objects(
 
         # Explicitly specify builtin includes.
         args.add("-nobuiltininc")
-        staging_include = "bazel-out/k8-fastbuild/bin/external/llvm-project/clang/staging/include"
-        args.add("-isystem{}".format(staging_include))
+        clang_builtin_include_path = paths.join(
+            llvm_target_directory_path(ctx),
+            "clang/staging/include",
+        )
+        args.add(clang_builtin_include_path, format = "-isystem%s")
 
         if toolchain_type == "//ll:toolchain_type":
             inputs = depset(
@@ -122,11 +141,15 @@ def compile_objects(
                 ctx.toolchains["//ll:toolchain_type"].cpp_stdlib,
                 transitive = [headers],
             )
-            libcxx_path = "bazel-out/k8-fastbuild/bin/external/llvm-project/libcxx"
+
             args.add("-nostdlib")
             args.add("-nostdinc++")
             args.add("-nostdlib++")
-            args.add("-I{}".format(libcxx_path + "/include"))
+            libcxx_include_path = paths.join(
+                llvm_target_directory_path(ctx),
+                "libcxx/include",
+            )
+            args.add(libcxx_include_path, format = "-I%s")
         else:
             # Only used for ll_bootstrap_toolchain.
             inputs = depset(
@@ -249,14 +272,20 @@ def create_executable(
         args.add("-lc")  # Required. This is glibc.
 
         # Use compiler-rt as runtime.
-        compiler_rt_path = "bazel-out/k8-fastbuild/bin/external/llvm-project/compiler-rt"
-        args.add("-L{}".format(compiler_rt_path))
-        args.add("-Wl,-rpath,{}".format(compiler_rt_path))
+        compiler_rt_path = paths.join(
+            llvm_target_directory_path(ctx),
+            "compiler-rt",
+        )
+        args.add(compiler_rt_path, format = "-L%s")
+        args.add(compiler_rt_path, format = "-Wl,-rpath,%s")
         args.add("-lll_compiler-rt")
 
         # Use libunwind as unwinder library.
-        libunwind_path = "bazel-out/k8-fastbuild/bin/external/llvm-project/libunwind"
-        args.add("-L{}".format(libunwind_path))
+        libunwind_path = paths.join(
+            llvm_target_directory_path(ctx),
+            "libunwind",
+        )
+        args.add(libunwind_path, format = "-L%s")
         args.add("-lll_unwind")
 
         # Add local crt1.o, crti.o and crtn.o files.
@@ -266,10 +295,12 @@ def create_executable(
         args.add("-nostdlib++")
 
         # Use custom libc++. Note that our libc++ includes libc++abi.
-        libcxx_path = "bazel-out/k8-fastbuild/bin/external/llvm-project/libcxx"
-        args.add("-isystem{}".format(libcxx_path + "/include"))
-        args.add("-L{}".format(libcxx_path))
-        args.add("-Wl,-rpath,{}".format(libcxx_path))
+        libcxx_path = paths.join(
+            llvm_target_directory_path(ctx),
+            "libcxx",
+        )
+        args.add(libcxx_path, format = "-L%s")
+        args.add(libcxx_path, format = "-Wl,-rpath,%s")
         args.add("-lll_cxx")
 
         # Strip symbols.

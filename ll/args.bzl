@@ -4,6 +4,10 @@ def _get_dirname(file):
 def construct_default_args(ctx, headers, includes, defines):
     args = ctx.actions.args()
 
+    # Run Clang in verbose mode when using --compilation_mode=dbg.
+    if ctx.var["COMPILATION_MODE"] == "dbg":
+        args.add("-v")
+
     # Always print diagnostics in color.
     args.add("-fcolor-diagnostics")
 
