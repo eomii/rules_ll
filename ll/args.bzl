@@ -5,7 +5,6 @@ def construct_default_args(ctx, headers, includes, defines):
     args = ctx.actions.args()
 
     # Always print diagnostics in color.
-    args.add("-v")
     args.add("-fcolor-diagnostics")
 
     # Disable the default gcc toolchain.

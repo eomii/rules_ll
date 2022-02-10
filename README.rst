@@ -48,7 +48,7 @@ The full ``WORKSPACE.bazel`` file created in this guide is available at
    .. code:: python
 
       load("@rules_ll//ll:init.bzl", "initialize_rules_ll")
-          initialize_rules_ll(
+      initialize_rules_ll(
           local_crt_path = "/usr/lib64",
           # llvm_commit,
           # llvm_sha256,
@@ -77,8 +77,8 @@ The full ``WORKSPACE.bazel`` file created in this guide is available at
       )
       llvm_disable_optional_support_deps()
 
-4. Finally, register the toolchains so that ``ll_*`` targets can be used in
-   your ``BUILD.bazel`` files.
+4. Finally, register the toolchain and the execution platform so that ``ll_*``
+   targets can be used in your ``BUILD.bazel`` files.
 
    .. code:: python
 
@@ -86,6 +86,7 @@ The full ``WORKSPACE.bazel`` file created in this guide is available at
           "@rules_ll//ll:ll_bootstrap_toolchain",
           "@rules_ll//ll:ll_toolchain",
       )
+      register_execution_platforms("@rules_ll//ll:ll_linux_exec_platform")
 
 5. You can now make ``ll_library`` and ``ll_binary`` targets available to your
    ``BUILD.bazel`` files via

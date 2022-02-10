@@ -110,9 +110,9 @@ def compile_objects(
         args.add("-c")
         args.add("-o", intermediary_object)
 
-        # Explicitly include builtins.
+        # Explicitly specify builtin includes.
         args.add("-nobuiltininc")
-        staging_include = "bazel-out/host/bin/external/llvm-project/clang/staging/include"
+        staging_include = "bazel-out/k8-fastbuild/bin/external/llvm-project/clang/staging/include"
         args.add("-isystem{}".format(staging_include))
 
         if toolchain_type == "//ll:toolchain_type":
@@ -122,7 +122,7 @@ def compile_objects(
                 ctx.toolchains["//ll:toolchain_type"].cpp_stdlib,
                 transitive = [headers],
             )
-            libcxx_path = "bazel-out/host/bin/external/llvm-project/libcxx"
+            libcxx_path = "bazel-out/k8-fastbuild/bin/external/llvm-project/libcxx"
             args.add("-nostdlib")
             args.add("-nostdinc++")
             args.add("-nostdlib++")
@@ -249,13 +249,13 @@ def create_executable(
         args.add("-lc")  # Required. This is glibc.
 
         # Use compiler-rt as runtime.
-        compiler_rt_path = "bazel-out/host/bin/external/llvm-project/compiler-rt"
+        compiler_rt_path = "bazel-out/k8-fastbuild/bin/external/llvm-project/compiler-rt"
         args.add("-L{}".format(compiler_rt_path))
         args.add("-Wl,-rpath,{}".format(compiler_rt_path))
         args.add("-lll_compiler-rt")
 
         # Use libunwind as unwinder library.
-        libunwind_path = "bazel-out/host/bin/external/llvm-project/libunwind"
+        libunwind_path = "bazel-out/k8-fastbuild/bin/external/llvm-project/libunwind"
         args.add("-L{}".format(libunwind_path))
         args.add("-lll_unwind")
 
@@ -266,7 +266,7 @@ def create_executable(
         args.add("-nostdlib++")
 
         # Use custom libc++. Note that our libc++ includes libc++abi.
-        libcxx_path = "bazel-out/host/bin/external/llvm-project/libcxx"
+        libcxx_path = "bazel-out/k8-fastbuild/bin/external/llvm-project/libcxx"
         args.add("-isystem{}".format(libcxx_path + "/include"))
         args.add("-L{}".format(libcxx_path))
         args.add("-Wl,-rpath,{}".format(libcxx_path))

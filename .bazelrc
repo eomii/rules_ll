@@ -2,5 +2,8 @@
 build --repo_env=BAZEL_CXXOPTS='-std=c++17'
 run --repo_env=BAZEL_CXXOPTS='-std=c++17'
 
+build --experimental_platform_in_output_dir
+run --experimental_platform_in_output_dir
+
 # build --experimental_enable_bzlmod
 # run --experimental_enable_bzlmod

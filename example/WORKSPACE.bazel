@@ -43,3 +43,5 @@ register_toolchains(
     "@rules_ll//ll:ll_bootstrap_toolchain",
     "@rules_ll//ll:ll_toolchain",
 )
+
+register_execution_platforms("@rules_ll//ll:ll_linux_exec_platform")
