@@ -134,6 +134,13 @@ def compile_objects(
         )
         args.add(clang_builtin_include_path, format = "-isystem%s")
 
+        if ctx.var["COMPILATION_MODE"] == "opt":
+            args.add("-O3")
+
+            # Long double with 80 bits breaks LTO.
+            args.add("-mlong-double-128")
+            args.add("-flto=thin")
+
         if toolchain_type == "//ll:toolchain_type":
             inputs = depset(
                 ctx.files.srcs +
@@ -176,12 +183,15 @@ def archive_action(
         toolchain_type):
     args = ctx.actions.args()
 
-    # -c: Do not warn when creating a new archive.
     # -v: Verbose.
+    # -c: Do not warn when creating a new archive.
     # -q: Quick-append inputs.
     # -L: Quick append archive members instead of the archive itself if an
     #     archive is part of the inputs.
-    args.add("-cvqL")
+    if ctx.var["COMPILATION_MODE"] == "dbg":
+        args.add("-vqL")
+    else:
+        args.add("-cqL")
 
     out_file = ctx.actions.declare_file(ctx.label.name + ".a")
     args.add(out_file)
@@ -304,7 +314,9 @@ def create_executable(
         args.add("-lll_cxx")
 
         # Strip symbols.
-        args.add("-Wl,--strip-all")
+        if ctx.var["COMPILATION_MODE"] == "opt":
+            args.add("-flto=thin")
+            args.add("-Wl,--strip-all")
 
         inputs = depset(
             ctx.toolchains["//ll:toolchain_type"].compiler_runtime +

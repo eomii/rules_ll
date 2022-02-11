@@ -181,13 +181,26 @@ X86_ARCH_SOURCES = [
     "builtins/i386/fp_mode.c",  # Used on 64-bit as well.
 ]
 
-X86_64_SOURCES = GENERIC_SOURCES + GENERIC_TF_SOURCES + X86_ARCH_SOURCES + [
+X86_80_BIT_SOURCES = [
+     "builtins/divxc3.c",
+     "builtins/fixxfdi.c",
+     "builtins/fixxfti.c",
+     "builtins/fixunsxfdi.c",
+     "builtins/fixunsxfsi.c",
+     "builtins/fixunsxfti.c",
+     "builtins/floatdixf.c",
+     "builtins/floattixf.c",
+     "builtins/floatundixf.c",
+     "builtins/floatuntixf.c",
+     "builtins/mulxc3.c",
+     "builtins/powixf2.c",
+]
+
+X86_64_SOURCES = GENERIC_SOURCES + GENERIC_TF_SOURCES + X86_ARCH_SOURCES + X86_80_BIT_SOURCES + [
     "builtins/x86_64/floatdidf.c",
     "builtins/x86_64/floatdisf.c",
     "builtins/x86_64/floatundidf.S",
     "builtins/x86_64/floatundisf.S",
-
-    # Only on non-Android.
     "builtins/x86_64/floatdixf.c",
     "builtins/x86_64/floatundixf.S",
 ]
