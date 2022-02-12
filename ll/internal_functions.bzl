@@ -104,6 +104,7 @@ def compile_objects(
         if src.extension in compilable_extensions
     ]
     intermediary_objects = []
+    cdfs = []
 
     for src in compilable_srcs:
         args = construct_default_args(ctx, headers, includes, defines)
@@ -165,8 +166,16 @@ def compile_objects(
                 transitive = [headers],
             )
 
+        cdf = ctx.actions.declare_file(
+            paths.join(
+                relative_src_dir,
+                paths.replace_extension(src.basename, ".cdf"),
+            ),
+        )
+        args.add(cdf, format = "-MJ%s")
+
         ctx.actions.run(
-            outputs = [intermediary_object],
+            outputs = [intermediary_object, cdf],
             inputs = inputs,
             executable = ctx.toolchains[toolchain_type].c_driver,
             arguments = [args],
@@ -174,7 +183,9 @@ def compile_objects(
             use_default_shell_env = False,
         )
         intermediary_objects += [intermediary_object]
-    return intermediary_objects
+        cdfs += [cdf]
+
+    return intermediary_objects, cdfs
 
 def archive_action(
         ctx,
@@ -216,7 +227,7 @@ def create_archive_library(
         defines = [],
         includes = [],
         toolchain_type = "//ll:toolchain_type"):
-    intermediary_objects = compile_objects(
+    intermediary_objects, cdfs = compile_objects(
         ctx,
         headers = headers,
         defines = defines,
@@ -229,7 +240,7 @@ def create_archive_library(
         libraries = libraries,
         toolchain_type = toolchain_type,
     )
-    return archive
+    return archive, cdfs
 
 def create_executable(
         ctx,
@@ -238,7 +249,7 @@ def create_executable(
         defines = [],
         includes = [],
         toolchain_type = "//ll:toolchain_type"):
-    intermediary_objects = compile_objects(
+    intermediary_objects, cdfs = compile_objects(
         ctx,
         headers = headers,
         defines = defines,
@@ -346,4 +357,4 @@ def create_executable(
         mnemonic = "LlLinkObject",
         use_default_shell_env = False,
     )
-    return out_file
+    return out_file, cdfs

@@ -1,7 +1,0 @@
-load("@rules_ll//ll:defs.bzl", "ll_binary", "ll_library")
-
-ll_binary(
-    name = "ll_library_cpp_test",
-    srcs = ["executable.cpp"],
-    # proprietary = True,
-)

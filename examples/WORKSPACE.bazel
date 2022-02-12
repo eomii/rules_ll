@@ -1,3 +1,5 @@
+workspace(name = "rules_ll_examples")
+
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
 # Usually one will have to use http_archive instead of new_local_repository

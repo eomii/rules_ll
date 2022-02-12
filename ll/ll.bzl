@@ -1,4 +1,4 @@
-load("//ll:providers.bzl", "LlInfo")
+load("//ll:providers.bzl", "LlCompilationDatabaseFragmentsInfo", "LlInfo")
 load(
     "//ll:internal_functions.bzl",
     "create_archive_library",
@@ -117,7 +117,7 @@ def _ll_library_impl(ctx):
         transitive_includes,
     ) = create_compile_inputs(ctx)
 
-    out_file = create_archive_library(
+    out_file, cdfs = create_archive_library(
         ctx,
         headers = headers,
         libraries = libraries,
@@ -129,12 +129,17 @@ def _ll_library_impl(ctx):
     exposed_headers = expose_headers(ctx)
 
     return [
-        DefaultInfo(files = depset([out_file] + exposed_headers)),
+        DefaultInfo(
+            files = depset([out_file] + exposed_headers),
+        ),
         LlInfo(
             transitive_headers = transitive_headers,
             libraries = depset([out_file], transitive = [libraries]),
             transitive_defines = transitive_defines,
             transitive_includes = transitive_includes,
+        ),
+        LlCompilationDatabaseFragmentsInfo(
+            cdfs = depset(cdfs),
         ),
     ]
 
@@ -160,7 +165,7 @@ Example:
 def _ll_binary_impl(ctx):
     headers, libraries, defines, includes, _, _, _ = create_compile_inputs(ctx)
 
-    out_file = create_executable(
+    out_file, cdfs = create_executable(
         ctx,
         headers = headers,
         libraries = libraries,
@@ -168,10 +173,15 @@ def _ll_binary_impl(ctx):
         includes = includes,
     )
 
-    return [DefaultInfo(
-        files = depset([out_file]),
-        executable = out_file,
-    )]
+    return [
+        DefaultInfo(
+            files = depset([out_file]),
+            executable = out_file,
+        ),
+        LlCompilationDatabaseFragmentsInfo(
+            cdfs = depset(cdfs),
+        ),
+    ]
 
 ll_binary = rule(
     implementation = _ll_binary_impl,

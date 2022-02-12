@@ -1,0 +1,6 @@
+load("@rules_ll//ll:defs.bzl", "ll_binary", "ll_compilation_database", "ll_library")
+
+ll_compilation_database(
+    name = "compilation_database",
+    target = "//clang_tidy_example:executable",
+)

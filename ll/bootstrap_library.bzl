@@ -18,7 +18,7 @@ def _ll_bootstrap_library_impl(ctx):
         transitive_includes,
     ) = create_compile_inputs(ctx)
 
-    out_file = create_archive_library(
+    out_file, _ = create_archive_library(
         ctx,
         headers = headers,
         libraries = libraries,
