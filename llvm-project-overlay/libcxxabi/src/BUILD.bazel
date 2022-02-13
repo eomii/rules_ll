@@ -1,19 +1,4 @@
-LIBCXXABI_BUILD_FILE = """load("@rules_ll//ll:defs.bzl", "ll_bootstrap_library")
-
-filegroup(
-    name = "libcxxabi_headers",
-    srcs = glob(["include/**"]),
-    visibility = ["//visibility:public"],
-)
-
-ll_bootstrap_library(
-    name = "libll_cxxabi",
-    deps = ["//libcxxabi/src:src"],
-    transitive_hdrs = [":libcxxabi_headers"],
-    visibility = ["//visibility:public"],
-)"""
-
-LIBCXXABI_SRC_BUILD_FILE = """load("@rules_ll//ll:defs.bzl", "ll_bootstrap_library")
+load("@rules_ll//ll:defs.bzl", "ll_bootstrap_library")
 
 ll_bootstrap_library(
     name = "src",
@@ -67,10 +52,16 @@ ll_bootstrap_library(
         # Other required headers.
         "//libcxx:libcxx_headers",
         "//libcxx/src:libcxx_src_headers",
-        "//libcxxabi:libcxxabi_headers"
+        "//libcxxabi:libcxxabi_headers",
     ],
-    # Libcxxabi requires some files from libc++.
-    includes = ["external/llvm-project/libcxx/src"],
+    compile_flags = [
+        "-nostdinc++",
+        "-std=c++20",
+        "-faligned-allocation",
+        "-funwind-tables",
+        "-fstrict-aliasing",
+        "-fvisibility-inlines-hidden",
+    ],
     defines = [
         "LIBCXX_BUILDING_LIBCXXABI",
         "HAVE___CXA_THREAD_ATEXIT_IMPL",  # 3 underscores.
@@ -85,13 +76,7 @@ ll_bootstrap_library(
         "CHAR_BIT=8",
         "INT_MAX=+2147483647",
     ],
-    compile_flags = [
-        "-nostdinc++",
-        "-std=c++20",
-        "-faligned-allocation",
-        "-funwind-tables",
-        "-fstrict-aliasing",
-        "-fvisibility-inlines-hidden",
-    ],
+    # Libcxxabi requires some files from libc++.
+    includes = ["external/llvm-project/libcxx/src"],
     visibility = ["//visibility:public"],
-)"""
+)

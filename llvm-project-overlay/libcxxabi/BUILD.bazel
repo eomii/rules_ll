@@ -1,0 +1,14 @@
+load("@rules_ll//ll:defs.bzl", "ll_bootstrap_library")
+
+filegroup(
+    name = "libcxxabi_headers",
+    srcs = glob(["include/**"]),
+    visibility = ["//visibility:public"],
+)
+
+ll_bootstrap_library(
+    name = "libll_cxxabi",
+    transitive_hdrs = [":libcxxabi_headers"],
+    visibility = ["//visibility:public"],
+    deps = ["//libcxxabi/src"],
+)

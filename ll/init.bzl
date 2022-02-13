@@ -1,26 +1,5 @@
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 load("@bazel_tools//tools/build_defs/repo:utils.bzl", "maybe")
-load(
-    "@rules_ll//libcxx:libcxx_overlay.bzl",
-    "LIBCXX_BUILD_FILE",
-    "LIBCXX_CONFIG_SITE",
-    "LIBCXX_SRC_BUILD_FILE",
-)
-load(
-    "@rules_ll//libcxxabi:libcxxabi_overlay.bzl",
-    "LIBCXXABI_BUILD_FILE",
-    "LIBCXXABI_SRC_BUILD_FILE",
-)
-load(
-    "@rules_ll//compiler-rt:compiler-rt_overlay.bzl",
-    "COMPILER_RT_BUILD_FILE",
-    "COMPILER_RT_LIB_BUILD_FILE",
-)
-load(
-    "@rules_ll//libunwind:libunwind_overlay.bzl",
-    "LIBUNWIND_BUILD_FILE",
-    "LIBUNWIND_SRC_BUILD_FILE",
-)
 
 # The current default commit for the LLVM repo. This should be updated
 # frequently.
@@ -38,33 +17,8 @@ def initialize_rules_ll(
         sha256 = llvm_sha256,
         strip_prefix = "llvm-project-" + llvm_commit,
         urls = ["https://github.com/llvm/llvm-project/archive/{}.tar.gz".format(llvm_commit)],
-        patch_cmds = [
-            # Libc++ overlay
-            "mkdir utils/bazel/llvm-project-overlay/libcxx",
-            "echo '{}' > libcxx/include/__config_site".format(LIBCXX_CONFIG_SITE),
-            "echo '{}' > utils/bazel/llvm-project-overlay/libcxx/BUILD.bazel".format(LIBCXX_BUILD_FILE),
-            "mkdir utils/bazel/llvm-project-overlay/libcxx/src",
-            "echo '{}' > utils/bazel/llvm-project-overlay/libcxx/src/BUILD.bazel".format(LIBCXX_SRC_BUILD_FILE),
-
-            # Libcxxabi overlay.
-            "mkdir utils/bazel/llvm-project-overlay/libcxxabi",
-            "echo '{}' > utils/bazel/llvm-project-overlay/libcxxabi/BUILD.bazel".format(LIBCXXABI_BUILD_FILE),
-            "mkdir utils/bazel/llvm-project-overlay/libcxxabi/src",
-            "echo '{}' > utils/bazel/llvm-project-overlay/libcxxabi/src/BUILD.bazel".format(LIBCXXABI_SRC_BUILD_FILE),
-
-            # Libunwind overlay.
-            # The libunwind directory already exists in the bazel overlay.
-            "echo '{}' > utils/bazel/llvm-project-overlay/libunwind/BUILD.bazel".format(LIBUNWIND_BUILD_FILE),
-            "mkdir utils/bazel/llvm-project-overlay/libunwind/src",
-            "echo '{}' > utils/bazel/llvm-project-overlay/libunwind/src/BUILD.bazel".format(LIBUNWIND_SRC_BUILD_FILE),
-
-            # Compiler-RT overlay. Under construction.
-            "mkdir utils/bazel/llvm-project-overlay/compiler-rt",
-            "echo '{}' > utils/bazel/llvm-project-overlay/compiler-rt/BUILD.bazel".format(COMPILER_RT_BUILD_FILE),
-            "mkdir utils/bazel/llvm-project-overlay/compiler-rt/lib",
-            "echo '{}' > utils/bazel/llvm-project-overlay/compiler-rt/lib/BUILD.bazel".format(COMPILER_RT_LIB_BUILD_FILE),
-        ],
-        patches = ["@rules_ll//compiler-rt:float128_patch.diff"],
+        patch_cmds = ["cp -r ../rules_ll/llvm-project-overlay/* utils/bazel/llvm-project-overlay"],
+        patches = ["@rules_ll//patches:compiler-rt_float128_patch.diff"],
         patch_args = ["-p1"],
     )
 

@@ -1,0 +1,10 @@
+load("@rules_ll//ll:defs.bzl", "ll_bootstrap_library")
+
+ll_bootstrap_library(
+    name = "libll_compiler-rt",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//compiler-rt/lib:builtins",
+        "//compiler-rt/lib:crt",
+    ],
+)

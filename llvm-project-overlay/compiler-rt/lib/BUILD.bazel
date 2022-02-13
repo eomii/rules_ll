@@ -1,15 +1,4 @@
-COMPILER_RT_BUILD_FILE = """load("@rules_ll//ll:defs.bzl", "ll_bootstrap_library")
-
-ll_bootstrap_library(
-    name = "libll_compiler-rt",
-    deps = [
-        "//compiler-rt/lib:builtins",
-        "//compiler-rt/lib:crt",
-    ],
-    visibility = ["//visibility:public"],
-)"""
-
-COMPILER_RT_LIB_BUILD_FILE = """load("@rules_ll//ll:defs.bzl", "ll_bootstrap_library")
+load("@rules_ll//ll:defs.bzl", "ll_bootstrap_library")
 
 GENERIC_SOURCES = [
     "builtins/absvdi2.c",
@@ -182,18 +171,18 @@ X86_ARCH_SOURCES = [
 ]
 
 X86_80_BIT_SOURCES = [
-     "builtins/divxc3.c",
-     "builtins/fixxfdi.c",
-     "builtins/fixxfti.c",
-     "builtins/fixunsxfdi.c",
-     "builtins/fixunsxfsi.c",
-     "builtins/fixunsxfti.c",
-     "builtins/floatdixf.c",
-     "builtins/floattixf.c",
-     "builtins/floatundixf.c",
-     "builtins/floatuntixf.c",
-     "builtins/mulxc3.c",
-     "builtins/powixf2.c",
+    "builtins/divxc3.c",
+    "builtins/fixxfdi.c",
+    "builtins/fixxfti.c",
+    "builtins/fixunsxfdi.c",
+    "builtins/fixunsxfsi.c",
+    "builtins/fixunsxfti.c",
+    "builtins/floatdixf.c",
+    "builtins/floattixf.c",
+    "builtins/floatundixf.c",
+    "builtins/floatuntixf.c",
+    "builtins/mulxc3.c",
+    "builtins/powixf2.c",
 ]
 
 X86_64_SOURCES = GENERIC_SOURCES + GENERIC_TF_SOURCES + X86_ARCH_SOURCES + X86_80_BIT_SOURCES + [
@@ -209,27 +198,27 @@ ll_bootstrap_library(
     name = "builtins",
     srcs = X86_64_SOURCES,
     hdrs = [
-        "builtins/int_lib.h",
-        "builtins/int_types.h",
-        "builtins/int_endianness.h",
-        "builtins/fp_lib.h",
-        "builtins/int_util.h",
-        "builtins/int_math.h",
-        "builtins/fp_compare_impl.inc",
-        "builtins/fp_mode.h",
-        "builtins/fp_add_impl.inc",
-        "builtins/int_mulo_impl.inc",
-        "builtins/int_div_impl.inc",
-        "builtins/fp_fixuint_impl.inc",
-        "builtins/fp_extend_impl.inc",
-        "builtins/fp_trunc_impl.inc",
-        "builtins/fp_mul_impl.inc",
-        "builtins/fp_extend.h",
         "builtins/assembly.h",
-        "builtins/fp_trunc.h",
-        "builtins/int_mulv_impl.inc",
-        "builtins/fp_fixint_impl.inc",
+        "builtins/fp_add_impl.inc",
+        "builtins/fp_compare_impl.inc",
         "builtins/fp_div_impl.inc",
+        "builtins/fp_extend.h",
+        "builtins/fp_extend_impl.inc",
+        "builtins/fp_fixint_impl.inc",
+        "builtins/fp_fixuint_impl.inc",
+        "builtins/fp_lib.h",
+        "builtins/fp_mode.h",
+        "builtins/fp_mul_impl.inc",
+        "builtins/fp_trunc.h",
+        "builtins/fp_trunc_impl.inc",
+        "builtins/int_div_impl.inc",
+        "builtins/int_endianness.h",
+        "builtins/int_lib.h",
+        "builtins/int_math.h",
+        "builtins/int_mulo_impl.inc",
+        "builtins/int_mulv_impl.inc",
+        "builtins/int_types.h",
+        "builtins/int_util.h",
     ],
     visibility = ["//visibility:public"],
 )
@@ -242,4 +231,3 @@ ll_bootstrap_library(
     ],
     visibility = ["//visibility:public"],
 )
-"""
