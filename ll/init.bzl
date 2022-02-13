@@ -17,7 +17,22 @@ def initialize_rules_ll(
         sha256 = llvm_sha256,
         strip_prefix = "llvm-project-" + llvm_commit,
         urls = ["https://github.com/llvm/llvm-project/archive/{}.tar.gz".format(llvm_commit)],
-        patch_cmds = ["cp -r ../rules_ll/llvm-project-overlay/* utils/bazel/llvm-project-overlay"],
+        # Overlay the existing overlay at utils/bazel/llvm-project-overlay with
+        # the files in rules_ll/llvm-bazel-overlay.
+        #
+        # If a BUILD.bazel file is already present in the original
+        # llvm-project-overlay, we append the contents of the BUILD.bazel file
+        # in the rules_ll overlay to the existing file. This way we don't break
+        # the existing overlay while still being able to add targets to the
+        # original BUILD.bazel files.
+        patch_cmds = ["""
+        for file in $(find ../rules_ll/llvm-project-overlay -type f); do
+            if [ ! -d utils/bazel/${file:12} ]
+                then mkdir -p `dirname utils/bazel/${file:12}`
+            fi;
+            cat $file >> utils/bazel/${file:12};
+        done"""],
+        # cp -r ../rules_ll/llvm-project-overlay/* utils/bazel/llvm-project-overlay
         patches = ["@rules_ll//patches:compiler-rt_float128_patch.diff"],
         patch_args = ["-p1"],
     )

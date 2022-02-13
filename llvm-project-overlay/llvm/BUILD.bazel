@@ -1,0 +1,7 @@
+filegroup(
+    name = "llvm_headers",
+    srcs = glob([
+        "include/llvm/**/*.h",
+        "include/llvm/*.h",
+    ]),
+)
