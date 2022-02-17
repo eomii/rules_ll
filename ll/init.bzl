@@ -46,7 +46,7 @@ def initialize_rules_ll(
     maybe(
         http_archive,
         name = "llvm-raw",
-        build_file_content = "",
+        build_file_content = "# empty",
         sha256 = llvm_sha256,
         strip_prefix = "llvm-project-" + llvm_commit,
         urls = ["https://github.com/llvm/llvm-project/archive/{}.tar.gz".format(llvm_commit)],
