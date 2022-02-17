@@ -1,3 +1,8 @@
+"""# `//ll:providers.bzl`
+
+Providers used by `rules_ll`.
+"""
+
 LlInfo = provider(
     doc = "Provider returned by ll targets.",
     fields = {

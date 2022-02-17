@@ -1,5 +1,44 @@
 <!-- Generated with Stardoc: http://skydoc.bazel.build -->
 
+# `//ll:providers.bzl`
+
+Providers used by `rules_ll`.
+
+
+<a id="#LlCompilationDatabaseFragmentsInfo"></a>
+
+## LlCompilationDatabaseFragmentsInfo
+
+<pre>
+LlCompilationDatabaseFragmentsInfo(<a href="#LlCompilationDatabaseFragmentsInfo-cdfs">cdfs</a>)
+</pre>
+
+Provider containing command objects (compilation database fragments).
+
+**FIELDS**
+
+
+| Name  | Description |
+| :------------- | :------------- |
+| <a id="LlCompilationDatabaseFragmentsInfo-cdfs"></a>cdfs |  A depset containing command database fragments. Assembling the command database fragments into a compile_commands.json file produces a compilation database for tools like clang-tidy.    |
+
+
+<a id="#LlCompilationDatabaseInfo"></a>
+
+## LlCompilationDatabaseInfo
+
+<pre>
+LlCompilationDatabaseInfo(<a href="#LlCompilationDatabaseInfo-compilation_database">compilation_database</a>)
+</pre>
+
+
+
+**FIELDS**
+
+
+| Name  | Description |
+| :------------- | :------------- |
+| <a id="LlCompilationDatabaseInfo-compilation_database"></a>compilation_database |  A compile_commands.json file containing a compilation database.    |
 
 
 <a id="#LlInfo"></a>

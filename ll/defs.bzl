@@ -1,3 +1,14 @@
+"""# `//ll:defs.bzl`
+
+These are the rules that should be imported in `BUILD.bazel` files.
+
+To load e.g. the `ll_binary` rule:
+
+```python
+load("@rules_ll//ll:defs.bzl", "ll_binary")
+```
+"""
+
 load(
     "//ll:ll.bzl",
     _ll_binary = "ll_binary",

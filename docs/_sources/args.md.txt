@@ -1,5 +1,8 @@
 <!-- Generated with Stardoc: http://skydoc.bazel.build -->
 
+# `//ll:args.bzl`
+
+Convenience function for setting compile arguments.
 
 
 <a id="#construct_default_args"></a>

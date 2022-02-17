@@ -1,3 +1,8 @@
+"""# `//ll:toolchain.bzl`
+
+Implements `ll_toolchain` and the internally used `ll_bootstrap_toolchain`.
+"""
+
 load("@bazel_skylib//lib:paths.bzl", "paths")
 
 def _ll_bootstrap_toolchain_impl(ctx):

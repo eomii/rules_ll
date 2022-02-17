@@ -1,5 +1,9 @@
 <!-- Generated with Stardoc: http://skydoc.bazel.build -->
 
+# `//ll:bootstrap_library.bzl`
+
+This rule is used by `rules_ll` to boostrap `compiler-rt`, `libcxx`,
+`libcxxabi` and `libunwind`. Users should use `ll_library` instead.
 
 
 <a id="#ll_bootstrap_library"></a>

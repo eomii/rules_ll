@@ -1,3 +1,8 @@
+"""# `//ll:compilation_database.bzl`
+
+Implements the `ll_compilation_database` rule.
+"""
+
 load(
     "//ll:providers.bzl",
     "LlCompilationDatabaseFragmentsInfo",
@@ -106,7 +111,23 @@ ll_compilation_database = rule(
     implementation = _ll_compilation_database,
     executable = True,
     attrs = {
-        "target": attr.label(mandatory = True),
+        "target": attr.label(
+            mandatory = True,
+            doc = """
+            The label for which the compilation database should be built.
+            """,
+        ),
     },
     toolchains = ["//ll:toolchain_type"],
+    doc = """
+Executable target for building a
+[compilation database](https://clang.llvm.org/docs/JSONCompilationDatabase.html)
+and running [clang-tidy](https://clang.llvm.org/extra/clang-tidy/) on it.
+
+For a full guide see
+[Using `rules_ll` with `clang-tidy`](https://qogecoin.github.io/rules_ll/guides/clang_tidy.html).
+
+An example project using this rule is available at
+[rules_ll/examples](https://github.com/qogecoin/rules_ll/tree/main/examples).
+""",
 )

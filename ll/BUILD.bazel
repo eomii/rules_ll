@@ -7,14 +7,16 @@ bzl_library(
     srcs = [
         "args.bzl",
         "bootstrap_library.bzl",
+        "compilation_database.bzl",
+        "defs.bzl",
         "deps.bzl",
         "init.bzl",
         "internal_functions.bzl",
-        "ll.bzl",
         "providers.bzl",
         "toolchain.bzl",
     ],
     deps = [
+        ":ll.bzl",
         "@bazel_skylib//lib:paths",
         "@bazel_tools//tools/build_defs/repo:http.bzl",
         "@bazel_tools//tools/build_defs/repo:utils.bzl",
@@ -25,6 +27,13 @@ stardoc(
     name = "ll_docs",
     out = "ll.md",
     input = "ll.bzl",
+    deps = [":ll_bzl"],
+)
+
+stardoc(
+    name = "defs_docs",
+    out = "defs.md",
+    input = "defs.bzl",
     deps = [":ll_bzl"],
 )
 
@@ -70,6 +79,13 @@ stardoc(
     deps = [":ll_bzl"],
 )
 
+stardoc(
+    name = "compilation_database_docs",
+    out = "compilation_database.md",
+    input = "compilation_database.bzl",
+    deps = [":ll_bzl"],
+)
+
 # stardoc(
 #     name = "init_docs",
 #     out = "init.md",
@@ -83,6 +99,8 @@ filegroup(
     srcs = [
         ":args_docs",
         ":bootstrap_library_docs",
+        ":compilation_database_docs",
+        ":defs_docs",
         ":deps_docs",
         ":internal_functions_docs",
         ":ll_docs",

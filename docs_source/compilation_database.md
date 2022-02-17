@@ -1,0 +1,34 @@
+<!-- Generated with Stardoc: http://skydoc.bazel.build -->
+
+# `//ll:compilation_database.bzl`
+
+Implements the `ll_compilation_database` rule.
+
+
+<a id="#ll_compilation_database"></a>
+
+## ll_compilation_database
+
+<pre>
+ll_compilation_database(<a href="#ll_compilation_database-name">name</a>, <a href="#ll_compilation_database-target">target</a>)
+</pre>
+
+
+Executable target for building a
+[compilation database](https://clang.llvm.org/docs/JSONCompilationDatabase.html)
+and running [clang-tidy](https://clang.llvm.org/extra/clang-tidy/) on it.
+
+For a full guide see
+[Using `rules_ll` with `clang-tidy`](https://qogecoin.github.io/rules_ll/guides/clang_tidy.html).
+
+An example project using this rule is available at
+[rules_ll/examples](https://github.com/qogecoin/rules_ll/tree/main/examples).
+
+
+**ATTRIBUTES**
+
+
+| Name  | Description | Type | Mandatory | Default |
+| :------------- | :------------- | :------------- | :------------- | :------------- |
+| <a id="ll_compilation_database-name"></a>name |  A unique name for this target.   | <a href="https://bazel.build/docs/build-ref.html#name">Name</a> | required |  |
+| <a id="ll_compilation_database-target"></a>target |  The label for which the compilation database should be built.   | <a href="https://bazel.build/docs/build-ref.html#labels">Label</a> | required |  |

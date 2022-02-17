@@ -1,5 +1,8 @@
 <!-- Generated with Stardoc: http://skydoc.bazel.build -->
 
+# `//ll:internal_functions.bzl`
+
+Internal functions used by `ll_binary` and `ll_library`.
 
 
 <a id="#archive_action"></a>
@@ -125,6 +128,31 @@ expose_headers(<a href="#expose_headers-ctx">ctx</a>)
 | Name  | Description | Default Value |
 | :------------- | :------------- | :------------- |
 | <a id="expose_headers-ctx"></a>ctx |  <p align="center"> - </p>   |  none |
+
+
+<a id="#llvm_target_directory_path"></a>
+
+## llvm_target_directory_path
+
+<pre>
+llvm_target_directory_path(<a href="#llvm_target_directory_path-ctx">ctx</a>)
+</pre>
+
+Returns the path to the `llvm-project` build output directory.
+
+The path looks like `bazel-out/{cpu}-{mode}/bin/external/llvm-project`.
+
+
+**PARAMETERS**
+
+
+| Name  | Description | Default Value |
+| :------------- | :------------- | :------------- |
+| <a id="llvm_target_directory_path-ctx"></a>ctx |  The rule context.   |  none |
+
+**RETURNS**
+
+A string.
 
 
 <a id="#resolve_deps"></a>

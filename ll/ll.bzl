@@ -1,3 +1,10 @@
+"""# `//ll:ll.bzl`
+
+Rules for building C/C++ with an upstream LLVM/Clang toolchain.
+
+Build files should import these rules via `@rules_ll//ll:defs.bzl`.
+"""
+
 load("//ll:providers.bzl", "LlCompilationDatabaseFragmentsInfo", "LlInfo")
 load(
     "//ll:internal_functions.bzl",

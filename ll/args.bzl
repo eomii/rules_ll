@@ -1,3 +1,8 @@
+"""# `//ll:args.bzl`
+
+Convenience function for setting compile arguments.
+"""
+
 def _get_dirname(file):
     return file.dirname
 

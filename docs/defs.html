@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>//ll:ll.bzl &#8212; rules_ll Documentation</title>
+    <title>//ll:defs.bzl &#8212; rules_ll Documentation</title>
 
   <link href="_static/css/theme.css" rel="stylesheet">
   <link href="_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
@@ -34,8 +34,8 @@
     <script src="_static/sphinx-book-theme.9d8b4a8b9bb19db25eeaddc40d639ba2.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="//ll:compilation_database.bzl" href="compilation_database.html" />
-    <link rel="prev" title="//ll:deps.bzl" href="deps.html" />
+    <link rel="next" title="//ll:deps.bzl" href="deps.html" />
+    <link rel="prev" title="Using clang-tidy with rules_ll" href="guides/clang_tidy.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
 
@@ -100,9 +100,9 @@
   Public API
  </span>
 </p>
-<ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="defs.html">
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
    <code class="docutils literal notranslate">
     <span class="pre">
      //ll:defs.bzl
@@ -125,9 +125,9 @@
   Private API
  </span>
 </p>
-<ul class="current nav bd-sidenav">
- <li class="toctree-l1 current active">
-  <a class="current reference internal" href="#">
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="ll.html">
    <code class="docutils literal notranslate">
     <span class="pre">
      //ll:ll.bzl
@@ -253,6 +253,16 @@
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#ll-bootstrap-library">
+   ll_bootstrap_library
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#ll-compilation-database">
+   ll_compilation_database
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#ll-library">
    ll_library
   </a>
@@ -267,7 +277,7 @@
         <div class="col-12 col-md-9 pl-md-3 pr-md-0">
             <!-- Table of contents that is only displayed when printing the page -->
             <div id="jb-print-docs-body" class="onlyprint">
-                <h1>//ll:ll.bzl</h1>
+                <h1>//ll:defs.bzl</h1>
                 <!-- Table of contents -->
                 <div id="print-main-content">
                     <div id="jb-print-toc">
@@ -280,6 +290,16 @@
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#ll-binary">
    ll_binary
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#ll-bootstrap-library">
+   ll_bootstrap_library
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#ll-compilation-database">
+   ll_compilation_database
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
@@ -297,10 +317,13 @@
               <div>
 
   <!-- Generated with Stardoc: http://skydoc.bazel.build -->
-<div class="tex2jax_ignore mathjax_ignore section" id="ll-ll-bzl">
-<h1><code class="docutils literal notranslate"><span class="pre">//ll:ll.bzl</span></code><a class="headerlink" href="#ll-ll-bzl" title="Permalink to this headline">¶</a></h1>
-<p>Rules for building C/C++ with an upstream LLVM/Clang toolchain.</p>
-<p>Build files should import these rules via <code class="docutils literal notranslate"><span class="pre">&#64;rules_ll//ll:defs.bzl</span></code>.</p>
+<div class="tex2jax_ignore mathjax_ignore section" id="ll-defs-bzl">
+<h1><code class="docutils literal notranslate"><span class="pre">//ll:defs.bzl</span></code><a class="headerlink" href="#ll-defs-bzl" title="Permalink to this headline">¶</a></h1>
+<p>These are the rules that should be imported in <code class="docutils literal notranslate"><span class="pre">BUILD.bazel</span></code> files.</p>
+<p>To load e.g. the <code class="docutils literal notranslate"><span class="pre">ll_binary</span></code> rule:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;@rules_ll//ll:defs.bzl&quot;</span><span class="p">,</span> <span class="s2">&quot;ll_binary&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
 <p><a id="#ll_binary"></a></p>
 <div class="section" id="ll-binary">
 <h2>ll_binary<a class="headerlink" href="#ll-binary" title="Permalink to this headline">¶</a></h2>
@@ -397,6 +420,140 @@ ll_binary(<a href="#ll_binary-name">name</a>, <a href="#ll_binary-compile_flags"
 <td class="text-left"><p>List of strings</p></td>
 <td class="text-left"><p>optional</p></td>
 <td class="text-left"><p>[]</p></td>
+</tr>
+</tbody>
+</table>
+<p><a id="#ll_bootstrap_library"></a></p>
+</div>
+<div class="section" id="ll-bootstrap-library">
+<h2>ll_bootstrap_library<a class="headerlink" href="#ll-bootstrap-library" title="Permalink to this headline">¶</a></h2>
+<pre>
+ll_bootstrap_library(<a href="#ll_bootstrap_library-name">name</a>, <a href="#ll_bootstrap_library-compile_flags">compile_flags</a>, <a href="#ll_bootstrap_library-defines">defines</a>, <a href="#ll_bootstrap_library-deps">deps</a>, <a href="#ll_bootstrap_library-hdrs">hdrs</a>, <a href="#ll_bootstrap_library-includes">includes</a>, <a href="#ll_bootstrap_library-link_flags">link_flags</a>, <a href="#ll_bootstrap_library-proprietary">proprietary</a>,
+                     <a href="#ll_bootstrap_library-srcs">srcs</a>, <a href="#ll_bootstrap_library-transitive_defines">transitive_defines</a>, <a href="#ll_bootstrap_library-transitive_hdrs">transitive_hdrs</a>, <a href="#ll_bootstrap_library-transitive_includes">transitive_includes</a>)
+</pre>
+<p>Internal use only.</p>
+<p>Same as ll_library, but uses a different toolchain.</p>
+<p><strong>ATTRIBUTES</strong></p>
+<table class="colwidths-auto table">
+<thead>
+<tr class="row-odd"><th class="text-left head"><p>Name</p></th>
+<th class="text-left head"><p>Description</p></th>
+<th class="text-left head"><p>Type</p></th>
+<th class="text-left head"><p>Mandatory</p></th>
+<th class="text-left head"><p>Default</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-left"><p><a id="ll_bootstrap_library-name"></a>name</p></td>
+<td class="text-left"><p>A unique name for this target.</p></td>
+<td class="text-left"><p><a href="https://bazel.build/docs/build-ref.html#name">Name</a></p></td>
+<td class="text-left"><p>required</p></td>
+<td class="text-left"><p></p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><a id="ll_bootstrap_library-compile_flags"></a>compile_flags</p></td>
+<td class="text-left"><p>Additional flags for the compiler.<br><br>        A list of strings <code>[“-O3”, “-std=c++20”]</code> will be appended to the         compile command line arguments as <code>-O3 -std=c++20</code>.<br><br>        Only used for this target.</p></td>
+<td class="text-left"><p>List of strings</p></td>
+<td class="text-left"><p>optional</p></td>
+<td class="text-left"><p>[]</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p><a id="ll_bootstrap_library-defines"></a>defines</p></td>
+<td class="text-left"><p>Additional defines for this target.<br><br>        A list of strings <code>[“MYDEFINE_1”, “MYDEFINE_2”]</code> will add         <code>-DMYDEFINE_1 -DMYDEFINE_2</code> to the compile command line.<br><br>        Defines in this attribute are only used for the current target.</p></td>
+<td class="text-left"><p>List of strings</p></td>
+<td class="text-left"><p>optional</p></td>
+<td class="text-left"><p>[]</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><a id="ll_bootstrap_library-deps"></a>deps</p></td>
+<td class="text-left"><p>The dependencies for this target.<br><br>        Every dependency needs to be an <code>ll_library</code>.</p></td>
+<td class="text-left"><p><a href="https://bazel.build/docs/build-ref.html#labels">List of labels</a></p></td>
+<td class="text-left"><p>optional</p></td>
+<td class="text-left"><p>[]</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p><a id="ll_bootstrap_library-hdrs"></a>hdrs</p></td>
+<td class="text-left"><p>Header files for this target.<br><br>        Headers in this attribute will not be exported, i.e. any generated         include paths are only used for this target.<br><br>        When including header files as <code>#include “some/path/myheader.h”</code> their         include paths need to be specified in the <code>includes</code> attribute as well.</p></td>
+<td class="text-left"><p><a href="https://bazel.build/docs/build-ref.html#labels">List of labels</a></p></td>
+<td class="text-left"><p>optional</p></td>
+<td class="text-left"><p>[]</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><a id="ll_bootstrap_library-includes"></a>includes</p></td>
+<td class="text-left"><p>Additional include paths for this target.<br><br>        When including a header not via <code>#include “header.h”</code>, but via         <code>#include “subdir/header.h”</code>, the include path needs to be added here in         addition to making the header available in the <code>hdrs</code> attribute.</p></td>
+<td class="text-left"><p>List of strings</p></td>
+<td class="text-left"><p>optional</p></td>
+<td class="text-left"><p>[]</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p><a id="ll_bootstrap_library-link_flags"></a>link_flags</p></td>
+<td class="text-left"><p>Additional flags for the linker.<br><br>        This is the place for adding library search paths and external link         targets.<br><br>        Assuming you have a library <code>/some/path/libmylib.a</code> on your host system,         you can make <code>mylib.a</code> available to the linker by passing         <code>[“-L/some/path”, “-lmylib”]</code> to this attribute.<br><br>        Only used for this target. Only used by <code>ll_binary</code>, since <code>ll_library</code>         does not invoke the linker.</p></td>
+<td class="text-left"><p>List of strings</p></td>
+<td class="text-left"><p>optional</p></td>
+<td class="text-left"><p>[]</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><a id="ll_bootstrap_library-proprietary"></a>proprietary</p></td>
+<td class="text-left"><p>Setting this to True will disable static linking of glibc.<br><br>        This attribute will be removed as soon as <code>rules_ll</code> uses LLVM’s <code>libc</code>.</p></td>
+<td class="text-left"><p>Boolean</p></td>
+<td class="text-left"><p>optional</p></td>
+<td class="text-left"><p>False</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p><a id="ll_bootstrap_library-srcs"></a>srcs</p></td>
+<td class="text-left"><p>Compilable source files for this target.<br><br>        Only compilable files and object files <code>[“.o”, “.S”, “.c”, “.cpp”]</code> are         allowed here.<br><br>        Headers should be placed in the <code>hdrs</code> attribute.</p></td>
+<td class="text-left"><p><a href="https://bazel.build/docs/build-ref.html#labels">List of labels</a></p></td>
+<td class="text-left"><p>optional</p></td>
+<td class="text-left"><p>[]</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><a id="ll_bootstrap_library-transitive_defines"></a>transitive_defines</p></td>
+<td class="text-left"><p>Additional transitive defines for this target.<br><br>        These defines will be defined by all depending downstream targets.</p></td>
+<td class="text-left"><p>List of strings</p></td>
+<td class="text-left"><p>optional</p></td>
+<td class="text-left"><p>[]</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p><a id="ll_bootstrap_library-transitive_hdrs"></a>transitive_hdrs</p></td>
+<td class="text-left"><p>Transitive headers for this target.<br><br>        Any transitive headers will be exported (copied) to the build directory.<br><br>        Transitive headers are available to depending downstream targets.</p></td>
+<td class="text-left"><p><a href="https://bazel.build/docs/build-ref.html#labels">List of labels</a></p></td>
+<td class="text-left"><p>optional</p></td>
+<td class="text-left"><p>[]</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><a id="ll_bootstrap_library-transitive_includes"></a>transitive_includes</p></td>
+<td class="text-left"><p>Additional transitive include paths for this target.<br><br>        Includes in this attribute will be added to the compile command line         arguments for all downstream targets.</p></td>
+<td class="text-left"><p>List of strings</p></td>
+<td class="text-left"><p>optional</p></td>
+<td class="text-left"><p>[]</p></td>
+</tr>
+</tbody>
+</table>
+<p><a id="#ll_compilation_database"></a></p>
+</div>
+<div class="section" id="ll-compilation-database">
+<h2>ll_compilation_database<a class="headerlink" href="#ll-compilation-database" title="Permalink to this headline">¶</a></h2>
+<pre>
+ll_compilation_database(<a href="#ll_compilation_database-name">name</a>, <a href="#ll_compilation_database-target">target</a>)
+</pre>
+<p>Executable target for building a
+<a class="reference external" href="https://clang.llvm.org/docs/JSONCompilationDatabase.html">compilation database</a>
+and running <a class="reference external" href="https://clang.llvm.org/extra/clang-tidy/">clang-tidy</a> on it.</p>
+<p>For a full guide see
+<a class="reference external" href="https://qogecoin.github.io/rules_ll/guides/clang_tidy.html">Using <code class="docutils literal notranslate"><span class="pre">rules_ll</span></code> with <code class="docutils literal notranslate"><span class="pre">clang-tidy</span></code></a>.</p>
+<p>An example project using this rule is available at
+<a class="reference external" href="https://github.com/qogecoin/rules_ll/tree/main/examples">rules_ll/examples</a>.</p>
+<p><strong>ATTRIBUTES</strong></p>
+<table class="colwidths-auto table">
+<thead>
+<tr class="row-odd"><th class="text-left head"><p>Name</p></th>
+<th class="text-left head"><p>Description</p></th>
+<th class="text-left head"><p>Type</p></th>
+<th class="text-left head"><p>Mandatory</p></th>
+<th class="text-left head"><p>Default</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-left"><p><a id="ll_compilation_database-name"></a>name</p></td>
+<td class="text-left"><p>A unique name for this target.</p></td>
+<td class="text-left"><p><a href="https://bazel.build/docs/build-ref.html#name">Name</a></p></td>
+<td class="text-left"><p>required</p></td>
+<td class="text-left"><p></p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><a id="ll_compilation_database-target"></a>target</p></td>
+<td class="text-left"><p>The label for which the compilation database should be built.</p></td>
+<td class="text-left"><p><a href="https://bazel.build/docs/build-ref.html#labels">Label</a></p></td>
+<td class="text-left"><p>required</p></td>
+<td class="text-left"><p></p></td>
 </tr>
 </tbody>
 </table>
@@ -509,17 +666,17 @@ ll_library(<a href="#ll_library-name">name</a>, <a href="#ll_library-compile_fla
 
                 <!-- Previous / next buttons -->
 <div class='prev-next-area'>
-    <a class='left-prev' id="prev-link" href="deps.html" title="previous page">
+    <a class='left-prev' id="prev-link" href="guides/clang_tidy.html" title="previous page">
         <i class="fas fa-angle-left"></i>
         <div class="prev-next-info">
             <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title"><code class="docutils literal notranslate"><span class="pre">//ll:deps.bzl</span></code></p>
+            <p class="prev-next-title">Using <code class="docutils literal notranslate"><span class="pre">clang-tidy</span></code> with <code class="docutils literal notranslate"><span class="pre">rules_ll</span></code></p>
         </div>
     </a>
-    <a class='right-next' id="next-link" href="compilation_database.html" title="next page">
+    <a class='right-next' id="next-link" href="deps.html" title="next page">
     <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title"><code class="docutils literal notranslate"><span class="pre">//ll:compilation_database.bzl</span></code></p>
+        <p class="prev-next-title"><code class="docutils literal notranslate"><span class="pre">//ll:deps.bzl</span></code></p>
     </div>
     <i class="fas fa-angle-right"></i>
     </a>

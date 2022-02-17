@@ -1,3 +1,8 @@
+"""# `//ll:internal_functions.bzl`
+
+Internal functions used by `ll_binary` and `ll_library`.
+"""
+
 load("@bazel_skylib//lib:paths.bzl", "paths")
 load("//ll:args.bzl", "construct_default_args")
 load("//ll:providers.bzl", "LlInfo")

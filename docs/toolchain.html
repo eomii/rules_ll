@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ll_bootstrap_toolchain &#8212; rules_ll Documentation</title>
+    <title>//ll:toolchain.bzl &#8212; rules_ll Documentation</title>
 
   <link href="_static/css/theme.css" rel="stylesheet">
   <link href="_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
@@ -34,8 +34,8 @@
     <script src="_static/sphinx-book-theme.9d8b4a8b9bb19db25eeaddc40d639ba2.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="ll_bootstrap_library" href="bootstrap_library.html" />
-    <link rel="prev" title="LlInfo" href="providers.html" />
+    <link rel="next" title="//ll:bootstrap_library.bzl" href="bootstrap_library.html" />
+    <link rel="prev" title="//ll:providers.bzl" href="providers.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
 
@@ -72,42 +72,121 @@
   <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
 </form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item active">
-        <ul class="nav bd-sidenav">
+        <p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Guides
+ </span>
+</p>
+<ul class="nav bd-sidenav">
  <li class="toctree-l1">
-  <a class="reference internal" href="ll.html">
-   ll_binary
+  <a class="reference internal" href="guides/clang_tidy.html">
+   Using
+   <code class="docutils literal notranslate">
+    <span class="pre">
+     clang-tidy
+    </span>
+   </code>
+   with
+   <code class="docutils literal notranslate">
+    <span class="pre">
+     rules_ll
+    </span>
+   </code>
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Public API
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="defs.html">
+   <code class="docutils literal notranslate">
+    <span class="pre">
+     //ll:defs.bzl
+    </span>
+   </code>
   </a>
  </li>
  <li class="toctree-l1">
   <a class="reference internal" href="deps.html">
-   rules_ll_dependencies
+   <code class="docutils literal notranslate">
+    <span class="pre">
+     //ll:deps.bzl
+    </span>
+   </code>
   </a>
  </li>
 </ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Private API
+ </span>
+</p>
 <ul class="current nav bd-sidenav">
  <li class="toctree-l1">
+  <a class="reference internal" href="ll.html">
+   <code class="docutils literal notranslate">
+    <span class="pre">
+     //ll:ll.bzl
+    </span>
+   </code>
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="compilation_database.html">
+   <code class="docutils literal notranslate">
+    <span class="pre">
+     //ll:compilation_database.bzl
+    </span>
+   </code>
+  </a>
+ </li>
+ <li class="toctree-l1">
   <a class="reference internal" href="args.html">
-   construct_default_args
+   <code class="docutils literal notranslate">
+    <span class="pre">
+     //ll:args.bzl
+    </span>
+   </code>
   </a>
  </li>
  <li class="toctree-l1">
   <a class="reference internal" href="internal_functions.html">
-   archive_action
+   <code class="docutils literal notranslate">
+    <span class="pre">
+     //ll:internal_functions.bzl
+    </span>
+   </code>
   </a>
  </li>
  <li class="toctree-l1">
   <a class="reference internal" href="providers.html">
-   LlInfo
+   <code class="docutils literal notranslate">
+    <span class="pre">
+     //ll:providers.bzl
+    </span>
+   </code>
   </a>
  </li>
  <li class="toctree-l1 current active">
   <a class="current reference internal" href="#">
-   ll_bootstrap_toolchain
+   <code class="docutils literal notranslate">
+    <span class="pre">
+     //ll:toolchain.bzl
+    </span>
+   </code>
   </a>
  </li>
  <li class="toctree-l1">
   <a class="reference internal" href="bootstrap_library.html">
-   ll_bootstrap_library
+   <code class="docutils literal notranslate">
+    <span class="pre">
+     //ll:bootstrap_library.bzl
+    </span>
+   </code>
   </a>
  </li>
 </ul>
@@ -168,12 +247,12 @@
             </div>
             <nav id="bd-toc-nav" aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
- <li class="toc-h1 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#ll-bootstrap-toolchain">
    ll_bootstrap_toolchain
   </a>
  </li>
- <li class="toc-h1 nav-item toc-entry">
+ <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#ll-toolchain">
    ll_toolchain
   </a>
@@ -188,7 +267,7 @@
         <div class="col-12 col-md-9 pl-md-3 pr-md-0">
             <!-- Table of contents that is only displayed when printing the page -->
             <div id="jb-print-docs-body" class="onlyprint">
-                <h1>ll_bootstrap_toolchain</h1>
+                <h1>//ll:toolchain.bzl</h1>
                 <!-- Table of contents -->
                 <div id="print-main-content">
                     <div id="jb-print-toc">
@@ -198,12 +277,12 @@
                         </div>
                         <nav aria-label="Page">
                             <ul class="visible nav section-nav flex-column">
- <li class="toc-h1 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#ll-bootstrap-toolchain">
    ll_bootstrap_toolchain
   </a>
  </li>
- <li class="toc-h1 nav-item toc-entry">
+ <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#ll-toolchain">
    ll_toolchain
   </a>
@@ -218,9 +297,12 @@
               <div>
 
   <!-- Generated with Stardoc: http://skydoc.bazel.build -->
+<div class="tex2jax_ignore mathjax_ignore section" id="ll-toolchain-bzl">
+<h1><code class="docutils literal notranslate"><span class="pre">//ll:toolchain.bzl</span></code><a class="headerlink" href="#ll-toolchain-bzl" title="Permalink to this headline">¶</a></h1>
+<p>Implements <code class="docutils literal notranslate"><span class="pre">ll_toolchain</span></code> and the internally used <code class="docutils literal notranslate"><span class="pre">ll_bootstrap_toolchain</span></code>.</p>
 <p><a id="#ll_bootstrap_toolchain"></a></p>
 <div class="section" id="ll-bootstrap-toolchain">
-<h1>ll_bootstrap_toolchain<a class="headerlink" href="#ll-bootstrap-toolchain" title="Permalink to this headline">¶</a></h1>
+<h2>ll_bootstrap_toolchain<a class="headerlink" href="#ll-bootstrap-toolchain" title="Permalink to this headline">¶</a></h2>
 <pre>
 ll_bootstrap_toolchain(<a href="#ll_bootstrap_toolchain-name">name</a>, <a href="#ll_bootstrap_toolchain-archiver">archiver</a>, <a href="#ll_bootstrap_toolchain-builtin_includes">builtin_includes</a>, <a href="#ll_bootstrap_toolchain-c_driver">c_driver</a>, <a href="#ll_bootstrap_toolchain-cpp_driver">cpp_driver</a>, <a href="#ll_bootstrap_toolchain-linker">linker</a>)
 </pre>
@@ -276,10 +358,10 @@ ll_bootstrap_toolchain(<a href="#ll_bootstrap_toolchain-name">name</a>, <a href=
 <p><a id="#ll_toolchain"></a></p>
 </div>
 <div class="section" id="ll-toolchain">
-<h1>ll_toolchain<a class="headerlink" href="#ll-toolchain" title="Permalink to this headline">¶</a></h1>
+<h2>ll_toolchain<a class="headerlink" href="#ll-toolchain" title="Permalink to this headline">¶</a></h2>
 <pre>
-ll_toolchain(<a href="#ll_toolchain-name">name</a>, <a href="#ll_toolchain-archiver">archiver</a>, <a href="#ll_toolchain-builtin_includes">builtin_includes</a>, <a href="#ll_toolchain-c_driver">c_driver</a>, <a href="#ll_toolchain-compiler_runtime">compiler_runtime</a>, <a href="#ll_toolchain-cpp_driver">cpp_driver</a>, <a href="#ll_toolchain-cpp_stdlib">cpp_stdlib</a>,
-             <a href="#ll_toolchain-linker">linker</a>, <a href="#ll_toolchain-local_crt">local_crt</a>, <a href="#ll_toolchain-unwind_library">unwind_library</a>)
+ll_toolchain(<a href="#ll_toolchain-name">name</a>, <a href="#ll_toolchain-archiver">archiver</a>, <a href="#ll_toolchain-builtin_includes">builtin_includes</a>, <a href="#ll_toolchain-c_driver">c_driver</a>, <a href="#ll_toolchain-clang_tidy">clang_tidy</a>, <a href="#ll_toolchain-clang_tidy_runner">clang_tidy_runner</a>,
+             <a href="#ll_toolchain-compiler_runtime">compiler_runtime</a>, <a href="#ll_toolchain-cpp_driver">cpp_driver</a>, <a href="#ll_toolchain-cpp_stdlib">cpp_stdlib</a>, <a href="#ll_toolchain-linker">linker</a>, <a href="#ll_toolchain-local_crt">local_crt</a>, <a href="#ll_toolchain-symbolizer">symbolizer</a>, <a href="#ll_toolchain-unwind_library">unwind_library</a>)
 </pre>
 <p><strong>ATTRIBUTES</strong></p>
 <table class="colwidths-auto table">
@@ -305,16 +387,28 @@ ll_toolchain(<a href="#ll_toolchain-name">name</a>, <a href="#ll_toolchain-archi
 <td class="text-left"><p>&#64;llvm-project//llvm:llvm-ar</p></td>
 </tr>
 <tr class="row-even"><td class="text-left"><p><a id="ll_toolchain-builtin_includes"></a>builtin_includes</p></td>
-<td class="text-left"><p>Builtin header files for the compler.</p></td>
-<td class="text-left"><p><a href="https://bazel.build/docs/build-ref.html#labels">Label</a></p></td>
+<td class="text-left"><p>Builtin header files for the compiler.</p></td>
+<td class="text-left"><p><a href="https://bazel.build/docs/build-ref.html#labels">List of labels</a></p></td>
 <td class="text-left"><p>optional</p></td>
-<td class="text-left"><p>&#64;llvm-project//clang:builtin_headers_gen</p></td>
+<td class="text-left"><p>[“&#64;llvm-project//clang:builtin_headers_gen”]</p></td>
 </tr>
 <tr class="row-odd"><td class="text-left"><p><a id="ll_toolchain-c_driver"></a>c_driver</p></td>
 <td class="text-left"><p>The C compiler driver.</p></td>
 <td class="text-left"><p><a href="https://bazel.build/docs/build-ref.html#labels">Label</a></p></td>
 <td class="text-left"><p>optional</p></td>
 <td class="text-left"><p>&#64;llvm-project//clang:clang</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p><a id="ll_toolchain-clang_tidy"></a>clang_tidy</p></td>
+<td class="text-left"><p>The clang-tidy executable.</p></td>
+<td class="text-left"><p><a href="https://bazel.build/docs/build-ref.html#labels">Label</a></p></td>
+<td class="text-left"><p>optional</p></td>
+<td class="text-left"><p>&#64;llvm-project//clang-tools-extra/clang-tidy:clang-tidy</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><a id="ll_toolchain-clang_tidy_runner"></a>clang_tidy_runner</p></td>
+<td class="text-left"><p>The run-clang-tidy.py wrapper script for clang-tidy. Enables multithreading.</p></td>
+<td class="text-left"><p><a href="https://bazel.build/docs/build-ref.html#labels">Label</a></p></td>
+<td class="text-left"><p>optional</p></td>
+<td class="text-left"><p>&#64;llvm-project//clang-tools-extra/clang-tidy:run-clang-tidy</p></td>
 </tr>
 <tr class="row-even"><td class="text-left"><p><a id="ll_toolchain-compiler_runtime"></a>compiler_runtime</p></td>
 <td class="text-left"><p>The compiler runtime.</p></td>
@@ -346,7 +440,13 @@ ll_toolchain(<a href="#ll_toolchain-name">name</a>, <a href="#ll_toolchain-archi
 <td class="text-left"><p>optional</p></td>
 <td class="text-left"><p>&#64;local_crt//:crt</p></td>
 </tr>
-<tr class="row-odd"><td class="text-left"><p><a id="ll_toolchain-unwind_library"></a>unwind_library</p></td>
+<tr class="row-odd"><td class="text-left"><p><a id="ll_toolchain-symbolizer"></a>symbolizer</p></td>
+<td class="text-left"><p>The llvm-symbolizer.</p></td>
+<td class="text-left"><p><a href="https://bazel.build/docs/build-ref.html#labels">Label</a></p></td>
+<td class="text-left"><p>optional</p></td>
+<td class="text-left"><p>&#64;llvm-project//llvm:llvm-symbolizer</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p><a id="ll_toolchain-unwind_library"></a>unwind_library</p></td>
 <td class="text-left"><p>The unwinder library.</p></td>
 <td class="text-left"><p><a href="https://bazel.build/docs/build-ref.html#labels">Label</a></p></td>
 <td class="text-left"><p>optional</p></td>
@@ -354,6 +454,7 @@ ll_toolchain(<a href="#ll_toolchain-name">name</a>, <a href="#ll_toolchain-archi
 </tr>
 </tbody>
 </table>
+</div>
 </div>
 
 
@@ -366,13 +467,13 @@ ll_toolchain(<a href="#ll_toolchain-name">name</a>, <a href="#ll_toolchain-archi
         <i class="fas fa-angle-left"></i>
         <div class="prev-next-info">
             <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title">LlInfo</p>
+            <p class="prev-next-title"><code class="docutils literal notranslate"><span class="pre">//ll:providers.bzl</span></code></p>
         </div>
     </a>
     <a class='right-next' id="next-link" href="bootstrap_library.html" title="next page">
     <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">ll_bootstrap_library</p>
+        <p class="prev-next-title"><code class="docutils literal notranslate"><span class="pre">//ll:bootstrap_library.bzl</span></code></p>
     </div>
     <i class="fas fa-angle-right"></i>
     </a>

@@ -3,29 +3,38 @@
 
 This is the documentation for ``rules_ll``.
 
-Public API
-----------
-
-An example project can be found at `<https://github.com/qogecoin/rules_ll/tree/main/example>`_.
-
-Public API for ``rules_ll`` consists of the two rules ``ll_library`` and
-``ll_binary``:
+Guides
+======
 
 .. toctree::
    :maxdepth: 1
+   :caption: Guides
 
-   ll
+   guides/clang_tidy
+
+Public API
+==========
+
+Example projects can be found at `<https://github.com/qogecoin/rules_ll/tree/main/examples>`_.
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Public API
+
+   defs
    deps
 
 Private API
------------
+===========
 
-These are the internal functions. Only relevant for contributors to
-``rules_ll`` itself.
+These are the internal functions used in ``rules_ll``.
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 2
+   :caption: Private API
 
+   ll
+   compilation_database
    args
    internal_functions
    providers

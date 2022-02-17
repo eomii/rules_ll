@@ -34,7 +34,7 @@
     <script src="_static/sphinx-book-theme.9d8b4a8b9bb19db25eeaddc40d639ba2.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="ll_binary" href="ll.html" />
+    <link rel="next" title="Using clang-tidy with rules_ll" href="guides/clang_tidy.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
 
@@ -71,42 +71,121 @@
   <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
 </form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item active">
-        <ul class="nav bd-sidenav">
+        <p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Guides
+ </span>
+</p>
+<ul class="nav bd-sidenav">
  <li class="toctree-l1">
-  <a class="reference internal" href="ll.html">
-   ll_binary
+  <a class="reference internal" href="guides/clang_tidy.html">
+   Using
+   <code class="docutils literal notranslate">
+    <span class="pre">
+     clang-tidy
+    </span>
+   </code>
+   with
+   <code class="docutils literal notranslate">
+    <span class="pre">
+     rules_ll
+    </span>
+   </code>
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Public API
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="defs.html">
+   <code class="docutils literal notranslate">
+    <span class="pre">
+     //ll:defs.bzl
+    </span>
+   </code>
   </a>
  </li>
  <li class="toctree-l1">
   <a class="reference internal" href="deps.html">
-   rules_ll_dependencies
+   <code class="docutils literal notranslate">
+    <span class="pre">
+     //ll:deps.bzl
+    </span>
+   </code>
   </a>
  </li>
 </ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Private API
+ </span>
+</p>
 <ul class="nav bd-sidenav">
  <li class="toctree-l1">
+  <a class="reference internal" href="ll.html">
+   <code class="docutils literal notranslate">
+    <span class="pre">
+     //ll:ll.bzl
+    </span>
+   </code>
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="compilation_database.html">
+   <code class="docutils literal notranslate">
+    <span class="pre">
+     //ll:compilation_database.bzl
+    </span>
+   </code>
+  </a>
+ </li>
+ <li class="toctree-l1">
   <a class="reference internal" href="args.html">
-   construct_default_args
+   <code class="docutils literal notranslate">
+    <span class="pre">
+     //ll:args.bzl
+    </span>
+   </code>
   </a>
  </li>
  <li class="toctree-l1">
   <a class="reference internal" href="internal_functions.html">
-   archive_action
+   <code class="docutils literal notranslate">
+    <span class="pre">
+     //ll:internal_functions.bzl
+    </span>
+   </code>
   </a>
  </li>
  <li class="toctree-l1">
   <a class="reference internal" href="providers.html">
-   LlInfo
+   <code class="docutils literal notranslate">
+    <span class="pre">
+     //ll:providers.bzl
+    </span>
+   </code>
   </a>
  </li>
  <li class="toctree-l1">
   <a class="reference internal" href="toolchain.html">
-   ll_bootstrap_toolchain
+   <code class="docutils literal notranslate">
+    <span class="pre">
+     //ll:toolchain.bzl
+    </span>
+   </code>
   </a>
  </li>
  <li class="toctree-l1">
   <a class="reference internal" href="bootstrap_library.html">
-   ll_bootstrap_library
+   <code class="docutils literal notranslate">
+    <span class="pre">
+     //ll:bootstrap_library.bzl
+    </span>
+   </code>
   </a>
  </li>
 </ul>
@@ -167,22 +246,17 @@
             </div>
             <nav id="bd-toc-nav" aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
- <li class="toc-h1 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#">
-   <code class="docutils literal notranslate">
-    <span class="pre">
-     rules_ll
-    </span>
-   </code>
-   Documentation
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#guides">
+   Guides
   </a>
  </li>
- <li class="toc-h1 nav-item toc-entry">
+ <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#public-api">
    Public API
   </a>
  </li>
- <li class="toc-h1 nav-item toc-entry">
+ <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#private-api">
    Private API
   </a>
@@ -207,22 +281,17 @@
                         </div>
                         <nav aria-label="Page">
                             <ul class="visible nav section-nav flex-column">
- <li class="toc-h1 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#">
-   <code class="docutils literal notranslate">
-    <span class="pre">
-     rules_ll
-    </span>
-   </code>
-   Documentation
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#guides">
+   Guides
   </a>
  </li>
- <li class="toc-h1 nav-item toc-entry">
+ <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#public-api">
    Public API
   </a>
  </li>
- <li class="toc-h1 nav-item toc-entry">
+ <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#private-api">
    Private API
   </a>
@@ -239,39 +308,82 @@
   <div class="section" id="rules-ll-documentation">
 <h1><code class="docutils literal notranslate"><span class="pre">rules_ll</span></code> Documentation<a class="headerlink" href="#rules-ll-documentation" title="Permalink to this headline">¶</a></h1>
 <p>This is the documentation for <code class="docutils literal notranslate"><span class="pre">rules_ll</span></code>.</p>
+<div class="section" id="guides">
+<h2>Guides<a class="headerlink" href="#guides" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Guides</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="guides/clang_tidy.html">Using <code class="docutils literal notranslate"><span class="pre">clang-tidy</span></code> with <code class="docutils literal notranslate"><span class="pre">rules_ll</span></code></a></li>
+</ul>
+</div>
 </div>
 <div class="section" id="public-api">
-<h1>Public API<a class="headerlink" href="#public-api" title="Permalink to this headline">¶</a></h1>
-<p>First-time users should read the Getting started guide. (TODO).</p>
-<p>Public API for <code class="docutils literal notranslate"><span class="pre">rules_ll</span></code> consists of the two rules <code class="docutils literal notranslate"><span class="pre">ll_library</span></code> and
-<code class="docutils literal notranslate"><span class="pre">ll_binary</span></code>:</p>
+<h2>Public API<a class="headerlink" href="#public-api" title="Permalink to this headline">¶</a></h2>
+<p>Example projects can be found at <a class="reference external" href="https://github.com/qogecoin/rules_ll/tree/main/examples">https://github.com/qogecoin/rules_ll/tree/main/examples</a>.</p>
 <div class="toctree-wrapper compound">
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Public API</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="ll.html">ll_binary</a></li>
-<li class="toctree-l1"><a class="reference internal" href="ll.html#ll-library">ll_library</a></li>
-<li class="toctree-l1"><a class="reference internal" href="deps.html">rules_ll_dependencies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="defs.html"><code class="docutils literal notranslate"><span class="pre">//ll:defs.bzl</span></code></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="defs.html#ll-binary">ll_binary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="defs.html#ll-bootstrap-library">ll_bootstrap_library</a></li>
+<li class="toctree-l2"><a class="reference internal" href="defs.html#ll-compilation-database">ll_compilation_database</a></li>
+<li class="toctree-l2"><a class="reference internal" href="defs.html#ll-library">ll_library</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="deps.html"><code class="docutils literal notranslate"><span class="pre">//ll:deps.bzl</span></code></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="deps.html#rules-ll-dependencies">rules_ll_dependencies</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
 <div class="section" id="private-api">
-<h1>Private API<a class="headerlink" href="#private-api" title="Permalink to this headline">¶</a></h1>
-<p>These are the internal functions. Only relevant for contributors to
-<code class="docutils literal notranslate"><span class="pre">rules_ll</span></code> itself.</p>
+<h2>Private API<a class="headerlink" href="#private-api" title="Permalink to this headline">¶</a></h2>
+<p>These are the internal functions used in <code class="docutils literal notranslate"><span class="pre">rules_ll</span></code>.</p>
 <div class="toctree-wrapper compound">
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Private API</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="args.html">construct_default_args</a></li>
-<li class="toctree-l1"><a class="reference internal" href="internal_functions.html">archive_action</a></li>
-<li class="toctree-l1"><a class="reference internal" href="internal_functions.html#compile-objects">compile_objects</a></li>
-<li class="toctree-l1"><a class="reference internal" href="internal_functions.html#create-archive-library">create_archive_library</a></li>
-<li class="toctree-l1"><a class="reference internal" href="internal_functions.html#create-compile-inputs">create_compile_inputs</a></li>
-<li class="toctree-l1"><a class="reference internal" href="internal_functions.html#create-executable">create_executable</a></li>
-<li class="toctree-l1"><a class="reference internal" href="internal_functions.html#expose-headers">expose_headers</a></li>
-<li class="toctree-l1"><a class="reference internal" href="internal_functions.html#resolve-deps">resolve_deps</a></li>
-<li class="toctree-l1"><a class="reference internal" href="providers.html">LlInfo</a></li>
-<li class="toctree-l1"><a class="reference internal" href="toolchain.html">ll_bootstrap_toolchain</a></li>
-<li class="toctree-l1"><a class="reference internal" href="toolchain.html#ll-toolchain">ll_toolchain</a></li>
-<li class="toctree-l1"><a class="reference internal" href="bootstrap_library.html">ll_bootstrap_library</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ll.html"><code class="docutils literal notranslate"><span class="pre">//ll:ll.bzl</span></code></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ll.html#ll-binary">ll_binary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ll.html#ll-library">ll_library</a></li>
 </ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="compilation_database.html"><code class="docutils literal notranslate"><span class="pre">//ll:compilation_database.bzl</span></code></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="compilation_database.html#ll-compilation-database">ll_compilation_database</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="args.html"><code class="docutils literal notranslate"><span class="pre">//ll:args.bzl</span></code></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="args.html#construct-default-args">construct_default_args</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="internal_functions.html"><code class="docutils literal notranslate"><span class="pre">//ll:internal_functions.bzl</span></code></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="internal_functions.html#archive-action">archive_action</a></li>
+<li class="toctree-l2"><a class="reference internal" href="internal_functions.html#compile-objects">compile_objects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="internal_functions.html#create-archive-library">create_archive_library</a></li>
+<li class="toctree-l2"><a class="reference internal" href="internal_functions.html#create-compile-inputs">create_compile_inputs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="internal_functions.html#create-executable">create_executable</a></li>
+<li class="toctree-l2"><a class="reference internal" href="internal_functions.html#expose-headers">expose_headers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="internal_functions.html#llvm-target-directory-path">llvm_target_directory_path</a></li>
+<li class="toctree-l2"><a class="reference internal" href="internal_functions.html#resolve-deps">resolve_deps</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="providers.html"><code class="docutils literal notranslate"><span class="pre">//ll:providers.bzl</span></code></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="providers.html#llcompilationdatabasefragmentsinfo">LlCompilationDatabaseFragmentsInfo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="providers.html#llcompilationdatabaseinfo">LlCompilationDatabaseInfo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="providers.html#llinfo">LlInfo</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="toolchain.html"><code class="docutils literal notranslate"><span class="pre">//ll:toolchain.bzl</span></code></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="toolchain.html#ll-bootstrap-toolchain">ll_bootstrap_toolchain</a></li>
+<li class="toctree-l2"><a class="reference internal" href="toolchain.html#ll-toolchain">ll_toolchain</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="bootstrap_library.html"><code class="docutils literal notranslate"><span class="pre">//ll:bootstrap_library.bzl</span></code></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="bootstrap_library.html#ll-bootstrap-library">ll_bootstrap_library</a></li>
+</ul>
+</li>
+</ul>
+</div>
 </div>
 </div>
 
@@ -281,10 +393,10 @@
 
                 <!-- Previous / next buttons -->
 <div class='prev-next-area'>
-    <a class='right-next' id="next-link" href="ll.html" title="next page">
+    <a class='right-next' id="next-link" href="guides/clang_tidy.html" title="next page">
     <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">ll_binary</p>
+        <p class="prev-next-title">Using <code class="docutils literal notranslate"><span class="pre">clang-tidy</span></code> with <code class="docutils literal notranslate"><span class="pre">rules_ll</span></code></p>
     </div>
     <i class="fas fa-angle-right"></i>
     </a>
