@@ -86,13 +86,12 @@ stardoc(
     deps = [":ll_bzl"],
 )
 
-# stardoc(
-#     name = "init_docs",
-#     out = "init.md",
-#     input = "init.bzl",
-#     symbol_names = ["initialize_rules_ll"],
-#     deps = [":ll_bzl"],
-# )
+stardoc(
+    name = "init_docs",
+    out = "init.md",
+    input = "init.bzl",
+    deps = [":ll_bzl"],
+)
 
 filegroup(
     name = "docs",
@@ -102,6 +101,7 @@ filegroup(
         ":compilation_database_docs",
         ":defs_docs",
         ":deps_docs",
+        ":init_docs",
         ":internal_functions_docs",
         ":ll_docs",
         ":providers_docs",

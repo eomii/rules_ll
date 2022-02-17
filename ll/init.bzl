@@ -1,3 +1,8 @@
+"""# `//ll:init.bzl`
+
+Initializer function which should be called in the `WORKSPACE.bazel` file.
+"""
+
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 load("@bazel_tools//tools/build_defs/repo:utils.bzl", "maybe")
 
@@ -10,10 +15,38 @@ def initialize_rules_ll(
         local_crt_path,
         llvm_commit = LLVM_COMMIT,
         llvm_sha256 = LLVM_SHA256):
+    """Initializes the LLVM repository.
+
+    The correct `local_crt_path` is likely something like `/usr/lib64` or
+    `/usr/x86_64-unknown-linux-gnu`.
+
+    `rules_ll` modifies the existing bazel overlay in the LLVM repository. If
+    the overlay in `rules_ll` breaks because you specified a custom commit, you
+    can patch `rules_ll` during import e.g. via
+
+    ```python
+    http_archive(
+        name = "rules_ll",
+        sha256 = "<Correct SHA256>",
+        urls = [
+            "https://github.com/neqochan/rules_ll/archive/<COMMIT_HASH>.zip"
+        ],
+        patches = [":my_patch.diff"],
+        patch_args = ["-p1"],
+    )
+    ```
+
+    Args:
+        local_crt_path: The path to the directory containing `crt1.o`, `crti.o`
+            and `crtn.o`.
+        llvm_commit: The llvm-commit to use for the `llvm-project` repository.
+        llvm_sha256: The SHA256 for corresponding to `llvm_commit`. Bazel will
+            print the correct value if this is set to `None`.
+    """
     maybe(
         http_archive,
         name = "llvm-raw",
-        build_file_content = "# empty",
+        build_file_content = "",
         sha256 = llvm_sha256,
         strip_prefix = "llvm-project-" + llvm_commit,
         urls = ["https://github.com/llvm/llvm-project/archive/{}.tar.gz".format(llvm_commit)],

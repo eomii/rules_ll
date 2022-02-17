@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>rules_ll Documentation &#8212; rules_ll Documentation</title>
+    <title>//ll:init.bzl &#8212; rules_ll Documentation</title>
 
   <link href="_static/css/theme.css" rel="stylesheet">
   <link href="_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
@@ -34,7 +34,8 @@
     <script src="_static/sphinx-book-theme.9d8b4a8b9bb19db25eeaddc40d639ba2.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Using clang-tidy with rules_ll" href="guides/clang_tidy.html" />
+    <link rel="next" title="//ll:ll.bzl" href="ll.html" />
+    <link rel="prev" title="//ll:deps.bzl" href="deps.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
 
@@ -59,7 +60,7 @@
 <div class="col-12 col-md-3 bd-sidebar site-navigation " id="site-navigation">
 
         <div class="navbar-brand-box">
-    <a class="navbar-brand text-wrap" href="#">
+    <a class="navbar-brand text-wrap" href="index.html">
 
 
 
@@ -99,7 +100,7 @@
   Public API
  </span>
 </p>
-<ul class="nav bd-sidenav">
+<ul class="current nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="defs.html">
    <code class="docutils literal notranslate">
@@ -118,8 +119,8 @@
    </code>
   </a>
  </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="init.html">
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
    <code class="docutils literal notranslate">
     <span class="pre">
      //ll:init.bzl
@@ -256,18 +257,8 @@
             <nav id="bd-toc-nav" aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#guides">
-   Guides
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#public-api">
-   Public API
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#private-api">
-   Private API
+  <a class="reference internal nav-link" href="#initialize-rules-ll">
+   initialize_rules_ll
   </a>
  </li>
 </ul>
@@ -280,7 +271,7 @@
         <div class="col-12 col-md-9 pl-md-3 pr-md-0">
             <!-- Table of contents that is only displayed when printing the page -->
             <div id="jb-print-docs-body" class="onlyprint">
-                <h1>rules_ll Documentation</h1>
+                <h1>//ll:init.bzl</h1>
                 <!-- Table of contents -->
                 <div id="print-main-content">
                     <div id="jb-print-toc">
@@ -291,18 +282,8 @@
                         <nav aria-label="Page">
                             <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#guides">
-   Guides
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#public-api">
-   Public API
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#private-api">
-   Private API
+  <a class="reference internal nav-link" href="#initialize-rules-ll">
+   initialize_rules_ll
   </a>
  </li>
 </ul>
@@ -314,89 +295,56 @@
 
               <div>
 
-  <div class="section" id="rules-ll-documentation">
-<h1><code class="docutils literal notranslate"><span class="pre">rules_ll</span></code> Documentation<a class="headerlink" href="#rules-ll-documentation" title="Permalink to this headline">¶</a></h1>
-<p>This is the documentation for <code class="docutils literal notranslate"><span class="pre">rules_ll</span></code>.</p>
-<div class="section" id="guides">
-<h2>Guides<a class="headerlink" href="#guides" title="Permalink to this headline">¶</a></h2>
-<div class="toctree-wrapper compound">
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Guides</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="guides/clang_tidy.html">Using <code class="docutils literal notranslate"><span class="pre">clang-tidy</span></code> with <code class="docutils literal notranslate"><span class="pre">rules_ll</span></code></a></li>
-</ul>
+  <!-- Generated with Stardoc: http://skydoc.bazel.build -->
+<div class="tex2jax_ignore mathjax_ignore section" id="ll-init-bzl">
+<h1><code class="docutils literal notranslate"><span class="pre">//ll:init.bzl</span></code><a class="headerlink" href="#ll-init-bzl" title="Permalink to this headline">¶</a></h1>
+<p>Initializer function which should be called in the <code class="docutils literal notranslate"><span class="pre">WORKSPACE.bazel</span></code> file.</p>
+<p><a id="#initialize_rules_ll"></a></p>
+<div class="section" id="initialize-rules-ll">
+<h2>initialize_rules_ll<a class="headerlink" href="#initialize-rules-ll" title="Permalink to this headline">¶</a></h2>
+<pre>
+initialize_rules_ll(<a href="#initialize_rules_ll-local_crt_path">local_crt_path</a>, <a href="#initialize_rules_ll-llvm_commit">llvm_commit</a>, <a href="#initialize_rules_ll-llvm_sha256">llvm_sha256</a>)
+</pre>
+<p>Initializes the LLVM repository.</p>
+<p>The correct <code class="docutils literal notranslate"><span class="pre">local_crt_path</span></code> is likely something like <code class="docutils literal notranslate"><span class="pre">/usr/lib64</span></code> or
+<code class="docutils literal notranslate"><span class="pre">/usr/x86_64-unknown-linux-gnu</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">rules_ll</span></code> modifies the existing bazel overlay in the LLVM repository. If
+the overlay in <code class="docutils literal notranslate"><span class="pre">rules_ll</span></code> breaks because you specified a custom commit, you
+can patch <code class="docutils literal notranslate"><span class="pre">rules_ll</span></code> during import e.g. via</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">http_archive</span><span class="p">(</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;rules_ll&quot;</span><span class="p">,</span>
+    <span class="n">sha256</span> <span class="o">=</span> <span class="s2">&quot;&lt;Correct SHA256&gt;&quot;</span><span class="p">,</span>
+    <span class="n">urls</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="s2">&quot;https://github.com/neqochan/rules_ll/archive/&lt;COMMIT_HASH&gt;.zip&quot;</span>
+    <span class="p">],</span>
+    <span class="n">patches</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;:my_patch.diff&quot;</span><span class="p">],</span>
+    <span class="n">patch_args</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;-p1&quot;</span><span class="p">],</span>
+<span class="p">)</span>
+</pre></div>
 </div>
-</div>
-<div class="section" id="public-api">
-<h2>Public API<a class="headerlink" href="#public-api" title="Permalink to this headline">¶</a></h2>
-<p>Example projects can be found at <a class="reference external" href="https://github.com/qogecoin/rules_ll/tree/main/examples">https://github.com/qogecoin/rules_ll/tree/main/examples</a>.</p>
-<div class="toctree-wrapper compound">
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Public API</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="defs.html"><code class="docutils literal notranslate"><span class="pre">//ll:defs.bzl</span></code></a><ul>
-<li class="toctree-l2"><a class="reference internal" href="defs.html#ll-binary">ll_binary</a></li>
-<li class="toctree-l2"><a class="reference internal" href="defs.html#ll-bootstrap-library">ll_bootstrap_library</a></li>
-<li class="toctree-l2"><a class="reference internal" href="defs.html#ll-compilation-database">ll_compilation_database</a></li>
-<li class="toctree-l2"><a class="reference internal" href="defs.html#ll-library">ll_library</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="deps.html"><code class="docutils literal notranslate"><span class="pre">//ll:deps.bzl</span></code></a><ul>
-<li class="toctree-l2"><a class="reference internal" href="deps.html#rules-ll-dependencies">rules_ll_dependencies</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="init.html"><code class="docutils literal notranslate"><span class="pre">//ll:init.bzl</span></code></a><ul>
-<li class="toctree-l2"><a class="reference internal" href="init.html#initialize-rules-ll">initialize_rules_ll</a></li>
-</ul>
-</li>
-</ul>
-</div>
-</div>
-<div class="section" id="private-api">
-<h2>Private API<a class="headerlink" href="#private-api" title="Permalink to this headline">¶</a></h2>
-<p>These are the internal functions used in <code class="docutils literal notranslate"><span class="pre">rules_ll</span></code>.</p>
-<div class="toctree-wrapper compound">
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Private API</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="ll.html"><code class="docutils literal notranslate"><span class="pre">//ll:ll.bzl</span></code></a><ul>
-<li class="toctree-l2"><a class="reference internal" href="ll.html#ll-binary">ll_binary</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ll.html#ll-library">ll_library</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="compilation_database.html"><code class="docutils literal notranslate"><span class="pre">//ll:compilation_database.bzl</span></code></a><ul>
-<li class="toctree-l2"><a class="reference internal" href="compilation_database.html#ll-compilation-database">ll_compilation_database</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="args.html"><code class="docutils literal notranslate"><span class="pre">//ll:args.bzl</span></code></a><ul>
-<li class="toctree-l2"><a class="reference internal" href="args.html#construct-default-args">construct_default_args</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="internal_functions.html"><code class="docutils literal notranslate"><span class="pre">//ll:internal_functions.bzl</span></code></a><ul>
-<li class="toctree-l2"><a class="reference internal" href="internal_functions.html#archive-action">archive_action</a></li>
-<li class="toctree-l2"><a class="reference internal" href="internal_functions.html#compile-objects">compile_objects</a></li>
-<li class="toctree-l2"><a class="reference internal" href="internal_functions.html#create-archive-library">create_archive_library</a></li>
-<li class="toctree-l2"><a class="reference internal" href="internal_functions.html#create-compile-inputs">create_compile_inputs</a></li>
-<li class="toctree-l2"><a class="reference internal" href="internal_functions.html#create-executable">create_executable</a></li>
-<li class="toctree-l2"><a class="reference internal" href="internal_functions.html#expose-headers">expose_headers</a></li>
-<li class="toctree-l2"><a class="reference internal" href="internal_functions.html#llvm-target-directory-path">llvm_target_directory_path</a></li>
-<li class="toctree-l2"><a class="reference internal" href="internal_functions.html#resolve-deps">resolve_deps</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="providers.html"><code class="docutils literal notranslate"><span class="pre">//ll:providers.bzl</span></code></a><ul>
-<li class="toctree-l2"><a class="reference internal" href="providers.html#llcompilationdatabasefragmentsinfo">LlCompilationDatabaseFragmentsInfo</a></li>
-<li class="toctree-l2"><a class="reference internal" href="providers.html#llcompilationdatabaseinfo">LlCompilationDatabaseInfo</a></li>
-<li class="toctree-l2"><a class="reference internal" href="providers.html#llinfo">LlInfo</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="toolchain.html"><code class="docutils literal notranslate"><span class="pre">//ll:toolchain.bzl</span></code></a><ul>
-<li class="toctree-l2"><a class="reference internal" href="toolchain.html#ll-bootstrap-toolchain">ll_bootstrap_toolchain</a></li>
-<li class="toctree-l2"><a class="reference internal" href="toolchain.html#ll-toolchain">ll_toolchain</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="bootstrap_library.html"><code class="docutils literal notranslate"><span class="pre">//ll:bootstrap_library.bzl</span></code></a><ul>
-<li class="toctree-l2"><a class="reference internal" href="bootstrap_library.html#ll-bootstrap-library">ll_bootstrap_library</a></li>
-</ul>
-</li>
-</ul>
-</div>
+<p><strong>PARAMETERS</strong></p>
+<table class="colwidths-auto table">
+<thead>
+<tr class="row-odd"><th class="text-left head"><p>Name</p></th>
+<th class="text-left head"><p>Description</p></th>
+<th class="text-left head"><p>Default Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-left"><p><a id="initialize_rules_ll-local_crt_path"></a>local_crt_path</p></td>
+<td class="text-left"><p>The path to the directory containing <code>crt1.o</code>, <code>crti.o</code> and <code>crtn.o</code>.</p></td>
+<td class="text-left"><p>none</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><a id="initialize_rules_ll-llvm_commit"></a>llvm_commit</p></td>
+<td class="text-left"><p>The llvm-commit to use for the <code>llvm-project</code> repository.</p></td>
+<td class="text-left"><p><code>”e7d65fca7ec470469ad3f8e7689b5e563346e4d7”</code></p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p><a id="initialize_rules_ll-llvm_sha256"></a>llvm_sha256</p></td>
+<td class="text-left"><p>The SHA256 for corresponding to <code>llvm_commit</code>. Bazel will print the correct value if this is set to <code>None</code>.</p></td>
+<td class="text-left"><p><code>”6a7bd0862b27d0d9b5b1c77b1c765dea32a5d9be9f01a8cc53a909e50555ff27”</code></p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 
@@ -406,10 +354,17 @@
 
                 <!-- Previous / next buttons -->
 <div class='prev-next-area'>
-    <a class='right-next' id="next-link" href="guides/clang_tidy.html" title="next page">
+    <a class='left-prev' id="prev-link" href="deps.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title"><code class="docutils literal notranslate"><span class="pre">//ll:deps.bzl</span></code></p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="ll.html" title="next page">
     <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Using <code class="docutils literal notranslate"><span class="pre">clang-tidy</span></code> with <code class="docutils literal notranslate"><span class="pre">rules_ll</span></code></p>
+        <p class="prev-next-title"><code class="docutils literal notranslate"><span class="pre">//ll:ll.bzl</span></code></p>
     </div>
     <i class="fas fa-angle-right"></i>
     </a>

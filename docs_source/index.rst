@@ -23,6 +23,7 @@ Example projects can be found at `<https://github.com/qogecoin/rules_ll/tree/mai
 
    defs
    deps
+   init
 
 Private API
 ===========

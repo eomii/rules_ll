@@ -12,3 +12,5 @@ Loads dependencies used by `rules_ll`.
 <pre>
 rules_ll_dependencies()
 </pre>
+
+Currently imports `rules_python`, `bazel_skylib` and `io_bazel_stardoc`.
