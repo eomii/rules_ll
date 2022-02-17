@@ -126,6 +126,11 @@ def _ll_library_impl(ctx):
         toolchain_type = "//ll:toolchain_type",
     )
 
+    transitive_cdfs = [
+        dep[LlCompilationDatabaseFragmentsInfo].cdfs
+        for dep in ctx.attr.deps
+    ]
+
     exposed_headers = expose_headers(ctx)
 
     return [
@@ -139,7 +144,7 @@ def _ll_library_impl(ctx):
             transitive_includes = transitive_includes,
         ),
         LlCompilationDatabaseFragmentsInfo(
-            cdfs = depset(cdfs),
+            cdfs = depset(cdfs, transitive = transitive_cdfs),
         ),
     ]
 
@@ -173,13 +178,18 @@ def _ll_binary_impl(ctx):
         includes = includes,
     )
 
+    transitive_cdfs = [
+        dep[LlCompilationDatabaseFragmentsInfo].cdfs
+        for dep in ctx.attr.deps
+    ]
+
     return [
         DefaultInfo(
             files = depset([out_file]),
             executable = out_file,
         ),
         LlCompilationDatabaseFragmentsInfo(
-            cdfs = depset(cdfs),
+            cdfs = depset(cdfs, transitive = transitive_cdfs),
         ),
     ]
 

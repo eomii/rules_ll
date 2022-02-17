@@ -13,6 +13,7 @@ ll_library(
         "lib_1/lib_1_public.h",
         "lib_1/public_include/included_header.h",
     ],
+    visibility = ["@rules_ll_examples//:__pkg__"],
 )
 
 ll_library(

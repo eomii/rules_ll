@@ -33,7 +33,9 @@ def initialize_rules_ll(
             cat $file >> utils/bazel/${file:12};
         done"""],
         # cp -r ../rules_ll/llvm-project-overlay/* utils/bazel/llvm-project-overlay
-        patches = ["@rules_ll//patches:compiler-rt_float128_patch.diff"],
+        patches = [
+            "@rules_ll//patches:compiler-rt_float128_patch.diff",
+        ],
         patch_args = ["-p1"],
     )
 

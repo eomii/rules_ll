@@ -1,89 +1,11 @@
 load(
-    "@rules_ll//ll:defs.bzl",
-    "ll_binary",
-    "ll_library",
+    "@llvm-project//clang-tools-extra/clang-tidy:clang_tidy_module.bzl",
+    "clang_tidy_module",
 )
+load("@rules_python//python:defs.bzl", "py_binary")
 
-ll_library(
-    name = "bugprone",
-    srcs = glob(["bugprone/*.cpp"]),
-    hdrs = glob([
-        "bugprone/*.h",
-        "*.h",
-    ]),
-)
-
-ll_library(
-    name = "cppcoreguidelines",
-    srcs = glob(["cppcoreguidelines/*.cpp"]),
-    hdrs = glob([
-        "cppcoreguidelines/*.h",
-        "*.h",
-    ]),
-)
-
-ll_library(
-    name = "google",
-    srcs = glob(["google/*.cpp"]),
-    hdrs = glob([
-        "google/*.h",
-        "*.h",
-    ]),
-)
-
-ll_library(
-    name = "misc",
-    srcs = glob(["misc/*.cpp"]),
-    hdrs = glob([
-        "misc/*.h",
-        "*.h",
-    ]),
-)
-
-ll_library(
-    name = "modernize",
-    srcs = glob(["modernize/*.cpp"]),
-    hdrs = glob([
-        "modernize/*.h",
-        "*.h",
-    ]),
-)
-
-ll_library(
-    name = "performance",
-    srcs = glob(["performance/*.cpp"]),
-    hdrs = glob([
-        "performance/*.h",
-        "*.h",
-    ]),
-)
-
-ll_library(
-    name = "portability",
-    srcs = glob(["portability/*.cpp"]),
-    hdrs = glob([
-        "portability/*.h",
-        "*.h",
-    ]),
-)
-
-ll_library(
-    name = "readability",
-    srcs = glob(["readability/*.cpp"]),
-    hdrs = glob([
-        "readability/*.h",
-        "*.h",
-    ]),
-)
-
-ll_library(
-    name = "lex",
-    srcs = ["@llvm-project//clang:lib/Lex/HeaderMap.cpp"],
-    # hdrs = ["@llvm-project//clang:lib/Lex/HeaderMap.h"])
-)
-
-ll_binary(
-    name = "clang-tidy",
+cc_library(
+    name = "clang_tidy",
     srcs = [
         "ClangTidy.cpp",
         "ClangTidyCheck.cpp",
@@ -95,7 +17,194 @@ ll_binary(
         "GlobList.cpp",
         "NoLintDirectiveHandler.cpp",
     ],
-    hdrs = glob(["*.h"]) + ["@llvm-project//llvm/include:llvm_headers"],
+    hdrs = [
+        "ClangTidy.h",
+        "ClangTidyCheck.h",
+        "ClangTidyDiagnosticConsumer.h",
+        "ClangTidyForceLinker.h",
+        "ClangTidyModule.h",
+        "ClangTidyModuleRegistry.h",
+        "ClangTidyOptions.h",
+        "ClangTidyProfiling.h",
+        "ExpandModularHeadersPPCallbacks.h",
+        "GlobList.h",
+        "NoLintDirectiveHandler.h",
+
+        # Added manually to the overlay.
+        "clang-tidy-config.h",
+    ],
+    deps = [
+        "@llvm-project//clang:analysis",
+        "@llvm-project//clang:ast",
+        "@llvm-project//clang:ast_matchers",
+        "@llvm-project//clang:basic",
+        "@llvm-project//clang:format",
+        "@llvm-project//clang:frontend",
+        "@llvm-project//clang:frontend_rewrite",
+        "@llvm-project//clang:lex",
+        "@llvm-project//clang:rewrite",
+        "@llvm-project//clang:sema",
+        "@llvm-project//clang:serialization",
+        "@llvm-project//clang:static_analyzer_core",
+        "@llvm-project//clang:static_analyzer_frontend",
+        "@llvm-project//clang:tooling",
+        "@llvm-project//clang:tooling_core",
+        "@llvm-project//llvm:FrontendOpenMP",
+        "@llvm-project//llvm:Support",
+    ],
+)
+
+cc_library(
+    name = "clang_tidy_utils",
+    srcs = glob(["utils/*.cpp"]),
+    hdrs = glob(["utils/*.h"]),
+    deps = [
+        ":clang_tidy",
+        "@llvm-project//clang:ast",
+        "@llvm-project//clang:ast_matchers",
+        "@llvm-project//clang:basic",
+        "@llvm-project//clang:lex",
+        "@llvm-project//clang:sema",
+        "@llvm-project//clang:transformer",
+    ],
+)
+
+clang_tidy_module(
+    name = "abseil",
+    deps = [
+        "@llvm-project//clang:tooling",
+        "@llvm-project//clang:transformer",
+    ],
+)
+
+clang_tidy_module(
+    name = "altera",
+    deps = [
+        "@llvm-project//clang:analysis",
+    ],
+)
+
+clang_tidy_module(name = "android")
+
+clang_tidy_module(name = "boost")
+
+clang_tidy_module(
+    name = "concurrency",
+    deps = [
+        "@llvm-project//clang:analysis",
+        "@llvm-project//clang:serialization",
+        "@llvm-project//clang:tooling",
+    ],
+)
+
+clang_tidy_module(name = "darwin")
+
+clang_tidy_module(
+    name = "readability",
+    deps = [
+        "@llvm-project//clang:analysis",
+        "@llvm-project//clang:tooling",
+    ],
+)
+
+clang_tidy_module(
+    name = "google",
+    deps = [":readability"],
+)
+
+clang_tidy_module(
+    name = "fuchsia",
+    deps = [":google"],
+)
+
+clang_tidy_module(name = "linuxkernel")
+
+clang_tidy_module(
+    name = "llvm",
+    deps = [":readability"],
+)
+
+clang_tidy_module(
+    name = "portability",
+    deps = ["@llvm-project//clang:tooling"],
+)
+
+clang_tidy_module(
+    name = "llvmlibc",
+    deps = [":portability"],
+)
+
+clang_tidy_module(
+    name = "misc",
+    deps = [
+        "@llvm-project//clang:serialization",
+        "@llvm-project//clang:tooling",
+    ],
+)
+
+clang_tidy_module(
+    name = "modernize",
+    deps = [
+        ":readability",
+        "@llvm-project//clang:tooling",
+    ],
+)
+
+clang_tidy_module(
+    name = "mpi",
+    deps = [
+        "@llvm-project//clang:analysis",
+        "@llvm-project//clang:static_analyzer_checkers",
+        "@llvm-project//clang:tooling",
+    ],
+)
+
+clang_tidy_module(name = "objc")
+
+clang_tidy_module(name = "openmp")
+
+clang_tidy_module(
+    name = "performance",
+    deps = ["@llvm-project//clang:analysis"],
+)
+
+clang_tidy_module(name = "zircon")
+
+clang_tidy_module(
+    name = "cppcoreguidelines",
+    deps = [
+        ":misc",
+        ":modernize",
+        ":readability",
+        "@llvm-project//clang:serialization",
+        "@llvm-project//clang:tooling",
+    ],
+)
+
+clang_tidy_module(
+    name = "bugprone",
+    deps = [
+        ":cppcoreguidelines",
+        "@llvm-project//clang:analysis",
+        "@llvm-project//clang:tooling",
+        "@llvm-project//clang:transformer",
+    ],
+)
+
+clang_tidy_module(
+    name = "cert",
+    deps = [
+        ":bugprone",
+        ":concurrency",
+        ":google",
+        ":misc",
+        ":performance",
+        ":readability",
+    ],
+)
+
+clang_tidy_module(
+    name = "hicpp",
     deps = [
         ":bugprone",
         ":cppcoreguidelines",
@@ -103,7 +212,95 @@ ll_binary(
         ":misc",
         ":modernize",
         ":performance",
-        ":portability",
         ":readability",
+        "@llvm-project//clang:serialization",
     ],
+)
+
+ALL_CLANG_TIDY_CHECKS = [
+    ":android",
+    ":abseil",
+    ":altera",
+    ":boost",
+    ":bugprone",
+    ":cert",
+    ":concurrency",
+    ":cppcoreguidelines",
+    ":darwin",
+    ":fuchsia",
+    ":google",
+    ":hicpp",
+    ":linuxkernel",
+    ":llvm",
+    ":llvmlibc",
+    ":misc",
+    ":modernize",
+    ":mpi",
+    ":objc",
+    ":openmp",
+    ":performance",
+    ":portability",
+    ":readability",
+    ":zircon",
+]
+
+cc_binary(
+    name = "clang_tidy_plugin",
+    srcs = ["plugin/ClangTidyPlugin.cpp"],
+    linkshared = True,
+    visibility = ["//visibility:public"],
+    deps = ALL_CLANG_TIDY_CHECKS + [
+        ":clang_tidy",
+        "@llvm-project//clang:ast",
+        "@llvm-project//clang:ast_matchers",
+        "@llvm-project//clang:basic",
+        "@llvm-project//clang:frontend",
+        "@llvm-project//clang:sema",
+        "@llvm-project//clang:tooling",
+    ],
+)
+
+cc_library(
+    name = "clang_tidy_main",
+    srcs = [
+        "tool/ClangTidyMain.cpp",
+    ],
+    hdrs = [
+        "tool/ClangTidyMain.h",
+    ],
+    deps = [
+        ":clang_tidy",
+        "@llvm-project//clang:ast",
+        "@llvm-project//clang:ast_matchers",
+        "@llvm-project//clang:basic",
+        "@llvm-project//clang:tooling",
+        "@llvm-project//clang:tooling_core",
+    ],
+)
+
+cc_binary(
+    name = "clang-tidy",
+    srcs = [
+        "tool/ClangTidyToolMain.cpp",
+    ],
+    visibility = ["//visibility:public"],
+    deps = ALL_CLANG_TIDY_CHECKS + [
+        ":clang_tidy",
+        ":clang_tidy_main",
+        "@llvm-project//clang:ast",
+        "@llvm-project//clang:ast_matchers",
+        "@llvm-project//clang:basic",
+        "@llvm-project//clang:tooling",
+        "@llvm-project//clang:tooling_core",
+    ],
+)
+
+filegroup(
+    name = "run-clang-tidy",
+    srcs = ["tool/run-clang-tidy.py"],
+    visibility = ["//visibility:public"],
+)
+
+exports_files(
+    ["tool/run-clang-tidy.py"],
 )

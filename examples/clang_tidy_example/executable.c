@@ -1,8 +1,9 @@
-#include <stdio.h>
+#include <stdio.h>  // This will tigger clang-tidy [llvm-include-order].
 #include "lib_1_public.h"
 #include "lib_2_public.h"
 
 int main() {
+  int a;  // This will trigger clang-tidy [cppcoreguidelines-init-variables].
 
 #ifndef A_LOCAL_DEFINE
   printf("PASS: A_LOCAL_DEFINE was not defined in executable.\n");

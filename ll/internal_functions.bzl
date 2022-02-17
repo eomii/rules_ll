@@ -111,6 +111,16 @@ def compile_objects(
 
         args.add_all(ctx.attr.compile_flags)
 
+        # Using llvm-symbolizer will produce readable stacktraces if clang
+        # crashes.
+        tools = depset([])
+        env = {}
+        if toolchain_type == "//ll:toolchain_type":
+            env = {
+                "LLVM_SYMBOLIZER_PATH": ctx.toolchains[toolchain_type].symbolizer.path,
+            }
+            tools = [ctx.toolchains[toolchain_type].symbolizer]
+
         # Single input.
         args.add(src)
 
@@ -134,6 +144,12 @@ def compile_objects(
             "clang/staging/include",
         )
         args.add(clang_builtin_include_path, format = "-isystem%s")
+
+        clang_include_path = paths.join(
+            llvm_target_directory_path(ctx),
+            "clang/include",
+        )
+        args.add(clang_include_path, format = "-I%s")
 
         if ctx.var["COMPILATION_MODE"] == "opt":
             args.add("-O3")
@@ -178,9 +194,11 @@ def compile_objects(
             outputs = [intermediary_object, cdf],
             inputs = inputs,
             executable = ctx.toolchains[toolchain_type].c_driver,
+            tools = tools,
             arguments = [args],
             mnemonic = "LlCompileIntermediaryObject",
             use_default_shell_env = False,
+            env = env,
         )
         intermediary_objects += [intermediary_object]
         cdfs += [cdf]

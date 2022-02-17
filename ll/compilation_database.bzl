@@ -33,7 +33,7 @@ def _ll_compilation_database(ctx):
         # ${@:$#} is the last input argument.
         # ${@:1:$#-1} are the input arguments except for the last one.
         #
-        # The sed command removes the trailing comma in the second-to-last line,
+        # The sed command removes the trailing comma in the second-to-last line
         # so that we get a valid json as output.
         command = """(
          echo [;
@@ -70,7 +70,7 @@ with open(sys.argv[1], 'r') as in_file, open(sys.argv[2], 'w') as out_file:
 """ $1 $2
 ''',
         execution_requirements = {
-            "no-sanbox": "1",
+            "no-sandbox": "1",
             "no-cache": "1",
             "no-remote": "1",
             "local": "1",
@@ -78,13 +78,35 @@ with open(sys.argv[1], 'r') as in_file, open(sys.argv[2], 'w') as out_file:
         arguments = [args],
     )
 
+    clang_tidy_runner = ctx.actions.declare_file("hello.sh")
+    runfile_content = """#!/bin/bash
+    ls external/llvm-project/clang-tools-extra/clang-tidy/clang-tidy;
+{} -j $(nproc) -clang-tidy-binary={} -checks=* -quiet""".format(
+        ctx.toolchains["//ll:toolchain_type"].clang_tidy_runner.path,
+        ctx.toolchains["//ll:toolchain_type"].clang_tidy.short_path,
+    )
+    ctx.actions.write(clang_tidy_runner, runfile_content, is_executable = True)
+
+    runfiles = ctx.runfiles(
+        files = [
+            cdb,
+            ctx.toolchains["//ll:toolchain_type"].clang_tidy_runner,
+            ctx.toolchains["//ll:toolchain_type"].clang_tidy,
+        ],
+    )
     return [
-        DefaultInfo(files = depset([cdb])),
+        DefaultInfo(
+            files = depset([cdb]),
+            executable = clang_tidy_runner,
+            runfiles = runfiles,
+        ),
     ]
 
 ll_compilation_database = rule(
     implementation = _ll_compilation_database,
+    executable = True,
     attrs = {
         "target": attr.label(mandatory = True),
     },
+    toolchains = ["//ll:toolchain_type"],
 )

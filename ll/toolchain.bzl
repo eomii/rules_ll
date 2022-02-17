@@ -79,6 +79,9 @@ def _ll_toolchain_impl(ctx):
             compiler_runtime = ctx.files.compiler_runtime,
             unwind_library = ctx.files.unwind_library,
             local_crt = ctx.files.local_crt,
+            clang_tidy = ctx.executable.clang_tidy,
+            clang_tidy_runner = ctx.executable.clang_tidy_runner,
+            symbolizer = ctx.executable.symbolizer,
         ),
     ]
 
@@ -114,10 +117,12 @@ ll_toolchain = rule(
             cfg = "exec",
             default = "@llvm-project//lld:lld",
         ),
-        "builtin_includes": attr.label(
-            doc = "Builtin header files for the compler.",
+        "builtin_includes": attr.label_list(
+            doc = "Builtin header files for the compiler.",
             cfg = "target",
-            default = "@llvm-project//clang:builtin_headers_gen",
+            default = [
+                "@llvm-project//clang:builtin_headers_gen",
+            ],
         ),
         "cpp_stdlib": attr.label(
             doc = "The C++ standard library.",
@@ -137,6 +142,24 @@ ll_toolchain = rule(
         "local_crt": attr.label(
             doc = "A filegroup containing the system's local crt1.o, crti.o and crtn.o files.",
             default = "@local_crt//:crt",
+        ),
+        "clang_tidy": attr.label(
+            doc = "The clang-tidy executable.",
+            cfg = "exec",
+            default = "@llvm-project//clang-tools-extra/clang-tidy:clang-tidy",
+            executable = True,
+        ),
+        "clang_tidy_runner": attr.label(
+            doc = "The run-clang-tidy.py wrapper script for clang-tidy. Enables multithreading.",
+            cfg = "exec",
+            default = "@llvm-project//clang-tools-extra/clang-tidy:run-clang-tidy",
+            executable = True,
+        ),
+        "symbolizer": attr.label(
+            doc = "The llvm-symbolizer.",
+            cfg = "exec",
+            default = "@llvm-project//llvm:llvm-symbolizer",
+            executable = True,
         ),
     },
 )
