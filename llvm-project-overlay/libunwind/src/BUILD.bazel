@@ -14,25 +14,21 @@ ll_bootstrap_library(
     ],
     hdrs = [
         "AddressSpace.hpp",
-        "assembly.h",
         "CompactUnwinder.hpp",
-        "cet_unwind.h",
-        "config.h",
-        "dwarf2.h",
         "DwarfInstructions.hpp",
         "DwarfParser.hpp",
         "EHHeaderParser.hpp",
         "FrameHeaderCache.hpp",
-        "libunwind_ext.h",
-        "Registers.hpp",
         "RWMutex.hpp",
+        "Registers.hpp",
         "Unwind-EHABI.h",
         "UnwindCursor.hpp",
+        "assembly.h",
+        "cet_unwind.h",
+        "config.h",
+        "dwarf2.h",
+        "libunwind_ext.h",
         "//libunwind:libunwind_headers",
-        # ../include/libunwind.h
-        # ../include/unwind.h
-        # ../include/unwind_itanium.h
-        # ../include/unwind_arm_ehabi.h
     ],
     compile_flags = [
         "-nostdinc++",

@@ -1,7 +1,5 @@
 load("@rules_ll//ll:defs.bzl", "ll_bootstrap_library")
 
-# These headers are required to build libcxxabi, but are not part of the public
-# libc++ api.
 filegroup(
     name = "libcxx_src_headers",
     srcs = glob(["include/**"]),
@@ -21,6 +19,7 @@ ll_bootstrap_library(
         "condition_variable.cpp",
         "condition_variable_destructor.cpp",
         "exception.cpp",
+        "format.cpp",
         "functional.cpp",
         "future.cpp",
         "hash.cpp",
