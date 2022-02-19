@@ -24,12 +24,12 @@ DEFAULT_ATTRS = {
     "srcs": attr.label_list(
         doc = """Compilable source files for this target.
 
-        Only compilable files and object files `[".o", ".S", ".c", ".cpp"]` are
-        allowed here.
+        Only compilable files and object files
+        `[".ll", ".o", ".S", ".c", ".cl", ".cpp"]` are allowed here.
 
         Headers should be placed in the `hdrs` attribute.
         """,
-        allow_files = [".o", ".S", ".c", ".cpp"],
+        allow_files = [".ll", ".o", ".S", ".c", ".cl", ".cpp"],
     ),
     "hdrs": attr.label_list(
         doc = """Header files for this target.

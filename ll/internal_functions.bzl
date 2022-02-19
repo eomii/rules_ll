@@ -102,7 +102,7 @@ def compile_objects(
         defines = [],
         includes = [],
         toolchain_type = "//ll:toolchain_type"):
-    compilable_extensions = ["c", "cpp", "S"]
+    compilable_extensions = ["ll", "c", "cl", "cpp", "S"]
     compilable_srcs = [
         src
         for src in ctx.files.srcs
@@ -110,6 +110,12 @@ def compile_objects(
     ]
     intermediary_objects = []
     cdfs = []
+
+    compiler_driver = ctx.toolchains[toolchain_type].c_driver
+    for src in ctx.files.srcs:
+        if src.extension in ["cpp", "hpp", "ipp", "cl"]:
+            compiler_driver = ctx.toolchains[toolchain_type].cpp_driver
+            break
 
     for src in compilable_srcs:
         args = construct_default_args(ctx, headers, includes, defines)
@@ -171,9 +177,7 @@ def compile_objects(
                 transitive = [headers],
             )
 
-            args.add("-nostdlib")
             args.add("-nostdinc++")
-            args.add("-nostdlib++")
             libcxx_include_path = paths.join(
                 llvm_target_directory_path(ctx),
                 "libcxx/include",
@@ -198,7 +202,7 @@ def compile_objects(
         ctx.actions.run(
             outputs = [intermediary_object, cdf],
             inputs = inputs,
-            executable = ctx.toolchains[toolchain_type].c_driver,
+            executable = compiler_driver,
             tools = tools,
             arguments = [args],
             mnemonic = "LlCompileIntermediaryObject",
@@ -296,7 +300,7 @@ def create_executable(
     # has a c++-related file extension.
     compiler_driver = ctx.toolchains[toolchain_type].c_driver
     for src in ctx.files.srcs:
-        if src.extension in ["cpp", "hpp", "ipp"]:
+        if src.extension in ["cpp", "hpp", "ipp", "cl"]:
             compiler_driver = ctx.toolchains[toolchain_type].cpp_driver
             break
 

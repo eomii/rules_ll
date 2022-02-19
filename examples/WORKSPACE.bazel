@@ -10,7 +10,7 @@ load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 #     sha256 = "<Correct SHA256>",
 #     urls = [
 #         "https://github.com/neqochan/rules_ll/archive/<COMMIT_HASH>.zip"
-#     ]
+#     ],
 # )
 
 local_repository(
