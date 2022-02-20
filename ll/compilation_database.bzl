@@ -83,12 +83,13 @@ with open(sys.argv[1], 'r') as in_file, open(sys.argv[2], 'w') as out_file:
         arguments = [args],
     )
 
-    clang_tidy_runner = ctx.actions.declare_file("hello.sh")
+    clang_tidy_runner = ctx.actions.declare_file("run_clang_tidy.sh")
     runfile_content = """#!/bin/bash
-    ls external/llvm-project/clang-tools-extra/clang-tidy/clang-tidy;
-{} -j $(nproc) -clang-tidy-binary={} -checks=* -quiet""".format(
+    echo "Running clang-tidy. This may take a while.";
+{} -j $(nproc) -clang-tidy-binary={} -quiet""".format(
         ctx.toolchains["//ll:toolchain_type"].clang_tidy_runner.path,
         ctx.toolchains["//ll:toolchain_type"].clang_tidy.short_path,
+        ctx.file.config.path,
     )
     ctx.actions.write(clang_tidy_runner, runfile_content, is_executable = True)
 
@@ -97,6 +98,7 @@ with open(sys.argv[1], 'r') as in_file, open(sys.argv[2], 'w') as out_file:
             cdb,
             ctx.toolchains["//ll:toolchain_type"].clang_tidy_runner,
             ctx.toolchains["//ll:toolchain_type"].clang_tidy,
+            ctx.file.config,
         ],
     )
     return [
@@ -116,6 +118,14 @@ ll_compilation_database = rule(
             doc = """
             The label for which the compilation database should be built.
             """,
+        ),
+        "config": attr.label(
+            doc = """
+            The label of a `.clang-tidy` configuration file.
+
+            This file should be at the root of your project directory.
+            """,
+            allow_single_file = True,
         ),
     },
     toolchains = ["//ll:toolchain_type"],

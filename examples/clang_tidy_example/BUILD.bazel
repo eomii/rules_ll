@@ -1,7 +1,7 @@
 load("@rules_ll//ll:defs.bzl", "ll_binary", "ll_compilation_database", "ll_library")
 
 ll_library(
-    name = "lib_1_library",
+    name = "lib_1",
     srcs = [
         "lib_1/lib_1.c",
         "lib_1/lib_1_additional_source.c",
@@ -27,10 +27,22 @@ ll_library(
 
 ll_binary(
     name = "executable",
-    srcs = ["executable.c"],
+    srcs = ["executable.cpp"],
     visibility = ["@rules_ll_examples//:__pkg__"],
     deps = [
-        ":lib_1_library",
+        ":lib_1",
         ":lib_2",
     ],
+)
+
+ll_compilation_database(
+    name = "lib_1_compile_commands",
+    config = "//:clang_tidy_config",
+    target = ":lib_1",
+)
+
+ll_compilation_database(
+    name = "clang_tidy_example",
+    config = "//:clang_tidy_config",
+    target = ":executable",
 )

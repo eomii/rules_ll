@@ -2,6 +2,8 @@
 #include "lib_1_private.h"
 
 void print_lib_1_string(void) {
+  int an_uninitialized_variable;  // Triggers clang-tidy.
+
 #ifdef A_LOCAL_DEFINE
   printf("A_LOCAL_DEFINE was defined in lib_1.\n");
 #endif

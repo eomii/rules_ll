@@ -17,6 +17,11 @@ For a target ``my_library`` defined in a ``BUILD.bazel`` file, we can add an
 
    load("@rules_ll//ll:defs.bzl", "ll_library", "ll_compilation_database")
 
+   filegroup(
+      name = "clang_tidy_config",
+      srcs = [".clang-tidy"],
+   )
+
    ll_library(
        name = "my_library",
        srcs = ["my_library.cpp"],
@@ -25,10 +30,15 @@ For a target ``my_library`` defined in a ``BUILD.bazel`` file, we can add an
    ll_compilation_database(
        name = "my_library_compile_commands",
        target = ":my_library",
+       config = ":clang_tidy_config",
    )
 
 The ``target`` attribute in ``ll_compilation_database`` is used to specify the
 target for which it should generate the ``compile_commands.json`` file.
+
+The ``.clang-tidy`` file contains the configuration for ``clang-tidy``. See
+`rules/ll/examples/.clang-tidy <https://github.con/qogecoin/rules_ll/tree/main/examples/.clang-tidy>`_
+for an example configuration.
 
 To run ``clang-tidy`` on the sources of ``my_library_compile_commands``, run
 
@@ -58,6 +68,11 @@ and its dependencies' compile commands. Consider the following targets:
 
 .. code:: python
 
+   filegroup(
+      name = "clang_tidy_config",
+      srcs = [".clang-tidy"],
+   )
+
    ll_library(
        name = "mylib_1",
        srcs = [
@@ -77,11 +92,13 @@ and its dependencies' compile commands. Consider the following targets:
    ll_compilation_database(
        name = "cdb_1",
        target = ":mylib_1",
+       config = ":clang_tidy_config",
    )
 
    ll_compilation_database(
        name = "cdb_2",
        target = ":mylib_2",
+       config = ":clang_tidy_config",
    )
 
 Running ``cdb_1`` will run ``clang-tidy`` only on ``mylib_1.cpp``:
@@ -102,9 +119,6 @@ Running ``cdb_2`` will run ``clang-tidy`` on ``mylib_1.cpp`` and
 
 Limitations
 ===========
-
-Currently all checks are always enabled. Support for ``.clang-tidy`` config
-files is planned.
 
 ``ll_compilation_database`` currently does not support the ``-fix`` option for
 ``clang-tidy``. The auto-fixer tends to break code and would have to work

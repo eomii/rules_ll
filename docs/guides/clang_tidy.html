@@ -327,6 +327,11 @@ for a target (and its dependencies) and run <code class="docutils literal notran
 <code class="docutils literal notranslate"><span class="pre">ll_compilation_database</span></code> like this:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;@rules_ll//ll:defs.bzl&quot;</span><span class="p">,</span> <span class="s2">&quot;ll_library&quot;</span><span class="p">,</span> <span class="s2">&quot;ll_compilation_database&quot;</span><span class="p">)</span>
 
+<span class="n">filegroup</span><span class="p">(</span>
+   <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;clang_tidy_config&quot;</span><span class="p">,</span>
+   <span class="n">srcs</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;.clang-tidy&quot;</span><span class="p">],</span>
+<span class="p">)</span>
+
 <span class="n">ll_library</span><span class="p">(</span>
     <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;my_library&quot;</span><span class="p">,</span>
     <span class="n">srcs</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;my_library.cpp&quot;</span><span class="p">],</span>
@@ -335,11 +340,15 @@ for a target (and its dependencies) and run <code class="docutils literal notran
 <span class="n">ll_compilation_database</span><span class="p">(</span>
     <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;my_library_compile_commands&quot;</span><span class="p">,</span>
     <span class="n">target</span> <span class="o">=</span> <span class="s2">&quot;:my_library&quot;</span><span class="p">,</span>
+    <span class="n">config</span> <span class="o">=</span> <span class="s2">&quot;:clang_tidy_config&quot;</span><span class="p">,</span>
 <span class="p">)</span>
 </pre></div>
 </div>
 <p>The <code class="docutils literal notranslate"><span class="pre">target</span></code> attribute in <code class="docutils literal notranslate"><span class="pre">ll_compilation_database</span></code> is used to specify the
 target for which it should generate the <code class="docutils literal notranslate"><span class="pre">compile_commands.json</span></code> file.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">.clang-tidy</span></code> file contains the configuration for <code class="docutils literal notranslate"><span class="pre">clang-tidy</span></code>. See
+<a class="reference external" href="https://github.con/qogecoin/rules_ll/tree/main/examples/.clang-tidy">rules/ll/examples/.clang-tidy</a>
+for an example configuration.</p>
 <p>To run <code class="docutils literal notranslate"><span class="pre">clang-tidy</span></code> on the sources of <code class="docutils literal notranslate"><span class="pre">my_library_compile_commands</span></code>, run</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>bazel run my_library_compile_commands
 <span class="c1"># Prints warnings for my_library.cpp.</span>
@@ -360,7 +369,12 @@ the <code class="docutils literal notranslate"><span class="pre">ll_compilation_
 <p>The <code class="docutils literal notranslate"><span class="pre">ll_compilation_database</span></code> rule will construct the
 <code class="docutils literal notranslate"><span class="pre">compile_commands.json</span></code> file from the <code class="docutils literal notranslate"><span class="pre">target</span></code> attribute’s compile commands
 and its dependencies’ compile commands. Consider the following targets:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ll_library</span><span class="p">(</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">filegroup</span><span class="p">(</span>
+   <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;clang_tidy_config&quot;</span><span class="p">,</span>
+   <span class="n">srcs</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;.clang-tidy&quot;</span><span class="p">],</span>
+<span class="p">)</span>
+
+<span class="n">ll_library</span><span class="p">(</span>
     <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;mylib_1&quot;</span><span class="p">,</span>
     <span class="n">srcs</span> <span class="o">=</span> <span class="p">[</span>
         <span class="s2">&quot;mylib_1.cpp&quot;</span><span class="p">,</span>
@@ -379,11 +393,13 @@ and its dependencies’ compile commands. Consider the following targets:</p>
 <span class="n">ll_compilation_database</span><span class="p">(</span>
     <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;cdb_1&quot;</span><span class="p">,</span>
     <span class="n">target</span> <span class="o">=</span> <span class="s2">&quot;:mylib_1&quot;</span><span class="p">,</span>
+    <span class="n">config</span> <span class="o">=</span> <span class="s2">&quot;:clang_tidy_config&quot;</span><span class="p">,</span>
 <span class="p">)</span>
 
 <span class="n">ll_compilation_database</span><span class="p">(</span>
     <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;cdb_2&quot;</span><span class="p">,</span>
     <span class="n">target</span> <span class="o">=</span> <span class="s2">&quot;:mylib_2&quot;</span><span class="p">,</span>
+    <span class="n">config</span> <span class="o">=</span> <span class="s2">&quot;:clang_tidy_config&quot;</span><span class="p">,</span>
 <span class="p">)</span>
 </pre></div>
 </div>
@@ -402,8 +418,6 @@ and its dependencies’ compile commands. Consider the following targets:</p>
 </div>
 <div class="section" id="limitations">
 <h2>Limitations<a class="headerlink" href="#limitations" title="Permalink to this headline">¶</a></h2>
-<p>Currently all checks are always enabled. Support for <code class="docutils literal notranslate"><span class="pre">.clang-tidy</span></code> config
-files is planned.</p>
 <p><code class="docutils literal notranslate"><span class="pre">ll_compilation_database</span></code> currently does not support the <code class="docutils literal notranslate"><span class="pre">-fix</span></code> option for
 <code class="docutils literal notranslate"><span class="pre">clang-tidy</span></code>. The auto-fixer tends to break code and would have to work
 outside of the Bazel build direcories.</p>

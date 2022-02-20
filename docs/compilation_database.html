@@ -303,7 +303,7 @@
 <div class="section" id="ll-compilation-database">
 <h2>ll_compilation_database<a class="headerlink" href="#ll-compilation-database" title="Permalink to this headline">¶</a></h2>
 <pre>
-ll_compilation_database(<a href="#ll_compilation_database-name">name</a>, <a href="#ll_compilation_database-target">target</a>)
+ll_compilation_database(<a href="#ll_compilation_database-name">name</a>, <a href="#ll_compilation_database-config">config</a>, <a href="#ll_compilation_database-target">target</a>)
 </pre>
 <p>Executable target for building a
 <a class="reference external" href="https://clang.llvm.org/docs/JSONCompilationDatabase.html">compilation database</a>
@@ -329,7 +329,13 @@ and running <a class="reference external" href="https://clang.llvm.org/extra/cla
 <td class="text-left"><p>required</p></td>
 <td class="text-left"><p></p></td>
 </tr>
-<tr class="row-odd"><td class="text-left"><p><a id="ll_compilation_database-target"></a>target</p></td>
+<tr class="row-odd"><td class="text-left"><p><a id="ll_compilation_database-config"></a>config</p></td>
+<td class="text-left"><p>The label of a <code>.clang-tidy</code> configuration file.<br><br>            This file should be at the root of your project directory.</p></td>
+<td class="text-left"><p><a href="https://bazel.build/docs/build-ref.html#labels">Label</a></p></td>
+<td class="text-left"><p>optional</p></td>
+<td class="text-left"><p>None</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p><a id="ll_compilation_database-target"></a>target</p></td>
 <td class="text-left"><p>The label for which the compilation database should be built.</p></td>
 <td class="text-left"><p><a href="https://bazel.build/docs/build-ref.html#labels">Label</a></p></td>
 <td class="text-left"><p>required</p></td>
