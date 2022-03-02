@@ -67,6 +67,7 @@ def initialize_rules_ll(
         done"""],
         patches = [
             "@rules_ll//patches:compiler-rt_float128_patch.diff",
+            "@rules_ll//patches:clang_header_patch.diff",
         ],
         patch_args = ["-p1"],
     )

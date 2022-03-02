@@ -78,7 +78,10 @@ def _ll_toolchain_impl(ctx):
             c_driver = ctx.executable.c_driver,
             cpp_driver = ctx.executable.cpp_driver,
             archiver = ctx.executable.archiver,
+            bitcode_linker = ctx.executable.bitcode_linker,
             linker = lld_alias,
+            linker_executable = ctx.executable.linker,
+            offload_bundler = ctx.executable.offload_bundler,
             builtin_includes = ctx.files.builtin_includes,
             cpp_stdlib = ctx.files.cpp_stdlib,
             compiler_runtime = ctx.files.compiler_runtime,
@@ -129,6 +132,15 @@ ll_toolchain = rule(
                 "@llvm-project//clang:builtin_headers_gen",
             ],
         ),
+        "bitcode_linker": attr.label(
+            doc = """The linker for LLVM bitcode files. While `llvm-ar` is able
+            to archive bitcode files into an archive, it cannot link them into
+            a single bitcode file. We need `llvm-link` to do this.
+            """,
+            executable = True,
+            cfg = "exec",
+            default = "@llvm-project//llvm:llvm-link",
+        ),
         "cpp_stdlib": attr.label(
             doc = "The C++ standard library.",
             cfg = "target",
@@ -158,6 +170,14 @@ ll_toolchain = rule(
             doc = "The run-clang-tidy.py wrapper script for clang-tidy. Enables multithreading.",
             cfg = "exec",
             default = "@llvm-project//clang-tools-extra/clang-tidy:run-clang-tidy",
+            executable = True,
+        ),
+        "offload_bundler": attr.label(
+            doc = """Offload bundler used to bundle code objects for languages
+            targeting multiple devices in a single source file, e.g. GPU code.
+            """,
+            cfg = "exec",
+            default = "@llvm-project//clang:clang-offload-bundler",
             executable = True,
         ),
         "symbolizer": attr.label(

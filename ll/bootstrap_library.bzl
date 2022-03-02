@@ -6,10 +6,11 @@ This rule is used by `rules_ll` to boostrap `compiler-rt`, `libcxx`,
 
 load("//ll:ll.bzl", "DEFAULT_ATTRS")
 load("//ll:providers.bzl", "LlInfo")
+load("//ll:internal_functions.bzl", "resolve_deps")
 load(
-    "//ll:internal_functions.bzl",
+    "//ll:actions.bzl",
+    "compile_objects",
     "create_archive_library",
-    "create_compile_inputs",
     "expose_headers",
 )
 
@@ -22,24 +23,34 @@ def _ll_bootstrap_library_impl(ctx):
         transitive_headers,
         transitive_defines,
         transitive_includes,
-    ) = create_compile_inputs(ctx)
+    ) = resolve_deps(ctx)
 
-    out_file, _ = create_archive_library(
+    intermediary_objects, cdfs = compile_objects(
         ctx,
         headers = headers,
-        libraries = libraries,
         defines = defines,
         includes = includes,
         toolchain_type = "//ll:bootstrap_toolchain_type",
     )
 
+    out_files = intermediary_objects
+    if ctx.attr.aggregate == "static":
+        out_files = create_archive_library(
+            ctx,
+            in_files = intermediary_objects,
+            libraries = libraries,
+            toolchain_type = "//ll:bootstrap_toolchain_type",
+        )
+    else:
+        fail("ll_bootstrap_library does not support the aggregate option.")
+
     exposed_headers = expose_headers(ctx)
 
     return [
-        DefaultInfo(files = depset([out_file] + exposed_headers)),
+        DefaultInfo(files = depset(out_files + exposed_headers)),
         LlInfo(
             transitive_headers = transitive_headers,
-            libraries = depset([out_file], transitive = [libraries]),
+            libraries = depset(out_files, transitive = [libraries]),
             transitive_defines = transitive_defines,
             transitive_includes = transitive_includes,
         ),

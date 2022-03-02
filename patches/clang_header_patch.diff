@@ -1,0 +1,17 @@
+diff --git a/utils/bazel/llvm-project-overlay/clang/BUILD.bazel b/utils/bazel/llvm-project-overlay/clang/BUILD.bazel
+index fedcd79fa..a34e9e852 100644
+--- a/utils/bazel/llvm-project-overlay/clang/BUILD.bazel
++++ b/utils/bazel/llvm-project-overlay/clang/BUILD.bazel
+@@ -1448,7 +1448,11 @@ gentbl(
+ # We generate the set of builtin headers under a special subdirectory in the
+ # 'bin' section of the bazel output so that they can be used as data
+ # dependencies. It requires listing explicitly all the generated inputs here.
+-builtin_headers = glob(["lib/Headers/**/*.h"]) + [
++builtin_headers = glob([
++    "lib/Headers/**/*.h",
++    "lib/Headers/openmp_wrappers/*",
++    "lib/Headers/cuda_wrappers/*",
++]) + [
+     "lib/Headers/arm_cde.h",
+     "lib/Headers/arm_fp16.h",
+     "lib/Headers/arm_mve.h",
