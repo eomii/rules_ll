@@ -34,10 +34,16 @@ These are the internal functions used in ``rules_ll``.
    :maxdepth: 2
    :caption: Private API
 
-   ll
-   compilation_database
+   actions
    args
+   bootstrap_library
+   compilation_database
+   driver
+   environment
+   inputs
    internal_functions
+   ll
+   outputs
    providers
    toolchain
-   bootstrap_library
+   tools

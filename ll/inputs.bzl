@@ -1,3 +1,8 @@
+"""# `//ll:inputs.bzl`
+
+Action inputs.
+"""
+
 def compilable_sources(ctx):
     compilable_extensions = ["ll", "c", "cl", "cpp", "S"]
     return [

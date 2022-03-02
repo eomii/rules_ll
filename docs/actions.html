@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>//ll:args.bzl &#8212; rules_ll Documentation</title>
+    <title>//ll:actions.bzl &#8212; rules_ll Documentation</title>
 
   <link href="_static/css/theme.css" rel="stylesheet">
   <link href="_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
@@ -34,8 +34,8 @@
     <script src="_static/sphinx-book-theme.9d8b4a8b9bb19db25eeaddc40d639ba2.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="//ll:bootstrap_library.bzl" href="bootstrap_library.html" />
-    <link rel="prev" title="//ll:actions.bzl" href="actions.html" />
+    <link rel="next" title="//ll:args.bzl" href="args.html" />
+    <link rel="prev" title="//ll:init.bzl" href="init.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
 
@@ -135,8 +135,8 @@
  </span>
 </p>
 <ul class="current nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="actions.html">
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
    <code class="docutils literal notranslate">
     <span class="pre">
      //ll:actions.bzl
@@ -144,8 +144,8 @@
    </code>
   </a>
  </li>
- <li class="toctree-l1 current active">
-  <a class="current reference internal" href="#">
+ <li class="toctree-l1">
+  <a class="reference internal" href="args.html">
    <code class="docutils literal notranslate">
     <span class="pre">
      //ll:args.bzl
@@ -311,33 +311,33 @@
             <nav id="bd-toc-nav" aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#compile-object-args">
-   compile_object_args
+  <a class="reference internal nav-link" href="#compile-object">
+   compile_object
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#create-archive-library-args">
-   create_archive_library_args
+  <a class="reference internal nav-link" href="#compile-objects">
+   compile_objects
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#expose-headers-args">
-   expose_headers_args
+  <a class="reference internal nav-link" href="#create-archive-library">
+   create_archive_library
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#link-bitcode-library-args">
-   link_bitcode_library_args
+  <a class="reference internal nav-link" href="#expose-headers">
+   expose_headers
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#link-executable-args">
-   link_executable_args
+  <a class="reference internal nav-link" href="#link-bitcode-library">
+   link_bitcode_library
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#llvm-target-directory-path">
-   llvm_target_directory_path
+  <a class="reference internal nav-link" href="#link-executable">
+   link_executable
   </a>
  </li>
 </ul>
@@ -350,7 +350,7 @@
         <div class="col-12 col-md-9 pl-md-3 pr-md-0">
             <!-- Table of contents that is only displayed when printing the page -->
             <div id="jb-print-docs-body" class="onlyprint">
-                <h1>//ll:args.bzl</h1>
+                <h1>//ll:actions.bzl</h1>
                 <!-- Table of contents -->
                 <div id="print-main-content">
                     <div id="jb-print-toc">
@@ -361,33 +361,33 @@
                         <nav aria-label="Page">
                             <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#compile-object-args">
-   compile_object_args
+  <a class="reference internal nav-link" href="#compile-object">
+   compile_object
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#create-archive-library-args">
-   create_archive_library_args
+  <a class="reference internal nav-link" href="#compile-objects">
+   compile_objects
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#expose-headers-args">
-   expose_headers_args
+  <a class="reference internal nav-link" href="#create-archive-library">
+   create_archive_library
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#link-bitcode-library-args">
-   link_bitcode_library_args
+  <a class="reference internal nav-link" href="#expose-headers">
+   expose_headers
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#link-executable-args">
-   link_executable_args
+  <a class="reference internal nav-link" href="#link-bitcode-library">
+   link_bitcode_library
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#llvm-target-directory-path">
-   llvm_target_directory_path
+  <a class="reference internal nav-link" href="#link-executable">
+   link_executable
   </a>
  </li>
 </ul>
@@ -400,14 +400,16 @@
               <div>
 
   <!-- Generated with Stardoc: http://skydoc.bazel.build -->
-<div class="tex2jax_ignore mathjax_ignore section" id="ll-args-bzl">
-<h1><code class="docutils literal notranslate"><span class="pre">//ll:args.bzl</span></code><a class="headerlink" href="#ll-args-bzl" title="Permalink to this headline">¶</a></h1>
-<p>Convenience function for setting compile arguments.</p>
-<p><a id="#compile_object_args"></a></p>
-<div class="section" id="compile-object-args">
-<h2>compile_object_args<a class="headerlink" href="#compile-object-args" title="Permalink to this headline">¶</a></h2>
+<div class="tex2jax_ignore mathjax_ignore section" id="ll-actions-bzl">
+<h1><code class="docutils literal notranslate"><span class="pre">//ll:actions.bzl</span></code><a class="headerlink" href="#ll-actions-bzl" title="Permalink to this headline">¶</a></h1>
+<p>Actions wiring up inputs, outputs and tools to emit output files.</p>
+<p>Every function in this file effectively wraps <code class="docutils literal notranslate"><span class="pre">ctx.actions.run</span></code> or
+<code class="docutils literal notranslate"><span class="pre">ctx.actions.run_shell</span></code>.</p>
+<p><a id="#compile_object"></a></p>
+<div class="section" id="compile-object">
+<h2>compile_object<a class="headerlink" href="#compile-object" title="Permalink to this headline">¶</a></h2>
 <pre>
-compile_object_args(<a href="#compile_object_args-ctx">ctx</a>, <a href="#compile_object_args-in_file">in_file</a>, <a href="#compile_object_args-out_file">out_file</a>, <a href="#compile_object_args-cdf">cdf</a>, <a href="#compile_object_args-headers">headers</a>, <a href="#compile_object_args-defines">defines</a>, <a href="#compile_object_args-includes">includes</a>)
+compile_object(<a href="#compile_object-ctx">ctx</a>, <a href="#compile_object-in_file">in_file</a>, <a href="#compile_object-headers">headers</a>, <a href="#compile_object-defines">defines</a>, <a href="#compile_object-includes">includes</a>, <a href="#compile_object-toolchain_type">toolchain_type</a>)
 </pre>
 <p><strong>PARAMETERS</strong></p>
 <table class="colwidths-auto table">
@@ -418,42 +420,38 @@ compile_object_args(<a href="#compile_object_args-ctx">ctx</a>, <a href="#compil
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td class="text-left"><p><a id="compile_object_args-ctx"></a>ctx</p></td>
+<tr class="row-even"><td class="text-left"><p><a id="compile_object-ctx"></a>ctx</p></td>
 <td class="text-left"><p><p align="center"> - </p></p></td>
 <td class="text-left"><p>none</p></td>
 </tr>
-<tr class="row-odd"><td class="text-left"><p><a id="compile_object_args-in_file"></a>in_file</p></td>
+<tr class="row-odd"><td class="text-left"><p><a id="compile_object-in_file"></a>in_file</p></td>
 <td class="text-left"><p><p align="center"> - </p></p></td>
 <td class="text-left"><p>none</p></td>
 </tr>
-<tr class="row-even"><td class="text-left"><p><a id="compile_object_args-out_file"></a>out_file</p></td>
+<tr class="row-even"><td class="text-left"><p><a id="compile_object-headers"></a>headers</p></td>
 <td class="text-left"><p><p align="center"> - </p></p></td>
 <td class="text-left"><p>none</p></td>
 </tr>
-<tr class="row-odd"><td class="text-left"><p><a id="compile_object_args-cdf"></a>cdf</p></td>
+<tr class="row-odd"><td class="text-left"><p><a id="compile_object-defines"></a>defines</p></td>
 <td class="text-left"><p><p align="center"> - </p></p></td>
 <td class="text-left"><p>none</p></td>
 </tr>
-<tr class="row-even"><td class="text-left"><p><a id="compile_object_args-headers"></a>headers</p></td>
+<tr class="row-even"><td class="text-left"><p><a id="compile_object-includes"></a>includes</p></td>
 <td class="text-left"><p><p align="center"> - </p></p></td>
 <td class="text-left"><p>none</p></td>
 </tr>
-<tr class="row-odd"><td class="text-left"><p><a id="compile_object_args-defines"></a>defines</p></td>
-<td class="text-left"><p><p align="center"> - </p></p></td>
-<td class="text-left"><p>none</p></td>
-</tr>
-<tr class="row-even"><td class="text-left"><p><a id="compile_object_args-includes"></a>includes</p></td>
+<tr class="row-odd"><td class="text-left"><p><a id="compile_object-toolchain_type"></a>toolchain_type</p></td>
 <td class="text-left"><p><p align="center"> - </p></p></td>
 <td class="text-left"><p>none</p></td>
 </tr>
 </tbody>
 </table>
-<p><a id="#create_archive_library_args"></a></p>
+<p><a id="#compile_objects"></a></p>
 </div>
-<div class="section" id="create-archive-library-args">
-<h2>create_archive_library_args<a class="headerlink" href="#create-archive-library-args" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="compile-objects">
+<h2>compile_objects<a class="headerlink" href="#compile-objects" title="Permalink to this headline">¶</a></h2>
 <pre>
-create_archive_library_args(<a href="#create_archive_library_args-ctx">ctx</a>, <a href="#create_archive_library_args-in_files">in_files</a>, <a href="#create_archive_library_args-out_file">out_file</a>, <a href="#create_archive_library_args-libraries">libraries</a>)
+compile_objects(<a href="#compile_objects-ctx">ctx</a>, <a href="#compile_objects-headers">headers</a>, <a href="#compile_objects-defines">defines</a>, <a href="#compile_objects-includes">includes</a>, <a href="#compile_objects-libraries">libraries</a>, <a href="#compile_objects-toolchain_type">toolchain_type</a>)
 </pre>
 <p><strong>PARAMETERS</strong></p>
 <table class="colwidths-auto table">
@@ -464,30 +462,38 @@ create_archive_library_args(<a href="#create_archive_library_args-ctx">ctx</a>, 
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td class="text-left"><p><a id="create_archive_library_args-ctx"></a>ctx</p></td>
+<tr class="row-even"><td class="text-left"><p><a id="compile_objects-ctx"></a>ctx</p></td>
 <td class="text-left"><p><p align="center"> - </p></p></td>
 <td class="text-left"><p>none</p></td>
 </tr>
-<tr class="row-odd"><td class="text-left"><p><a id="create_archive_library_args-in_files"></a>in_files</p></td>
+<tr class="row-odd"><td class="text-left"><p><a id="compile_objects-headers"></a>headers</p></td>
 <td class="text-left"><p><p align="center"> - </p></p></td>
-<td class="text-left"><p>none</p></td>
+<td class="text-left"><p><code>[]</code></p></td>
 </tr>
-<tr class="row-even"><td class="text-left"><p><a id="create_archive_library_args-out_file"></a>out_file</p></td>
+<tr class="row-even"><td class="text-left"><p><a id="compile_objects-defines"></a>defines</p></td>
 <td class="text-left"><p><p align="center"> - </p></p></td>
-<td class="text-left"><p>none</p></td>
+<td class="text-left"><p><code>[]</code></p></td>
 </tr>
-<tr class="row-odd"><td class="text-left"><p><a id="create_archive_library_args-libraries"></a>libraries</p></td>
+<tr class="row-odd"><td class="text-left"><p><a id="compile_objects-includes"></a>includes</p></td>
 <td class="text-left"><p><p align="center"> - </p></p></td>
-<td class="text-left"><p>none</p></td>
+<td class="text-left"><p><code>[]</code></p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p><a id="compile_objects-libraries"></a>libraries</p></td>
+<td class="text-left"><p><p align="center"> - </p></p></td>
+<td class="text-left"><p><code>[]</code></p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><a id="compile_objects-toolchain_type"></a>toolchain_type</p></td>
+<td class="text-left"><p><p align="center"> - </p></p></td>
+<td class="text-left"><p><code>”//ll:toolchain_type”</code></p></td>
 </tr>
 </tbody>
 </table>
-<p><a id="#expose_headers_args"></a></p>
+<p><a id="#create_archive_library"></a></p>
 </div>
-<div class="section" id="expose-headers-args">
-<h2>expose_headers_args<a class="headerlink" href="#expose-headers-args" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="create-archive-library">
+<h2>create_archive_library<a class="headerlink" href="#create-archive-library" title="Permalink to this headline">¶</a></h2>
 <pre>
-expose_headers_args(<a href="#expose_headers_args-ctx">ctx</a>, <a href="#expose_headers_args-in_file">in_file</a>, <a href="#expose_headers_args-out_file">out_file</a>)
+create_archive_library(<a href="#create_archive_library-ctx">ctx</a>, <a href="#create_archive_library-in_files">in_files</a>, <a href="#create_archive_library-libraries">libraries</a>, <a href="#create_archive_library-toolchain_type">toolchain_type</a>)
 </pre>
 <p><strong>PARAMETERS</strong></p>
 <table class="colwidths-auto table">
@@ -498,26 +504,30 @@ expose_headers_args(<a href="#expose_headers_args-ctx">ctx</a>, <a href="#expose
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td class="text-left"><p><a id="expose_headers_args-ctx"></a>ctx</p></td>
+<tr class="row-even"><td class="text-left"><p><a id="create_archive_library-ctx"></a>ctx</p></td>
 <td class="text-left"><p><p align="center"> - </p></p></td>
 <td class="text-left"><p>none</p></td>
 </tr>
-<tr class="row-odd"><td class="text-left"><p><a id="expose_headers_args-in_file"></a>in_file</p></td>
+<tr class="row-odd"><td class="text-left"><p><a id="create_archive_library-in_files"></a>in_files</p></td>
 <td class="text-left"><p><p align="center"> - </p></p></td>
-<td class="text-left"><p>none</p></td>
+<td class="text-left"><p><code>[]</code></p></td>
 </tr>
-<tr class="row-even"><td class="text-left"><p><a id="expose_headers_args-out_file"></a>out_file</p></td>
+<tr class="row-even"><td class="text-left"><p><a id="create_archive_library-libraries"></a>libraries</p></td>
 <td class="text-left"><p><p align="center"> - </p></p></td>
-<td class="text-left"><p>none</p></td>
+<td class="text-left"><p><code>[]</code></p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><a id="create_archive_library-toolchain_type"></a>toolchain_type</p></td>
+<td class="text-left"><p><p align="center"> - </p></p></td>
+<td class="text-left"><p><code>”//ll:toolchain_type”</code></p></td>
 </tr>
 </tbody>
 </table>
-<p><a id="#link_bitcode_library_args"></a></p>
+<p><a id="#expose_headers"></a></p>
 </div>
-<div class="section" id="link-bitcode-library-args">
-<h2>link_bitcode_library_args<a class="headerlink" href="#link-bitcode-library-args" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="expose-headers">
+<h2>expose_headers<a class="headerlink" href="#expose-headers" title="Permalink to this headline">¶</a></h2>
 <pre>
-link_bitcode_library_args(<a href="#link_bitcode_library_args-ctx">ctx</a>, <a href="#link_bitcode_library_args-in_files">in_files</a>, <a href="#link_bitcode_library_args-out_file">out_file</a>, <a href="#link_bitcode_library_args-libraries">libraries</a>)
+expose_headers(<a href="#expose_headers-ctx">ctx</a>)
 </pre>
 <p><strong>PARAMETERS</strong></p>
 <table class="colwidths-auto table">
@@ -528,30 +538,18 @@ link_bitcode_library_args(<a href="#link_bitcode_library_args-ctx">ctx</a>, <a h
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td class="text-left"><p><a id="link_bitcode_library_args-ctx"></a>ctx</p></td>
-<td class="text-left"><p><p align="center"> - </p></p></td>
-<td class="text-left"><p>none</p></td>
-</tr>
-<tr class="row-odd"><td class="text-left"><p><a id="link_bitcode_library_args-in_files"></a>in_files</p></td>
-<td class="text-left"><p><p align="center"> - </p></p></td>
-<td class="text-left"><p>none</p></td>
-</tr>
-<tr class="row-even"><td class="text-left"><p><a id="link_bitcode_library_args-out_file"></a>out_file</p></td>
-<td class="text-left"><p><p align="center"> - </p></p></td>
-<td class="text-left"><p>none</p></td>
-</tr>
-<tr class="row-odd"><td class="text-left"><p><a id="link_bitcode_library_args-libraries"></a>libraries</p></td>
+<tr class="row-even"><td class="text-left"><p><a id="expose_headers-ctx"></a>ctx</p></td>
 <td class="text-left"><p><p align="center"> - </p></p></td>
 <td class="text-left"><p>none</p></td>
 </tr>
 </tbody>
 </table>
-<p><a id="#link_executable_args"></a></p>
+<p><a id="#link_bitcode_library"></a></p>
 </div>
-<div class="section" id="link-executable-args">
-<h2>link_executable_args<a class="headerlink" href="#link-executable-args" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="link-bitcode-library">
+<h2>link_bitcode_library<a class="headerlink" href="#link-bitcode-library" title="Permalink to this headline">¶</a></h2>
 <pre>
-link_executable_args(<a href="#link_executable_args-ctx">ctx</a>, <a href="#link_executable_args-in_files">in_files</a>, <a href="#link_executable_args-out_file">out_file</a>, <a href="#link_executable_args-libraries">libraries</a>)
+link_bitcode_library(<a href="#link_bitcode_library-ctx">ctx</a>, <a href="#link_bitcode_library-in_files">in_files</a>, <a href="#link_bitcode_library-libraries">libraries</a>, <a href="#link_bitcode_library-toolchain_type">toolchain_type</a>)
 </pre>
 <p><strong>PARAMETERS</strong></p>
 <table class="colwidths-auto table">
@@ -562,33 +560,31 @@ link_executable_args(<a href="#link_executable_args-ctx">ctx</a>, <a href="#link
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td class="text-left"><p><a id="link_executable_args-ctx"></a>ctx</p></td>
+<tr class="row-even"><td class="text-left"><p><a id="link_bitcode_library-ctx"></a>ctx</p></td>
 <td class="text-left"><p><p align="center"> - </p></p></td>
 <td class="text-left"><p>none</p></td>
 </tr>
-<tr class="row-odd"><td class="text-left"><p><a id="link_executable_args-in_files"></a>in_files</p></td>
+<tr class="row-odd"><td class="text-left"><p><a id="link_bitcode_library-in_files"></a>in_files</p></td>
 <td class="text-left"><p><p align="center"> - </p></p></td>
 <td class="text-left"><p>none</p></td>
 </tr>
-<tr class="row-even"><td class="text-left"><p><a id="link_executable_args-out_file"></a>out_file</p></td>
+<tr class="row-even"><td class="text-left"><p><a id="link_bitcode_library-libraries"></a>libraries</p></td>
 <td class="text-left"><p><p align="center"> - </p></p></td>
 <td class="text-left"><p>none</p></td>
 </tr>
-<tr class="row-odd"><td class="text-left"><p><a id="link_executable_args-libraries"></a>libraries</p></td>
+<tr class="row-odd"><td class="text-left"><p><a id="link_bitcode_library-toolchain_type"></a>toolchain_type</p></td>
 <td class="text-left"><p><p align="center"> - </p></p></td>
-<td class="text-left"><p>none</p></td>
+<td class="text-left"><p><code>”//ll:toolchain_type”</code></p></td>
 </tr>
 </tbody>
 </table>
-<p><a id="#llvm_target_directory_path"></a></p>
+<p><a id="#link_executable"></a></p>
 </div>
-<div class="section" id="llvm-target-directory-path">
-<h2>llvm_target_directory_path<a class="headerlink" href="#llvm-target-directory-path" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="link-executable">
+<h2>link_executable<a class="headerlink" href="#link-executable" title="Permalink to this headline">¶</a></h2>
 <pre>
-llvm_target_directory_path(<a href="#llvm_target_directory_path-ctx">ctx</a>)
+link_executable(<a href="#link_executable-ctx">ctx</a>, <a href="#link_executable-in_files">in_files</a>, <a href="#link_executable-libraries">libraries</a>, <a href="#link_executable-toolchain_type">toolchain_type</a>)
 </pre>
-<p>Returns the path to the <code class="docutils literal notranslate"><span class="pre">llvm-project</span></code> build output directory.</p>
-<p>The path looks like <code class="docutils literal notranslate"><span class="pre">bazel-out/{cpu}-{mode}/bin/external/llvm-project</span></code>.</p>
 <p><strong>PARAMETERS</strong></p>
 <table class="colwidths-auto table">
 <thead>
@@ -598,14 +594,24 @@ llvm_target_directory_path(<a href="#llvm_target_directory_path-ctx">ctx</a>)
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td class="text-left"><p><a id="llvm_target_directory_path-ctx"></a>ctx</p></td>
-<td class="text-left"><p>The rule context.</p></td>
+<tr class="row-even"><td class="text-left"><p><a id="link_executable-ctx"></a>ctx</p></td>
+<td class="text-left"><p><p align="center"> - </p></p></td>
 <td class="text-left"><p>none</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><a id="link_executable-in_files"></a>in_files</p></td>
+<td class="text-left"><p><p align="center"> - </p></p></td>
+<td class="text-left"><p>none</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p><a id="link_executable-libraries"></a>libraries</p></td>
+<td class="text-left"><p><p align="center"> - </p></p></td>
+<td class="text-left"><p>none</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><a id="link_executable-toolchain_type"></a>toolchain_type</p></td>
+<td class="text-left"><p><p align="center"> - </p></p></td>
+<td class="text-left"><p><code>”//ll:toolchain_type”</code></p></td>
 </tr>
 </tbody>
 </table>
-<p><strong>RETURNS</strong></p>
-<p>A string.</p>
 </div>
 </div>
 
@@ -615,17 +621,17 @@ llvm_target_directory_path(<a href="#llvm_target_directory_path-ctx">ctx</a>)
 
                 <!-- Previous / next buttons -->
 <div class='prev-next-area'>
-    <a class='left-prev' id="prev-link" href="actions.html" title="previous page">
+    <a class='left-prev' id="prev-link" href="init.html" title="previous page">
         <i class="fas fa-angle-left"></i>
         <div class="prev-next-info">
             <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title"><code class="docutils literal notranslate"><span class="pre">//ll:actions.bzl</span></code></p>
+            <p class="prev-next-title"><code class="docutils literal notranslate"><span class="pre">//ll:init.bzl</span></code></p>
         </div>
     </a>
-    <a class='right-next' id="next-link" href="bootstrap_library.html" title="next page">
+    <a class='right-next' id="next-link" href="args.html" title="next page">
     <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title"><code class="docutils literal notranslate"><span class="pre">//ll:bootstrap_library.bzl</span></code></p>
+        <p class="prev-next-title"><code class="docutils literal notranslate"><span class="pre">//ll:args.bzl</span></code></p>
     </div>
     <i class="fas fa-angle-right"></i>
     </a>

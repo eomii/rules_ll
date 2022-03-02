@@ -1,3 +1,8 @@
+"""# `//ll:environment.bzl`
+
+Action environments.
+"""
+
 def compile_object_environment(ctx):
     if "//ll:toolchain_type" in ctx.toolchains:
         return {

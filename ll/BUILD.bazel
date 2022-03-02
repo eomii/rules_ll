@@ -2,110 +2,53 @@ load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
 load("@io_bazel_stardoc//stardoc:stardoc.bzl", "stardoc")
 load(":toolchain.bzl", "ll_bootstrap_toolchain", "ll_toolchain")
 
+LL_MODULES = [
+    "actions",
+    "args",
+    "bootstrap_library",
+    "compilation_database",
+    "defs",
+    "deps",
+    "driver",
+    "environment",
+    "init",
+    "inputs",
+    "internal_functions",
+    "ll",
+    "outputs",
+    "providers",
+    "toolchain",
+    "tools",
+]
+
 bzl_library(
     name = "ll_bzl",
     srcs = [
-        "args.bzl",
-        "bootstrap_library.bzl",
-        "compilation_database.bzl",
-        "defs.bzl",
-        "deps.bzl",
-        "init.bzl",
-        "internal_functions.bzl",
-        "providers.bzl",
-        "toolchain.bzl",
+        "{}.bzl".format(name)
+        for name in LL_MODULES
     ],
     deps = [
-        ":ll.bzl",
         "@bazel_skylib//lib:paths",
         "@bazel_tools//tools/build_defs/repo:http.bzl",
         "@bazel_tools//tools/build_defs/repo:utils.bzl",
     ],
 )
 
-stardoc(
-    name = "ll_docs",
-    out = "ll.md",
-    input = "ll.bzl",
-    deps = [":ll_bzl"],
-)
-
-stardoc(
-    name = "defs_docs",
-    out = "defs.md",
-    input = "defs.bzl",
-    deps = [":ll_bzl"],
-)
-
-stardoc(
-    name = "toolchain_docs",
-    out = "toolchain.md",
-    input = "toolchain.bzl",
-    deps = [":ll_bzl"],
-)
-
-stardoc(
-    name = "providers_docs",
-    out = "providers.md",
-    input = "providers.bzl",
-    deps = [":ll_bzl"],
-)
-
-stardoc(
-    name = "args_docs",
-    out = "args.md",
-    input = "args.bzl",
-    deps = [":ll_bzl"],
-)
-
-stardoc(
-    name = "internal_functions_docs",
-    out = "internal_functions.md",
-    input = "internal_functions.bzl",
-    deps = [":ll_bzl"],
-)
-
-stardoc(
-    name = "bootstrap_library_docs",
-    out = "bootstrap_library.md",
-    input = "bootstrap_library.bzl",
-    deps = [":ll_bzl"],
-)
-
-stardoc(
-    name = "deps_docs",
-    out = "deps.md",
-    input = "deps.bzl",
-    deps = [":ll_bzl"],
-)
-
-stardoc(
-    name = "compilation_database_docs",
-    out = "compilation_database.md",
-    input = "compilation_database.bzl",
-    deps = [":ll_bzl"],
-)
-
-stardoc(
-    name = "init_docs",
-    out = "init.md",
-    input = "init.bzl",
-    deps = [":ll_bzl"],
-)
+[
+    stardoc(
+        name = "{}_docs".format(name),
+        out = "{}.md".format(name),
+        input = "{}.bzl".format(name),
+        deps = [":ll_bzl"],
+    )
+    for name in LL_MODULES
+]
 
 filegroup(
     name = "docs",
     srcs = [
-        ":args_docs",
-        ":bootstrap_library_docs",
-        ":compilation_database_docs",
-        ":defs_docs",
-        ":deps_docs",
-        ":init_docs",
-        ":internal_functions_docs",
-        ":ll_docs",
-        ":providers_docs",
-        ":toolchain_docs",
+        ":{}_docs".format(name)
+        for name in LL_MODULES
     ],
 )
 

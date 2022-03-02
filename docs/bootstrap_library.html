@@ -34,7 +34,8 @@
     <script src="_static/sphinx-book-theme.9d8b4a8b9bb19db25eeaddc40d639ba2.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="prev" title="//ll:toolchain.bzl" href="toolchain.html" />
+    <link rel="next" title="//ll:compilation_database.bzl" href="compilation_database.html" />
+    <link rel="prev" title="//ll:args.bzl" href="args.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
 
@@ -135,10 +136,28 @@
 </p>
 <ul class="current nav bd-sidenav">
  <li class="toctree-l1">
-  <a class="reference internal" href="ll.html">
+  <a class="reference internal" href="actions.html">
    <code class="docutils literal notranslate">
     <span class="pre">
-     //ll:ll.bzl
+     //ll:actions.bzl
+    </span>
+   </code>
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="args.html">
+   <code class="docutils literal notranslate">
+    <span class="pre">
+     //ll:args.bzl
+    </span>
+   </code>
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   <code class="docutils literal notranslate">
+    <span class="pre">
+     //ll:bootstrap_library.bzl
     </span>
    </code>
   </a>
@@ -153,10 +172,28 @@
   </a>
  </li>
  <li class="toctree-l1">
-  <a class="reference internal" href="args.html">
+  <a class="reference internal" href="driver.html">
    <code class="docutils literal notranslate">
     <span class="pre">
-     //ll:args.bzl
+     //ll:driver.bzl
+    </span>
+   </code>
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="environment.html">
+   <code class="docutils literal notranslate">
+    <span class="pre">
+     //ll:environment.bzl
+    </span>
+   </code>
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="inputs.html">
+   <code class="docutils literal notranslate">
+    <span class="pre">
+     //ll:inputs.bzl
     </span>
    </code>
   </a>
@@ -166,6 +203,24 @@
    <code class="docutils literal notranslate">
     <span class="pre">
      //ll:internal_functions.bzl
+    </span>
+   </code>
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="ll.html">
+   <code class="docutils literal notranslate">
+    <span class="pre">
+     //ll:ll.bzl
+    </span>
+   </code>
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="outputs.html">
+   <code class="docutils literal notranslate">
+    <span class="pre">
+     //ll:outputs.bzl
     </span>
    </code>
   </a>
@@ -188,11 +243,11 @@
    </code>
   </a>
  </li>
- <li class="toctree-l1 current active">
-  <a class="current reference internal" href="#">
+ <li class="toctree-l1">
+  <a class="reference internal" href="tools.html">
    <code class="docutils literal notranslate">
     <span class="pre">
-     //ll:bootstrap_library.bzl
+     //ll:tools.bzl
     </span>
    </code>
   </a>
@@ -303,8 +358,9 @@
 <div class="section" id="ll-bootstrap-library">
 <h2>ll_bootstrap_library<a class="headerlink" href="#ll-bootstrap-library" title="Permalink to this headline">¶</a></h2>
 <pre>
-ll_bootstrap_library(<a href="#ll_bootstrap_library-name">name</a>, <a href="#ll_bootstrap_library-compile_flags">compile_flags</a>, <a href="#ll_bootstrap_library-defines">defines</a>, <a href="#ll_bootstrap_library-deps">deps</a>, <a href="#ll_bootstrap_library-hdrs">hdrs</a>, <a href="#ll_bootstrap_library-includes">includes</a>, <a href="#ll_bootstrap_library-link_flags">link_flags</a>, <a href="#ll_bootstrap_library-proprietary">proprietary</a>,
-                     <a href="#ll_bootstrap_library-srcs">srcs</a>, <a href="#ll_bootstrap_library-transitive_defines">transitive_defines</a>, <a href="#ll_bootstrap_library-transitive_hdrs">transitive_hdrs</a>, <a href="#ll_bootstrap_library-transitive_includes">transitive_includes</a>)
+ll_bootstrap_library(<a href="#ll_bootstrap_library-name">name</a>, <a href="#ll_bootstrap_library-aggregate">aggregate</a>, <a href="#ll_bootstrap_library-compile_flags">compile_flags</a>, <a href="#ll_bootstrap_library-data">data</a>, <a href="#ll_bootstrap_library-defines">defines</a>, <a href="#ll_bootstrap_library-deps">deps</a>, <a href="#ll_bootstrap_library-hdrs">hdrs</a>, <a href="#ll_bootstrap_library-includes">includes</a>,
+                     <a href="#ll_bootstrap_library-link_flags">link_flags</a>, <a href="#ll_bootstrap_library-proprietary">proprietary</a>, <a href="#ll_bootstrap_library-srcs">srcs</a>, <a href="#ll_bootstrap_library-transitive_defines">transitive_defines</a>, <a href="#ll_bootstrap_library-transitive_hdrs">transitive_hdrs</a>,
+                     <a href="#ll_bootstrap_library-transitive_includes">transitive_includes</a>)
 </pre>
 <p>Internal use only.</p>
 <p>Same as ll_library, but uses a different toolchain.</p>
@@ -325,9 +381,21 @@ ll_bootstrap_library(<a href="#ll_bootstrap_library-name">name</a>, <a href="#ll
 <td class="text-left"><p>required</p></td>
 <td class="text-left"><p></p></td>
 </tr>
-<tr class="row-odd"><td class="text-left"><p><a id="ll_bootstrap_library-compile_flags"></a>compile_flags</p></td>
+<tr class="row-odd"><td class="text-left"><p><a id="ll_bootstrap_library-aggregate"></a>aggregate</p></td>
+<td class="text-left"><p>Sets the aggregation mode for compiled outputs in <code>ll_library</code>.<br><br>        <code>”static”</code> invokes the archiver and creates an archive with a <code>.a</code>         extension.         <code>”bitcode”</code> invokes the bitcode linker and creates a bitcode file with a         <code>.bc</code> extension.         <code>”none”</code> will not invoke any aggregator. Instead, loose files will             be output by the rule.<br><br>        Not used by <code>ll_binary</code>, but <code>ll_library</code> targets with         <code>aggregate = “bitcode”</code> can be used as <code>deps</code> for <code>ll_binary</code>.</p></td>
+<td class="text-left"><p>String</p></td>
+<td class="text-left"><p>optional</p></td>
+<td class="text-left"><p>“static”</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p><a id="ll_bootstrap_library-compile_flags"></a>compile_flags</p></td>
 <td class="text-left"><p>Additional flags for the compiler.<br><br>        A list of strings <code>[“-O3”, “-std=c++20”]</code> will be appended to the         compile command line arguments as <code>-O3 -std=c++20</code>.<br><br>        Only used for this target.</p></td>
 <td class="text-left"><p>List of strings</p></td>
+<td class="text-left"><p>optional</p></td>
+<td class="text-left"><p>[]</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><a id="ll_bootstrap_library-data"></a>data</p></td>
+<td class="text-left"><p>Additional files made available to the sandboxed actions         executed within this rule. These files are not appended to any command         line arguments, but are part of the inputs to the action and may be         referenced manually via the <code>includes</code>, <code>compile_flags</code> and         <code>link_flags</code> attributes.</p></td>
+<td class="text-left"><p><a href="https://bazel.build/docs/build-ref.html#labels">List of labels</a></p></td>
 <td class="text-left"><p>optional</p></td>
 <td class="text-left"><p>[]</p></td>
 </tr>
@@ -356,7 +424,7 @@ ll_bootstrap_library(<a href="#ll_bootstrap_library-name">name</a>, <a href="#ll
 <td class="text-left"><p>[]</p></td>
 </tr>
 <tr class="row-even"><td class="text-left"><p><a id="ll_bootstrap_library-link_flags"></a>link_flags</p></td>
-<td class="text-left"><p>Additional flags for the linker.<br><br>        This is the place for adding library search paths and external link         targets.<br><br>        Assuming you have a library <code>/some/path/libmylib.a</code> on your host system,         you can make <code>mylib.a</code> available to the linker by passing         <code>[“-L/some/path”, “-lmylib”]</code> to this attribute.<br><br>        Only used for this target. Only used by <code>ll_binary</code>, since <code>ll_library</code>         does not invoke the linker.</p></td>
+<td class="text-left"><p>Additional flags for the linker.<br><br>        For <code>ll_binary</code>:         This is the place for adding library search paths and external link         targets.<br><br>        Assuming you have a library <code>/some/path/libmylib.a</code> on your host system,         you can make <code>mylib.a</code> available to the linker by passing         <code>[“-L/some/path”, “-lmylib”]</code> to this attribute.<br><br>        For <code>ll_library</code>:         If <code>aggregate = “bitcode”</code>, these flags are passed to the bitcode         linker <code>llvm-link</code>.</p></td>
 <td class="text-left"><p>List of strings</p></td>
 <td class="text-left"><p>optional</p></td>
 <td class="text-left"><p>[]</p></td>
@@ -402,12 +470,19 @@ ll_bootstrap_library(<a href="#ll_bootstrap_library-name">name</a>, <a href="#ll
 
                 <!-- Previous / next buttons -->
 <div class='prev-next-area'>
-    <a class='left-prev' id="prev-link" href="toolchain.html" title="previous page">
+    <a class='left-prev' id="prev-link" href="args.html" title="previous page">
         <i class="fas fa-angle-left"></i>
         <div class="prev-next-info">
             <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title"><code class="docutils literal notranslate"><span class="pre">//ll:toolchain.bzl</span></code></p>
+            <p class="prev-next-title"><code class="docutils literal notranslate"><span class="pre">//ll:args.bzl</span></code></p>
         </div>
+    </a>
+    <a class='right-next' id="next-link" href="compilation_database.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title"><code class="docutils literal notranslate"><span class="pre">//ll:compilation_database.bzl</span></code></p>
+    </div>
+    <i class="fas fa-angle-right"></i>
     </a>
 </div>
 

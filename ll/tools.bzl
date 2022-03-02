@@ -1,3 +1,8 @@
+"""# `//ll:tools.bzl`
+
+Tools used by actions.
+"""
+
 def compile_object_tools(ctx):
     if "//ll:toolchain_type" in ctx.toolchains:
         return [

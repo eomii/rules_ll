@@ -1,3 +1,8 @@
+"""# `//ll:outputs.bzl`
+
+Action outputs.
+"""
+
 load("@bazel_skylib//lib:paths.bzl", "paths")
 
 def link_executable_outputs(ctx):

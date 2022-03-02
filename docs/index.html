@@ -135,19 +135,10 @@
 </p>
 <ul class="nav bd-sidenav">
  <li class="toctree-l1">
-  <a class="reference internal" href="ll.html">
+  <a class="reference internal" href="actions.html">
    <code class="docutils literal notranslate">
     <span class="pre">
-     //ll:ll.bzl
-    </span>
-   </code>
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="compilation_database.html">
-   <code class="docutils literal notranslate">
-    <span class="pre">
-     //ll:compilation_database.bzl
+     //ll:actions.bzl
     </span>
    </code>
   </a>
@@ -162,10 +153,73 @@
   </a>
  </li>
  <li class="toctree-l1">
+  <a class="reference internal" href="bootstrap_library.html">
+   <code class="docutils literal notranslate">
+    <span class="pre">
+     //ll:bootstrap_library.bzl
+    </span>
+   </code>
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="compilation_database.html">
+   <code class="docutils literal notranslate">
+    <span class="pre">
+     //ll:compilation_database.bzl
+    </span>
+   </code>
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="driver.html">
+   <code class="docutils literal notranslate">
+    <span class="pre">
+     //ll:driver.bzl
+    </span>
+   </code>
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="environment.html">
+   <code class="docutils literal notranslate">
+    <span class="pre">
+     //ll:environment.bzl
+    </span>
+   </code>
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="inputs.html">
+   <code class="docutils literal notranslate">
+    <span class="pre">
+     //ll:inputs.bzl
+    </span>
+   </code>
+  </a>
+ </li>
+ <li class="toctree-l1">
   <a class="reference internal" href="internal_functions.html">
    <code class="docutils literal notranslate">
     <span class="pre">
      //ll:internal_functions.bzl
+    </span>
+   </code>
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="ll.html">
+   <code class="docutils literal notranslate">
+    <span class="pre">
+     //ll:ll.bzl
+    </span>
+   </code>
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="outputs.html">
+   <code class="docutils literal notranslate">
+    <span class="pre">
+     //ll:outputs.bzl
     </span>
    </code>
   </a>
@@ -189,10 +243,10 @@
   </a>
  </li>
  <li class="toctree-l1">
-  <a class="reference internal" href="bootstrap_library.html">
+  <a class="reference internal" href="tools.html">
    <code class="docutils literal notranslate">
     <span class="pre">
-     //ll:bootstrap_library.bzl
+     //ll:tools.bzl
     </span>
    </code>
   </a>
@@ -356,28 +410,61 @@
 <div class="toctree-wrapper compound">
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Private API</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="ll.html"><code class="docutils literal notranslate"><span class="pre">//ll:ll.bzl</span></code></a><ul>
-<li class="toctree-l2"><a class="reference internal" href="ll.html#ll-binary">ll_binary</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ll.html#ll-library">ll_library</a></li>
+<li class="toctree-l1"><a class="reference internal" href="actions.html"><code class="docutils literal notranslate"><span class="pre">//ll:actions.bzl</span></code></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="actions.html#compile-object">compile_object</a></li>
+<li class="toctree-l2"><a class="reference internal" href="actions.html#compile-objects">compile_objects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="actions.html#create-archive-library">create_archive_library</a></li>
+<li class="toctree-l2"><a class="reference internal" href="actions.html#expose-headers">expose_headers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="actions.html#link-bitcode-library">link_bitcode_library</a></li>
+<li class="toctree-l2"><a class="reference internal" href="actions.html#link-executable">link_executable</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="args.html"><code class="docutils literal notranslate"><span class="pre">//ll:args.bzl</span></code></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="args.html#compile-object-args">compile_object_args</a></li>
+<li class="toctree-l2"><a class="reference internal" href="args.html#create-archive-library-args">create_archive_library_args</a></li>
+<li class="toctree-l2"><a class="reference internal" href="args.html#expose-headers-args">expose_headers_args</a></li>
+<li class="toctree-l2"><a class="reference internal" href="args.html#link-bitcode-library-args">link_bitcode_library_args</a></li>
+<li class="toctree-l2"><a class="reference internal" href="args.html#link-executable-args">link_executable_args</a></li>
+<li class="toctree-l2"><a class="reference internal" href="args.html#llvm-target-directory-path">llvm_target_directory_path</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="bootstrap_library.html"><code class="docutils literal notranslate"><span class="pre">//ll:bootstrap_library.bzl</span></code></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="bootstrap_library.html#ll-bootstrap-library">ll_bootstrap_library</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="compilation_database.html"><code class="docutils literal notranslate"><span class="pre">//ll:compilation_database.bzl</span></code></a><ul>
 <li class="toctree-l2"><a class="reference internal" href="compilation_database.html#ll-compilation-database">ll_compilation_database</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="args.html"><code class="docutils literal notranslate"><span class="pre">//ll:args.bzl</span></code></a><ul>
-<li class="toctree-l2"><a class="reference internal" href="args.html#construct-default-args">construct_default_args</a></li>
+<li class="toctree-l1"><a class="reference internal" href="driver.html"><code class="docutils literal notranslate"><span class="pre">//ll:driver.bzl</span></code></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="driver.html#compiler-driver">compiler_driver</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="environment.html"><code class="docutils literal notranslate"><span class="pre">//ll:environment.bzl</span></code></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="environment.html#compile-object-environment">compile_object_environment</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="inputs.html"><code class="docutils literal notranslate"><span class="pre">//ll:inputs.bzl</span></code></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="inputs.html#compilable-sources">compilable_sources</a></li>
+<li class="toctree-l2"><a class="reference internal" href="inputs.html#compile-object-inputs">compile_object_inputs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="inputs.html#link-bitcode-library-inputs">link_bitcode_library_inputs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="inputs.html#link-executable-inputs">link_executable_inputs</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="internal_functions.html"><code class="docutils literal notranslate"><span class="pre">//ll:internal_functions.bzl</span></code></a><ul>
-<li class="toctree-l2"><a class="reference internal" href="internal_functions.html#archive-action">archive_action</a></li>
-<li class="toctree-l2"><a class="reference internal" href="internal_functions.html#compile-objects">compile_objects</a></li>
-<li class="toctree-l2"><a class="reference internal" href="internal_functions.html#create-archive-library">create_archive_library</a></li>
-<li class="toctree-l2"><a class="reference internal" href="internal_functions.html#create-compile-inputs">create_compile_inputs</a></li>
-<li class="toctree-l2"><a class="reference internal" href="internal_functions.html#create-executable">create_executable</a></li>
-<li class="toctree-l2"><a class="reference internal" href="internal_functions.html#expose-headers">expose_headers</a></li>
-<li class="toctree-l2"><a class="reference internal" href="internal_functions.html#llvm-target-directory-path">llvm_target_directory_path</a></li>
 <li class="toctree-l2"><a class="reference internal" href="internal_functions.html#resolve-deps">resolve_deps</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="ll.html"><code class="docutils literal notranslate"><span class="pre">//ll:ll.bzl</span></code></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ll.html#ll-binary">ll_binary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ll.html#ll-library">ll_library</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="outputs.html"><code class="docutils literal notranslate"><span class="pre">//ll:outputs.bzl</span></code></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="outputs.html#compile-object-outputs">compile_object_outputs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="outputs.html#create-archive-library-outputs">create_archive_library_outputs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="outputs.html#link-bitcode-library-outputs">link_bitcode_library_outputs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="outputs.html#link-executable-outputs">link_executable_outputs</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="providers.html"><code class="docutils literal notranslate"><span class="pre">//ll:providers.bzl</span></code></a><ul>
@@ -391,8 +478,9 @@
 <li class="toctree-l2"><a class="reference internal" href="toolchain.html#ll-toolchain">ll_toolchain</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="bootstrap_library.html"><code class="docutils literal notranslate"><span class="pre">//ll:bootstrap_library.bzl</span></code></a><ul>
-<li class="toctree-l2"><a class="reference internal" href="bootstrap_library.html#ll-bootstrap-library">ll_bootstrap_library</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tools.html"><code class="docutils literal notranslate"><span class="pre">//ll:tools.bzl</span></code></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tools.html#compile-object-tools">compile_object_tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools.html#linking-tools">linking_tools</a></li>
 </ul>
 </li>
 </ul>
