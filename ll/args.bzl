@@ -56,20 +56,13 @@ def compile_object_args(ctx, in_file, out_file, cdf, headers, defines, includes)
         llvm_target_directory_path(ctx),
         "libcxx/include",
     )
-    args.add(libcxx_include_path, format = "-I%s")
+    args.add(libcxx_include_path, format = "-isystem%s")
 
     clang_builtin_include_path = paths.join(
         llvm_target_directory_path(ctx),
         "clang/staging/include",
     )
     args.add(clang_builtin_include_path, format = "-isystem%s")
-
-    # clang_include_path = paths.join(
-    #     llvm_target_directory_path(ctx),
-    #     "clang/include",
-    # )
-    # clang_include_path = "external/llvm-project/clang/include"
-    # args.add(clang_include_path, format = "-I%s")
 
     # Target-specific flags.
     args.add_all(
@@ -160,7 +153,7 @@ def link_bitcode_library_args(ctx, in_files, out_file, libraries):
     if ctx.var["COMPILATION_MODE"] == "dbg":
         args.add("-v")
 
-    args.add_all(ctx.attr.bitcode_link_flags)
+    args.add_all(ctx.attr.link_flags)
 
     args.add_all(in_files)
     args.add_all(libraries)

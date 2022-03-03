@@ -128,20 +128,20 @@ def create_archive_library(
         mnemonic = "LlCreateArchiveLibrary",
         use_default_shell_env = False,
     )
-    return [out_file]
+    return out_file
 
 def link_bitcode_library(ctx, in_files, libraries, toolchain_type = "//ll:toolchain_type"):
-    outs = link_bitcode_library_outputs(ctx)
+    out_file = link_bitcode_library_outputs(ctx)
 
     ctx.actions.run(
-        outputs = outs,
+        outputs = [out_file],
         inputs = link_bitcode_library_inputs(ctx, in_files, libraries),
         executable = ctx.toolchains[toolchain_type].bitcode_linker,
-        arguments = link_bitcode_library_args(ctx, in_files, outs, libraries),
+        arguments = link_bitcode_library_args(ctx, in_files, out_file, libraries),
         mnemonic = "LlLinkBitcodeLibrary",
         use_default_shell_env = False,
     )
-    return outs
+    return out_file
 
 def link_executable(ctx, in_files, libraries, toolchain_type = "//ll:toolchain_type"):
     out_file = link_executable_outputs(ctx)

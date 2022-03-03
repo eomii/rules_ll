@@ -28,10 +28,10 @@ DEFAULT_ATTRS = {
     ),
     "data": attr.label_list(
         doc = """Additional files made available to the sandboxed actions
-        executed within this rule. These files are not appended to any command
+        executed within this rule. These files are not appended to the default
         line arguments, but are part of the inputs to the action and may be
-        referenced manually via the `includes`, `compile_flags` and
-        `link_flags` attributes.
+        referenced added to command line arguments manually via the `includes`,
+        `compile_flags` and `link_flags` attributes.
         """,
         allow_files = True,
     ),
@@ -165,10 +165,10 @@ def _ll_library_impl(ctx):
     )
 
     out_files = intermediary_objects
-    if ctx.attr.aggregate == "archive":
+    if ctx.attr.aggregate == "static":
         out_file = create_archive_library(
             ctx,
-            object_files = intermediary_objects,
+            in_files = intermediary_objects,
             libraries = libraries,
             toolchain_type = "//ll:toolchain_type",
         )
@@ -176,7 +176,7 @@ def _ll_library_impl(ctx):
     elif ctx.attr.aggregate == "bitcode":
         out_file = link_bitcode_library(
             ctx,
-            object_files = intermediary_objects,
+            in_files = intermediary_objects,
             libraries = libraries,
             toolchain_type = "//ll:toolchain_type",
         )

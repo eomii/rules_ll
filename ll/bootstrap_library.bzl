@@ -35,7 +35,7 @@ def _ll_bootstrap_library_impl(ctx):
 
     out_files = intermediary_objects
     if ctx.attr.aggregate == "static":
-        out_files = create_archive_library(
+        out_file = create_archive_library(
             ctx,
             in_files = intermediary_objects,
             libraries = libraries,
@@ -47,7 +47,7 @@ def _ll_bootstrap_library_impl(ctx):
     exposed_headers = expose_headers(ctx)
 
     return [
-        DefaultInfo(files = depset(out_files + exposed_headers)),
+        DefaultInfo(files = depset([out_file] + exposed_headers)),
         LlInfo(
             transitive_headers = transitive_headers,
             libraries = depset(out_files, transitive = [libraries]),
