@@ -2,13 +2,84 @@ load("@rules_ll//ll:defs.bzl", "ll_bootstrap_library")
 
 filegroup(
     name = "libcxxabi_headers",
-    srcs = glob(["include/**"]),
+    srcs = glob(["include/**/*"]),
     visibility = ["//visibility:public"],
 )
 
 ll_bootstrap_library(
     name = "libll_cxxabi",
-    transitive_hdrs = [":libcxxabi_headers"],
+    srcs = [
+        # C++ABI files
+        "src/cxa_aux_runtime.cpp",
+        "src/cxa_default_handlers.cpp",
+        "src/cxa_demangle.cpp",
+        "src/cxa_exception_storage.cpp",
+        "src/cxa_guard.cpp",
+        "src/cxa_handlers.cpp",
+        "src/cxa_thread_atexit.cpp",
+        "src/cxa_vector.cpp",
+        "src/cxa_virtual.cpp",
+
+        # C++ STL files
+        "src/stdlib_exception.cpp",
+        "src/stdlib_stdexcept.cpp",
+        "src/stdlib_typeinfo.cpp",
+
+        # Internal files
+        "src/abort_message.cpp",
+        "src/fallback_malloc.cpp",
+        "src/private_typeinfo.cpp",
+
+        # New/Delete
+        "src/stdlib_new_delete.cpp",
+
+        # Exceptions
+        "src/cxa_exception.cpp",
+        "src/cxa_personality.cpp",
+    ],
+    hdrs = glob(["include/**"]) + [
+        # C++ABI files.
+        "src/cxa_handlers.h",
+        "src/cxa_guard_impl.h",
+
+        # C++ STL files.
+        "src/abort_message.h",
+        "src/fallback_malloc.h",
+        "src/private_typeinfo.h",
+
+        # Exceptions.
+        "src/cxa_exception.h",
+
+        # Demangle
+        "src/demangle/DemangleConfig.h",
+        "src/demangle/ItaniumDemangle.h",
+        "src/demangle/StringView.h",
+        "src/demangle/Utility.h",
+    ],
+    compile_flags = [
+        "-std=c++20",
+        "-faligned-allocation",
+        "-funwind-tables",
+        "-fstrict-aliasing",
+        "-fvisibility-inlines-hidden",
+    ],
+    # Include libcxx headers via -I instead of -isystem.
+    data = [
+        "//libcxx:libcxx_headers",
+        "//libcxx:libcxx_sources",
+    ],
+    defines = [
+        "LIBCXX_BUILDING_LIBCXXABI",
+        "HAVE___CXA_THREAD_ATEXIT_IMPL",  # 3 underscores.
+        "LIBCXXABI_USE_LLVM_UNWINDER",
+        "_LIBCPP_BUILDING_LIBRARY",
+        "_LIBCXXABI_BUILDING_LIBRARY",
+        "_LIBCXXABI_LINK_PTHREAD_LIB",
+        "__STDC_CONSTANT_MACROS",
+        "__STDC_FORMAT_MACROS",
+        "__STDC_LIMIT_MACROS",
+    ],
+    # Libcxxabi requires some files from libc++.
+    includes = ["external/llvm-project/libcxx/src"],
     visibility = ["//visibility:public"],
-    deps = ["//libcxxabi/src"],
 )

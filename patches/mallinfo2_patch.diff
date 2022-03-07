@@ -1,0 +1,14 @@
+diff --git a/utils/bazel/llvm-project-overlay/llvm/include/llvm/Config/config.h b/utils/bazel/llvm-project-overlay/llvm/include/llvm/Config/config.h
+index 45945510d..88c0afb66 100644
+--- a/utils/bazel/llvm-project-overlay/llvm/include/llvm/Config/config.h
++++ b/utils/bazel/llvm-project-overlay/llvm/include/llvm/Config/config.h
+@@ -159,6 +159,9 @@
+ /* Define to 1 if you have the `mallinfo' function. */
+ /* HAVE_MALLINFO defined in Bazel */
+
++/* Define to 1 if you have the `mallinfo2` function. */
++#define HAVE_MALLINFO2 1
++
+ /* Define to 1 if you have the <malloc/malloc.h> header file. */
+ /* HAVE_MALLOC_MALLOC_H defined in Bazel */
+

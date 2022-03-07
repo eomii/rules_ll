@@ -50,19 +50,15 @@ def compile_object_args(ctx, in_file, out_file, cdf, headers, defines, includes)
     # Environment encapsulation.
     # args.add("-nostdinc")
     args.add("-nostdinc++")
-    args.add("-nobuiltininc")
-
-    libcxx_include_path = paths.join(
-        llvm_target_directory_path(ctx),
-        "libcxx/include",
-    )
-    args.add(libcxx_include_path, format = "-isystem%s")
 
     clang_builtin_include_path = paths.join(
         llvm_target_directory_path(ctx),
-        "clang/staging/include",
+        "clang/staging",
     )
-    args.add(clang_builtin_include_path, format = "-isystem%s")
+    args.add(clang_builtin_include_path, format = "-resource-dir=%s")
+
+    libcxx_include_path = "external/llvm-project/libcxx/include"
+    args.add(libcxx_include_path, format = "-isystem%s")
 
     # Target-specific flags.
     args.add_all(
@@ -81,7 +77,7 @@ def compile_object_args(ctx, in_file, out_file, cdf, headers, defines, includes)
 
     return [args]
 
-def link_executable_args(ctx, in_files, out_file, libraries):
+def link_executable_args(ctx, in_files, out_file):
     args = ctx.actions.args()
 
     # Visualization.
@@ -119,7 +115,7 @@ def link_executable_args(ctx, in_files, out_file, libraries):
     args.add(libunwind_path, format = "-L%s")
     args.add("-lll_unwind")
 
-    # Use custom libc++. Note that our libc++ includes libc++abi.
+    # Use custom libc++.
     libcxx_path = paths.join(
         llvm_target_directory_path(ctx),
         "libcxx",
@@ -127,6 +123,15 @@ def link_executable_args(ctx, in_files, out_file, libraries):
     args.add(libcxx_path, format = "-L%s")
     args.add(libcxx_path, format = "--rpath=%s")
     args.add("-lll_cxx")
+
+    # Use custom libc++abi.
+    libcxxabi_path = paths.join(
+        llvm_target_directory_path(ctx),
+        "libcxxabi",
+    )
+    args.add(libcxxabi_path, format = "-L%s")
+    args.add(libcxxabi_path, format = "--rpath=%s")
+    args.add("-lll_cxxabi")
 
     # Additional system libraries.
     args.add("-L/usr/lib")
@@ -141,29 +146,28 @@ def link_executable_args(ctx, in_files, out_file, libraries):
 
     # Target-specific flags.
     args.add_all(ctx.attr.link_flags)
-    args.add_all(libraries)
+    print(in_files)
     args.add_all(in_files)
     args.add("-o", out_file)
 
     return [args]
 
-def link_bitcode_library_args(ctx, in_files, out_file, libraries):
+def link_bitcode_library_args(ctx, in_files, out_file):
     args = ctx.actions.args()
 
     if ctx.var["COMPILATION_MODE"] == "dbg":
         args.add("-v")
 
-    args.add_all(ctx.attr.link_flags)
+    args.add_all(ctx.attr.bitcode_link_flags)
 
     args.add_all(in_files)
-    args.add_all(libraries)
 
     out_file = ctx.actions.declare_file(ctx.label.name + ".bc")
     args.add("-o", out_file)
 
     return [args]
 
-def create_archive_library_args(ctx, in_files, out_file, libraries):
+def create_archive_library_args(ctx, in_files, out_file):
     args = ctx.actions.args()
 
     # -v: Verbose.
@@ -178,7 +182,6 @@ def create_archive_library_args(ctx, in_files, out_file, libraries):
 
     args.add(out_file)
     args.add_all(in_files)
-    args.add_all(libraries)
 
     return [args]
 

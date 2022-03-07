@@ -8,8 +8,40 @@ filegroup(
 
 ll_bootstrap_library(
     name = "libll_unwind",
-    visibility = ["//visibility:public"],
-    deps = [
-        "//libunwind/src",
+    srcs = [
+        "src/Unwind-EHABI.cpp",
+        "src/Unwind-seh.cpp",
+        "src/Unwind-sjlj.c",
+        "src/UnwindLevel1.c",
+        "src/UnwindLevel1-gcc-ext.c",
+        "src/UnwindRegistersRestore.S",
+        "src/UnwindRegistersSave.S",
+        "src/libunwind.cpp",
     ],
+    hdrs = [
+        "src/AddressSpace.hpp",
+        "src/CompactUnwinder.hpp",
+        "src/DwarfInstructions.hpp",
+        "src/DwarfParser.hpp",
+        "src/EHHeaderParser.hpp",
+        "src/FrameHeaderCache.hpp",
+        "src/RWMutex.hpp",
+        "src/Registers.hpp",
+        "src/Unwind-EHABI.h",
+        "src/UnwindCursor.hpp",
+        "src/assembly.h",
+        "src/cet_unwind.h",
+        "src/config.h",
+        "src/dwarf2.h",
+        "src/libunwind_ext.h",
+        "//libunwind:libunwind_headers",
+    ],
+    compile_flags = [
+        "-faligned-allocation",
+        "-funwind-tables",
+        "-fstrict-aliasing",
+        "-fvisibility-inlines-hidden",
+    ],
+    visibility = ["//visibility:public"],
+    deps = ["//compiler-rt:libll_compiler-rt"],
 )

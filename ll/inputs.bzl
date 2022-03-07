@@ -3,6 +3,8 @@
 Action inputs.
 """
 
+load("//ll:providers.bzl", "LlInfo")
+
 def compilable_sources(ctx):
     compilable_extensions = ["ll", "c", "cl", "cpp", "S"]
     return [
@@ -16,9 +18,11 @@ def compile_object_inputs(ctx, headers):
         return depset(
             ctx.files.srcs +
             ctx.files.data +
-            ctx.toolchains["//ll:toolchain_type"].builtin_includes +
-            ctx.toolchains["//ll:toolchain_type"].cpp_stdlib,
-            transitive = [headers],
+            ctx.toolchains["//ll:toolchain_type"].builtin_includes,
+            transitive = [
+                headers,
+                ctx.toolchains["//ll:toolchain_type"].cpp_stdhdrs.files,
+            ],
         )
     elif "//ll:bootstrap_toolchain_type" in ctx.toolchains:
         return depset(
@@ -31,21 +35,29 @@ def compile_object_inputs(ctx, headers):
         fail("Unregognized toolchain type. rules_ll supports " +
              "//ll:toolchain_type and //ll:bootstrap_toolchain_type.")
 
-def link_executable_inputs(ctx, in_files, libraries):
+def create_archive_library_inputs(ctx, in_files):
+    print(ctx.files.deps)
+    return depset(in_files + ctx.files.deps)
+
+def link_executable_inputs(ctx, in_files):
     if "//ll:toolchain_type" in ctx.toolchains:
         return depset(
             in_files +
-            ctx.toolchains["//ll:toolchain_type"].compiler_runtime +
-            ctx.toolchains["//ll:toolchain_type"].unwind_library +
-            ctx.toolchains["//ll:toolchain_type"].cpp_stdlib +
+            ctx.files.deps +
+            ctx.files.libraries +
             ctx.toolchains["//ll:toolchain_type"].local_crt,
-            transitive = [libraries],
+            transitive = [
+                ctx.toolchains["//ll:toolchain_type"].cpp_stdlib.files,
+                ctx.toolchains["//ll:toolchain_type"].unwind_library.files,
+                ctx.toolchains["//ll:toolchain_type"].cpp_abi.files,
+                ctx.toolchains["//ll:toolchain_type"].compiler_runtime.files,
+            ],
         )
     else:
         fail("Can only link when using \"//ll:toolchain_type\".")
 
-def link_bitcode_library_inputs(ctx, in_files, libraries):
+def link_bitcode_library_inputs(ctx, in_files):
     if "//ll:toolchain_type" in ctx.toolchains:
-        return depset(in_files, transitive = [libraries])
+        return depset(in_files + ctx.files.deps + ctx.files.bitcode_libraries)
     else:
         fail("Can only link bitcode when using \"//ll:toolchain_type\".")

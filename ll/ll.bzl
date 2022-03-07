@@ -5,10 +5,12 @@ Rules for building C/C++ with an upstream LLVM/Clang toolchain.
 Build files should import these rules via `@rules_ll//ll:defs.bzl`.
 """
 
+load("@bazel_skylib//lib:dicts.bzl", "dicts")
 load("//ll:providers.bzl", "LlCompilationDatabaseFragmentsInfo", "LlInfo")
 load(
     "//ll:internal_functions.bzl",
-    "resolve_deps",
+    "resolve_binary_deps",
+    "resolve_library_deps",
 )
 load(
     "//ll:actions.bzl",
@@ -29,9 +31,12 @@ DEFAULT_ATTRS = {
     "data": attr.label_list(
         doc = """Additional files made available to the sandboxed actions
         executed within this rule. These files are not appended to the default
-        line arguments, but are part of the inputs to the action and may be
-        referenced added to command line arguments manually via the `includes`,
-        `compile_flags` and `link_flags` attributes.
+        line arguments, but are part of the inputs to the actions and may be
+        added to command line arguments manually via the `includes`,
+        and `compile_flags` (for `ll_binary also `link_flags`) attributes.
+
+        This attribute may be used to make intermediary outputs from non-ll
+        targets (e.g. from `rules_cc` or `filegroup`) available to the rule.
         """,
         allow_files = True,
     ),
@@ -49,12 +54,83 @@ DEFAULT_ATTRS = {
         doc = """Header files for this target.
 
         Headers in this attribute will not be exported, i.e. any generated
-        include paths are only used for this target.
+        include paths are only used for this target and the header files are
+        not made available to downstream targets.
 
         When including header files as `#include "some/path/myheader.h"` their
         include paths need to be specified in the `includes` attribute as well.
         """,
         allow_files = True,
+    ),
+    "defines": attr.string_list(
+        doc = """Additional defines for this target.
+
+        A list of strings `["MYDEFINE_1", "MYDEFINE_2"]` will add
+        `-DMYDEFINE_1 -DMYDEFINE_2` to the compile command line.
+
+        Only used for this target.
+        """,
+    ),
+    "includes": attr.string_list(
+        doc = """Additional include paths for this target.
+
+        When including a header not via `#include "header.h"`, but via
+        `#include "subdir/header.h"`, the include path needs to be added here in
+        addition to making the header available in the `hdrs` attribute.
+
+        Only used for this target.
+        """,
+    ),
+    "compile_flags": attr.string_list(
+        doc = """Additional flags for the compiler.
+
+        A list of strings `["-O3", "-std=c++20"]` will be appended to the
+        compile command line arguments as `-O3 -std=c++20`.
+
+        Flag pairs like `-Xclang -somearg` need to be split into separate flags
+        `["-Xclang", "-somearg"]`.
+
+        Only used for this target.
+        """,
+    ),
+}
+
+LIBRARY_ATTRS = {
+    "aggregate": attr.string(
+        doc = """Sets the aggregation mode for compiled outputs in `ll_library`.
+
+        `"static"` invokes the archiver and creates an archive with a `.a`
+        extension.
+        `"bitcode"` invokes the bitcode linker and creates a bitcode file with a
+        `.bc` extension.
+        `"none"` will not invoke any aggregator. Instead, loose object files
+        will be output by the rule.
+
+        Not used by `ll_binary`, but `ll_library` targets with
+        `aggregate = "bitcode"` can be used as `deps` for `ll_binary`.
+        """,
+        default = "static",
+        values = ["static", "bitcode", "none"],
+    ),
+    "bitcode_link_flags": attr.string_list(
+        doc = """Additional flags for the bitcode linker.
+
+        If `aggregate = "bitcode"`, these flags are passed to the bitcode
+        linker. The default bitcode linker is `llvm-link`.
+        """,
+    ),
+    "bitcode_libraries": attr.label_list(
+        doc = """Bitcode libraries that should always be linked.
+
+        Only used if `aggregate = "bitcode"`.
+        """,
+        allow_files = [".bc"],
+    ),
+    "transitive_defines": attr.string_list(
+        doc = """Additional transitive defines for this target.
+
+        These defines will be defined by all depending downstream targets.
+        """,
     ),
     "transitive_hdrs": attr.label_list(
         doc = """Transitive headers for this target.
@@ -65,29 +141,6 @@ DEFAULT_ATTRS = {
         """,
         allow_files = True,
     ),
-    "defines": attr.string_list(
-        doc = """Additional defines for this target.
-
-        A list of strings `["MYDEFINE_1", "MYDEFINE_2"]` will add
-        `-DMYDEFINE_1 -DMYDEFINE_2` to the compile command line.
-
-        Defines in this attribute are only used for the current target.
-        """,
-    ),
-    "transitive_defines": attr.string_list(
-        doc = """Additional transitive defines for this target.
-
-        These defines will be defined by all depending downstream targets.
-        """,
-    ),
-    "includes": attr.string_list(
-        doc = """Additional include paths for this target.
-
-        When including a header not via `#include "header.h"`, but via
-        `#include "subdir/header.h"`, the include path needs to be added here in
-        addition to making the header available in the `hdrs` attribute.
-        """,
-    ),
     "transitive_includes": attr.string_list(
         doc = """Additional transitive include paths for this target.
 
@@ -95,14 +148,22 @@ DEFAULT_ATTRS = {
         arguments for all downstream targets.
         """,
     ),
-    "compile_flags": attr.string_list(
-        doc = """Additional flags for the compiler.
+}
 
-        A list of strings `["-O3", "-std=c++20"]` will be appended to the
-        compile command line arguments as `-O3 -std=c++20`.
+BINARY_ATTRS = {
+    "proprietary": attr.bool(
+        doc = """Setting this to True will disable static linking of glibc.
 
-        Only used for this target.
+        This attribute will be removed as soon as `rules_ll` uses LLVM's `libc`.
         """,
+        default = False,
+    ),
+    "libraries": attr.label_list(
+        doc = """Additional libraries linked to the final executable.
+
+        Adds these libraries to the command line arguments for the linker.
+        """,
+        allow_files = True,
     ),
     "link_flags": attr.string_list(
         doc = """Additional flags for the linker.
@@ -115,46 +176,21 @@ DEFAULT_ATTRS = {
         you can make `mylib.a` available to the linker by passing
         `["-L/some/path", "-lmylib"]` to this attribute.
 
-        For `ll_library`:
-        If `aggregate = "bitcode"`, these flags are passed to the bitcode
-        linker `llvm-link`.
+        Prefer using the `libraries` attribute for library files already present
+        within the bazel build graph.
         """,
-    ),
-    "proprietary": attr.bool(
-        doc = """Setting this to True will disable static linking of glibc.
-
-        This attribute will be removed as soon as `rules_ll` uses LLVM's `libc`.
-        """,
-        default = False,
-    ),
-    "aggregate": attr.string(
-        doc = """Sets the aggregation mode for compiled outputs in `ll_library`.
-
-        `"static"` invokes the archiver and creates an archive with a `.a`
-        extension.
-        `"bitcode"` invokes the bitcode linker and creates a bitcode file with a
-        `.bc` extension.
-        `"none"` will not invoke any aggregator. Instead, loose files will
-            be output by the rule.
-
-        Not used by `ll_binary`, but `ll_library` targets with
-        `aggregate = "bitcode"` can be used as `deps` for `ll_binary`.
-        """,
-        default = "static",
-        values = ["static", "bitcode", "none"],
     ),
 }
 
 def _ll_library_impl(ctx):
     (
         headers,
-        libraries,
         defines,
         includes,
         transitive_headers,
         transitive_defines,
         transitive_includes,
-    ) = resolve_deps(ctx)
+    ) = resolve_library_deps(ctx)
 
     intermediary_objects, cdfs = compile_objects(
         ctx,
@@ -169,7 +205,6 @@ def _ll_library_impl(ctx):
         out_file = create_archive_library(
             ctx,
             in_files = intermediary_objects,
-            libraries = libraries,
             toolchain_type = "//ll:toolchain_type",
         )
         out_files = [out_file]
@@ -177,7 +212,6 @@ def _ll_library_impl(ctx):
         out_file = link_bitcode_library(
             ctx,
             in_files = intermediary_objects,
-            libraries = libraries,
             toolchain_type = "//ll:toolchain_type",
         )
         out_files = [out_file]
@@ -187,15 +221,12 @@ def _ll_library_impl(ctx):
         for dep in ctx.attr.deps
     ]
 
-    exposed_headers = expose_headers(ctx)
-
     return [
         DefaultInfo(
-            files = depset(out_files + exposed_headers),
+            files = depset(out_files),
         ),
         LlInfo(
             transitive_headers = transitive_headers,
-            libraries = depset(out_files, transitive = [libraries]),
             transitive_defines = transitive_defines,
             transitive_includes = transitive_includes,
         ),
@@ -207,7 +238,7 @@ def _ll_library_impl(ctx):
 ll_library = rule(
     implementation = _ll_library_impl,
     executable = False,
-    attrs = DEFAULT_ATTRS,
+    attrs = dicts.add(DEFAULT_ATTRS, LIBRARY_ATTRS),
     toolchains = ["//ll:toolchain_type"],
     output_to_genfiles = True,
     doc = """
@@ -224,18 +255,19 @@ Example:
 )
 
 def _ll_binary_impl(ctx):
-    headers, libraries, defines, includes, _, _, _ = resolve_deps(ctx)
+    headers, defines, includes = resolve_binary_deps(ctx)
+
+    print(headers)
 
     intermediary_objects, cdfs = compile_objects(
         ctx,
         headers = headers,
         defines = defines,
         includes = includes,
-        libraries = libraries,
         toolchain_type = "//ll:toolchain_type",
     )
 
-    out_file = link_executable(ctx, intermediary_objects, libraries)
+    out_file = link_executable(ctx, intermediary_objects + ctx.files.deps)
 
     transitive_cdfs = [
         dep[LlCompilationDatabaseFragmentsInfo].cdfs
@@ -255,7 +287,7 @@ def _ll_binary_impl(ctx):
 ll_binary = rule(
     implementation = _ll_binary_impl,
     executable = True,
-    attrs = DEFAULT_ATTRS,
+    attrs = dicts.add(DEFAULT_ATTRS, BINARY_ATTRS),
     toolchains = ["//ll:toolchain_type"],
     doc = """
 Creates an executable.

@@ -4,6 +4,7 @@ Implements `ll_toolchain` and the internally used `ll_bootstrap_toolchain`.
 """
 
 load("@bazel_skylib//lib:paths.bzl", "paths")
+load("//ll:providers.bzl", "LlInfo")
 
 def _ll_bootstrap_toolchain_impl(ctx):
     lld_alias = ctx.actions.declare_file("ld.lld")
@@ -83,9 +84,11 @@ def _ll_toolchain_impl(ctx):
             linker_executable = ctx.executable.linker,
             offload_bundler = ctx.executable.offload_bundler,
             builtin_includes = ctx.files.builtin_includes,
-            cpp_stdlib = ctx.files.cpp_stdlib,
-            compiler_runtime = ctx.files.compiler_runtime,
-            unwind_library = ctx.files.unwind_library,
+            cpp_stdlib = ctx.attr.cpp_stdlib,
+            cpp_stdhdrs = ctx.attr.cpp_stdhdrs,
+            cpp_abi = ctx.attr.cpp_abi,
+            compiler_runtime = ctx.attr.compiler_runtime,
+            unwind_library = ctx.attr.unwind_library,
             local_crt = ctx.files.local_crt,
             clang_tidy = ctx.executable.clang_tidy,
             clang_tidy_runner = ctx.executable.clang_tidy_runner,
@@ -142,14 +145,28 @@ ll_toolchain = rule(
             default = "@llvm-project//llvm:llvm-link",
         ),
         "cpp_stdlib": attr.label(
-            doc = "The C++ standard library.",
+            doc = "The C++ standard library archive.",
             cfg = "target",
             default = "@llvm-project//libcxx:libll_cxx",
+            providers = [LlInfo],
+        ),
+        "cpp_stdhdrs": attr.label(
+            doc = "The C++ standard library headers.",
+            cfg = "target",
+            default = "@llvm-project//libcxx:libcxx_headers",
+            allow_files = True,
+        ),
+        "cpp_abi": attr.label(
+            doc = "The C++ ABI library archive.",
+            cfg = "target",
+            default = "@llvm-project//libcxxabi:libll_cxxabi",
+            providers = [LlInfo],
         ),
         "compiler_runtime": attr.label(
             doc = "The compiler runtime.",
             cfg = "target",
             default = "@llvm-project//compiler-rt:libll_compiler-rt",
+            providers = [LlInfo],
         ),
         "unwind_library": attr.label(
             doc = "The unwinder library.",

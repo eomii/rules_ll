@@ -11,6 +11,7 @@ load(
     "//ll:inputs.bzl",
     "compilable_sources",
     "compile_object_inputs",
+    "create_archive_library_inputs",
     "link_bitcode_library_inputs",
     "link_executable_inputs",
 )
@@ -70,7 +71,6 @@ def compile_objects(
         headers = [],
         defines = [],
         includes = [],
-        libraries = [],
         toolchain_type = "//ll:toolchain_type"):
     in_files = compilable_sources(ctx)
     out_files = []
@@ -116,44 +116,44 @@ def compile_object(ctx, in_file, headers, defines, includes, toolchain_type):
 def create_archive_library(
         ctx,
         in_files = [],
-        libraries = [],
         toolchain_type = "//ll:toolchain_type"):
     out_file = create_archive_library_outputs(ctx)
+    in_files = create_archive_library_inputs(ctx, in_files)
 
     ctx.actions.run(
         outputs = [out_file],
-        inputs = depset(in_files, transitive = [libraries]),
+        inputs = in_files,
         executable = ctx.toolchains[toolchain_type].archiver,
-        arguments = create_archive_library_args(ctx, in_files, out_file, libraries),
+        arguments = create_archive_library_args(ctx, in_files, out_file),
         mnemonic = "LlCreateArchiveLibrary",
         use_default_shell_env = False,
     )
     return out_file
 
-def link_bitcode_library(ctx, in_files, libraries, toolchain_type = "//ll:toolchain_type"):
+def link_bitcode_library(ctx, in_files, toolchain_type = "//ll:toolchain_type"):
     out_file = link_bitcode_library_outputs(ctx)
 
     ctx.actions.run(
         outputs = [out_file],
-        inputs = link_bitcode_library_inputs(ctx, in_files, libraries),
+        inputs = link_bitcode_library_inputs(ctx, in_files),
         executable = ctx.toolchains[toolchain_type].bitcode_linker,
-        arguments = link_bitcode_library_args(ctx, in_files, out_file, libraries),
+        arguments = link_bitcode_library_args(ctx, in_files, out_file),
         mnemonic = "LlLinkBitcodeLibrary",
         use_default_shell_env = False,
     )
     return out_file
 
-def link_executable(ctx, in_files, libraries, toolchain_type = "//ll:toolchain_type"):
+def link_executable(ctx, in_files, toolchain_type = "//ll:toolchain_type"):
     out_file = link_executable_outputs(ctx)
 
     ctx.actions.run(
         outputs = [out_file],
-        inputs = link_executable_inputs(ctx, in_files, libraries),
+        inputs = link_executable_inputs(ctx, in_files),
         executable = ctx.toolchains[toolchain_type].linker,
         tools = [
             ctx.toolchains[toolchain_type].linker,
         ],
-        arguments = link_executable_args(ctx, in_files, out_file, libraries),
+        arguments = link_executable_args(ctx, in_files, out_file),
         mnemonic = "LlLinkExecutable",
         use_default_shell_env = False,
     )

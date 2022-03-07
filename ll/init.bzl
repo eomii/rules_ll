@@ -8,8 +8,8 @@ load("@bazel_tools//tools/build_defs/repo:utils.bzl", "maybe")
 
 # The current default commit for the LLVM repo. This should be updated
 # frequently.
-LLVM_COMMIT = "e7d65fca7ec470469ad3f8e7689b5e563346e4d7"
-LLVM_SHA256 = "6a7bd0862b27d0d9b5b1c77b1c765dea32a5d9be9f01a8cc53a909e50555ff27"
+LLVM_COMMIT = "df6c26fd3499d0770eff3922b90f576d7bde3880"
+LLVM_SHA256 = "4bfa9f4444e54dfe338710f2c5729def357414d33eb5e044cc47fc4497a6b57b"
 
 def initialize_rules_ll(
         local_crt_path,
@@ -68,6 +68,7 @@ def initialize_rules_ll(
         patches = [
             "@rules_ll//patches:compiler-rt_float128_patch.diff",
             "@rules_ll//patches:clang_header_patch.diff",
+            "@rules_ll//patches:mallinfo2_patch.diff",
         ],
         patch_args = ["-p1"],
     )
