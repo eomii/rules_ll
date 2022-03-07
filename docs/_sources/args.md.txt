@@ -34,7 +34,7 @@ compile_object_args(<a href="#compile_object_args-ctx">ctx</a>, <a href="#compil
 ## create_archive_library_args
 
 <pre>
-create_archive_library_args(<a href="#create_archive_library_args-ctx">ctx</a>, <a href="#create_archive_library_args-in_files">in_files</a>, <a href="#create_archive_library_args-out_file">out_file</a>, <a href="#create_archive_library_args-libraries">libraries</a>)
+create_archive_library_args(<a href="#create_archive_library_args-ctx">ctx</a>, <a href="#create_archive_library_args-in_files">in_files</a>, <a href="#create_archive_library_args-out_file">out_file</a>)
 </pre>
 
 
@@ -47,7 +47,6 @@ create_archive_library_args(<a href="#create_archive_library_args-ctx">ctx</a>, 
 | <a id="create_archive_library_args-ctx"></a>ctx |  <p align="center"> - </p>   |  none |
 | <a id="create_archive_library_args-in_files"></a>in_files |  <p align="center"> - </p>   |  none |
 | <a id="create_archive_library_args-out_file"></a>out_file |  <p align="center"> - </p>   |  none |
-| <a id="create_archive_library_args-libraries"></a>libraries |  <p align="center"> - </p>   |  none |
 
 
 <a id="#expose_headers_args"></a>
@@ -75,7 +74,7 @@ expose_headers_args(<a href="#expose_headers_args-ctx">ctx</a>, <a href="#expose
 ## link_bitcode_library_args
 
 <pre>
-link_bitcode_library_args(<a href="#link_bitcode_library_args-ctx">ctx</a>, <a href="#link_bitcode_library_args-in_files">in_files</a>, <a href="#link_bitcode_library_args-out_file">out_file</a>, <a href="#link_bitcode_library_args-libraries">libraries</a>)
+link_bitcode_library_args(<a href="#link_bitcode_library_args-ctx">ctx</a>, <a href="#link_bitcode_library_args-in_files">in_files</a>, <a href="#link_bitcode_library_args-out_file">out_file</a>)
 </pre>
 
 
@@ -88,7 +87,6 @@ link_bitcode_library_args(<a href="#link_bitcode_library_args-ctx">ctx</a>, <a h
 | <a id="link_bitcode_library_args-ctx"></a>ctx |  <p align="center"> - </p>   |  none |
 | <a id="link_bitcode_library_args-in_files"></a>in_files |  <p align="center"> - </p>   |  none |
 | <a id="link_bitcode_library_args-out_file"></a>out_file |  <p align="center"> - </p>   |  none |
-| <a id="link_bitcode_library_args-libraries"></a>libraries |  <p align="center"> - </p>   |  none |
 
 
 <a id="#link_executable_args"></a>
@@ -96,7 +94,7 @@ link_bitcode_library_args(<a href="#link_bitcode_library_args-ctx">ctx</a>, <a h
 ## link_executable_args
 
 <pre>
-link_executable_args(<a href="#link_executable_args-ctx">ctx</a>, <a href="#link_executable_args-in_files">in_files</a>, <a href="#link_executable_args-out_file">out_file</a>, <a href="#link_executable_args-libraries">libraries</a>)
+link_executable_args(<a href="#link_executable_args-ctx">ctx</a>, <a href="#link_executable_args-in_files">in_files</a>, <a href="#link_executable_args-out_file">out_file</a>)
 </pre>
 
 
@@ -109,7 +107,6 @@ link_executable_args(<a href="#link_executable_args-ctx">ctx</a>, <a href="#link
 | <a id="link_executable_args-ctx"></a>ctx |  <p align="center"> - </p>   |  none |
 | <a id="link_executable_args-in_files"></a>in_files |  <p align="center"> - </p>   |  none |
 | <a id="link_executable_args-out_file"></a>out_file |  <p align="center"> - </p>   |  none |
-| <a id="link_executable_args-libraries"></a>libraries |  <p align="center"> - </p>   |  none |
 
 
 <a id="#llvm_target_directory_path"></a>

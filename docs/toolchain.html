@@ -154,6 +154,15 @@
   </a>
  </li>
  <li class="toctree-l1">
+  <a class="reference internal" href="attributes.html">
+   <code class="docutils literal notranslate">
+    <span class="pre">
+     //ll:attributes.bzl
+    </span>
+   </code>
+  </a>
+ </li>
+ <li class="toctree-l1">
   <a class="reference internal" href="bootstrap_library.html">
    <code class="docutils literal notranslate">
     <span class="pre">
@@ -424,8 +433,8 @@ ll_bootstrap_toolchain(<a href="#ll_bootstrap_toolchain-name">name</a>, <a href=
 <h2>ll_toolchain<a class="headerlink" href="#ll-toolchain" title="Permalink to this headline">¶</a></h2>
 <pre>
 ll_toolchain(<a href="#ll_toolchain-name">name</a>, <a href="#ll_toolchain-archiver">archiver</a>, <a href="#ll_toolchain-bitcode_linker">bitcode_linker</a>, <a href="#ll_toolchain-builtin_includes">builtin_includes</a>, <a href="#ll_toolchain-c_driver">c_driver</a>, <a href="#ll_toolchain-clang_tidy">clang_tidy</a>,
-             <a href="#ll_toolchain-clang_tidy_runner">clang_tidy_runner</a>, <a href="#ll_toolchain-compiler_runtime">compiler_runtime</a>, <a href="#ll_toolchain-cpp_driver">cpp_driver</a>, <a href="#ll_toolchain-cpp_stdlib">cpp_stdlib</a>, <a href="#ll_toolchain-linker">linker</a>, <a href="#ll_toolchain-local_crt">local_crt</a>,
-             <a href="#ll_toolchain-offload_bundler">offload_bundler</a>, <a href="#ll_toolchain-symbolizer">symbolizer</a>, <a href="#ll_toolchain-unwind_library">unwind_library</a>)
+             <a href="#ll_toolchain-clang_tidy_runner">clang_tidy_runner</a>, <a href="#ll_toolchain-compiler_runtime">compiler_runtime</a>, <a href="#ll_toolchain-cpp_abi">cpp_abi</a>, <a href="#ll_toolchain-cpp_driver">cpp_driver</a>, <a href="#ll_toolchain-cpp_stdhdrs">cpp_stdhdrs</a>, <a href="#ll_toolchain-cpp_stdlib">cpp_stdlib</a>,
+             <a href="#ll_toolchain-linker">linker</a>, <a href="#ll_toolchain-local_crt">local_crt</a>, <a href="#ll_toolchain-offload_bundler">offload_bundler</a>, <a href="#ll_toolchain-symbolizer">symbolizer</a>, <a href="#ll_toolchain-unwind_library">unwind_library</a>)
 </pre>
 <p><strong>ATTRIBUTES</strong></p>
 <table class="colwidths-auto table">
@@ -486,14 +495,26 @@ ll_toolchain(<a href="#ll_toolchain-name">name</a>, <a href="#ll_toolchain-archi
 <td class="text-left"><p>optional</p></td>
 <td class="text-left"><p>&#64;llvm-project//compiler-rt:libll_compiler-rt</p></td>
 </tr>
-<tr class="row-even"><td class="text-left"><p><a id="ll_toolchain-cpp_driver"></a>cpp_driver</p></td>
+<tr class="row-even"><td class="text-left"><p><a id="ll_toolchain-cpp_abi"></a>cpp_abi</p></td>
+<td class="text-left"><p>The C++ ABI library archive.</p></td>
+<td class="text-left"><p><a href="https://bazel.build/docs/build-ref.html#labels">Label</a></p></td>
+<td class="text-left"><p>optional</p></td>
+<td class="text-left"><p>&#64;llvm-project//libcxxabi:libll_cxxabi</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><a id="ll_toolchain-cpp_driver"></a>cpp_driver</p></td>
 <td class="text-left"><p>The C++ compiler driver.</p></td>
 <td class="text-left"><p><a href="https://bazel.build/docs/build-ref.html#labels">Label</a></p></td>
 <td class="text-left"><p>optional</p></td>
 <td class="text-left"><p>&#64;llvm-project//clang:clang++</p></td>
 </tr>
+<tr class="row-even"><td class="text-left"><p><a id="ll_toolchain-cpp_stdhdrs"></a>cpp_stdhdrs</p></td>
+<td class="text-left"><p>The C++ standard library headers.</p></td>
+<td class="text-left"><p><a href="https://bazel.build/docs/build-ref.html#labels">Label</a></p></td>
+<td class="text-left"><p>optional</p></td>
+<td class="text-left"><p>&#64;llvm-project//libcxx:libcxx_headers</p></td>
+</tr>
 <tr class="row-odd"><td class="text-left"><p><a id="ll_toolchain-cpp_stdlib"></a>cpp_stdlib</p></td>
-<td class="text-left"><p>The C++ standard library.</p></td>
+<td class="text-left"><p>The C++ standard library archive.</p></td>
 <td class="text-left"><p><a href="https://bazel.build/docs/build-ref.html#labels">Label</a></p></td>
 <td class="text-left"><p>optional</p></td>
 <td class="text-left"><p>&#64;llvm-project//libcxx:libll_cxx</p></td>

@@ -154,6 +154,15 @@
   </a>
  </li>
  <li class="toctree-l1">
+  <a class="reference internal" href="attributes.html">
+   <code class="docutils literal notranslate">
+    <span class="pre">
+     //ll:attributes.bzl
+    </span>
+   </code>
+  </a>
+ </li>
+ <li class="toctree-l1">
   <a class="reference internal" href="bootstrap_library.html">
    <code class="docutils literal notranslate">
     <span class="pre">
@@ -368,8 +377,8 @@
 <div class="section" id="ll-binary">
 <h2>ll_binary<a class="headerlink" href="#ll-binary" title="Permalink to this headline">¶</a></h2>
 <pre>
-ll_binary(<a href="#ll_binary-name">name</a>, <a href="#ll_binary-aggregate">aggregate</a>, <a href="#ll_binary-compile_flags">compile_flags</a>, <a href="#ll_binary-data">data</a>, <a href="#ll_binary-defines">defines</a>, <a href="#ll_binary-deps">deps</a>, <a href="#ll_binary-hdrs">hdrs</a>, <a href="#ll_binary-includes">includes</a>, <a href="#ll_binary-link_flags">link_flags</a>,
-          <a href="#ll_binary-proprietary">proprietary</a>, <a href="#ll_binary-srcs">srcs</a>, <a href="#ll_binary-transitive_defines">transitive_defines</a>, <a href="#ll_binary-transitive_hdrs">transitive_hdrs</a>, <a href="#ll_binary-transitive_includes">transitive_includes</a>)
+ll_binary(<a href="#ll_binary-name">name</a>, <a href="#ll_binary-compile_flags">compile_flags</a>, <a href="#ll_binary-data">data</a>, <a href="#ll_binary-defines">defines</a>, <a href="#ll_binary-deps">deps</a>, <a href="#ll_binary-hdrs">hdrs</a>, <a href="#ll_binary-includes">includes</a>, <a href="#ll_binary-libraries">libraries</a>, <a href="#ll_binary-link_flags">link_flags</a>,
+          <a href="#ll_binary-proprietary">proprietary</a>, <a href="#ll_binary-srcs">srcs</a>)
 </pre>
 <p>Creates an executable.</p>
 <p>Example:</p>
@@ -395,50 +404,50 @@ ll_binary(<a href="#ll_binary-name">name</a>, <a href="#ll_binary-aggregate">agg
 <td class="text-left"><p>required</p></td>
 <td class="text-left"><p></p></td>
 </tr>
-<tr class="row-odd"><td class="text-left"><p><a id="ll_binary-aggregate"></a>aggregate</p></td>
-<td class="text-left"><p>Sets the aggregation mode for compiled outputs in <code>ll_library</code>.<br><br>        <code>”static”</code> invokes the archiver and creates an archive with a <code>.a</code>         extension.         <code>”bitcode”</code> invokes the bitcode linker and creates a bitcode file with a         <code>.bc</code> extension.         <code>”none”</code> will not invoke any aggregator. Instead, loose files will             be output by the rule.<br><br>        Not used by <code>ll_binary</code>, but <code>ll_library</code> targets with         <code>aggregate = “bitcode”</code> can be used as <code>deps</code> for <code>ll_binary</code>.</p></td>
-<td class="text-left"><p>String</p></td>
-<td class="text-left"><p>optional</p></td>
-<td class="text-left"><p>“static”</p></td>
-</tr>
-<tr class="row-even"><td class="text-left"><p><a id="ll_binary-compile_flags"></a>compile_flags</p></td>
-<td class="text-left"><p>Additional flags for the compiler.<br><br>        A list of strings <code>[“-O3”, “-std=c++20”]</code> will be appended to the         compile command line arguments as <code>-O3 -std=c++20</code>.<br><br>        Only used for this target.</p></td>
+<tr class="row-odd"><td class="text-left"><p><a id="ll_binary-compile_flags"></a>compile_flags</p></td>
+<td class="text-left"><p>Additional flags for the compiler.<br><br>        A list of strings <code>[“-O3”, “-std=c++20”]</code> will be appended to the         compile command line arguments as <code>-O3 -std=c++20</code>.<br><br>        Flag pairs like <code>-Xclang -somearg</code> need to be split into separate flags         <code>[“-Xclang”, “-somearg”]</code>.<br><br>        Only used for this target.</p></td>
 <td class="text-left"><p>List of strings</p></td>
 <td class="text-left"><p>optional</p></td>
 <td class="text-left"><p>[]</p></td>
 </tr>
-<tr class="row-odd"><td class="text-left"><p><a id="ll_binary-data"></a>data</p></td>
-<td class="text-left"><p>Additional files made available to the sandboxed actions         executed within this rule. These files are not appended to any command         line arguments, but are part of the inputs to the action and may be         referenced manually via the <code>includes</code>, <code>compile_flags</code> and         <code>link_flags</code> attributes.</p></td>
+<tr class="row-even"><td class="text-left"><p><a id="ll_binary-data"></a>data</p></td>
+<td class="text-left"><p>Additional files made available to the sandboxed actions         executed within this rule. These files are not appended to the default         line arguments, but are part of the inputs to the actions and may be         added to command line arguments manually via the <code>includes</code>,         and <code>compile_flags</code> (for <code>ll_binary also </code>link_flags<code>) attributes.<br><br>        This attribute may be used to make intermediary outputs from non-ll         targets (e.g. from </code>rules_cc<code> or </code>filegroup<code>) available to the rule.</p></td>
 <td class="text-left"><p><a href="https://bazel.build/docs/build-ref.html#labels">List of labels</a></p></td>
 <td class="text-left"><p>optional</p></td>
 <td class="text-left"><p>[]</p></td>
 </tr>
-<tr class="row-even"><td class="text-left"><p><a id="ll_binary-defines"></a>defines</p></td>
-<td class="text-left"><p>Additional defines for this target.<br><br>        A list of strings <code>[“MYDEFINE_1”, “MYDEFINE_2”]</code> will add         <code>-DMYDEFINE_1 -DMYDEFINE_2</code> to the compile command line.<br><br>        Defines in this attribute are only used for the current target.</p></td>
+<tr class="row-odd"><td class="text-left"><p><a id="ll_binary-defines"></a>defines</p></td>
+<td class="text-left"><p>Additional defines for this target.<br><br>        A list of strings <code>[“MYDEFINE_1”, “MYDEFINE_2”]</code> will add         <code>-DMYDEFINE_1 -DMYDEFINE_2</code> to the compile command line.<br><br>        Only used for this target.</p></td>
 <td class="text-left"><p>List of strings</p></td>
 <td class="text-left"><p>optional</p></td>
 <td class="text-left"><p>[]</p></td>
 </tr>
-<tr class="row-odd"><td class="text-left"><p><a id="ll_binary-deps"></a>deps</p></td>
+<tr class="row-even"><td class="text-left"><p><a id="ll_binary-deps"></a>deps</p></td>
 <td class="text-left"><p>The dependencies for this target.<br><br>        Every dependency needs to be an <code>ll_library</code>.</p></td>
 <td class="text-left"><p><a href="https://bazel.build/docs/build-ref.html#labels">List of labels</a></p></td>
 <td class="text-left"><p>optional</p></td>
 <td class="text-left"><p>[]</p></td>
 </tr>
-<tr class="row-even"><td class="text-left"><p><a id="ll_binary-hdrs"></a>hdrs</p></td>
-<td class="text-left"><p>Header files for this target.<br><br>        Headers in this attribute will not be exported, i.e. any generated         include paths are only used for this target.<br><br>        When including header files as <code>#include “some/path/myheader.h”</code> their         include paths need to be specified in the <code>includes</code> attribute as well.</p></td>
+<tr class="row-odd"><td class="text-left"><p><a id="ll_binary-hdrs"></a>hdrs</p></td>
+<td class="text-left"><p>Header files for this target.<br><br>        Headers in this attribute will not be exported, i.e. any generated         include paths are only used for this target and the header files are         not made available to downstream targets.<br><br>        When including header files as <code>#include “some/path/myheader.h”</code> their         include paths need to be specified in the <code>includes</code> attribute as well.</p></td>
 <td class="text-left"><p><a href="https://bazel.build/docs/build-ref.html#labels">List of labels</a></p></td>
 <td class="text-left"><p>optional</p></td>
 <td class="text-left"><p>[]</p></td>
 </tr>
-<tr class="row-odd"><td class="text-left"><p><a id="ll_binary-includes"></a>includes</p></td>
-<td class="text-left"><p>Additional include paths for this target.<br><br>        When including a header not via <code>#include “header.h”</code>, but via         <code>#include “subdir/header.h”</code>, the include path needs to be added here in         addition to making the header available in the <code>hdrs</code> attribute.</p></td>
+<tr class="row-even"><td class="text-left"><p><a id="ll_binary-includes"></a>includes</p></td>
+<td class="text-left"><p>Additional include paths for this target.<br><br>        When including a header not via <code>#include “header.h”</code>, but via         <code>#include “subdir/header.h”</code>, the include path needs to be added here in         addition to making the header available in the <code>hdrs</code> attribute.<br><br>        Only used for this target.</p></td>
 <td class="text-left"><p>List of strings</p></td>
 <td class="text-left"><p>optional</p></td>
 <td class="text-left"><p>[]</p></td>
 </tr>
+<tr class="row-odd"><td class="text-left"><p><a id="ll_binary-libraries"></a>libraries</p></td>
+<td class="text-left"><p>Additional libraries linked to the final executable.<br><br>        Adds these libraries to the command line arguments for the linker.</p></td>
+<td class="text-left"><p><a href="https://bazel.build/docs/build-ref.html#labels">List of labels</a></p></td>
+<td class="text-left"><p>optional</p></td>
+<td class="text-left"><p>[]</p></td>
+</tr>
 <tr class="row-even"><td class="text-left"><p><a id="ll_binary-link_flags"></a>link_flags</p></td>
-<td class="text-left"><p>Additional flags for the linker.<br><br>        For <code>ll_binary</code>:         This is the place for adding library search paths and external link         targets.<br><br>        Assuming you have a library <code>/some/path/libmylib.a</code> on your host system,         you can make <code>mylib.a</code> available to the linker by passing         <code>[“-L/some/path”, “-lmylib”]</code> to this attribute.<br><br>        For <code>ll_library</code>:         If <code>aggregate = “bitcode”</code>, these flags are passed to the bitcode         linker <code>llvm-link</code>.</p></td>
+<td class="text-left"><p>Additional flags for the linker.<br><br>        For <code>ll_binary</code>:         This is the place for adding library search paths and external link         targets.<br><br>        Assuming you have a library <code>/some/path/libmylib.a</code> on your host system,         you can make <code>mylib.a</code> available to the linker by passing         <code>[“-L/some/path”, “-lmylib”]</code> to this attribute.<br><br>        Prefer using the <code>libraries</code> attribute for library files already present         within the bazel build graph.</p></td>
 <td class="text-left"><p>List of strings</p></td>
 <td class="text-left"><p>optional</p></td>
 <td class="text-left"><p>[]</p></td>
@@ -455,24 +464,6 @@ ll_binary(<a href="#ll_binary-name">name</a>, <a href="#ll_binary-aggregate">agg
 <td class="text-left"><p>optional</p></td>
 <td class="text-left"><p>[]</p></td>
 </tr>
-<tr class="row-odd"><td class="text-left"><p><a id="ll_binary-transitive_defines"></a>transitive_defines</p></td>
-<td class="text-left"><p>Additional transitive defines for this target.<br><br>        These defines will be defined by all depending downstream targets.</p></td>
-<td class="text-left"><p>List of strings</p></td>
-<td class="text-left"><p>optional</p></td>
-<td class="text-left"><p>[]</p></td>
-</tr>
-<tr class="row-even"><td class="text-left"><p><a id="ll_binary-transitive_hdrs"></a>transitive_hdrs</p></td>
-<td class="text-left"><p>Transitive headers for this target.<br><br>        Any transitive headers will be exported (copied) to the build directory.<br><br>        Transitive headers are available to depending downstream targets.</p></td>
-<td class="text-left"><p><a href="https://bazel.build/docs/build-ref.html#labels">List of labels</a></p></td>
-<td class="text-left"><p>optional</p></td>
-<td class="text-left"><p>[]</p></td>
-</tr>
-<tr class="row-odd"><td class="text-left"><p><a id="ll_binary-transitive_includes"></a>transitive_includes</p></td>
-<td class="text-left"><p>Additional transitive include paths for this target.<br><br>        Includes in this attribute will be added to the compile command line         arguments for all downstream targets.</p></td>
-<td class="text-left"><p>List of strings</p></td>
-<td class="text-left"><p>optional</p></td>
-<td class="text-left"><p>[]</p></td>
-</tr>
 </tbody>
 </table>
 <p><a id="#ll_library"></a></p>
@@ -480,8 +471,8 @@ ll_binary(<a href="#ll_binary-name">name</a>, <a href="#ll_binary-aggregate">agg
 <div class="section" id="ll-library">
 <h2>ll_library<a class="headerlink" href="#ll-library" title="Permalink to this headline">¶</a></h2>
 <pre>
-ll_library(<a href="#ll_library-name">name</a>, <a href="#ll_library-aggregate">aggregate</a>, <a href="#ll_library-compile_flags">compile_flags</a>, <a href="#ll_library-data">data</a>, <a href="#ll_library-defines">defines</a>, <a href="#ll_library-deps">deps</a>, <a href="#ll_library-hdrs">hdrs</a>, <a href="#ll_library-includes">includes</a>, <a href="#ll_library-link_flags">link_flags</a>,
-           <a href="#ll_library-proprietary">proprietary</a>, <a href="#ll_library-srcs">srcs</a>, <a href="#ll_library-transitive_defines">transitive_defines</a>, <a href="#ll_library-transitive_hdrs">transitive_hdrs</a>, <a href="#ll_library-transitive_includes">transitive_includes</a>)
+ll_library(<a href="#ll_library-name">name</a>, <a href="#ll_library-aggregate">aggregate</a>, <a href="#ll_library-bitcode_libraries">bitcode_libraries</a>, <a href="#ll_library-bitcode_link_flags">bitcode_link_flags</a>, <a href="#ll_library-compile_flags">compile_flags</a>, <a href="#ll_library-data">data</a>, <a href="#ll_library-defines">defines</a>,
+           <a href="#ll_library-deps">deps</a>, <a href="#ll_library-hdrs">hdrs</a>, <a href="#ll_library-includes">includes</a>, <a href="#ll_library-srcs">srcs</a>, <a href="#ll_library-transitive_defines">transitive_defines</a>, <a href="#ll_library-transitive_hdrs">transitive_hdrs</a>, <a href="#ll_library-transitive_includes">transitive_includes</a>)
 </pre>
 <p>Creates a static archive.</p>
 <p>Example:</p>
@@ -508,25 +499,37 @@ ll_library(<a href="#ll_library-name">name</a>, <a href="#ll_library-aggregate">
 <td class="text-left"><p></p></td>
 </tr>
 <tr class="row-odd"><td class="text-left"><p><a id="ll_library-aggregate"></a>aggregate</p></td>
-<td class="text-left"><p>Sets the aggregation mode for compiled outputs in <code>ll_library</code>.<br><br>        <code>”static”</code> invokes the archiver and creates an archive with a <code>.a</code>         extension.         <code>”bitcode”</code> invokes the bitcode linker and creates a bitcode file with a         <code>.bc</code> extension.         <code>”none”</code> will not invoke any aggregator. Instead, loose files will             be output by the rule.<br><br>        Not used by <code>ll_binary</code>, but <code>ll_library</code> targets with         <code>aggregate = “bitcode”</code> can be used as <code>deps</code> for <code>ll_binary</code>.</p></td>
+<td class="text-left"><p>Sets the aggregation mode for compiled outputs in <code>ll_library</code>.<br><br>        <code>”static”</code> invokes the archiver and creates an archive with a <code>.a</code>         extension.         <code>”bitcode”</code> invokes the bitcode linker and creates a bitcode file with a         <code>.bc</code> extension.         <code>”none”</code> will not invoke any aggregator. Instead, loose object files         will be output by the rule.<br><br>        Not used by <code>ll_binary</code>, but <code>ll_library</code> targets with         <code>aggregate = “bitcode”</code> can be used as <code>deps</code> for <code>ll_binary</code>.</p></td>
 <td class="text-left"><p>String</p></td>
 <td class="text-left"><p>optional</p></td>
 <td class="text-left"><p>“static”</p></td>
 </tr>
+<tr class="row-even"><td class="text-left"><p><a id="ll_library-bitcode_libraries"></a>bitcode_libraries</p></td>
+<td class="text-left"><p>Bitcode libraries that should always be linked.<br><br>        Only used if <code>aggregate = “bitcode”</code>.</p></td>
+<td class="text-left"><p><a href="https://bazel.build/docs/build-ref.html#labels">List of labels</a></p></td>
+<td class="text-left"><p>optional</p></td>
+<td class="text-left"><p>[]</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><a id="ll_library-bitcode_link_flags"></a>bitcode_link_flags</p></td>
+<td class="text-left"><p>Additional flags for the bitcode linker.<br><br>        If <code>aggregate = “bitcode”</code>, these flags are passed to the bitcode         linker. The default bitcode linker is <code>llvm-link</code>.</p></td>
+<td class="text-left"><p>List of strings</p></td>
+<td class="text-left"><p>optional</p></td>
+<td class="text-left"><p>[]</p></td>
+</tr>
 <tr class="row-even"><td class="text-left"><p><a id="ll_library-compile_flags"></a>compile_flags</p></td>
-<td class="text-left"><p>Additional flags for the compiler.<br><br>        A list of strings <code>[“-O3”, “-std=c++20”]</code> will be appended to the         compile command line arguments as <code>-O3 -std=c++20</code>.<br><br>        Only used for this target.</p></td>
+<td class="text-left"><p>Additional flags for the compiler.<br><br>        A list of strings <code>[“-O3”, “-std=c++20”]</code> will be appended to the         compile command line arguments as <code>-O3 -std=c++20</code>.<br><br>        Flag pairs like <code>-Xclang -somearg</code> need to be split into separate flags         <code>[“-Xclang”, “-somearg”]</code>.<br><br>        Only used for this target.</p></td>
 <td class="text-left"><p>List of strings</p></td>
 <td class="text-left"><p>optional</p></td>
 <td class="text-left"><p>[]</p></td>
 </tr>
 <tr class="row-odd"><td class="text-left"><p><a id="ll_library-data"></a>data</p></td>
-<td class="text-left"><p>Additional files made available to the sandboxed actions         executed within this rule. These files are not appended to any command         line arguments, but are part of the inputs to the action and may be         referenced manually via the <code>includes</code>, <code>compile_flags</code> and         <code>link_flags</code> attributes.</p></td>
+<td class="text-left"><p>Additional files made available to the sandboxed actions         executed within this rule. These files are not appended to the default         line arguments, but are part of the inputs to the actions and may be         added to command line arguments manually via the <code>includes</code>,         and <code>compile_flags</code> (for <code>ll_binary also </code>link_flags<code>) attributes.<br><br>        This attribute may be used to make intermediary outputs from non-ll         targets (e.g. from </code>rules_cc<code> or </code>filegroup<code>) available to the rule.</p></td>
 <td class="text-left"><p><a href="https://bazel.build/docs/build-ref.html#labels">List of labels</a></p></td>
 <td class="text-left"><p>optional</p></td>
 <td class="text-left"><p>[]</p></td>
 </tr>
 <tr class="row-even"><td class="text-left"><p><a id="ll_library-defines"></a>defines</p></td>
-<td class="text-left"><p>Additional defines for this target.<br><br>        A list of strings <code>[“MYDEFINE_1”, “MYDEFINE_2”]</code> will add         <code>-DMYDEFINE_1 -DMYDEFINE_2</code> to the compile command line.<br><br>        Defines in this attribute are only used for the current target.</p></td>
+<td class="text-left"><p>Additional defines for this target.<br><br>        A list of strings <code>[“MYDEFINE_1”, “MYDEFINE_2”]</code> will add         <code>-DMYDEFINE_1 -DMYDEFINE_2</code> to the compile command line.<br><br>        Only used for this target.</p></td>
 <td class="text-left"><p>List of strings</p></td>
 <td class="text-left"><p>optional</p></td>
 <td class="text-left"><p>[]</p></td>
@@ -538,28 +541,16 @@ ll_library(<a href="#ll_library-name">name</a>, <a href="#ll_library-aggregate">
 <td class="text-left"><p>[]</p></td>
 </tr>
 <tr class="row-even"><td class="text-left"><p><a id="ll_library-hdrs"></a>hdrs</p></td>
-<td class="text-left"><p>Header files for this target.<br><br>        Headers in this attribute will not be exported, i.e. any generated         include paths are only used for this target.<br><br>        When including header files as <code>#include “some/path/myheader.h”</code> their         include paths need to be specified in the <code>includes</code> attribute as well.</p></td>
+<td class="text-left"><p>Header files for this target.<br><br>        Headers in this attribute will not be exported, i.e. any generated         include paths are only used for this target and the header files are         not made available to downstream targets.<br><br>        When including header files as <code>#include “some/path/myheader.h”</code> their         include paths need to be specified in the <code>includes</code> attribute as well.</p></td>
 <td class="text-left"><p><a href="https://bazel.build/docs/build-ref.html#labels">List of labels</a></p></td>
 <td class="text-left"><p>optional</p></td>
 <td class="text-left"><p>[]</p></td>
 </tr>
 <tr class="row-odd"><td class="text-left"><p><a id="ll_library-includes"></a>includes</p></td>
-<td class="text-left"><p>Additional include paths for this target.<br><br>        When including a header not via <code>#include “header.h”</code>, but via         <code>#include “subdir/header.h”</code>, the include path needs to be added here in         addition to making the header available in the <code>hdrs</code> attribute.</p></td>
+<td class="text-left"><p>Additional include paths for this target.<br><br>        When including a header not via <code>#include “header.h”</code>, but via         <code>#include “subdir/header.h”</code>, the include path needs to be added here in         addition to making the header available in the <code>hdrs</code> attribute.<br><br>        Only used for this target.</p></td>
 <td class="text-left"><p>List of strings</p></td>
 <td class="text-left"><p>optional</p></td>
 <td class="text-left"><p>[]</p></td>
-</tr>
-<tr class="row-even"><td class="text-left"><p><a id="ll_library-link_flags"></a>link_flags</p></td>
-<td class="text-left"><p>Additional flags for the linker.<br><br>        For <code>ll_binary</code>:         This is the place for adding library search paths and external link         targets.<br><br>        Assuming you have a library <code>/some/path/libmylib.a</code> on your host system,         you can make <code>mylib.a</code> available to the linker by passing         <code>[“-L/some/path”, “-lmylib”]</code> to this attribute.<br><br>        For <code>ll_library</code>:         If <code>aggregate = “bitcode”</code>, these flags are passed to the bitcode         linker <code>llvm-link</code>.</p></td>
-<td class="text-left"><p>List of strings</p></td>
-<td class="text-left"><p>optional</p></td>
-<td class="text-left"><p>[]</p></td>
-</tr>
-<tr class="row-odd"><td class="text-left"><p><a id="ll_library-proprietary"></a>proprietary</p></td>
-<td class="text-left"><p>Setting this to True will disable static linking of glibc.<br><br>        This attribute will be removed as soon as <code>rules_ll</code> uses LLVM’s <code>libc</code>.</p></td>
-<td class="text-left"><p>Boolean</p></td>
-<td class="text-left"><p>optional</p></td>
-<td class="text-left"><p>False</p></td>
 </tr>
 <tr class="row-even"><td class="text-left"><p><a id="ll_library-srcs"></a>srcs</p></td>
 <td class="text-left"><p>Compilable source files for this target.<br><br>        Only compilable files and object files         <code>[“.ll”, “.o”, “.S”, “.c”, “.cl”, “.cpp”]</code> are allowed here.<br><br>        Headers should be placed in the <code>hdrs</code> attribute.</p></td>

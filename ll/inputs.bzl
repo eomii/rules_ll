@@ -36,7 +36,6 @@ def compile_object_inputs(ctx, headers):
              "//ll:toolchain_type and //ll:bootstrap_toolchain_type.")
 
 def create_archive_library_inputs(ctx, in_files):
-    print(ctx.files.deps)
     return depset(in_files + ctx.files.deps)
 
 def link_executable_inputs(ctx, in_files):

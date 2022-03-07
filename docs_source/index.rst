@@ -36,6 +36,7 @@ These are the internal functions used in ``rules_ll``.
 
    actions
    args
+   attributes
    bootstrap_library
    compilation_database
    driver

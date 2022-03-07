@@ -34,7 +34,7 @@
     <script src="_static/sphinx-book-theme.9d8b4a8b9bb19db25eeaddc40d639ba2.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="//ll:bootstrap_library.bzl" href="bootstrap_library.html" />
+    <link rel="next" title="//ll:attributes.bzl" href="attributes.html" />
     <link rel="prev" title="//ll:actions.bzl" href="actions.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
@@ -149,6 +149,15 @@
    <code class="docutils literal notranslate">
     <span class="pre">
      //ll:args.bzl
+    </span>
+   </code>
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="attributes.html">
+   <code class="docutils literal notranslate">
+    <span class="pre">
+     //ll:attributes.bzl
     </span>
    </code>
   </a>
@@ -453,7 +462,7 @@ compile_object_args(<a href="#compile_object_args-ctx">ctx</a>, <a href="#compil
 <div class="section" id="create-archive-library-args">
 <h2>create_archive_library_args<a class="headerlink" href="#create-archive-library-args" title="Permalink to this headline">¶</a></h2>
 <pre>
-create_archive_library_args(<a href="#create_archive_library_args-ctx">ctx</a>, <a href="#create_archive_library_args-in_files">in_files</a>, <a href="#create_archive_library_args-out_file">out_file</a>, <a href="#create_archive_library_args-libraries">libraries</a>)
+create_archive_library_args(<a href="#create_archive_library_args-ctx">ctx</a>, <a href="#create_archive_library_args-in_files">in_files</a>, <a href="#create_archive_library_args-out_file">out_file</a>)
 </pre>
 <p><strong>PARAMETERS</strong></p>
 <table class="colwidths-auto table">
@@ -473,10 +482,6 @@ create_archive_library_args(<a href="#create_archive_library_args-ctx">ctx</a>, 
 <td class="text-left"><p>none</p></td>
 </tr>
 <tr class="row-even"><td class="text-left"><p><a id="create_archive_library_args-out_file"></a>out_file</p></td>
-<td class="text-left"><p><p align="center"> - </p></p></td>
-<td class="text-left"><p>none</p></td>
-</tr>
-<tr class="row-odd"><td class="text-left"><p><a id="create_archive_library_args-libraries"></a>libraries</p></td>
 <td class="text-left"><p><p align="center"> - </p></p></td>
 <td class="text-left"><p>none</p></td>
 </tr>
@@ -517,7 +522,7 @@ expose_headers_args(<a href="#expose_headers_args-ctx">ctx</a>, <a href="#expose
 <div class="section" id="link-bitcode-library-args">
 <h2>link_bitcode_library_args<a class="headerlink" href="#link-bitcode-library-args" title="Permalink to this headline">¶</a></h2>
 <pre>
-link_bitcode_library_args(<a href="#link_bitcode_library_args-ctx">ctx</a>, <a href="#link_bitcode_library_args-in_files">in_files</a>, <a href="#link_bitcode_library_args-out_file">out_file</a>, <a href="#link_bitcode_library_args-libraries">libraries</a>)
+link_bitcode_library_args(<a href="#link_bitcode_library_args-ctx">ctx</a>, <a href="#link_bitcode_library_args-in_files">in_files</a>, <a href="#link_bitcode_library_args-out_file">out_file</a>)
 </pre>
 <p><strong>PARAMETERS</strong></p>
 <table class="colwidths-auto table">
@@ -540,10 +545,6 @@ link_bitcode_library_args(<a href="#link_bitcode_library_args-ctx">ctx</a>, <a h
 <td class="text-left"><p><p align="center"> - </p></p></td>
 <td class="text-left"><p>none</p></td>
 </tr>
-<tr class="row-odd"><td class="text-left"><p><a id="link_bitcode_library_args-libraries"></a>libraries</p></td>
-<td class="text-left"><p><p align="center"> - </p></p></td>
-<td class="text-left"><p>none</p></td>
-</tr>
 </tbody>
 </table>
 <p><a id="#link_executable_args"></a></p>
@@ -551,7 +552,7 @@ link_bitcode_library_args(<a href="#link_bitcode_library_args-ctx">ctx</a>, <a h
 <div class="section" id="link-executable-args">
 <h2>link_executable_args<a class="headerlink" href="#link-executable-args" title="Permalink to this headline">¶</a></h2>
 <pre>
-link_executable_args(<a href="#link_executable_args-ctx">ctx</a>, <a href="#link_executable_args-in_files">in_files</a>, <a href="#link_executable_args-out_file">out_file</a>, <a href="#link_executable_args-libraries">libraries</a>)
+link_executable_args(<a href="#link_executable_args-ctx">ctx</a>, <a href="#link_executable_args-in_files">in_files</a>, <a href="#link_executable_args-out_file">out_file</a>)
 </pre>
 <p><strong>PARAMETERS</strong></p>
 <table class="colwidths-auto table">
@@ -571,10 +572,6 @@ link_executable_args(<a href="#link_executable_args-ctx">ctx</a>, <a href="#link
 <td class="text-left"><p>none</p></td>
 </tr>
 <tr class="row-even"><td class="text-left"><p><a id="link_executable_args-out_file"></a>out_file</p></td>
-<td class="text-left"><p><p align="center"> - </p></p></td>
-<td class="text-left"><p>none</p></td>
-</tr>
-<tr class="row-odd"><td class="text-left"><p><a id="link_executable_args-libraries"></a>libraries</p></td>
 <td class="text-left"><p><p align="center"> - </p></p></td>
 <td class="text-left"><p>none</p></td>
 </tr>
@@ -622,10 +619,10 @@ llvm_target_directory_path(<a href="#llvm_target_directory_path-ctx">ctx</a>)
             <p class="prev-next-title"><code class="docutils literal notranslate"><span class="pre">//ll:actions.bzl</span></code></p>
         </div>
     </a>
-    <a class='right-next' id="next-link" href="bootstrap_library.html" title="next page">
+    <a class='right-next' id="next-link" href="attributes.html" title="next page">
     <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title"><code class="docutils literal notranslate"><span class="pre">//ll:bootstrap_library.bzl</span></code></p>
+        <p class="prev-next-title"><code class="docutils literal notranslate"><span class="pre">//ll:attributes.bzl</span></code></p>
     </div>
     <i class="fas fa-angle-right"></i>
     </a>

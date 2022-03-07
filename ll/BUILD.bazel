@@ -5,6 +5,7 @@ load(":toolchain.bzl", "ll_bootstrap_toolchain", "ll_toolchain")
 LL_MODULES = [
     "actions",
     "args",
+    "attributes",
     "bootstrap_library",
     "compilation_database",
     "defs",
@@ -28,6 +29,7 @@ bzl_library(
         for name in LL_MODULES
     ],
     deps = [
+        "@bazel_skylib//lib:dicts",
         "@bazel_skylib//lib:paths",
         "@bazel_tools//tools/build_defs/repo:http.bzl",
         "@bazel_tools//tools/build_defs/repo:utils.bzl",

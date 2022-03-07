@@ -41,5 +41,5 @@ http_archive(
 | Name  | Description | Default Value |
 | :------------- | :------------- | :------------- |
 | <a id="initialize_rules_ll-local_crt_path"></a>local_crt_path |  The path to the directory containing <code>crt1.o</code>, <code>crti.o</code> and <code>crtn.o</code>.   |  none |
-| <a id="initialize_rules_ll-llvm_commit"></a>llvm_commit |  The llvm-commit to use for the <code>llvm-project</code> repository.   |  <code>"e7d65fca7ec470469ad3f8e7689b5e563346e4d7"</code> |
-| <a id="initialize_rules_ll-llvm_sha256"></a>llvm_sha256 |  The SHA256 for corresponding to <code>llvm_commit</code>. Bazel will print the correct value if this is set to <code>None</code>.   |  <code>"6a7bd0862b27d0d9b5b1c77b1c765dea32a5d9be9f01a8cc53a909e50555ff27"</code> |
+| <a id="initialize_rules_ll-llvm_commit"></a>llvm_commit |  The llvm-commit to use for the <code>llvm-project</code> repository.   |  <code>"df6c26fd3499d0770eff3922b90f576d7bde3880"</code> |
+| <a id="initialize_rules_ll-llvm_sha256"></a>llvm_sha256 |  The SHA256 for corresponding to <code>llvm_commit</code>. Bazel will print the correct value if this is set to <code>None</code>.   |  <code>"4bfa9f4444e54dfe338710f2c5729def357414d33eb5e044cc47fc4497a6b57b"</code> |

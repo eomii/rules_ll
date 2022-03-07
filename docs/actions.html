@@ -154,6 +154,15 @@
   </a>
  </li>
  <li class="toctree-l1">
+  <a class="reference internal" href="attributes.html">
+   <code class="docutils literal notranslate">
+    <span class="pre">
+     //ll:attributes.bzl
+    </span>
+   </code>
+  </a>
+ </li>
+ <li class="toctree-l1">
   <a class="reference internal" href="bootstrap_library.html">
    <code class="docutils literal notranslate">
     <span class="pre">
@@ -451,7 +460,7 @@ compile_object(<a href="#compile_object-ctx">ctx</a>, <a href="#compile_object-i
 <div class="section" id="compile-objects">
 <h2>compile_objects<a class="headerlink" href="#compile-objects" title="Permalink to this headline">¶</a></h2>
 <pre>
-compile_objects(<a href="#compile_objects-ctx">ctx</a>, <a href="#compile_objects-headers">headers</a>, <a href="#compile_objects-defines">defines</a>, <a href="#compile_objects-includes">includes</a>, <a href="#compile_objects-libraries">libraries</a>, <a href="#compile_objects-toolchain_type">toolchain_type</a>)
+compile_objects(<a href="#compile_objects-ctx">ctx</a>, <a href="#compile_objects-headers">headers</a>, <a href="#compile_objects-defines">defines</a>, <a href="#compile_objects-includes">includes</a>, <a href="#compile_objects-toolchain_type">toolchain_type</a>)
 </pre>
 <p><strong>PARAMETERS</strong></p>
 <table class="colwidths-auto table">
@@ -478,11 +487,7 @@ compile_objects(<a href="#compile_objects-ctx">ctx</a>, <a href="#compile_object
 <td class="text-left"><p><p align="center"> - </p></p></td>
 <td class="text-left"><p><code>[]</code></p></td>
 </tr>
-<tr class="row-even"><td class="text-left"><p><a id="compile_objects-libraries"></a>libraries</p></td>
-<td class="text-left"><p><p align="center"> - </p></p></td>
-<td class="text-left"><p><code>[]</code></p></td>
-</tr>
-<tr class="row-odd"><td class="text-left"><p><a id="compile_objects-toolchain_type"></a>toolchain_type</p></td>
+<tr class="row-even"><td class="text-left"><p><a id="compile_objects-toolchain_type"></a>toolchain_type</p></td>
 <td class="text-left"><p><p align="center"> - </p></p></td>
 <td class="text-left"><p><code>”//ll:toolchain_type”</code></p></td>
 </tr>
@@ -493,7 +498,7 @@ compile_objects(<a href="#compile_objects-ctx">ctx</a>, <a href="#compile_object
 <div class="section" id="create-archive-library">
 <h2>create_archive_library<a class="headerlink" href="#create-archive-library" title="Permalink to this headline">¶</a></h2>
 <pre>
-create_archive_library(<a href="#create_archive_library-ctx">ctx</a>, <a href="#create_archive_library-in_files">in_files</a>, <a href="#create_archive_library-libraries">libraries</a>, <a href="#create_archive_library-toolchain_type">toolchain_type</a>)
+create_archive_library(<a href="#create_archive_library-ctx">ctx</a>, <a href="#create_archive_library-in_files">in_files</a>, <a href="#create_archive_library-toolchain_type">toolchain_type</a>)
 </pre>
 <p><strong>PARAMETERS</strong></p>
 <table class="colwidths-auto table">
@@ -512,11 +517,7 @@ create_archive_library(<a href="#create_archive_library-ctx">ctx</a>, <a href="#
 <td class="text-left"><p><p align="center"> - </p></p></td>
 <td class="text-left"><p><code>[]</code></p></td>
 </tr>
-<tr class="row-even"><td class="text-left"><p><a id="create_archive_library-libraries"></a>libraries</p></td>
-<td class="text-left"><p><p align="center"> - </p></p></td>
-<td class="text-left"><p><code>[]</code></p></td>
-</tr>
-<tr class="row-odd"><td class="text-left"><p><a id="create_archive_library-toolchain_type"></a>toolchain_type</p></td>
+<tr class="row-even"><td class="text-left"><p><a id="create_archive_library-toolchain_type"></a>toolchain_type</p></td>
 <td class="text-left"><p><p align="center"> - </p></p></td>
 <td class="text-left"><p><code>”//ll:toolchain_type”</code></p></td>
 </tr>
@@ -549,7 +550,7 @@ expose_headers(<a href="#expose_headers-ctx">ctx</a>)
 <div class="section" id="link-bitcode-library">
 <h2>link_bitcode_library<a class="headerlink" href="#link-bitcode-library" title="Permalink to this headline">¶</a></h2>
 <pre>
-link_bitcode_library(<a href="#link_bitcode_library-ctx">ctx</a>, <a href="#link_bitcode_library-in_files">in_files</a>, <a href="#link_bitcode_library-libraries">libraries</a>, <a href="#link_bitcode_library-toolchain_type">toolchain_type</a>)
+link_bitcode_library(<a href="#link_bitcode_library-ctx">ctx</a>, <a href="#link_bitcode_library-in_files">in_files</a>, <a href="#link_bitcode_library-toolchain_type">toolchain_type</a>)
 </pre>
 <p><strong>PARAMETERS</strong></p>
 <table class="colwidths-auto table">
@@ -568,11 +569,7 @@ link_bitcode_library(<a href="#link_bitcode_library-ctx">ctx</a>, <a href="#link
 <td class="text-left"><p><p align="center"> - </p></p></td>
 <td class="text-left"><p>none</p></td>
 </tr>
-<tr class="row-even"><td class="text-left"><p><a id="link_bitcode_library-libraries"></a>libraries</p></td>
-<td class="text-left"><p><p align="center"> - </p></p></td>
-<td class="text-left"><p>none</p></td>
-</tr>
-<tr class="row-odd"><td class="text-left"><p><a id="link_bitcode_library-toolchain_type"></a>toolchain_type</p></td>
+<tr class="row-even"><td class="text-left"><p><a id="link_bitcode_library-toolchain_type"></a>toolchain_type</p></td>
 <td class="text-left"><p><p align="center"> - </p></p></td>
 <td class="text-left"><p><code>”//ll:toolchain_type”</code></p></td>
 </tr>
@@ -583,7 +580,7 @@ link_bitcode_library(<a href="#link_bitcode_library-ctx">ctx</a>, <a href="#link
 <div class="section" id="link-executable">
 <h2>link_executable<a class="headerlink" href="#link-executable" title="Permalink to this headline">¶</a></h2>
 <pre>
-link_executable(<a href="#link_executable-ctx">ctx</a>, <a href="#link_executable-in_files">in_files</a>, <a href="#link_executable-libraries">libraries</a>, <a href="#link_executable-toolchain_type">toolchain_type</a>)
+link_executable(<a href="#link_executable-ctx">ctx</a>, <a href="#link_executable-in_files">in_files</a>, <a href="#link_executable-toolchain_type">toolchain_type</a>)
 </pre>
 <p><strong>PARAMETERS</strong></p>
 <table class="colwidths-auto table">
@@ -602,11 +599,7 @@ link_executable(<a href="#link_executable-ctx">ctx</a>, <a href="#link_executabl
 <td class="text-left"><p><p align="center"> - </p></p></td>
 <td class="text-left"><p>none</p></td>
 </tr>
-<tr class="row-even"><td class="text-left"><p><a id="link_executable-libraries"></a>libraries</p></td>
-<td class="text-left"><p><p align="center"> - </p></p></td>
-<td class="text-left"><p>none</p></td>
-</tr>
-<tr class="row-odd"><td class="text-left"><p><a id="link_executable-toolchain_type"></a>toolchain_type</p></td>
+<tr class="row-even"><td class="text-left"><p><a id="link_executable-toolchain_type"></a>toolchain_type</p></td>
 <td class="text-left"><p><p align="center"> - </p></p></td>
 <td class="text-left"><p><code>”//ll:toolchain_type”</code></p></td>
 </tr>

@@ -42,12 +42,31 @@ compile_object_inputs(<a href="#compile_object_inputs-ctx">ctx</a>, <a href="#co
 | <a id="compile_object_inputs-headers"></a>headers |  <p align="center"> - </p>   |  none |
 
 
+<a id="#create_archive_library_inputs"></a>
+
+## create_archive_library_inputs
+
+<pre>
+create_archive_library_inputs(<a href="#create_archive_library_inputs-ctx">ctx</a>, <a href="#create_archive_library_inputs-in_files">in_files</a>)
+</pre>
+
+
+
+**PARAMETERS**
+
+
+| Name  | Description | Default Value |
+| :------------- | :------------- | :------------- |
+| <a id="create_archive_library_inputs-ctx"></a>ctx |  <p align="center"> - </p>   |  none |
+| <a id="create_archive_library_inputs-in_files"></a>in_files |  <p align="center"> - </p>   |  none |
+
+
 <a id="#link_bitcode_library_inputs"></a>
 
 ## link_bitcode_library_inputs
 
 <pre>
-link_bitcode_library_inputs(<a href="#link_bitcode_library_inputs-ctx">ctx</a>, <a href="#link_bitcode_library_inputs-in_files">in_files</a>, <a href="#link_bitcode_library_inputs-libraries">libraries</a>)
+link_bitcode_library_inputs(<a href="#link_bitcode_library_inputs-ctx">ctx</a>, <a href="#link_bitcode_library_inputs-in_files">in_files</a>)
 </pre>
 
 
@@ -59,7 +78,6 @@ link_bitcode_library_inputs(<a href="#link_bitcode_library_inputs-ctx">ctx</a>, 
 | :------------- | :------------- | :------------- |
 | <a id="link_bitcode_library_inputs-ctx"></a>ctx |  <p align="center"> - </p>   |  none |
 | <a id="link_bitcode_library_inputs-in_files"></a>in_files |  <p align="center"> - </p>   |  none |
-| <a id="link_bitcode_library_inputs-libraries"></a>libraries |  <p align="center"> - </p>   |  none |
 
 
 <a id="#link_executable_inputs"></a>
@@ -67,7 +85,7 @@ link_bitcode_library_inputs(<a href="#link_bitcode_library_inputs-ctx">ctx</a>, 
 ## link_executable_inputs
 
 <pre>
-link_executable_inputs(<a href="#link_executable_inputs-ctx">ctx</a>, <a href="#link_executable_inputs-in_files">in_files</a>, <a href="#link_executable_inputs-libraries">libraries</a>)
+link_executable_inputs(<a href="#link_executable_inputs-ctx">ctx</a>, <a href="#link_executable_inputs-in_files">in_files</a>)
 </pre>
 
 
@@ -79,4 +97,3 @@ link_executable_inputs(<a href="#link_executable_inputs-ctx">ctx</a>, <a href="#
 | :------------- | :------------- | :------------- |
 | <a id="link_executable_inputs-ctx"></a>ctx |  <p align="center"> - </p>   |  none |
 | <a id="link_executable_inputs-in_files"></a>in_files |  <p align="center"> - </p>   |  none |
-| <a id="link_executable_inputs-libraries"></a>libraries |  <p align="center"> - </p>   |  none |

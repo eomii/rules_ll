@@ -146,7 +146,6 @@ def link_executable_args(ctx, in_files, out_file):
 
     # Target-specific flags.
     args.add_all(ctx.attr.link_flags)
-    print(in_files)
     args.add_all(in_files)
     args.add("-o", out_file)
 

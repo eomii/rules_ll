@@ -4,8 +4,7 @@ This rule is used by `rules_ll` to boostrap `compiler-rt`, `libcxx`,
 `libcxxabi` and `libunwind`. Users should use `ll_library` instead.
 """
 
-load("@bazel_skylib//lib:dicts.bzl", "dicts")
-load("//ll:ll.bzl", "DEFAULT_ATTRS", "LIBRARY_ATTRS")
+load("//ll:attributes.bzl", "LIBRARY_ATTRS")
 load("//ll:providers.bzl", "LlInfo")
 load("//ll:internal_functions.bzl", "resolve_library_deps")
 load(
@@ -55,7 +54,7 @@ def _ll_bootstrap_library_impl(ctx):
 ll_bootstrap_library = rule(
     implementation = _ll_bootstrap_library_impl,
     executable = False,
-    attrs = dicts.add(DEFAULT_ATTRS, LIBRARY_ATTRS),
+    attrs = LIBRARY_ATTRS,
     toolchains = ["//ll:bootstrap_toolchain_type"],
     output_to_genfiles = True,
     doc = """
