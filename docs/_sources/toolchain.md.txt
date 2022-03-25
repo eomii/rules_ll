@@ -35,7 +35,7 @@ ll_bootstrap_toolchain(<a href="#ll_bootstrap_toolchain-name">name</a>, <a href=
 <pre>
 ll_toolchain(<a href="#ll_toolchain-name">name</a>, <a href="#ll_toolchain-archiver">archiver</a>, <a href="#ll_toolchain-bitcode_linker">bitcode_linker</a>, <a href="#ll_toolchain-builtin_includes">builtin_includes</a>, <a href="#ll_toolchain-c_driver">c_driver</a>, <a href="#ll_toolchain-clang_tidy">clang_tidy</a>,
              <a href="#ll_toolchain-clang_tidy_runner">clang_tidy_runner</a>, <a href="#ll_toolchain-compiler_runtime">compiler_runtime</a>, <a href="#ll_toolchain-cpp_abi">cpp_abi</a>, <a href="#ll_toolchain-cpp_driver">cpp_driver</a>, <a href="#ll_toolchain-cpp_stdhdrs">cpp_stdhdrs</a>, <a href="#ll_toolchain-cpp_stdlib">cpp_stdlib</a>,
-             <a href="#ll_toolchain-linker">linker</a>, <a href="#ll_toolchain-local_crt">local_crt</a>, <a href="#ll_toolchain-offload_bundler">offload_bundler</a>, <a href="#ll_toolchain-symbolizer">symbolizer</a>, <a href="#ll_toolchain-unwind_library">unwind_library</a>)
+             <a href="#ll_toolchain-linker">linker</a>, <a href="#ll_toolchain-local_crt">local_crt</a>, <a href="#ll_toolchain-machine_code_tool">machine_code_tool</a>, <a href="#ll_toolchain-offload_bundler">offload_bundler</a>, <a href="#ll_toolchain-symbolizer">symbolizer</a>, <a href="#ll_toolchain-unwind_library">unwind_library</a>)
 </pre>
 
 
@@ -59,6 +59,7 @@ ll_toolchain(<a href="#ll_toolchain-name">name</a>, <a href="#ll_toolchain-archi
 | <a id="ll_toolchain-cpp_stdlib"></a>cpp_stdlib |  The C++ standard library archive.   | <a href="https://bazel.build/docs/build-ref.html#labels">Label</a> | optional | @llvm-project//libcxx:libll_cxx |
 | <a id="ll_toolchain-linker"></a>linker |  The linker.   | <a href="https://bazel.build/docs/build-ref.html#labels">Label</a> | optional | @llvm-project//lld:lld |
 | <a id="ll_toolchain-local_crt"></a>local_crt |  A filegroup containing the system's local crt1.o, crti.o and crtn.o files.   | <a href="https://bazel.build/docs/build-ref.html#labels">Label</a> | optional | @local_crt//:crt |
+| <a id="ll_toolchain-machine_code_tool"></a>machine_code_tool |  The llvm-mc tool. Used for separarable compilation (CUDA/HIP).   | <a href="https://bazel.build/docs/build-ref.html#labels">Label</a> | optional | @llvm-project//llvm:llvm-mc |
 | <a id="ll_toolchain-offload_bundler"></a>offload_bundler |  Offload bundler used to bundle code objects for languages             targeting multiple devices in a single source file, e.g. GPU code.   | <a href="https://bazel.build/docs/build-ref.html#labels">Label</a> | optional | @llvm-project//clang:clang-offload-bundler |
 | <a id="ll_toolchain-symbolizer"></a>symbolizer |  The llvm-symbolizer.   | <a href="https://bazel.build/docs/build-ref.html#labels">Label</a> | optional | @llvm-project//llvm:llvm-symbolizer |
 | <a id="ll_toolchain-unwind_library"></a>unwind_library |  The unwinder library.   | <a href="https://bazel.build/docs/build-ref.html#labels">Label</a> | optional | @llvm-project//libunwind:libll_unwind |
