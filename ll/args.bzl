@@ -27,35 +27,54 @@ def _get_dirname(file):
 def compile_object_args(ctx, in_file, out_file, cdf, headers, defines, includes):
     args = ctx.actions.args()
 
+    args.add("-fcolor-diagnostics")
+
     # Visualization.
     if ctx.var["COMPILATION_MODE"] == "dbg":
         args.add("-v")
-
-    args.add("-fcolor-diagnostics")
+        args.add("-glldb")
+        if ctx.attr.heterogeneous_mode != "none":
+            args.add("--cuda-noopt-device-debug")
 
     # Optimization.
     if ctx.var["COMPILATION_MODE"] == "opt":
         args.add("-O3")
 
         # Long double with 80 bits breaks LTO.
-        args.add("-mlong-double-128")
+        if ctx.attr.heterogeneous_mode == "none":
+            args.add("-mlong-double-128")
         args.add("-flto=thin")
 
     # Only compile.
     args.add("-c")
 
-    # Emit compilation database fragment.
-    args.add(cdf, format = "-MJ%s")
+    # Maybe enable heterogeneous compilation.
+    if ctx.attr.heterogeneous_mode == "hip_nvidia":
+        args.add("-xcuda")
+        args.add("--cuda-path=/usr/local/cuda")
+
+    # Write compilation database.
+    if ctx.attr.heterogeneous_mode != "none":
+        args.add("-Xarch_host")
+        args.add(cdf, format = "-MJ%s")
+    else:
+        args.add(cdf, format = "-MJ%s")
 
     # Environment encapsulation.
     # args.add("-nostdinc")
+    args.add("-nostdlib++")
     args.add("-nostdinc++")
+    args.add("-nostdlib")
+    args.add("--gcc-toolchain=NONE")
 
     clang_builtin_include_path = paths.join(
         llvm_target_directory_path(ctx),
         "clang/staging",
     )
     args.add(clang_builtin_include_path, format = "-resource-dir=%s")
+
+    # Ensure that #include_next works properly in cuda_wrappers/algorithm.
+    args.add(clang_builtin_include_path, format = "-isystem%s")
 
     libcxx_include_path = "external/llvm-project/libcxx/include"
     args.add(libcxx_include_path, format = "-isystem%s")
@@ -80,23 +99,22 @@ def compile_object_args(ctx, in_file, out_file, cdf, headers, defines, includes)
 def link_executable_args(ctx, in_files, out_file):
     args = ctx.actions.args()
 
+    args.add("--color-diagnostics")
+
     # Visualization.
     if ctx.var["COMPILATION_MODE"] == "dbg":
         args.add("--verbose")
-
-    args.add("--color-diagnostics")
 
     # Optimization.
     if ctx.var["COMPILATION_MODE"] == "opt":
         args.add("--lto-O3")
         args.add("--strip-all")
 
-    # Link static per default.
-    if not ctx.attr.proprietary:
-        args.add("--static")
-
     # Encapsulation.
     args.add("--nostdlib")
+
+    # Add dynamic linker.
+    args.add("-dynamic-linker=/lib64/ld-linux-x86-64.so.2")
 
     # Use compiler-rt as runtime.
     compiler_rt_path = paths.join(
@@ -134,12 +152,16 @@ def link_executable_args(ctx, in_files, out_file):
     args.add("-lll_cxxabi")
 
     # Additional system libraries.
-    args.add("-L/usr/lib")
     args.add("-L/usr/lib64")
     args.add("-lm")  # Required for math-related functions.
     args.add("-ldl")  # Required by libunwind.
     args.add("-lpthread")  # Required by libunwind.
     args.add("-lc")  # Required. This is glibc.
+
+    if ctx.attr.heterogeneous_mode == "hip_nvidia":
+        args.add("-L/usr/local/cuda/lib64")
+        args.add("-lrt")
+        args.add("-lcudart_static")
 
     # Add local crt1.o, crti.o and crtn.o files.
     args.add_all(ctx.toolchains["//ll:toolchain_type"].local_crt)

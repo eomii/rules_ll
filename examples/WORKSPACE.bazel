@@ -37,6 +37,8 @@ llvm_configure(
     name = "llvm-project",
     targets = [
         "X86",
+        "AMDGPU",
+        "NVPTX",
     ],
 )
 llvm_disable_optional_support_deps()

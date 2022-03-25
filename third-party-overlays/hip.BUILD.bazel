@@ -1,0 +1,5 @@
+filegroup(
+    name = "headers",
+    srcs = glob(["include/**", "include/hip/hip_version.h"]),
+    visibility = ["//visibility:public"],
+)

@@ -156,5 +156,6 @@ def link_executable(ctx, in_files, toolchain_type = "//ll:toolchain_type"):
         arguments = link_executable_args(ctx, in_files, out_file),
         mnemonic = "LlLinkExecutable",
         use_default_shell_env = False,
+        env = compile_object_environment(ctx),
     )
     return out_file

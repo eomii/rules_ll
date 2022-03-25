@@ -93,6 +93,7 @@ def _ll_toolchain_impl(ctx):
             clang_tidy = ctx.executable.clang_tidy,
             clang_tidy_runner = ctx.executable.clang_tidy_runner,
             symbolizer = ctx.executable.symbolizer,
+            machine_code_tool = ctx.executable.machine_code_tool,
         ),
     ]
 
@@ -201,6 +202,12 @@ ll_toolchain = rule(
             doc = "The llvm-symbolizer.",
             cfg = "exec",
             default = "@llvm-project//llvm:llvm-symbolizer",
+            executable = True,
+        ),
+        "machine_code_tool": attr.label(
+            doc = "The llvm-mc tool. Used for separarable compilation (CUDA/HIP).",
+            cfg = "exec",
+            default = "@llvm-project//llvm:llvm-mc",
             executable = True,
         ),
     },

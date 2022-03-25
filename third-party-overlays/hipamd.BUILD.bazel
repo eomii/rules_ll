@@ -1,0 +1,5 @@
+filegroup(
+    name = "headers",
+    srcs = glob(["include/**"]),
+    visibility = ["//visibility:public"],
+)
