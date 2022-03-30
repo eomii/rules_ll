@@ -1,129 +1,110 @@
-#include <assert.h>
-#include <stdio.h>
-#include <stdlib.h>
-
-#include <algorithm>
-#include <cstdlib>
+#include <array>
 #include <iostream>
+#include <vector>
 
 #include "hip/hip_runtime.h"
 
-#define HIP_ASSERT(x) assert(((x) == hipSuccess))
+constexpr float kInputA = 1.0F;
+constexpr float kInputB = 2.0F;
+constexpr float kExpectedOutput = 3.0F;
+constexpr int kDimension = 1 << 20;
+constexpr auto kThreadsPerBlockX = 128;
+constexpr auto kThreadsPerBlockY = 1;
+constexpr auto kThreadsPerBlockZ = 1;
 
-#define WIDTH 1024
-#define HEIGHT 1024
+template <typename T> constexpr void hip_assert(const T value) {
+  assert((value == hipSuccess));
+}
 
-#define NUM (WIDTH * HEIGHT)
-
-#define THREADS_PER_BLOCK_X 16
-#define THREADS_PER_BLOCK_Y 16
-#define THREADS_PER_BLOCK_Z 1
-
-__global__ void
-vectoradd_float(float *__restrict__ a, const float *__restrict__ b,
-                const float *__restrict__ c, int width, int height)
-
-{
-  int x = hipBlockDim_x * hipBlockIdx_x + hipThreadIdx_x;
-  int y = hipBlockDim_y * hipBlockIdx_y + hipThreadIdx_y;
-
-  int i = y * width + x;
-  if (i < (width * height)) {
-    a[i] = b[i] + c[i];
+__global__ void add_vector(float *input_a, const float *input_b,
+                           const int dimension) {
+  int index = hipBlockIdx_x * hipBlockDim_x + hipThreadIdx_x;
+  if (index < dimension) {
+    // NOLINTNEXTLINE cppcoreguidelines-pro-bounds-pointer-arithmetic
+    input_a[index] += input_b[index];
   }
 }
 
-#if 0
-__kernel__ void vectoradd_float(float* a, const float* b, const float* c, int width, int height) {
-
-
-  int x = blockDimX * blockIdx.x + threadIdx.x;
-  int y = blockDimY * blockIdy.y + threadIdx.y;
-
-  int i = y * width + x;
-  if ( i < (width * height)) {
-    a[i] = b[i] + c[i];
-  }
-}
-#endif
-
-int main() {
-  float *hostA;
-  float *hostB;
-  float *hostC;
-
-  float *deviceA;
-  float *deviceB;
-  float *deviceC;
-
+void print_device_info() {
   int count = 0;
   hipError_t err = hipGetDeviceCount(&count);
   if (err == hipErrorInvalidDevice) {
     std::cout << "FAIL: invalid device" << std::endl;
   }
-  std::cout << " Number of devices is " << count << std::endl;
+  std::cout << "Number of devices is " << count << std::endl;
 
-  hipDeviceProp_t devProp;
-  hipGetDeviceProperties(&devProp, 0);
-  std::cout << " System major: " << devProp.major << std::endl;
-  std::cout << " System minor: " << devProp.minor << std::endl;
-  std::cout << " Device name: " << devProp.name << std::endl;
-
-  std::cout << "HIP DeviceProp succeeded." << std::endl;
-
-  int i;
-  int errors;
-
-  hostA = (float *)malloc(NUM * sizeof(float));
-  hostB = (float *)malloc(NUM * sizeof(float));
-  hostC = (float *)malloc(NUM * sizeof(float));
-
-  // initialize the input data
-  for (i = 0; i < NUM; i++) {
-    hostB[i] = (float)i;
-    hostC[i] = (float)i * 100.0f;
+  hipDeviceProp_t device_prop;
+  hip_assert(hipGetDeviceProperties(&device_prop, 0));
+  std::cout << "System major: " << device_prop.major << std::endl;
+  std::cout << "System minor: " << device_prop.minor << std::endl;
+  std::cout << "Device name : ";
+  for (auto character : device_prop.name) {
+    std::cout << character;
   }
+  std::cout << std::endl;
+}
 
-  HIP_ASSERT(hipMalloc((void **)&deviceA, NUM * sizeof(float)));
-  HIP_ASSERT(hipMalloc((void **)&deviceB, NUM * sizeof(float)));
-  HIP_ASSERT(hipMalloc((void **)&deviceC, NUM * sizeof(float)));
-
-  HIP_ASSERT(
-      hipMemcpy(deviceB, hostB, NUM * sizeof(float), hipMemcpyHostToDevice));
-  HIP_ASSERT(
-      hipMemcpy(deviceC, hostC, NUM * sizeof(float), hipMemcpyHostToDevice));
-
-  hipLaunchKernelGGL(
-      vectoradd_float,
-      dim3(WIDTH / THREADS_PER_BLOCK_X, HEIGHT / THREADS_PER_BLOCK_Y),
-      dim3(THREADS_PER_BLOCK_X, THREADS_PER_BLOCK_Y), 0, 0, deviceA, deviceB,
-      deviceC, WIDTH, HEIGHT);
-
-  HIP_ASSERT(
-      hipMemcpy(hostA, deviceA, NUM * sizeof(float), hipMemcpyDeviceToHost));
-
-  // verify the results
-  errors = 0;
-  for (i = 0; i < NUM; i++) {
-    if (hostA[i] != (hostB[i] + hostC[i])) {
+auto count_errors(const float *result) -> int {
+  int errors = 0;
+  for (int i = 0; i < kDimension; i++) {
+    // NOLINTNEXTLINE cppcoreguidelines-pro-bounds-pointer-arithmetic
+    if (result[i] != kExpectedOutput) {
       errors++;
     }
   }
+
   if (errors != 0) {
-    printf("Vector calculation failed: %d errors\n", errors);
+    std::cout << "Vector calculation failed:" << errors << " errors\n";
   } else {
-    printf("Vector calculation passed.\n");
+    std::cout << "Vector calculation passed.\n";
+  }
+  return errors;
+}
+
+auto main() -> int {
+  print_device_info();
+
+  float *host_input_a = nullptr;
+  float *host_input_b = nullptr;
+
+  // NOLINTBEGIN cppcoreguidelines-pro-type-reinterpret-cast
+  hip_assert(hipMallocHost(reinterpret_cast<void **>(&host_input_a),
+                           kDimension * sizeof(float)));
+  hip_assert(hipMallocHost(reinterpret_cast<void **>(&host_input_b),
+                           kDimension * sizeof(float)));
+  // NOLINTEND cppcoreguidelines-pro-type-reinterpret-cast
+
+  for (int i = 0; i < kDimension; i++) {
+    host_input_a[i] = // NOLINT cppcoreguidelines-pro-bounds-pointer-arithmetic
+        kInputA;
+    host_input_b[i] = // NOLINT cppcoreguidelines-pro-bounds-pointer-arithmetic
+        kInputB;
   }
 
-  HIP_ASSERT(hipFree(deviceA));
-  HIP_ASSERT(hipFree(deviceB));
-  HIP_ASSERT(hipFree(deviceC));
+  float *device_input_a = nullptr;
+  float *device_input_b = nullptr;
+  hip_assert(hipMalloc(&device_input_a, kDimension * sizeof(float)));
+  hip_assert(hipMalloc(&device_input_b, kDimension * sizeof(float)));
 
-  free(hostA);
-  free(hostB);
-  free(hostC);
+  hip_assert(hipMemcpy(device_input_a, host_input_a, kDimension * sizeof(float),
+                       hipMemcpyHostToDevice));
+  hip_assert(hipMemcpy(device_input_b, host_input_b, kDimension * sizeof(float),
+                       hipMemcpyHostToDevice));
 
-  // hipResetDefaultAccelerator();
+  dim3 grid_dim = dim3(kDimension / kThreadsPerBlockX);
+  dim3 block_dim = dim3(kThreadsPerBlockX);
+  hipLaunchKernelGGL(add_vector, grid_dim, block_dim, 0, nullptr,
+                     device_input_a, device_input_b, kDimension);
+
+  hip_assert(hipMemcpy(host_input_a, device_input_a, kDimension * sizeof(float),
+                       hipMemcpyDeviceToHost));
+
+  int errors = count_errors(host_input_a);
+
+  hip_assert(hipFree(device_input_a));
+  hip_assert(hipFree(device_input_b));
+  hip_assert(hipHostFree(host_input_a));
+  hip_assert(hipHostFree(host_input_b));
 
   return errors;
 }

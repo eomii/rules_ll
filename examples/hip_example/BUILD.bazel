@@ -4,8 +4,7 @@ ll_binary(
     name = "nvidia",
     srcs = ["example.cpp"],
     compile_flags = [
-        "-v",
-        "--std=c++17",
+        "--std=c++20",
         "--offload-arch=sm_70",
         "-Wno-deprecated",
     ],
