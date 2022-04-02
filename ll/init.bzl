@@ -117,3 +117,40 @@ def initialize_rules_ll(
         strip_prefix = "hipamd-a97f7e4214c4111723d1476942106022d1186c70",
         urls = ["https://github.com/ROCm-Developer-Tools/hipamd/archive/a97f7e4214c4111723d1476942106022d1186c70.zip"],
     )
+
+    maybe(
+        http_archive,
+        name = "cuda_cudart",
+        urls = ["https://developer.download.nvidia.com/compute/cuda/redist/cuda_cudart/linux-x86_64/cuda_cudart-linux-x86_64-11.6.55-archive.tar.xz"],
+        strip_prefix = "cuda_cudart-linux-x86_64-11.6.55-archive",
+        sha256 = "734a77b3a26a9d08489d43afb74bad230c7c4a0ed2d17a6317a47cf363dca521",
+        # workspace_file_content = """workspace(name = "cuda_cudart")""",
+        build_file = "@rules_ll//third-party-overlays:cuda_cudart.BUILD.bazel",
+    )
+
+    maybe(
+        http_archive,
+        name = "cuda_nvcc",
+        urls = ["https://developer.download.nvidia.com/compute/cuda/redist/cuda_nvcc/linux-x86_64/cuda_nvcc-linux-x86_64-11.6.124-archive.tar.xz"],
+        strip_prefix = "cuda_nvcc-linux-x86_64-11.6.124-archive",
+        sha256 = "8c81199c5a096869a10c284197cefc1a958df8bf482322a0a48dff9cc82291b8",
+        build_file = "@rules_ll//third-party-overlays:cuda_nvcc.BUILD.bazel",
+    )
+
+    maybe(
+        http_archive,
+        name = "cuda_nvprof",
+        urls = ["https://developer.download.nvidia.com/compute/cuda/redist/cuda_nvprof/linux-x86_64/cuda_nvprof-linux-x86_64-11.6.124-archive.tar.xz"],
+        strip_prefix = "cuda_nvprof-linux-x86_64-11.6.124-archive",
+        sha256 = "2c05600562bcbe4841cd0d86fdbf2fecba36c54ad393979cb22653dd45487a9b",
+        build_file = "@rules_ll//third-party-overlays:cuda_nvprof.BUILD.bazel",
+    )
+
+    maybe(
+        http_archive,
+        name = "libcurand",
+        urls = ["https://developer.download.nvidia.com/compute/cuda/redist/libcurand/linux-x86_64/libcurand-linux-x86_64-10.2.9.124-archive.tar.xz"],
+        strip_prefix = "libcurand-linux-x86_64-10.2.9.124-archive",
+        sha256 = "87b1d70ec749db31cabb79ae5034b05883666e1848aa3feca643ea4a68dea47e",
+        build_file = "@rules_ll//third-party-overlays:libcurand.BUILD.bazel",
+    )

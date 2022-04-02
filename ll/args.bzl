@@ -51,7 +51,13 @@ def compile_object_args(ctx, in_file, out_file, cdf, headers, defines, includes)
     # Maybe enable heterogeneous compilation.
     if ctx.attr.heterogeneous_mode == "hip_nvidia":
         args.add("-xcuda")
-        args.add("--cuda-path=/usr/local/cuda")
+        args.add("--cuda-path=external/cuda_nvcc")
+        args.add("-Iexternal/cuda_cudart/include")
+        args.add("-Iexternal/cuda_nvprof/include")
+        args.add("-Iexternal/libcurand/include")
+
+        args.add("-Iexternal/hip/include")
+        args.add("-Iexternal/hipamd/include")
 
     # Write compilation database.
     if ctx.attr.heterogeneous_mode != "none":
@@ -159,8 +165,8 @@ def link_executable_args(ctx, in_files, out_file):
     args.add("-lc")  # Required. This is glibc.
 
     if ctx.attr.heterogeneous_mode == "hip_nvidia":
-        args.add("-L/usr/local/cuda/lib64")
         args.add("-lrt")
+        args.add("-Lexternal/cuda_cudart/lib")
         args.add("-lcudart_static")
 
     # Add local crt1.o, crti.o and crtn.o files.

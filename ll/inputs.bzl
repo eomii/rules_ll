@@ -44,6 +44,7 @@ def link_executable_inputs(ctx, in_files):
             in_files +
             ctx.files.deps +
             ctx.files.libraries +
+            ctx.files.data +
             ctx.toolchains["//ll:toolchain_type"].local_crt,
             transitive = [
                 ctx.toolchains["//ll:toolchain_type"].cpp_stdlib.files,

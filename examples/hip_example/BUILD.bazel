@@ -9,14 +9,14 @@ ll_binary(
         "-Wno-deprecated",
     ],
     data = [
+        "@cuda_cudart//:contents",
+        "@cuda_nvcc//:contents",
+        "@cuda_nvprof//:contents",
         "@hip//:headers",
         "@hipamd//:headers",
+        "@libcurand//:contents",
     ],
     heterogeneous_mode = "hip_nvidia",
-    includes = [
-        "external/hip/include",
-        "external/hipamd/include",
-    ],
 )
 
 ll_compilation_database(
