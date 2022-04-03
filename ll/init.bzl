@@ -116,6 +116,8 @@ def initialize_rules_ll(
         sha256 = "656f336e5ed8705629af811dea83096849298ddf05664051b730d3f104b0e18d",
         strip_prefix = "hipamd-a97f7e4214c4111723d1476942106022d1186c70",
         urls = ["https://github.com/ROCm-Developer-Tools/hipamd/archive/a97f7e4214c4111723d1476942106022d1186c70.zip"],
+        patches = ["@rules_ll//patches:hipamd_return_fix.diff"],
+        patch_args = ["-p1"],
     )
 
     maybe(

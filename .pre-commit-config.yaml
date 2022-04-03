@@ -3,6 +3,7 @@ repos:
     rev: v4.1.0
     hooks:
     -   id: trailing-whitespace
+        exclude: ^patches/
     -   id: end-of-file-fixer
         exclude: ^patches/
     -   id: fix-byte-order-marker
