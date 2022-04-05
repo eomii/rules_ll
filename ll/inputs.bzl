@@ -15,6 +15,18 @@ def compilable_sources(ctx):
 
 def compile_object_inputs(ctx, headers):
     if "//ll:toolchain_type" in ctx.toolchains:
+        third_party_deps = depset()
+        if ctx.attr.heterogeneous_mode in ["hip_nvidia", "hip_amd"]:
+            third_party_deps = depset(
+                ctx.toolchains["//ll:toolchain_type"].hip_libraries,
+                transitive = [third_party_deps],
+            )
+        if ctx.attr.heterogeneous_mode in ["hip_nvidia"]:
+            third_party_deps = depset(
+                ctx.toolchains["//ll:toolchain_type"].cuda_toolkit,
+                transitive = [third_party_deps],
+            )
+
         return depset(
             ctx.files.srcs +
             ctx.files.data +
@@ -22,6 +34,7 @@ def compile_object_inputs(ctx, headers):
             transitive = [
                 headers,
                 ctx.toolchains["//ll:toolchain_type"].cpp_stdhdrs.files,
+                third_party_deps,
             ],
         )
     elif "//ll:bootstrap_toolchain_type" in ctx.toolchains:
@@ -40,6 +53,18 @@ def create_archive_library_inputs(ctx, in_files):
 
 def link_executable_inputs(ctx, in_files):
     if "//ll:toolchain_type" in ctx.toolchains:
+        third_party_deps = depset()
+        if ctx.attr.heterogeneous_mode in ["hip_nvidia", "hip_amd"]:
+            third_party_deps = depset(
+                ctx.toolchains["//ll:toolchain_type"].hip_libraries,
+                transitive = [third_party_deps],
+            )
+        if ctx.attr.heterogeneous_mode in ["hip_nvidia"]:
+            third_party_deps = depset(
+                ctx.toolchains["//ll:toolchain_type"].cuda_toolkit,
+                transitive = [third_party_deps],
+            )
+
         return depset(
             in_files +
             ctx.files.deps +
@@ -51,6 +76,7 @@ def link_executable_inputs(ctx, in_files):
                 ctx.toolchains["//ll:toolchain_type"].unwind_library.files,
                 ctx.toolchains["//ll:toolchain_type"].cpp_abi.files,
                 ctx.toolchains["//ll:toolchain_type"].compiler_runtime.files,
+                third_party_deps,
             ],
         )
     else:

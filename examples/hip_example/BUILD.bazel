@@ -8,14 +8,6 @@ ll_binary(
         "--offload-arch=sm_70",
         "-Wno-deprecated",
     ],
-    data = [
-        "@cuda_cudart//:contents",
-        "@cuda_nvcc//:contents",
-        "@cuda_nvprof//:contents",
-        "@hip//:headers",
-        "@hipamd//:headers",
-        "@libcurand//:contents",
-    ],
     heterogeneous_mode = "hip_nvidia",
 )
 

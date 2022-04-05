@@ -434,7 +434,8 @@ ll_bootstrap_toolchain(<a href="#ll_bootstrap_toolchain-name">name</a>, <a href=
 <pre>
 ll_toolchain(<a href="#ll_toolchain-name">name</a>, <a href="#ll_toolchain-archiver">archiver</a>, <a href="#ll_toolchain-bitcode_linker">bitcode_linker</a>, <a href="#ll_toolchain-builtin_includes">builtin_includes</a>, <a href="#ll_toolchain-c_driver">c_driver</a>, <a href="#ll_toolchain-clang_tidy">clang_tidy</a>,
              <a href="#ll_toolchain-clang_tidy_runner">clang_tidy_runner</a>, <a href="#ll_toolchain-compiler_runtime">compiler_runtime</a>, <a href="#ll_toolchain-cpp_abi">cpp_abi</a>, <a href="#ll_toolchain-cpp_driver">cpp_driver</a>, <a href="#ll_toolchain-cpp_stdhdrs">cpp_stdhdrs</a>, <a href="#ll_toolchain-cpp_stdlib">cpp_stdlib</a>,
-             <a href="#ll_toolchain-linker">linker</a>, <a href="#ll_toolchain-local_crt">local_crt</a>, <a href="#ll_toolchain-machine_code_tool">machine_code_tool</a>, <a href="#ll_toolchain-offload_bundler">offload_bundler</a>, <a href="#ll_toolchain-symbolizer">symbolizer</a>, <a href="#ll_toolchain-unwind_library">unwind_library</a>)
+             <a href="#ll_toolchain-cuda_toolkit">cuda_toolkit</a>, <a href="#ll_toolchain-hip_libraries">hip_libraries</a>, <a href="#ll_toolchain-linker">linker</a>, <a href="#ll_toolchain-local_crt">local_crt</a>, <a href="#ll_toolchain-machine_code_tool">machine_code_tool</a>, <a href="#ll_toolchain-offload_bundler">offload_bundler</a>,
+             <a href="#ll_toolchain-symbolizer">symbolizer</a>, <a href="#ll_toolchain-unwind_library">unwind_library</a>)
 </pre>
 <p><strong>ATTRIBUTES</strong></p>
 <table class="colwidths-auto table">
@@ -518,6 +519,18 @@ ll_toolchain(<a href="#ll_toolchain-name">name</a>, <a href="#ll_toolchain-archi
 <td class="text-left"><p><a href="https://bazel.build/docs/build-ref.html#labels">Label</a></p></td>
 <td class="text-left"><p>optional</p></td>
 <td class="text-left"><p>&#64;llvm-project//libcxx:libll_cxx</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p><a id="ll_toolchain-cuda_toolkit"></a>cuda_toolkit</p></td>
+<td class="text-left"><p>CUDA toolkit files. <code>rules_ll</code> will still use <code>clang</code> as             the CUDA device compiler. Building targets that make use of the             CUDA libraries imply acceptance of their respective licenses.</p></td>
+<td class="text-left"><p><a href="https://bazel.build/docs/build-ref.html#labels">List of labels</a></p></td>
+<td class="text-left"><p>optional</p></td>
+<td class="text-left"><p>[“&#64;cuda_cudart//:contents”, “&#64;cuda_nvcc//:contents”, “&#64;cuda_nvprof//:contents”, “&#64;libcurand//:contents”]</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><a id="ll_toolchain-hip_libraries"></a>hip_libraries</p></td>
+<td class="text-left"><p>HIP library files. <code>rules_ll</code> will use <code>clang</code> as the             device compiler. Building targets that make use of the HIP toolkit             implies acceptance of its license.<br><br>            Using HIP for AMD devices implies the use of the ROCm stack and the             acceptance of its licenses.<br><br>            Using HIP for Nvidia devices implies use of the CUDA toolkit and the             acceptance of its licenses.</p></td>
+<td class="text-left"><p><a href="https://bazel.build/docs/build-ref.html#labels">List of labels</a></p></td>
+<td class="text-left"><p>optional</p></td>
+<td class="text-left"><p>[“&#64;hip//:headers”, “&#64;hipamd//:headers”]</p></td>
 </tr>
 <tr class="row-even"><td class="text-left"><p><a id="ll_toolchain-linker"></a>linker</p></td>
 <td class="text-left"><p>The linker.</p></td>

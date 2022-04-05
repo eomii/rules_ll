@@ -94,6 +94,8 @@ def _ll_toolchain_impl(ctx):
             clang_tidy_runner = ctx.executable.clang_tidy_runner,
             symbolizer = ctx.executable.symbolizer,
             machine_code_tool = ctx.executable.machine_code_tool,
+            cuda_toolkit = ctx.files.cuda_toolkit,
+            hip_libraries = ctx.files.hip_libraries,
         ),
     ]
 
@@ -209,6 +211,36 @@ ll_toolchain = rule(
             cfg = "exec",
             default = "@llvm-project//llvm:llvm-mc",
             executable = True,
+        ),
+        "cuda_toolkit": attr.label_list(
+            doc = """CUDA toolkit files. `rules_ll` will still use `clang` as
+            the CUDA device compiler. Building targets that make use of the
+            CUDA libraries imply acceptance of their respective licenses.
+            """,
+            default = [
+                "@cuda_cudart//:contents",
+                "@cuda_nvcc//:contents",
+                "@cuda_nvprof//:contents",
+                "@libcurand//:contents",
+            ],
+            cfg = "target",
+        ),
+        "hip_libraries": attr.label_list(
+            doc = """HIP library files. `rules_ll` will use `clang` as the
+            device compiler. Building targets that make use of the HIP toolkit
+            implies acceptance of its license.
+
+            Using HIP for AMD devices implies the use of the ROCm stack and the
+            acceptance of its licenses.
+
+            Using HIP for Nvidia devices implies use of the CUDA toolkit and the
+            acceptance of its licenses.
+            """,
+            default = [
+                "@hip//:headers",
+                "@hipamd//:headers",
+            ],
+            cfg = "target",
         ),
     },
 )
