@@ -2,7 +2,7 @@ load(
     "@llvm-project//clang-tools-extra/clang-tidy:clang_tidy_module.bzl",
     "clang_tidy_module",
 )
-load("@rules_python//python:defs.bzl", "py_binary")
+load("@bazel_skylib//rules:native_binary.bzl", "native_binary")
 
 cc_library(
     name = "clang_tidy",
@@ -295,12 +295,10 @@ cc_binary(
     ],
 )
 
-filegroup(
+native_binary(
     name = "run-clang-tidy",
-    srcs = ["tool/run-clang-tidy.py"],
+    src = "tool/run-clang-tidy.py",
+    out = "run-clang-tidy",
+    data = [":clang-tidy"],
     visibility = ["//visibility:public"],
-)
-
-exports_files(
-    ["tool/run-clang-tidy.py"],
 )

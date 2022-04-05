@@ -84,12 +84,14 @@ with open(sys.argv[1], 'r') as in_file, open(sys.argv[2], 'w') as out_file:
     )
 
     clang_tidy_runner = ctx.actions.declare_file("run_clang_tidy.sh")
+
     runfile_content = """#!/bin/bash
-    echo "Running clang-tidy. This may take a while.";
-{} -j $(nproc) -clang-tidy-binary={} -quiet -use-color""".format(
-        ctx.toolchains["//ll:toolchain_type"].clang_tidy_runner.path,
-        ctx.toolchains["//ll:toolchain_type"].clang_tidy.short_path,
-        ctx.file.config.path,
+echo "Running clang-tidy. This may take a while.";
+{runner} -j $(nproc) -quiet -use-color -clang-tidy-binary={binary} -config-file={config};
+""".format(
+        runner = ctx.toolchains["//ll:toolchain_type"].clang_tidy_runner.short_path,
+        binary = ctx.toolchains["//ll:toolchain_type"].clang_tidy.short_path,
+        config = ctx.file.config.short_path,
     )
     ctx.actions.write(clang_tidy_runner, runfile_content, is_executable = True)
 
