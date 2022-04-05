@@ -1,23 +1,32 @@
-``rules_ll`` - An Upstream LLVM/Clang Toolchain for Bazel
----------------------------------------------------------
+An Upstream LLVM/Clang Toolchain for Bazel
+------------------------------------------
 
 This repository exposes ``ll_library`` and ``ll_binary`` rules to build C and
 C++ code with a Clang/LLVM based toolchain built from upstream.
 
-The current ``ll_toolchain`` uses targets from the
-`llvm-bazel-overlay <https://github.com/llvm/llvm-project/tree/main/utils/bazel>`_
-as well as custom overlays for ``libcxx``, ``libcxxabi``, ``libunwind`` and
-``compiler-rt``.
+**Features**
 
-API Documentation: `<https://qogecoin.github.io/rules_ll>`_
+- Uses targets from the
+  `llvm-bazel-overlay <https://github.com/llvm/llvm-project/tree/main/utils/bazel>`_
+  for Clang, LLVM, etc.
+- Comes with custom overlays for ``libcxx``, ``libcxxabi``, ``libunwind`` and
+  ``compiler-rt`` and ``clang-tidy`` for a modern, encapsulated toolchain.
+- Integrates ``clang-tidy`` via an easy-to-use ``ll_compilation_database`` target.
+- Supports heterogeneous programming for Nvidia GPUs using HIP and CUDA, including
+  fully automated setup of required libraries, toolkits etc.
+- Support for HIP/AMD is planned.
 
-Discord: `<https://discord.gg/Ax67899n4y>`_
+**Links**
+
+- Examples: `rules_ll/examples <https://github.com/qogecoin/rules_ll/tree/main/examples>`_.
+- API Documentation: `<https://qogecoin.github.io/rules_ll>`_
+- Discord: `<https://discord.gg/Ax67899n4y>`_
 
 ``WORKSPACE.bazel`` Quickstart
 ------------------------------
 
 The full ``WORKSPACE.bazel`` file created in this guide is available at
-`rules_ll/example <https://github.com/qogecoin/rules_ll/tree/main/example>`_.
+`rules_ll/examples <https://github.com/qogecoin/rules_ll/tree/main/examples>`_.
 
 1. Import the ``rules_ll`` repository.
 
@@ -128,11 +137,7 @@ convenience script ``generate_docs.sh`` to generate the documentation::
 Licensing considerations
 ------------------------
 
-``rules_ll`` is distributed under the Apache 2.0 License. As such, the license
-for ``rules_ll`` itself is quite lenient.
+``rules_ll`` is distributed under the Apache 2.0 License.
 
-However, as long as ``rules_ll`` does not support LLVM's ``libc``, it will
-default to statically linking ``glibc`` into your executables. If your project
-uses a proprietary license you need to disable static linking for your binaries
-via the ``proprietary`` attribute in ``ll_binary``. This will link ``glibc`` as
-a shared object.
+This repository contains overlays and automated setups for the CUDA toolkit and
+HIP. Using ``heterogeneous_mode`` implies acceptance of their licenses.
