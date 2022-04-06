@@ -11,9 +11,10 @@ C++ code with a Clang/LLVM based toolchain built from upstream.
   for Clang, LLVM, etc.
 - Comes with custom overlays for ``libcxx``, ``libcxxabi``, ``libunwind`` and
   ``compiler-rt`` and ``clang-tidy`` for a modern, encapsulated toolchain.
-- Integrates ``clang-tidy`` via an easy-to-use ``ll_compilation_database`` target.
-- Supports heterogeneous programming for Nvidia GPUs using HIP and CUDA, including
-  fully automated setup of required libraries, toolkits etc.
+- Integrates ``clang-tidy`` via an easy-to-use ``ll_compilation_database``
+  target.
+- Supports heterogeneous programming for Nvidia GPUs using HIP and CUDA,
+  including fully automated setup of required libraries, toolkits etc.
 - Support for HIP/AMD is planned.
 
 **Links**

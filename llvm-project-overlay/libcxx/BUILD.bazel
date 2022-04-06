@@ -1,4 +1,4 @@
-load("@rules_ll//ll:defs.bzl", "ll_bootstrap_library")
+load("@rules_ll//ll:bootstrap_library.bzl", "ll_bootstrap_library")
 
 filegroup(
     name = "libcxx_headers",
