@@ -1,13 +1,13 @@
-Checks:
-  -*,
-  bugprone-*,
-  google-*,
-  cppcoreguidelines-*,
-  misc-*,
-  modernize-*,
-  performance-*,
-  portability-*,
-  readability-*,
+Checks: |
+  -*
+  bugprone-*
+  google-*
+  cppcoreguidelines-*
+  misc-*
+  modernize-*
+  performance-*
+  portability-*
+  readability-*
 
 WarningsAsErrors: "*"
 
