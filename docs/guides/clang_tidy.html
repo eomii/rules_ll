@@ -32,6 +32,7 @@
     <script src="../_static/underscore.js"></script>
     <script src="../_static/doctools.js"></script>
     <script src="../_static/sphinx-book-theme.9d8b4a8b9bb19db25eeaddc40d639ba2.js"></script>
+    <link rel="canonical" href="ll.eomii.org/guides/clang_tidy.html" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="//ll:defs.bzl" href="../defs.html" />
@@ -297,7 +298,7 @@
         aria-label="Connect with source repository"><i class="fab fa-github"></i></button>
     <div class="dropdown-buttons sourcebuttons">
         <a class="repository-button"
-            href="https://github.com/qogecoin/rules_ll"><button type="button" class="btn btn-secondary topbarbtn"
+            href="https://github.com/eomii/rules_ll"><button type="button" class="btn btn-secondary topbarbtn"
                 data-toggle="tooltip" data-placement="left" title="Source repository"><i
                     class="fab fa-github"></i>repository</button></a>
 
@@ -383,7 +384,7 @@
 <p><code class="docutils literal notranslate"><span class="pre">rules_ll</span></code> comes with a Bazel overlay for <code class="docutils literal notranslate"><span class="pre">clang-tidy</span></code>. The
 <code class="docutils literal notranslate"><span class="pre">ll_compilation_database</span></code> rule can be used to build a <a class="reference external" href="https://clang.llvm.org/docs/JSONCompilationDatabase.html">compilation database</a>
 for a target (and its dependencies) and run <code class="docutils literal notranslate"><span class="pre">clang-tidy</span></code> on it.</p>
-<p>An example similar to the one described below can be found at <a class="reference external" href="https://github.com/qogecoin/rules_ll/tree/main/examples">rules_ll/examples</a></p>
+<p>An example similar to the one described below can be found at <a class="reference external" href="https://github.com/eomii/rules_ll/tree/main/examples">rules_ll/examples</a></p>
 <div class="section" id="basic-usage">
 <h2>Basic Usage<a class="headerlink" href="#basic-usage" title="Permalink to this headline">¶</a></h2>
 <p>For a target <code class="docutils literal notranslate"><span class="pre">my_library</span></code> defined in a <code class="docutils literal notranslate"><span class="pre">BUILD.bazel</span></code> file, we can add an
@@ -410,7 +411,7 @@ for a target (and its dependencies) and run <code class="docutils literal notran
 <p>The <code class="docutils literal notranslate"><span class="pre">target</span></code> attribute in <code class="docutils literal notranslate"><span class="pre">ll_compilation_database</span></code> is used to specify the
 target for which it should generate the <code class="docutils literal notranslate"><span class="pre">compile_commands.json</span></code> file.</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">.clang-tidy</span></code> file contains the configuration for <code class="docutils literal notranslate"><span class="pre">clang-tidy</span></code>. See
-<a class="reference external" href="https://github.con/qogecoin/rules_ll/tree/main/examples/.clang-tidy">rules/ll/examples/.clang-tidy</a>
+<a class="reference external" href="https://github.con/eomii/rules_ll/tree/main/examples/.clang-tidy">rules/ll/examples/.clang-tidy</a>
 for an example configuration.</p>
 <p>To run <code class="docutils literal notranslate"><span class="pre">clang-tidy</span></code> on the sources of <code class="docutils literal notranslate"><span class="pre">my_library_compile_commands</span></code>, run</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>bazel run my_library_compile_commands

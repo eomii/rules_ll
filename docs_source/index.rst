@@ -15,7 +15,7 @@ Guides
 Public API
 ==========
 
-Example projects can be found at `<https://github.com/qogecoin/rules_ll/tree/main/examples>`_.
+Example projects can be found at `<https://github.com/eomii/rules_ll/tree/main/examples>`_.
 
 .. toctree::
    :maxdepth: 2

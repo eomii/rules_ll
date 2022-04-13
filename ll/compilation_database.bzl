@@ -137,9 +137,9 @@ Executable target for building a
 and running [clang-tidy](https://clang.llvm.org/extra/clang-tidy/) on it.
 
 For a full guide see
-[Using `rules_ll` with `clang-tidy`](https://qogecoin.github.io/rules_ll/guides/clang_tidy.html).
+[Using `rules_ll` with `clang-tidy`](https://ll.eomii.org/guides/clang_tidy.html).
 
 An example project using this rule is available at
-[rules_ll/examples](https://github.com/qogecoin/rules_ll/tree/main/examples).
+[rules_ll/examples](https://github.com/eomii/rules_ll/tree/main/examples).
 """,
 )

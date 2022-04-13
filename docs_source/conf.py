@@ -20,6 +20,8 @@ extensions = [
     'myst_parser',
 ]
 
+html_baseurl = 'll.eomii.org'
+
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
 
@@ -42,6 +44,6 @@ html_theme_options = {
     'use_download_button': False,
     'use_fullscreen_button': False,
 
-    'repository_url': 'https://github.com/qogecoin/rules_ll',
+    'repository_url': 'https://github.com/eomii/rules_ll',
     'use_repository_button': True,
 }

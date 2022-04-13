@@ -19,15 +19,15 @@ C++ code with a Clang/LLVM based toolchain built from upstream.
 
 **Links**
 
-- Examples: `rules_ll/examples <https://github.com/qogecoin/rules_ll/tree/main/examples>`_.
-- API Documentation: `<https://qogecoin.github.io/rules_ll>`_
+- Examples: `rules_ll/examples <https://github.com/eomii/rules_ll/tree/main/examples>`_.
+- API Documentation: `<https://ll.eomii.org>`_
 - Discord: `<https://discord.gg/Ax67899n4y>`_
 
 ``WORKSPACE.bazel`` Quickstart
 ------------------------------
 
 The full ``WORKSPACE.bazel`` file created in this guide is available at
-`rules_ll/examples <https://github.com/qogecoin/rules_ll/tree/main/examples>`_.
+`rules_ll/examples <https://github.com/eomii/rules_ll/tree/main/examples>`_.
 
 1. Import the ``rules_ll`` repository.
 
@@ -39,7 +39,7 @@ The full ``WORKSPACE.bazel`` file created in this guide is available at
           name = "rules_ll",
           sha256 = "<Correct SHA256>",
           urls = [
-              "https://github.com/qogecoin/rules_ll/archive/<COMMIT_HASH>.zip"
+              "https://github.com/eomii/rules_ll/archive/<COMMIT_HASH>.zip"
           ]
       )
       load("@rules_ll//ll:deps.bzl", "rules_ll_dependencies")

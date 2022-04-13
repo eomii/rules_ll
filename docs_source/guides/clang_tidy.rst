@@ -5,7 +5,7 @@ Using ``clang-tidy`` with ``rules_ll``
 ``ll_compilation_database`` rule can be used to build a `compilation database <https://clang.llvm.org/docs/JSONCompilationDatabase.html>`_
 for a target (and its dependencies) and run ``clang-tidy`` on it.
 
-An example similar to the one described below can be found at `rules_ll/examples <https://github.com/qogecoin/rules_ll/tree/main/examples>`_
+An example similar to the one described below can be found at `rules_ll/examples <https://github.com/eomii/rules_ll/tree/main/examples>`_
 
 Basic Usage
 ===========
@@ -37,7 +37,7 @@ The ``target`` attribute in ``ll_compilation_database`` is used to specify the
 target for which it should generate the ``compile_commands.json`` file.
 
 The ``.clang-tidy`` file contains the configuration for ``clang-tidy``. See
-`rules/ll/examples/.clang-tidy <https://github.con/qogecoin/rules_ll/tree/main/examples/.clang-tidy>`_
+`rules/ll/examples/.clang-tidy <https://github.con/eomii/rules_ll/tree/main/examples/.clang-tidy>`_
 for an example configuration.
 
 To run ``clang-tidy`` on the sources of ``my_library_compile_commands``, run
