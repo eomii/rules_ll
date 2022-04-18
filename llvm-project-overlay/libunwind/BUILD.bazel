@@ -34,13 +34,15 @@ ll_bootstrap_library(
         "src/config.h",
         "src/dwarf2.h",
         "src/libunwind_ext.h",
-        "//libunwind:libunwind_headers",
     ],
     compile_flags = [
         "-faligned-allocation",
         "-funwind-tables",
         "-fstrict-aliasing",
         "-fvisibility-inlines-hidden",
+    ],
+    transitive_hdrs = [
+        ":libunwind_headers",
     ],
     visibility = ["//visibility:public"],
     deps = ["//compiler-rt:libll_compiler-rt"],

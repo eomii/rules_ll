@@ -11,6 +11,7 @@ LlInfo = provider(
         "libraries": "A depset containing object files.",
         "transitive_defines": "A depset containing defines. These defines are carried to all depending targets.",
         "transitive_includes": "A depset containing include paths. These include paths are carried to all depending targets.",
+        "transitive_angled_includes": "A depset containing angled include paths. These include paths are carried to all depending targets.",
     },
 )
 

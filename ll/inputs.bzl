@@ -6,7 +6,7 @@ Action inputs.
 load("//ll:providers.bzl", "LlInfo")
 
 def compilable_sources(ctx):
-    compilable_extensions = ["ll", "c", "cl", "cpp", "S"]
+    compilable_extensions = ["ll", "c", "cl", "cpp", "S", "cc"]
     return [
         src
         for src in ctx.files.srcs
@@ -34,6 +34,7 @@ def compile_object_inputs(ctx, headers):
             transitive = [
                 headers,
                 ctx.toolchains["//ll:toolchain_type"].cpp_stdhdrs.files,
+                ctx.toolchains["//ll:toolchain_type"].cpp_abi[LlInfo].transitive_headers,
                 third_party_deps,
             ],
         )

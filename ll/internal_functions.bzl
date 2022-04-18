@@ -9,6 +9,10 @@ def resolve_binary_deps(ctx):
     dep_headers = [dep[LlInfo].transitive_headers for dep in ctx.attr.deps]
     dep_defines = [dep[LlInfo].transitive_defines for dep in ctx.attr.deps]
     dep_includes = [dep[LlInfo].transitive_includes for dep in ctx.attr.deps]
+    dep_angled_includes = [
+        dep[LlInfo].transitive_angled_includes
+        for dep in ctx.attr.deps
+    ]
 
     # Headers.
     headers = depset(ctx.files.hdrs, transitive = dep_headers)
@@ -19,16 +23,27 @@ def resolve_binary_deps(ctx):
     # Includes.
     includes = depset(ctx.attr.includes, transitive = dep_includes)
 
+    # Angled includes.
+    angled_includes = depset(
+        ctx.attr.angled_includes,
+        transitive = dep_angled_includes,
+    )
+
     return (
         headers,
         defines,
         includes,
+        angled_includes,
     )
 
 def resolve_library_deps(ctx):
     dep_headers = [dep[LlInfo].transitive_headers for dep in ctx.attr.deps]
     dep_defines = [dep[LlInfo].transitive_defines for dep in ctx.attr.deps]
     dep_includes = [dep[LlInfo].transitive_includes for dep in ctx.attr.deps]
+    dep_angled_includes = [
+        dep[LlInfo].transitive_angled_includes
+        for dep in ctx.attr.deps
+    ]
 
     # Headers.
     transitive_headers = depset(
@@ -51,11 +66,23 @@ def resolve_library_deps(ctx):
     )
     includes = depset(ctx.attr.includes, transitive = [transitive_includes])
 
+    # Angled includes.
+    transitive_angled_includes = depset(
+        ctx.attr.angled_includes,
+        transitive = dep_angled_includes,
+    )
+    angled_includes = depset(
+        ctx.attr.angled_includes,
+        transitive = [transitive_angled_includes],
+    )
+
     return (
         headers,
         defines,
         includes,
+        angled_includes,
         transitive_headers,
         transitive_defines,
         transitive_includes,
+        transitive_angled_includes,
     )

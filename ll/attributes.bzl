@@ -33,7 +33,7 @@ DEFAULT_ATTRS = {
 
         Headers should be placed in the `hdrs` attribute.
         """,
-        allow_files = [".ll", ".o", ".S", ".c", ".cl", ".cpp"],
+        allow_files = [".ll", ".o", ".S", ".c", ".cc", ".cl", ".cpp"],
     ),
     "hdrs": attr.label_list(
         doc = """Header files for this target.
@@ -57,11 +57,20 @@ DEFAULT_ATTRS = {
         """,
     ),
     "includes": attr.string_list(
-        doc = """Additional include paths for this target.
+        doc = """Additional quoted include paths for this target.
 
         When including a header not via `#include "header.h"`, but via
         `#include "subdir/header.h"`, the include path needs to be added here in
         addition to making the header available in the `hdrs` attribute.
+
+        Only used for this target.
+        """,
+    ),
+    "angled_includes": attr.string_list(
+        doc = """Additional angled include paths for this target.
+
+        Per default all inclusions are quoted includes (via ``-iquote``).
+        Paths added here are available as angled includes (via ``-I``).
 
         Only used for this target.
         """,
@@ -155,6 +164,13 @@ LIBRARY_ATTRS = dicts.add(DEFAULT_ATTRS, HETEROGENEOUS_ATTRS, {
     ),
     "transitive_includes": attr.string_list(
         doc = """Additional transitive include paths for this target.
+
+        Includes in this attribute will be added to the compile command line
+        arguments for all downstream targets.
+        """,
+    ),
+    "transitive_angled_includes": attr.string_list(
+        doc = """Additional transitive angled include paths for this target.
 
         Includes in this attribute will be added to the compile command line
         arguments for all downstream targets.

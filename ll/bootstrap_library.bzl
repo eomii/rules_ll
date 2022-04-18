@@ -19,9 +19,11 @@ def _ll_bootstrap_library_impl(ctx):
         headers,
         defines,
         includes,
+        angled_includes,
         transitive_headers,
         transitive_defines,
         transitive_includes,
+        transitive_angled_includes,
     ) = resolve_library_deps(ctx)
 
     intermediary_objects, cdfs = compile_objects(
@@ -29,6 +31,7 @@ def _ll_bootstrap_library_impl(ctx):
         headers = headers,
         defines = defines,
         includes = includes,
+        angled_includes = angled_includes,
         toolchain_type = "//ll:bootstrap_toolchain_type",
     )
 
@@ -48,6 +51,7 @@ def _ll_bootstrap_library_impl(ctx):
             transitive_headers = transitive_headers,
             transitive_defines = transitive_defines,
             transitive_includes = transitive_includes,
+            transitive_angled_includes = transitive_angled_includes,
         ),
     ]
 

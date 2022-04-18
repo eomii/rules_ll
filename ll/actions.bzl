@@ -71,6 +71,7 @@ def compile_objects(
         headers = [],
         defines = [],
         includes = [],
+        angled_includes = [],
         toolchain_type = "//ll:toolchain_type"):
     in_files = compilable_sources(ctx)
     out_files = []
@@ -83,6 +84,7 @@ def compile_objects(
             headers,
             defines,
             includes,
+            angled_includes,
             toolchain_type,
         )
         out_files += [file_out]
@@ -90,7 +92,7 @@ def compile_objects(
 
     return out_files, cdfs
 
-def compile_object(ctx, in_file, headers, defines, includes, toolchain_type):
+def compile_object(ctx, in_file, headers, defines, includes, angled_includes, toolchain_type):
     file_out, cdf_out = compile_object_outputs(ctx, in_file)
 
     ctx.actions.run(
@@ -106,6 +108,7 @@ def compile_object(ctx, in_file, headers, defines, includes, toolchain_type):
             headers,
             defines,
             includes,
+            angled_includes,
         ),
         mnemonic = "LlCompileObject",
         use_default_shell_env = False,

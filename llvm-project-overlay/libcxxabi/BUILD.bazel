@@ -2,7 +2,10 @@ load("@rules_ll//ll:bootstrap_library.bzl", "ll_bootstrap_library")
 
 filegroup(
     name = "libcxxabi_headers",
-    srcs = glob(["include/**/*"]),
+    srcs = [
+        "include/__cxxabi_config.h",
+        "include/cxxabi.h",
+    ],
     visibility = ["//visibility:public"],
 )
 
@@ -66,6 +69,7 @@ ll_bootstrap_library(
     ],
     # Include libcxx headers via -I instead of -isystem.
     data = [
+        ":libcxxabi_headers",
         "//libcxx:libcxx_headers",
         "//libcxx:libcxx_sources",
     ],
@@ -82,5 +86,6 @@ ll_bootstrap_library(
     ],
     # Libcxxabi requires some files from libc++.
     includes = ["external/llvm-project/libcxx/src"],
+    transitive_hdrs = [":libcxxabi_headers"],
     visibility = ["//visibility:public"],
 )

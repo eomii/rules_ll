@@ -24,7 +24,7 @@ def llvm_target_directory_path(ctx):
 def _get_dirname(file):
     return file.dirname
 
-def compile_object_args(ctx, in_file, out_file, cdf, headers, defines, includes):
+def compile_object_args(ctx, in_file, out_file, cdf, headers, defines, includes, angled_includes):
     args = ctx.actions.args()
 
     args.add("-fcolor-diagnostics")
@@ -79,25 +79,42 @@ def compile_object_args(ctx, in_file, out_file, cdf, headers, defines, includes)
     )
     args.add(clang_builtin_include_path, format = "-resource-dir=%s")
 
-    # Ensure that #include_next works properly in cuda_wrappers/algorithm.
-    args.add(clang_builtin_include_path, format = "-isystem%s")
+    # Includes. This reflects the order in which clang will search for included
+    # files.
 
+    # 0. Search the directory of the including source file for quoted includes.
+
+    # 1. Search directories specified via -iquote for quoted includes.
+    args.add_all(includes, format_each = "-iquote%s", uniquify = True)
+
+    # 2. Search directories specified via -I for quoted and angled includes.
+    args.add_all(angled_includes, format_each = "-I%s", uniquify = True)
+
+    # 3. Search directories specified via -isystem for quoted and angled
+    #    includes.
     libcxx_include_path = "external/llvm-project/libcxx/include"
+    args.add(clang_builtin_include_path, format = "-isystem%s")
     args.add(libcxx_include_path, format = "-isystem%s")
+    libcxxabi_include_path = "external/llvm-project/libcxxabi/include"
+    args.add(libcxxabi_include_path, format = "-isystem%s")
+    libunwind_include_path = "external/llvm-project/libunwind/include"
+    args.add(libunwind_include_path, format = "-isystem%s")
 
-    # Target-specific flags.
-    args.add_all(
-        headers,
-        format_each = "-I%s",
-        map_each = _get_dirname,
-        uniquify = True,
-    )
-    args.add_all(includes, format_each = "-I%s", uniquify = True)
+    # 4. Search directories specified via -idirafter for quoted and angled
+    #    includes. Since most users will not need this flag, there is no
+    #    attribute for it. Instead, it should be specified in the compile_flags
+    #    attribute.
+
+    # Defines.
     args.add_all(defines, format_each = "-D%s")
 
+    # Additional compile flags.
     args.add_all(ctx.attr.compile_flags)
 
+    # Input file.
     args.add(in_file)
+
+    # Output file.
     args.add("-o", out_file)
 
     return [args]
