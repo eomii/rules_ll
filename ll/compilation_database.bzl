@@ -10,7 +10,11 @@ load(
 )
 
 def _ll_compilation_database(ctx):
-    inputs = ctx.attr.target[LlCompilationDatabaseFragmentsInfo].cdfs
+    inputs = [
+        cdf
+        for cdf in ctx.attr.target[LlCompilationDatabaseFragmentsInfo].cdfs.to_list()
+        if ctx.attr.exclude not in cdf.path
+    ]
 
     unmodified_cdb = ctx.actions.declare_file(
         "unmodified_compile_commands.json",
@@ -69,7 +73,6 @@ with open(sys.argv[1], 'r') as in_file, open(sys.argv[2], 'w') as out_file:
     compilation_database = json.load(in_file)
 
     for fragment in compilation_database:
-        print(fragment['directory'])
         fragment['directory'] = '$(pwd)'
     json.dump(compilation_database, out_file)
 """ $1 $2
@@ -128,6 +131,11 @@ ll_compilation_database = rule(
             This file should be at the root of your project directory.
             """,
             allow_single_file = True,
+        ),
+        "exclude": attr.string(
+            doc = """
+            Exclude all targets whose path includes this string.
+            """,
         ),
     },
     toolchains = ["//ll:toolchain_type"],
