@@ -13,7 +13,7 @@ Every function in this file effectively wraps `ctx.actions.run` or
 ## compile_object
 
 <pre>
-compile_object(<a href="#compile_object-ctx">ctx</a>, <a href="#compile_object-in_file">in_file</a>, <a href="#compile_object-headers">headers</a>, <a href="#compile_object-defines">defines</a>, <a href="#compile_object-includes">includes</a>, <a href="#compile_object-toolchain_type">toolchain_type</a>)
+compile_object(<a href="#compile_object-ctx">ctx</a>, <a href="#compile_object-in_file">in_file</a>, <a href="#compile_object-headers">headers</a>, <a href="#compile_object-defines">defines</a>, <a href="#compile_object-includes">includes</a>, <a href="#compile_object-angled_includes">angled_includes</a>, <a href="#compile_object-toolchain_type">toolchain_type</a>)
 </pre>
 
 
@@ -28,6 +28,7 @@ compile_object(<a href="#compile_object-ctx">ctx</a>, <a href="#compile_object-i
 | <a id="compile_object-headers"></a>headers |  <p align="center"> - </p>   |  none |
 | <a id="compile_object-defines"></a>defines |  <p align="center"> - </p>   |  none |
 | <a id="compile_object-includes"></a>includes |  <p align="center"> - </p>   |  none |
+| <a id="compile_object-angled_includes"></a>angled_includes |  <p align="center"> - </p>   |  none |
 | <a id="compile_object-toolchain_type"></a>toolchain_type |  <p align="center"> - </p>   |  none |
 
 
@@ -36,7 +37,7 @@ compile_object(<a href="#compile_object-ctx">ctx</a>, <a href="#compile_object-i
 ## compile_objects
 
 <pre>
-compile_objects(<a href="#compile_objects-ctx">ctx</a>, <a href="#compile_objects-headers">headers</a>, <a href="#compile_objects-defines">defines</a>, <a href="#compile_objects-includes">includes</a>, <a href="#compile_objects-toolchain_type">toolchain_type</a>)
+compile_objects(<a href="#compile_objects-ctx">ctx</a>, <a href="#compile_objects-headers">headers</a>, <a href="#compile_objects-defines">defines</a>, <a href="#compile_objects-includes">includes</a>, <a href="#compile_objects-angled_includes">angled_includes</a>, <a href="#compile_objects-toolchain_type">toolchain_type</a>)
 </pre>
 
 
@@ -50,6 +51,7 @@ compile_objects(<a href="#compile_objects-ctx">ctx</a>, <a href="#compile_object
 | <a id="compile_objects-headers"></a>headers |  <p align="center"> - </p>   |  <code>[]</code> |
 | <a id="compile_objects-defines"></a>defines |  <p align="center"> - </p>   |  <code>[]</code> |
 | <a id="compile_objects-includes"></a>includes |  <p align="center"> - </p>   |  <code>[]</code> |
+| <a id="compile_objects-angled_includes"></a>angled_includes |  <p align="center"> - </p>   |  <code>[]</code> |
 | <a id="compile_objects-toolchain_type"></a>toolchain_type |  <p align="center"> - </p>   |  <code>"//ll:toolchain_type"</code> |
 
 
