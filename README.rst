@@ -34,18 +34,23 @@ Install Bazel using `bazelisk <https://bazel.build/install/bazelisk>`_.
 
 The following commands set up a ``rules_ll`` workspace:
 
-   .. code:: bash
+.. code:: bash
 
-      mkdir myproject
-      cd myproject
-      touch WORKSPACE.bazel
-      touch .bazelrc
-      echo 'bazel_dep(name="rules_ll", version="20220602.0")' >> MODULE.bazel
+   git clone git@github.com:eomii/rules_ll.git
+   mkdir myproject
+   cd myproject
+   touch WORKSPACE.bazel MODULE.bazel .bazelrc
 
-``rules_ll`` uses `bzlmod <https://bazel.build/docs/bzlmod>`_ with the custom
-`bazel-eomii-registry <https://github.com/eomii/bazel-eomii-registry>`_ to
-resolve its dependencies. This means that the following settings are required
-in the previously created ``.bazelrc`` file::
+Copy the following lines into the just created ``.bashrc`` file::
+
+   # Upstream LLVM/Clang requires C++17. This will only configure rules_cc.
+   build --repo_env=BAZEL_CXXOPTS='-std=c++17'
+   run --repo_env=BAZEL_CXXOPTS='-std=c++17'
+
+   # Separate the toolchain from regular code. This will put execution artifacts
+   # into bazel-out/ll_linux_exec_platform-opt-exec-<hash>.
+   build --experimental_platform_in_output_dir
+   run --experimental_platform_in_output_dir
 
    # We require bzlmod.
    build --experimental_enable_bzlmod
@@ -55,48 +60,39 @@ in the previously created ``.bazelrc`` file::
    build --registry=https://raw.githubusercontent.com/eomii/bazel-eomii-registry/main/
    run --registry=https://raw.githubusercontent.com/eomii/bazel-eomii-registry/main/
 
+Copy the following lines into the ``MODULE.bazel`` file:
+
+.. code:: python
+
+   bazel_dep(name="rules_ll", version="20220602.0")
+   local_path_override(
+       module_name="rules_ll",
+       path="../rules_ll",
+   )
 
 If you are running 64-bit Gentoo or another operating system where ``crt1.o``,
 ``crti.o`` and ``crtn.o`` are located at ``/usr/lib64``, you are done.
 
-TODO: The following steps are known to be a bad user experience. Automation
-coming soon.
-
 Otherwise, you need to locate the directory containing the ``crt*.o`` files on
 your operating system
 
-   .. code:: bash
+.. code:: bash
 
-      find /usr/ -name crt*.o
+   find /usr/ -name crt*.o
 
 and create a symbolic link ``/usr/lib64 -> <your crt directory>``.
 
-   .. code:: bash
+.. code:: bash
 
-      ln -s <your crt directory> /usr/lib64
+   ln -s <your crt directory> /usr/lib64
 
 You can now load the ``ll_library`` and ``ll_binary`` rule definitions in your
 ``BUILD.bazel`` files via
 
-   .. code:: python
+.. code:: python
 
-      load("@rules_ll//ll:defs.bzl", "ll_library", "ll_binary")
+   load("@rules_ll//ll:defs.bzl", "ll_library", "ll_binary")
 
-
-Advanced Setup
---------------
-
-To run ``rules_ll`` in a custom configuration, clone the repository and
-override the ``bazel_dep`` to ``rules_ll`` with your local copy in your
-project's ``MODULE.bazel`` file:
-
-   .. code:: python
-
-      bazel_dep(name="rules_ll", version="20220602.0")
-      local_path_override(
-          module_name="rules_ll",
-          path="/path/to/local/rules_ll",
-      )
 
 Contributing
 ------------
