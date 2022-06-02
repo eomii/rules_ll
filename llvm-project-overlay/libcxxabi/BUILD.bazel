@@ -85,7 +85,7 @@ ll_bootstrap_library(
         "__STDC_LIMIT_MACROS",
     ],
     # Libcxxabi requires some files from libc++.
-    includes = ["external/llvm-project/libcxx/src"],
+    includes = ["external/rules_ll.llvm_project_overlay.llvm-project/libcxx/src"],
     transitive_hdrs = [":libcxxabi_headers"],
     visibility = ["//visibility:public"],
 )

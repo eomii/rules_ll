@@ -16,7 +16,7 @@ def llvm_target_directory_path(ctx):
     Returns:
         A string.
     """
-    return "bazel-out/{cpu}-{mode}/bin/external/llvm-project".format(
+    return "bazel-out/{cpu}-{mode}/bin/external/rules_ll.llvm_project_overlay.llvm-project".format(
         cpu = ctx.var["TARGET_CPU"],
         mode = ctx.var["COMPILATION_MODE"],
     )
@@ -51,13 +51,13 @@ def compile_object_args(ctx, in_file, out_file, cdf, headers, defines, includes,
     # Maybe enable heterogeneous compilation.
     if ctx.attr.heterogeneous_mode == "hip_nvidia":
         args.add("-xcuda")
-        args.add("--cuda-path=external/cuda_nvcc")
-        args.add("-Iexternal/cuda_cudart/include")
-        args.add("-Iexternal/cuda_nvprof/include")
-        args.add("-Iexternal/libcurand/include")
+        args.add("--cuda-path=external/rules_ll.rules_ll_dependencies.cuda_nvcc")
+        args.add("-Iexternal/rules_ll.rules_ll_dependencies.cuda_cudart/include")
+        args.add("-Iexternal/rules_ll.rules_ll_dependencies.cuda_nvprof/include")
+        args.add("-Iexternal/rules_ll.rules_ll_dependencies.libcurand/include")
 
-        args.add("-Iexternal/hip/include")
-        args.add("-Iexternal/hipamd/include")
+        args.add("-Iexternal/rules_ll.rules_ll_dependencies.hip/include")
+        args.add("-Iexternal/rules_ll.rules_ll_dependencies.hipamd/include")
 
     # Write compilation database.
     if ctx.attr.heterogeneous_mode != "none":
@@ -92,12 +92,12 @@ def compile_object_args(ctx, in_file, out_file, cdf, headers, defines, includes,
 
     # 3. Search directories specified via -isystem for quoted and angled
     #    includes.
-    libcxx_include_path = "external/llvm-project/libcxx/include"
+    libcxx_include_path = "external/rules_ll.llvm_project_overlay.llvm-project/libcxx/include"
     args.add(clang_builtin_include_path, format = "-isystem%s")
     args.add(libcxx_include_path, format = "-isystem%s")
-    libcxxabi_include_path = "external/llvm-project/libcxxabi/include"
+    libcxxabi_include_path = "external/rules_ll.llvm_project_overlay.llvm-project/libcxxabi/include"
     args.add(libcxxabi_include_path, format = "-isystem%s")
-    libunwind_include_path = "external/llvm-project/libunwind/include"
+    libunwind_include_path = "external/rules_ll.llvm_project_overlay.llvm-project/libunwind/include"
     args.add(libunwind_include_path, format = "-isystem%s")
 
     # 4. Search directories specified via -idirafter for quoted and angled
@@ -183,7 +183,7 @@ def link_executable_args(ctx, in_files, out_file):
 
     if ctx.attr.heterogeneous_mode == "hip_nvidia":
         args.add("-lrt")
-        args.add("-Lexternal/cuda_cudart/lib")
+        args.add("-Lexternal/rules_ll.rules_ll_dependencies.cuda_cudart/lib")
         args.add("-lcudart_static")
 
     # Add local crt1.o, crti.o and crtn.o files.

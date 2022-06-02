@@ -6,104 +6,97 @@ C++ code with a Clang/LLVM based toolchain built from upstream.
 
 **Features**
 
-- Uses targets from the
-  `llvm-bazel-overlay <https://github.com/llvm/llvm-project/tree/main/utils/bazel>`_
-  for Clang, LLVM, etc.
-- Comes with custom overlays for ``libcxx``, ``libcxxabi``, ``libunwind`` and
+- Clang/LLVM via the
+  `llvm-bazel-overlay <https://github.com/llvm/llvm-project/tree/main/utils/bazel>`_.
+- Custom overlays for ``libcxx``, ``libcxxabi``, ``libunwind`` and
   ``compiler-rt`` and ``clang-tidy`` for a modern, encapsulated toolchain.
-- Integrates ``clang-tidy`` via an easy-to-use ``ll_compilation_database``
-  target.
-- Supports heterogeneous programming for Nvidia GPUs using HIP and CUDA,
-  including fully automated setup of required libraries, toolkits etc.
-- Support for HIP/AMD is planned.
+- Multithreaded ``clang-tidy`` via an ``ll_compilation_database`` target.
+- Heterogeneous programming for Nvidia GPUs using HIP and CUDA, including fully
+  automated setup of required libraries, toolkits etc.
 
 **Links**
 
+- Documentation: `<https://ll.eomii.org>`_
 - Examples: `rules_ll/examples <https://github.com/eomii/rules_ll/tree/main/examples>`_.
-- API Documentation: `<https://ll.eomii.org>`_
 - Discord: `<https://discord.gg/Ax67899n4y>`_
 
-``WORKSPACE.bazel`` Quickstart
-------------------------------
+**Planned features**
 
-The full ``WORKSPACE.bazel`` file created in this guide is available at
-`rules_ll/examples <https://github.com/eomii/rules_ll/tree/main/examples>`_.
+- HIP/AMD.
+- SYCL.
+- WebAssembly.
+- Aarch64.
 
-1. Import the ``rules_ll`` repository.
+Quickstart
+----------
 
-   .. code:: python
+Install Bazel using `bazelisk <https://bazel.build/install/bazelisk>`_.
 
-      load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+The following commands set up a ``rules_ll`` workspace:
 
-      http_archive(
-          name = "rules_ll",
-          sha256 = "<Correct SHA256>",
-          urls = [
-              "https://github.com/eomii/rules_ll/archive/<COMMIT_HASH>.zip"
-          ]
-      )
-      load("@rules_ll//ll:deps.bzl", "rules_ll_dependencies")
-      rules_ll_dependencies()
+   .. code:: bash
 
-2. Executables require the ``crt1.o``, ``crti.o`` and ``crtn.o`` files which
-   will be located on your machine in a directory like ``/usr/lib64`` or
-   ``/usr/x86_64-unknown-linux-gnu``. Search for their location via
+      mkdir myproject
+      cd myproject
+      touch WORKSPACE.bazel
+      touch .bazelrc
+      echo 'bazel_dep(name="rules_ll", version="20220602.0")' >> MODULE.bazel
+
+``rules_ll`` uses `bzlmod <https://bazel.build/docs/bzlmod>`_ with the custom
+`bazel-eomii-registry <https://github.com/eomii/bazel-eomii-registry>`_ to
+resolve its dependencies. This means that the following settings are required
+in the previously created ``.bazelrc`` file::
+
+   # We require bzlmod.
+   build --experimental_enable_bzlmod
+   run --experimental_enable_bzlmod
+
+   # We use a custom registry.
+   build --registry=https://raw.githubusercontent.com/eomii/bazel-eomii-registry/main/
+   run --registry=https://raw.githubusercontent.com/eomii/bazel-eomii-registry/main/
+
+
+If you are running 64-bit Gentoo or another operating system where ``crt1.o``,
+``crti.o`` and ``crtn.o`` are located at ``/usr/lib64``, you are done.
+
+TODO: The following steps are known to be a bad user experience. Automation
+coming soon.
+
+Otherwise, you need to locate the directory containing the ``crt*.o`` files on
+your operating system
 
    .. code:: bash
 
       find /usr/ -name crt*.o
 
-   and initialize ``rules_ll`` with the correct path.
+and create a symbolic link ``/usr/lib64 -> <your crt directory>``.
 
-   .. code:: python
+   .. code:: bash
 
-      load("@rules_ll//ll:init.bzl", "initialize_rules_ll")
-      initialize_rules_ll(
-          local_crt_path = "/usr/lib64",
-          # llvm_commit,
-          # llvm_sha256,
-      )
+      ln -s <your crt directory> /usr/lib64
 
-   You may also specify custom llvm commits and their corresponding SHA256
-   here, but the overlays will likely break if the specified commit is too far
-   away from the current default used by ``rules_ll``.
-
-3. After initializing the ``llvm-raw`` workspace via ``initialize_rules_ll``,
-   configure the llvm-bazel-overlay.
-
-   .. code:: python
-
-      load(
-          "@llvm-raw//utils/bazel:configure.bzl",
-          "llvm_configure",
-          "llvm_disable_optional_support_deps",
-      )
-      llvm_configure(
-          name = "llvm-project",
-          targets = [
-              # Additional targets may be specified here, e.g. "NVPTX" or "AMDGPU".
-              "X86",
-          ],
-      )
-      llvm_disable_optional_support_deps()
-
-4. Finally, register the toolchain and the execution platform so that ``ll_*``
-   targets can be used in your ``BUILD.bazel`` files.
-
-   .. code:: python
-
-      register_toolchains(
-          "@rules_ll//ll:ll_bootstrap_toolchain",
-          "@rules_ll//ll:ll_toolchain",
-      )
-      register_execution_platforms("@rules_ll//ll:ll_linux_exec_platform")
-
-5. You can now make ``ll_library`` and ``ll_binary`` targets available to your
-   ``BUILD.bazel`` files via
+You can now load the ``ll_library`` and ``ll_binary`` rule definitions in your
+``BUILD.bazel`` files via
 
    .. code:: python
 
       load("@rules_ll//ll:defs.bzl", "ll_library", "ll_binary")
+
+
+Advanced Setup
+--------------
+
+To run ``rules_ll`` in a custom configuration, clone the repository and
+override the ``bazel_dep`` to ``rules_ll`` with your local copy in your
+project's ``MODULE.bazel`` file:
+
+   .. code:: python
+
+      bazel_dep(name="rules_ll", version="20220602.0")
+      local_path_override(
+          module_name="rules_ll",
+          path="/path/to/local/rules_ll",
+      )
 
 Contributing
 ------------

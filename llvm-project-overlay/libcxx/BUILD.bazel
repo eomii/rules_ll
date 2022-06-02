@@ -121,8 +121,8 @@ ll_bootstrap_library(
         "__STDC_LIMIT_MACROS",
     ],
     includes = [
-        "external/llvm-project/libcxx/src",
-        "external/llvm-project/libcxxabi/include",
+        "external/rules_ll.llvm_project_overlay.llvm-project/libcxx/src",
+        "external/rules_ll.llvm_project_overlay.llvm-project/libcxxabi/include",
     ],
     visibility = ["//visibility:public"],
 )

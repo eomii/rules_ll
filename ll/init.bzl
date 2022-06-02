@@ -1,20 +1,44 @@
 """# `//ll:init.bzl`
 
+
 Initializer function which should be called in the `WORKSPACE.bazel` file.
 """
 
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 load("@bazel_tools//tools/build_defs/repo:utils.bzl", "maybe")
+load("@bazel_skylib//lib:paths.bzl", "paths")
 
-# The current default commit for the LLVM repo. This should be updated
-# frequently.
-LLVM_COMMIT = "ffdbecccafdf96c37921e3e74bb436aa169faefa"
-LLVM_SHA256 = "b603ffaf8e141f2be751810a0a7def7dfb1844fe95f64fb0cea7901ab3d5948b"
+def _ll_local_crt_impl(ctx):
+    for filename in ["crt1.o", "crti.o", "crtn.o"]:
+        ctx.symlink(paths.join(ctx.attr.path, filename), filename)
 
-def initialize_rules_ll(
-        local_crt_path,
-        llvm_commit = LLVM_COMMIT,
-        llvm_sha256 = LLVM_SHA256):
+    ctx.file(
+        "WORKSPACE.bazel",
+        content = """# empty""",
+    )
+
+    ctx.file(
+        "BUILD.bazel",
+        content = """filegroup(
+            name = "crt",
+            srcs = [
+                ":crt1.o",
+                ":crti.o",
+                ":crtn.o",
+            ],
+            visibility = ["//visibility:public"],
+        )""",
+    )
+
+ll_local_crt = repository_rule(
+    implementation = _ll_local_crt_impl,
+    attrs = {
+        "path": attr.string(),
+        "build_file_content": attr.string(),
+    },
+)
+
+def initialize_rules_ll(local_crt_path):
     """Initializes the LLVM repository.
 
     The correct `local_crt_path` is likely something like `/usr/lib64` or
@@ -44,48 +68,9 @@ def initialize_rules_ll(
             print the correct value if this is set to `None`.
     """
     maybe(
-        http_archive,
-        name = "llvm-raw",
-        build_file_content = "# empty",
-        sha256 = llvm_sha256,
-        strip_prefix = "llvm-project-" + llvm_commit,
-        urls = ["https://github.com/llvm/llvm-project/archive/{}.tar.gz".format(llvm_commit)],
-        # Overlay the existing overlay at utils/bazel/llvm-project-overlay with
-        # the files in rules_ll/llvm-bazel-overlay.
-        #
-        # If a BUILD.bazel file is already present in the original
-        # llvm-project-overlay, we append the contents of the BUILD.bazel file
-        # in the rules_ll overlay to the existing file. This way we don't break
-        # the existing overlay while still being able to add targets to the
-        # original BUILD.bazel files.
-        patch_cmds = ["""
-        for file in $(find ../rules_ll/llvm-project-overlay -type f); do
-            if [ ! -d utils/bazel/${file:12} ]
-                then mkdir -p `dirname utils/bazel/${file:12}`
-            fi;
-            cat $file >> utils/bazel/${file:12};
-        done"""],
-        patches = [
-            "@rules_ll//patches:compiler-rt_float128_patch.diff",
-            "@rules_ll//patches:clang_header_patch.diff",
-            "@rules_ll//patches:mallinfo2_patch.diff",
-        ],
-        patch_args = ["-p1"],
-    )
-
-    maybe(
-        native.new_local_repository,
+        ll_local_crt,
         name = "local_crt",
         path = local_crt_path,
-        build_file_content = """filegroup(
-            name = "crt",
-            srcs = [
-                ":crt1.o",
-                ":crti.o",
-                ":crtn.o",
-            ],
-            visibility = ["//visibility:public"],
-        )""",
     )
 
     maybe(
@@ -156,3 +141,15 @@ def initialize_rules_ll(
         sha256 = "87b1d70ec749db31cabb79ae5034b05883666e1848aa3feca643ea4a68dea47e",
         build_file = "@rules_ll//third-party-overlays:libcurand.BUILD.bazel",
     )
+
+def _initialize_rules_ll_impl(module_ctx):
+    for module in module_ctx.modules:
+        local_crt_path = module.tags.configure[0].local_crt_path
+    initialize_rules_ll(local_crt_path)
+
+rules_ll_dependencies = module_extension(
+    implementation = _initialize_rules_ll_impl,
+    tag_classes = {
+        "configure": tag_class(attrs = {"local_crt_path": attr.string()}),
+    },
+)
