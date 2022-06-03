@@ -13,36 +13,47 @@ def compilable_sources(ctx):
         if src.extension in compilable_extensions
     ]
 
-def compile_object_inputs(ctx, headers):
-    if "//ll:toolchain_type" in ctx.toolchains:
-        third_party_deps = depset()
-        if ctx.attr.heterogeneous_mode in ["hip_nvidia", "hip_amd"]:
-            third_party_deps = depset(
-                ctx.toolchains["//ll:toolchain_type"].hip_libraries,
-                transitive = [third_party_deps],
-            )
-        if ctx.attr.heterogeneous_mode in ["hip_nvidia"]:
-            third_party_deps = depset(
-                ctx.toolchains["//ll:toolchain_type"].cuda_toolkit,
-                transitive = [third_party_deps],
-            )
-
+def compile_object_inputs(ctx, headers, toolchain_type):
+    if toolchain_type == "//ll:toolchain_type":
         return depset(
             ctx.files.srcs +
             ctx.files.data +
-            ctx.toolchains["//ll:toolchain_type"].builtin_includes,
+            ctx.toolchains[toolchain_type].builtin_includes,
             transitive = [
                 headers,
-                ctx.toolchains["//ll:toolchain_type"].cpp_stdhdrs.files,
-                ctx.toolchains["//ll:toolchain_type"].cpp_abi[LlInfo].transitive_headers,
-                third_party_deps,
+                ctx.toolchains[toolchain_type].cpp_stdhdrs.files,
+                ctx.toolchains[toolchain_type].cpp_abi[LlInfo].transitive_headers,
+                heterogeneous_deps,
             ],
         )
-    elif "//ll:bootstrap_toolchain_type" in ctx.toolchains:
+    elif toolchain_type == "//ll:heterogeneous_toolchain_type":
+        heterogeneous_deps = depset()
+        if ctx.attr.heterogeneous_mode in ["hip_nvidia", "hip_amd"]:
+            heterogeneous_deps = depset(
+                ctx.toolchains[toolchain_type].hip_libraries,
+                transitive = [heterogeneous_deps],
+            )
+        if ctx.attr.heterogeneous_mode in ["hip_nvidia"]:
+            heterogeneous_deps = depset(
+                ctx.toolchains[toolchain_type].cuda_toolkit,
+                transitive = [heterogeneous_deps],
+            )
         return depset(
             ctx.files.srcs +
             ctx.files.data +
-            ctx.toolchains["//ll:bootstrap_toolchain_type"].builtin_includes,
+            ctx.toolchains[toolchain_type].builtin_includes,
+            transitive = [
+                headers,
+                ctx.toolchains[toolchain_type].cpp_stdhdrs.files,
+                ctx.toolchains[toolchain_type].cpp_abi[LlInfo].transitive_headers,
+                heterogeneous_deps,
+            ],
+        )
+    elif toolchain_type == "//ll:bootstrap_toolchain_type":
+        return depset(
+            ctx.files.srcs +
+            ctx.files.data +
+            ctx.toolchains[toolchain_type].builtin_includes,
             transitive = [headers],
         )
     else:
@@ -52,31 +63,70 @@ def compile_object_inputs(ctx, headers):
 def create_archive_library_inputs(ctx, in_files):
     return depset(in_files + ctx.files.deps)
 
-def link_executable_inputs(ctx, in_files):
-    if "//ll:toolchain_type" in ctx.toolchains:
-        third_party_deps = depset()
-        if ctx.attr.heterogeneous_mode in ["hip_nvidia", "hip_amd"]:
-            third_party_deps = depset(
-                ctx.toolchains["//ll:toolchain_type"].hip_libraries,
-                transitive = [third_party_deps],
-            )
-        if ctx.attr.heterogeneous_mode in ["hip_nvidia"]:
-            third_party_deps = depset(
-                ctx.toolchains["//ll:toolchain_type"].cuda_toolkit,
-                transitive = [third_party_deps],
-            )
-
+def link_executable_inputs(ctx, in_files, toolchain_type):
+    if toolchain_type == "//ll:toolchain_type":
         return depset(
             in_files +
             ctx.files.deps +
             ctx.files.libraries +
             ctx.files.data +
-            ctx.toolchains["//ll:toolchain_type"].local_crt,
+            ctx.toolchains[toolchain_type].local_crt,
             transitive = [
-                ctx.toolchains["//ll:toolchain_type"].cpp_stdlib.files,
-                ctx.toolchains["//ll:toolchain_type"].unwind_library.files,
-                ctx.toolchains["//ll:toolchain_type"].cpp_abi.files,
-                ctx.toolchains["//ll:toolchain_type"].compiler_runtime.files,
+                ctx.toolchains[toolchain_type].cpp_stdlib.files,
+                ctx.toolchains[toolchain_type].unwind_library.files,
+                ctx.toolchains[toolchain_type].cpp_abi.files,
+                ctx.toolchains[toolchain_type].compiler_runtime.files,
+            ],
+        )
+    elif toolchain_type == "//ll:heterogeneous_toolchain_type":
+        heterogeneous_deps = depset()
+        if ctx.attr.heterogeneous_mode in ["hip_nvidia", "hip_amd"]:
+            heterogeneous_deps = depset(
+                ctx.toolchains[toolchain_type].hip_libraries,
+                transitive = [heterogeneous_deps],
+            )
+        if ctx.attr.heterogeneous_mode in ["hip_nvidia"]:
+            heterogeneous_deps = depset(
+                ctx.toolchains[toolchain_type].cuda_toolkit,
+                transitive = [heterogeneous_deps],
+            )
+        return depset(
+            in_files +
+            ctx.files.deps +
+            ctx.files.libraries +
+            ctx.files.data +
+            ctx.toolchains[toolchain_type].local_crt,
+            transitive = [
+                ctx.toolchains[toolchain_type].cpp_stdlib.files,
+                ctx.toolchains[toolchain_type].unwind_library.files,
+                ctx.toolchains[toolchain_type].cpp_abi.files,
+                ctx.toolchains[toolchain_type].compiler_runtime.files,
+                heterogeneous_deps,
+            ],
+        )
+
+    if toolchain_type in ["//ll:toolchain_type", "//ll:heterogeneous_toolchain_type"]:
+        if ctx.attr.heterogeneous_mode in ["hip_nvidia", "hip_amd"]:
+            third_party_deps = depset(
+                ctx.toolchains[toolchain_type].hip_libraries,
+                transitive = [third_party_deps],
+            )
+        if ctx.attr.heterogeneous_mode in ["hip_nvidia"]:
+            third_party_deps = depset(
+                ctx.toolchains[toolchain_type].cuda_toolkit,
+                transitive = [third_party_deps],
+            )
+        return depset(
+            in_files +
+            ctx.files.deps +
+            ctx.files.libraries +
+            ctx.files.data +
+            ctx.toolchains[toolchain_type].local_crt,
+            transitive = [
+                ctx.toolchains[toolchain_type].cpp_stdlib.files,
+                ctx.toolchains[toolchain_type].unwind_library.files,
+                ctx.toolchains[toolchain_type].cpp_abi.files,
+                ctx.toolchains[toolchain_type].compiler_runtime.files,
                 third_party_deps,
             ],
         )

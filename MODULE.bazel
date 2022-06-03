@@ -6,8 +6,9 @@ module(
     ],
     compatibility_level=0,
     toolchains_to_register = [
-        "@rules_ll//ll:ll_toolchain",
         "@rules_ll//ll:ll_bootstrap_toolchain",
+        "@rules_ll//ll:ll_heterogeneous_toolchain",
+        "@rules_ll//ll:ll_toolchain",
     ],
 )
 

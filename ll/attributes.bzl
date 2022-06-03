@@ -116,7 +116,7 @@ HETEROGENEOUS_ATTRS = {
     ),
 }
 
-LIBRARY_ATTRS = dicts.add(DEFAULT_ATTRS, HETEROGENEOUS_ATTRS, {
+LIBRARY_ATTRS = {
     "aggregate": attr.string(
         doc = """Sets the aggregation mode for compiled outputs in `ll_library`.
 
@@ -176,9 +176,9 @@ LIBRARY_ATTRS = dicts.add(DEFAULT_ATTRS, HETEROGENEOUS_ATTRS, {
         arguments for all downstream targets.
         """,
     ),
-})
+}
 
-BINARY_ATTRS = dicts.add(DEFAULT_ATTRS, HETEROGENEOUS_ATTRS, {
+BINARY_ATTRS = {
     "libraries": attr.label_list(
         doc = """Additional libraries linked to the final executable.
 
@@ -201,4 +201,162 @@ BINARY_ATTRS = dicts.add(DEFAULT_ATTRS, HETEROGENEOUS_ATTRS, {
         within the bazel build graph.
         """,
     ),
-})
+}
+
+BOOTSTRAP_TOOLCHAIN_ATTRS = {
+    "c_driver": attr.label(
+        doc = "The C compiler driver.",
+        executable = True,
+        allow_single_file = True,
+        cfg = "exec",
+        default = "@llvm-project//clang:clang",
+    ),
+    "cpp_driver": attr.label(
+        doc = "The C++ compiler driver.",
+        allow_single_file = True,
+        executable = True,
+        cfg = "exec",
+        default = "@llvm-project//clang:clang++",
+    ),
+    "archiver": attr.label(
+        doc = "The archiver.",
+        allow_single_file = True,
+        executable = True,
+        cfg = "exec",
+        default = "@llvm-project//llvm:llvm-ar",
+    ),
+    "linker": attr.label(
+        doc = "The linker.",
+        allow_single_file = True,
+        executable = True,
+        cfg = "exec",
+        default = "@llvm-project//lld:lld",
+    ),
+    "builtin_includes": attr.label(
+        doc = "Builtin header files. Defaults to @llvm-project//clang:builtin_headers_gen",
+        cfg = "target",
+        default = "@llvm-project//clang:builtin_headers_gen",
+    ),
+}
+
+TOOLCHAIN_ATTRS = {
+    "bitcode_linker": attr.label(
+        doc = """The linker for LLVM bitcode files. While `llvm-ar` is able
+        to archive bitcode files into an archive, it cannot link them into
+        a single bitcode file. We need `llvm-link` to do this.
+        """,
+        executable = True,
+        cfg = "exec",
+        default = "@llvm-project//llvm:llvm-link",
+    ),
+    "cpp_stdlib": attr.label(
+        doc = "The C++ standard library archive.",
+        cfg = "target",
+        default = "@llvm-project//libcxx:libll_cxx",
+        providers = [LlInfo],
+    ),
+    "cpp_stdhdrs": attr.label(
+        doc = "The C++ standard library headers.",
+        cfg = "target",
+        default = "@llvm-project//libcxx:libcxx_headers",
+        allow_files = True,
+    ),
+    "cpp_abi": attr.label(
+        doc = "The C++ ABI library archive.",
+        cfg = "target",
+        default = "@llvm-project//libcxxabi:libll_cxxabi",
+        providers = [LlInfo],
+    ),
+    "compiler_runtime": attr.label(
+        doc = "The compiler runtime.",
+        cfg = "target",
+        default = "@llvm-project//compiler-rt:libll_compiler-rt",
+        providers = [LlInfo],
+    ),
+    "unwind_library": attr.label(
+        doc = "The unwinder library.",
+        cfg = "target",
+        default = "@llvm-project//libunwind:libll_unwind",
+    ),
+    "local_crt": attr.label(
+        doc = "A filegroup containing the system's local crt1.o, crti.o and crtn.o files.",
+        default = "@local_crt//:crt",
+    ),
+    "clang_tidy": attr.label(
+        doc = "The clang-tidy executable.",
+        cfg = "exec",
+        default = "@llvm-project//clang-tools-extra/clang-tidy:clang-tidy",
+        executable = True,
+    ),
+    "clang_tidy_runner": attr.label(
+        doc = "The run-clang-tidy.py wrapper script for clang-tidy. Enables multithreading.",
+        cfg = "exec",
+        default = "@llvm-project//clang-tools-extra/clang-tidy:run-clang-tidy",
+        executable = True,
+    ),
+    "symbolizer": attr.label(
+        doc = "The llvm-symbolizer.",
+        cfg = "exec",
+        default = "@llvm-project//llvm:llvm-symbolizer",
+        executable = True,
+    ),
+}
+
+HETEROGENEOUS_TOOLCHAIN_ATTRS = {
+    "offload_bundler": attr.label(
+        doc = """Offload bundler used to bundle code objects for languages
+        targeting multiple devices in a single source file, e.g. GPU code.
+        """,
+        cfg = "exec",
+        default = "@llvm-project//clang:clang-offload-bundler",
+        executable = True,
+    ),
+    "machine_code_tool": attr.label(
+        doc = "The llvm-mc tool. Used for separarable compilation (CUDA/HIP).",
+        cfg = "exec",
+        default = "@llvm-project//llvm:llvm-mc",
+        executable = True,
+    ),
+    "cuda_toolkit": attr.label_list(
+        doc = """CUDA toolkit files. `rules_ll` will still use `clang` as
+        the CUDA device compiler. Building targets that make use of the
+        CUDA libraries imply acceptance of their respective licenses.
+        """,
+        default = [
+            "@cuda_cudart//:contents",
+            "@cuda_nvcc//:contents",
+            "@cuda_nvprof//:contents",
+            "@libcurand//:contents",
+        ],
+        cfg = "target",
+    ),
+    "hip_libraries": attr.label_list(
+        doc = """HIP library files. `rules_ll` will use `clang` as the
+        device compiler. Building targets that make use of the HIP toolkit
+        implies acceptance of its license.
+
+        Using HIP for AMD devices implies the use of the ROCm stack and the
+        acceptance of its licenses.
+
+        Using HIP for Nvidia devices implies use of the CUDA toolkit and the
+        acceptance of its licenses.
+        """,
+        default = [
+            "@hip//:headers",
+            "@hipamd//:headers",
+        ],
+        cfg = "target",
+    ),
+}
+
+LL_BOOTSTRAP_TOOLCHAIN_ATTRS = BOOTSTRAP_TOOLCHAIN_ATTRS
+LL_TOOLCHAIN_ATTRS = dicts.add(BOOTSTRAP_TOOLCHAIN_ATTRS, TOOLCHAIN_ATTRS)
+LL_HETEROGENEOUS_TOOLCHAIN_ATTRS = dicts.add(
+    BOOTSTRAP_TOOLCHAIN_ATTRS,
+    TOOLCHAIN_ATTRS,
+    HETEROGENEOUS_TOOLCHAIN_ATTRS,
+)
+
+LL_BOOTSTRAP_LIBRARY_ATTRS = dicts.add(DEFAULT_ATTRS, LIBRARY_ATTRS)
+LL_LIBRARY_ATTRS = dicts.add(DEFAULT_ATTRS, HETEROGENEOUS_ATTRS, LIBRARY_ATTRS)
+LL_BINARY_ATTRS = dicts.add(DEFAULT_ATTRS, HETEROGENEOUS_ATTRS, BINARY_ATTRS)

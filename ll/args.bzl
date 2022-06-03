@@ -33,7 +33,8 @@ def compile_object_args(ctx, in_file, out_file, cdf, headers, defines, includes,
     if ctx.var["COMPILATION_MODE"] == "dbg":
         args.add("-v")
         args.add("-glldb")
-        if ctx.attr.heterogeneous_mode != "none":
+
+        if "//ll:heterogeneous_toolchain_type" in ctx.toolchains and ctx.attr.heterogeneous_mode != "none":
             args.add("--cuda-noopt-device-debug")
 
     # Optimization.
@@ -49,7 +50,7 @@ def compile_object_args(ctx, in_file, out_file, cdf, headers, defines, includes,
     args.add("-c")
 
     # Maybe enable heterogeneous compilation.
-    if ctx.attr.heterogeneous_mode == "hip_nvidia":
+    if "//ll:heterogeneous_toolchain_type" in ctx.toolchains and ctx.attr.heterogeneous_mode == "hip_nvidia":
         args.add("-xcuda")
         args.add("--cuda-path=external/rules_ll.rules_ll_dependencies.cuda_nvcc")
         args.add("-Iexternal/rules_ll.rules_ll_dependencies.cuda_cudart/include")
@@ -60,7 +61,7 @@ def compile_object_args(ctx, in_file, out_file, cdf, headers, defines, includes,
         args.add("-Iexternal/rules_ll.rules_ll_dependencies.hipamd/include")
 
     # Write compilation database.
-    if ctx.attr.heterogeneous_mode != "none":
+    if "//ll:heterogeneous_toolchain_type" in ctx.toolchains and ctx.attr.heterogeneous_mode != "none":
         args.add("-Xarch_host")
         args.add(cdf, format = "-MJ%s")
     else:

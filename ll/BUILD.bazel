@@ -1,6 +1,11 @@
 load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
 load("@stardoc//stardoc:stardoc.bzl", "stardoc")
-load(":toolchain.bzl", "ll_bootstrap_toolchain", "ll_toolchain")
+load(
+    ":toolchain.bzl",
+    "ll_bootstrap_toolchain",
+    "ll_heterogeneous_toolchain",
+    "ll_toolchain",
+)
 
 LL_MODULES = [
     "actions",
@@ -70,15 +75,13 @@ platform(
     ],
 )
 
-toolchain_type(name = "toolchain_type")
-
-toolchain_type(name = "bootstrap_toolchain_type")
-
 ll_bootstrap_toolchain(
     name = "ll_bootstrap_toolchain_x86-64-unknown-linux-gnu",
     exec_compatible_with = [":ll_exec_linux"],
     visibility = ["//visibility:public"],
 )
+
+toolchain_type(name = "bootstrap_toolchain_type")
 
 toolchain(
     name = "ll_bootstrap_toolchain",
@@ -94,10 +97,28 @@ ll_toolchain(
     visibility = ["//visibility:public"],
 )
 
+toolchain_type(name = "toolchain_type")
+
 toolchain(
     name = "ll_toolchain",
     exec_compatible_with = [":ll_exec_linux"],
     toolchain = ":ll_toolchain_x86-64-unknown-linux-gnu",
     toolchain_type = ":toolchain_type",
+    visibility = ["//visibility:public"],
+)
+
+ll_heterogeneous_toolchain(
+    name = "ll_heterogeneous_toolchain_x86-64-unknown-linux-gnu",
+    exec_compatible_with = [":ll_exec_linux"],
+    visibility = ["//visibility:public"],
+)
+
+toolchain_type(name = "heterogeneous_toolchain_type")
+
+toolchain(
+    name = "ll_heterogeneous_toolchain",
+    exec_compatible_with = [":ll_exec_linux"],
+    toolchain = "ll_heterogeneous_toolchain_x86-64-unknown-linux-gnu",
+    toolchain_type = ":heterogeneous_toolchain_type",
     visibility = ["//visibility:public"],
 )

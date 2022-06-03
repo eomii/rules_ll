@@ -97,9 +97,9 @@ def compile_object(ctx, in_file, headers, defines, includes, angled_includes, to
 
     ctx.actions.run(
         outputs = [file_out, cdf_out],
-        inputs = compile_object_inputs(ctx, headers),
+        inputs = compile_object_inputs(ctx, headers, toolchain_type),
         executable = compiler_driver(ctx, toolchain_type),
-        tools = compile_object_tools(ctx),
+        tools = compile_object_tools(ctx, toolchain_type),
         arguments = compile_object_args(
             ctx,
             in_file,
@@ -112,7 +112,7 @@ def compile_object(ctx, in_file, headers, defines, includes, angled_includes, to
         ),
         mnemonic = "LlCompileObject",
         use_default_shell_env = False,
-        env = compile_object_environment(ctx),
+        env = compile_object_environment(ctx, toolchain_type),
     )
     return file_out, cdf_out
 
@@ -151,7 +151,7 @@ def link_executable(ctx, in_files, toolchain_type = "//ll:toolchain_type"):
 
     ctx.actions.run(
         outputs = [out_file],
-        inputs = link_executable_inputs(ctx, in_files),
+        inputs = link_executable_inputs(ctx, in_files, toolchain_type),
         executable = ctx.toolchains[toolchain_type].linker,
         tools = [
             ctx.toolchains[toolchain_type].linker,
@@ -159,6 +159,6 @@ def link_executable(ctx, in_files, toolchain_type = "//ll:toolchain_type"):
         arguments = link_executable_args(ctx, in_files, out_file),
         mnemonic = "LlLinkExecutable",
         use_default_shell_env = False,
-        env = compile_object_environment(ctx),
+        env = compile_object_environment(ctx, toolchain_type),
     )
     return out_file

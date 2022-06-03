@@ -21,9 +21,14 @@ load(
 )
 load(
     "//ll:attributes.bzl",
-    "BINARY_ATTRS",
-    "LIBRARY_ATTRS",
+    "LL_BINARY_ATTRS",
+    "LL_LIBRARY_ATTRS",
 )
+
+def select_toolchain_type(ctx):
+    if ctx.attr.heterogeneous_mode in ["hip_nvidia", "hip_amd"]:
+        return "//ll:heterogeneous_toolchain_type"
+    return "//ll:toolchain_type"
 
 def _ll_library_impl(ctx):
     (
@@ -43,7 +48,7 @@ def _ll_library_impl(ctx):
         defines = defines,
         includes = includes,
         angled_includes = angled_includes,
-        toolchain_type = "//ll:toolchain_type",
+        toolchain_type = select_toolchain_type(ctx),
     )
 
     out_files = intermediary_objects
@@ -51,14 +56,14 @@ def _ll_library_impl(ctx):
         out_file = create_archive_library(
             ctx,
             in_files = intermediary_objects,
-            toolchain_type = "//ll:toolchain_type",
+            toolchain_type = select_toolchain_type(ctx),
         )
         out_files = [out_file]
     elif ctx.attr.aggregate == "bitcode":
         out_file = link_bitcode_library(
             ctx,
             in_files = intermediary_objects,
-            toolchain_type = "//ll:toolchain_type",
+            toolchain_type = select_toolchain_type(ctx),
         )
         out_files = [out_file]
 
@@ -85,9 +90,12 @@ def _ll_library_impl(ctx):
 ll_library = rule(
     implementation = _ll_library_impl,
     executable = False,
-    attrs = LIBRARY_ATTRS,
-    toolchains = ["//ll:toolchain_type"],
+    attrs = LL_LIBRARY_ATTRS,
     output_to_genfiles = True,
+    toolchains = [
+        "//ll:toolchain_type",
+        "//ll:heterogeneous_toolchain_type",
+    ],
     doc = """
 Creates a static archive.
 
@@ -110,7 +118,7 @@ def _ll_binary_impl(ctx):
         defines = defines,
         includes = includes,
         angled_includes = angled_includes,
-        toolchain_type = "//ll:toolchain_type",
+        toolchain_type = select_toolchain_type(ctx),
     )
 
     out_file = link_executable(ctx, intermediary_objects + ctx.files.deps)
@@ -133,8 +141,11 @@ def _ll_binary_impl(ctx):
 ll_binary = rule(
     implementation = _ll_binary_impl,
     executable = True,
-    attrs = BINARY_ATTRS,
-    toolchains = ["//ll:toolchain_type"],
+    attrs = LL_BINARY_ATTRS,
+    toolchains = [
+        "//ll:toolchain_type",
+        "//ll:heterogeneous_toolchain_type",
+    ],
     doc = """
 Creates an executable.
 
