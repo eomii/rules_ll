@@ -68,11 +68,11 @@ def expose_headers(ctx):
 
 def compile_objects(
         ctx,
-        headers = [],
-        defines = [],
-        includes = [],
-        angled_includes = [],
-        toolchain_type = "//ll:toolchain_type"):
+        headers,
+        defines,
+        includes,
+        angled_includes,
+        toolchain_type):
     in_files = compilable_sources(ctx)
     out_files = []
     cdfs = []
@@ -118,8 +118,8 @@ def compile_object(ctx, in_file, headers, defines, includes, angled_includes, to
 
 def create_archive_library(
         ctx,
-        in_files = [],
-        toolchain_type = "//ll:toolchain_type"):
+        in_files,
+        toolchain_type):
     out_file = create_archive_library_outputs(ctx)
     in_files = create_archive_library_inputs(ctx, in_files)
 
@@ -133,7 +133,7 @@ def create_archive_library(
     )
     return out_file
 
-def link_bitcode_library(ctx, in_files, toolchain_type = "//ll:toolchain_type"):
+def link_bitcode_library(ctx, in_files, toolchain_type):
     out_file = link_bitcode_library_outputs(ctx)
 
     ctx.actions.run(
@@ -146,7 +146,7 @@ def link_bitcode_library(ctx, in_files, toolchain_type = "//ll:toolchain_type"):
     )
     return out_file
 
-def link_executable(ctx, in_files, toolchain_type = "//ll:toolchain_type"):
+def link_executable(ctx, in_files, toolchain_type):
     out_file = link_executable_outputs(ctx)
 
     ctx.actions.run(

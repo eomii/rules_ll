@@ -121,7 +121,11 @@ def _ll_binary_impl(ctx):
         toolchain_type = select_toolchain_type(ctx),
     )
 
-    out_file = link_executable(ctx, intermediary_objects + ctx.files.deps)
+    out_file = link_executable(
+        ctx,
+        in_files = intermediary_objects + ctx.files.deps,
+        toolchain_type = select_toolchain_type(ctx),
+    )
 
     transitive_cdfs = [
         dep[LlCompilationDatabaseFragmentsInfo].cdfs
