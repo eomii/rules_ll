@@ -73,8 +73,7 @@ def initialize_rules_ll(local_crt_path):
         path = local_crt_path,
     )
 
-    maybe(
-        http_archive,
+    http_archive(
         name = "hip",
         build_file = "@rules_ll//third-party-overlays:hip.BUILD.bazel",
         patch_cmds = [
@@ -94,8 +93,7 @@ def initialize_rules_ll(local_crt_path):
         urls = ["https://github.com/ROCm-Developer-Tools/HIP/archive/1389236aef23440d8fa2ccf36abc3ccd52c88127.zip"],
     )
 
-    maybe(
-        http_archive,
+    http_archive(
         name = "hipamd",
         build_file = "@rules_ll//third-party-overlays:hipamd.BUILD.bazel",
         sha256 = "656f336e5ed8705629af811dea83096849298ddf05664051b730d3f104b0e18d",
@@ -105,8 +103,7 @@ def initialize_rules_ll(local_crt_path):
         patch_args = ["-p1"],
     )
 
-    maybe(
-        http_archive,
+    http_archive(
         name = "cuda_cudart",
         urls = ["https://developer.download.nvidia.com/compute/cuda/redist/cuda_cudart/linux-x86_64/cuda_cudart-linux-x86_64-11.6.55-archive.tar.xz"],
         strip_prefix = "cuda_cudart-linux-x86_64-11.6.55-archive",
@@ -115,8 +112,7 @@ def initialize_rules_ll(local_crt_path):
         build_file = "@rules_ll//third-party-overlays:cuda_cudart.BUILD.bazel",
     )
 
-    maybe(
-        http_archive,
+    http_archive(
         name = "cuda_nvcc",
         urls = ["https://developer.download.nvidia.com/compute/cuda/redist/cuda_nvcc/linux-x86_64/cuda_nvcc-linux-x86_64-11.6.124-archive.tar.xz"],
         strip_prefix = "cuda_nvcc-linux-x86_64-11.6.124-archive",
@@ -124,8 +120,7 @@ def initialize_rules_ll(local_crt_path):
         build_file = "@rules_ll//third-party-overlays:cuda_nvcc.BUILD.bazel",
     )
 
-    maybe(
-        http_archive,
+    http_archive(
         name = "cuda_nvprof",
         urls = ["https://developer.download.nvidia.com/compute/cuda/redist/cuda_nvprof/linux-x86_64/cuda_nvprof-linux-x86_64-11.6.124-archive.tar.xz"],
         strip_prefix = "cuda_nvprof-linux-x86_64-11.6.124-archive",
@@ -133,8 +128,7 @@ def initialize_rules_ll(local_crt_path):
         build_file = "@rules_ll//third-party-overlays:cuda_nvprof.BUILD.bazel",
     )
 
-    maybe(
-        http_archive,
+    http_archive(
         name = "libcurand",
         urls = ["https://developer.download.nvidia.com/compute/cuda/redist/libcurand/linux-x86_64/libcurand-linux-x86_64-10.2.9.124-archive.tar.xz"],
         strip_prefix = "libcurand-linux-x86_64-10.2.9.124-archive",
