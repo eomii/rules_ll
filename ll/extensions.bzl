@@ -113,28 +113,42 @@ def _llvm_configure_extension_impl(ctx):
                 commit,
             ),
         ],
-        # Overlay the existing overlay at utils/bazel/llvm-project-overlay with
-        # the files in rules_ll/llvm-bazel-overlay.
-        #
-        # If a BUILD.bazel file is already present in the original
-        # llvm-project-overlay, we append the contents of the BUILD.bazel file
-        # in the rules_ll overlay to the existing file. This way we don't break
-        # the existing overlay while still being able to add targets to the
-        # original BUILD.bazel files.
-        patch_cmds = ["""
-        for file in $(find ../rules_ll/llvm-project-overlay -type f); do
+        # Bazel bug #14659 prevents us from using labels to reference files in
+        # the patches attribute. The workaround below will be removed as soon as
+        # the bug is fixed.
+        patch_cmds = [
+            """PATCHES="
+            ../rules_ll/patches/rules_ll_module_compatibility_patch.diff
+            ../rules_ll/patches/compiler-rt_float128_patch.diff
+            ../rules_ll/patches/clang_header_patch.diff
+            ../rules_ll/patches/mallinfo2_patch.diff"
+
+        for file in $PATCHES; do
+            echo $file
+            patch -p1 --input $file
+        done""",
+            # Overlay the existing overlay at utils/bazel/llvm-project-overlay with
+            # the files in rules_ll/llvm-bazel-overlay.
+            #
+            # If a BUILD.bazel file is already present in the original
+            # llvm-project-overlay, we append the contents of the BUILD.bazel file
+            # in the rules_ll overlay to the existing file. This way we don't break
+            # the existing overlay while still being able to add targets to the
+            # original BUILD.bazel files.
+            """for file in $(find ../rules_ll/llvm-project-overlay -type f); do
             if [ ! -d utils/bazel/${file:12} ]
                 then mkdir -p `dirname utils/bazel/${file:12}`
             fi;
             cat $file >> utils/bazel/${file:12};
-        done"""],
-        patches = [
-            "@rules_ll//patches:rules_ll_module_compatibility_patch.diff",
-            "@rules_ll//patches:compiler-rt_float128_patch.diff",
-            "@rules_ll//patches:clang_header_patch.diff",
-            "@rules_ll//patches:mallinfo2_patch.diff",
+        done""",
         ],
-        patch_args = ["-p1"],
+        # patches = [
+        #     "@rules_ll//patches:rules_ll_module_compatibility_patch.diff",
+        #     "@rules_ll//patches:compiler-rt_float128_patch.diff",
+        #     "@rules_ll//patches:clang_header_patch.diff",
+        #     "@rules_ll//patches:mallinfo2_patch.diff",
+        # ],
+        # patch_args = ["-p1"],
     )
 
     llvm_configure(name = "llvm-project", targets = targets)

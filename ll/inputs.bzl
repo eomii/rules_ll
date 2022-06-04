@@ -23,7 +23,6 @@ def compile_object_inputs(ctx, headers, toolchain_type):
                 headers,
                 ctx.toolchains[toolchain_type].cpp_stdhdrs.files,
                 ctx.toolchains[toolchain_type].cpp_abi[LlInfo].transitive_headers,
-                heterogeneous_deps,
             ],
         )
     elif toolchain_type == "//ll:heterogeneous_toolchain_type":

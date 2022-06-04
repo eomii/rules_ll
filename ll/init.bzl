@@ -67,16 +67,27 @@ def initialize_rules_ll(local_crt_path):
         llvm_sha256: The SHA256 for corresponding to `llvm_commit`. Bazel will
             print the correct value if this is set to `None`.
     """
-    maybe(
-        ll_local_crt,
+    ll_local_crt(
         name = "local_crt",
         path = local_crt_path,
     )
 
+    # Bazel bug #14659 prevents us from using labels to reference BUILD.bazel
+    # files in the build_file attribute. The workarounds below will be removed
+    # as soon as the bug is fixed.
+
     http_archive(
         name = "hip",
-        build_file = "@rules_ll//third-party-overlays:hip.BUILD.bazel",
+        # build_file = "@rules_ll//third-party-overlays:hip.BUILD.bazel",
+        build_file_content = """
+filegroup(
+    name = "headers",
+    srcs = glob(["include/**", "include/hip/hip_version.h"]),
+    visibility = ["//visibility:public"],
+)
+        """,
         patch_cmds = [
+            "cat ../rules_ll/third-party-overlays/hip.BUILD.bazel >> BUILD",
             """echo "
             #define HIP_VERSION_MAJOR 5
             #define HIP_VERSION_MINOR 1
@@ -95,21 +106,39 @@ def initialize_rules_ll(local_crt_path):
 
     http_archive(
         name = "hipamd",
-        build_file = "@rules_ll//third-party-overlays:hipamd.BUILD.bazel",
+        # build_file = "@rules_ll//third-party-overlays:hipamd.BUILD.bazel",
+        build_file_content = """
+filegroup(
+    name = "headers",
+    srcs = glob(["include/**"]),
+    visibility = ["//visibility:public"],
+)
+        """,
         sha256 = "656f336e5ed8705629af811dea83096849298ddf05664051b730d3f104b0e18d",
         strip_prefix = "hipamd-a97f7e4214c4111723d1476942106022d1186c70",
         urls = ["https://github.com/ROCm-Developer-Tools/hipamd/archive/a97f7e4214c4111723d1476942106022d1186c70.zip"],
-        patches = ["@rules_ll//patches:hipamd_return_fix.diff"],
+        # patches = ["@rules_ll//patches:hipamd_return_fix.diff"],
+        patch_cmds = [
+            "patch -p1 --input ../rules_ll/patches/hipamd_return_fix.diff",
+        ],
         patch_args = ["-p1"],
     )
+
+    CUDA_BUILD_FILE_CONTENT = """
+filegroup(
+    name = "contents",
+    srcs = glob(["**"]),
+    visibility = ["//visibility:public"],
+)
+    """
 
     http_archive(
         name = "cuda_cudart",
         urls = ["https://developer.download.nvidia.com/compute/cuda/redist/cuda_cudart/linux-x86_64/cuda_cudart-linux-x86_64-11.6.55-archive.tar.xz"],
         strip_prefix = "cuda_cudart-linux-x86_64-11.6.55-archive",
         sha256 = "734a77b3a26a9d08489d43afb74bad230c7c4a0ed2d17a6317a47cf363dca521",
-        # workspace_file_content = """workspace(name = "cuda_cudart")""",
-        build_file = "@rules_ll//third-party-overlays:cuda_cudart.BUILD.bazel",
+        # build_file = "@rules_ll//third-party-overlays:cuda_cudart.BUILD.bazel",
+        build_file_content = CUDA_BUILD_FILE_CONTENT,
     )
 
     http_archive(
@@ -117,7 +146,8 @@ def initialize_rules_ll(local_crt_path):
         urls = ["https://developer.download.nvidia.com/compute/cuda/redist/cuda_nvcc/linux-x86_64/cuda_nvcc-linux-x86_64-11.6.124-archive.tar.xz"],
         strip_prefix = "cuda_nvcc-linux-x86_64-11.6.124-archive",
         sha256 = "8c81199c5a096869a10c284197cefc1a958df8bf482322a0a48dff9cc82291b8",
-        build_file = "@rules_ll//third-party-overlays:cuda_nvcc.BUILD.bazel",
+        # build_file = "@rules_ll//third-party-overlays:cuda_nvcc.BUILD.bazel",
+        build_file_content = CUDA_BUILD_FILE_CONTENT,
     )
 
     http_archive(
@@ -125,7 +155,8 @@ def initialize_rules_ll(local_crt_path):
         urls = ["https://developer.download.nvidia.com/compute/cuda/redist/cuda_nvprof/linux-x86_64/cuda_nvprof-linux-x86_64-11.6.124-archive.tar.xz"],
         strip_prefix = "cuda_nvprof-linux-x86_64-11.6.124-archive",
         sha256 = "2c05600562bcbe4841cd0d86fdbf2fecba36c54ad393979cb22653dd45487a9b",
-        build_file = "@rules_ll//third-party-overlays:cuda_nvprof.BUILD.bazel",
+        # build_file = "@rules_ll//third-party-overlays:cuda_nvprof.BUILD.bazel",
+        build_file_content = CUDA_BUILD_FILE_CONTENT,
     )
 
     http_archive(
@@ -133,7 +164,8 @@ def initialize_rules_ll(local_crt_path):
         urls = ["https://developer.download.nvidia.com/compute/cuda/redist/libcurand/linux-x86_64/libcurand-linux-x86_64-10.2.9.124-archive.tar.xz"],
         strip_prefix = "libcurand-linux-x86_64-10.2.9.124-archive",
         sha256 = "87b1d70ec749db31cabb79ae5034b05883666e1848aa3feca643ea4a68dea47e",
-        build_file = "@rules_ll//third-party-overlays:libcurand.BUILD.bazel",
+        # build_file = "@rules_ll//third-party-overlays:libcurand.BUILD.bazel",
+        build_file_content = CUDA_BUILD_FILE_CONTENT,
     )
 
 def _initialize_rules_ll_impl(module_ctx):
