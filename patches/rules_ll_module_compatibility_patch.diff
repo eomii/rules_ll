@@ -1,26 +1,63 @@
 diff --git a/utils/bazel/llvm-project-overlay/clang/BUILD.bazel b/utils/bazel/llvm-project-overlay/clang/BUILD.bazel
-index 2156e55bc..28f592e5c 100644
+index 2156e55bc..de96fd6d4 100644
 --- a/utils/bazel/llvm-project-overlay/clang/BUILD.bazel
 +++ b/utils/bazel/llvm-project-overlay/clang/BUILD.bazel
-@@ -709,8 +709,9 @@ cc_library(
+@@ -5,6 +5,7 @@
+ load("//llvm:tblgen.bzl", "gentbl")
+ load("//llvm:binary_alias.bzl", "binary_alias")
+ load("//llvm:cc_plugin_library.bzl", "cc_plugin_library")
++load("//clang:workspace_root.bzl", "workspace_root")
+ 
+ package(
+     default_visibility = ["//visibility:public"],
+@@ -685,6 +686,10 @@ gentbl(
+     ],
+ )
+ 
++workspace_root(
++    name = "clang_workspace_root",
++)
++
+ cc_library(
+     name = "ast",
+     srcs = glob([
+@@ -709,8 +714,11 @@ cc_library(
          # least bad approach. Using `includes` is *specifically* problematic for
          # this library because it contains files that collide easily with system
          # headers such as `CXXABI.h`.
 -        "-I$(GENDIR)/external/llvm-project/clang/lib/AST",
 -        "-I$(GENDIR)/external/llvm-project/clang/lib/AST/Interp",
-+        "-I$(GENDIR)/external/rules_ll.llvm_project_overlay.llvm-project/clang/lib/AST",
-+        "-I$(GENDIR)/external/rules_ll.llvm_project_overlay.llvm-project/clang/lib/AST/Interp",
-+
++        "-I$(GENDIR)/$(WORKSPACE_ROOT)/clang/lib/AST",
++        "-I$(GENDIR)/$(WORKSPACE_ROOT)/clang/lib/AST/Interp",
++    ],
++    toolchains = [
++        ":clang_workspace_root"
      ],
      textual_hdrs = [
          "include/clang/AST/AttrImpl.inc",
-@@ -1464,7 +1465,8 @@ genrule(
+@@ -1464,7 +1472,7 @@ genrule(
      outs = [hdr.replace("lib/Headers/", "staging/include/") for hdr in builtin_headers],
      cmd = """
         for src in $(SRCS); do
 -         relsrc=$${src/*external\\/llvm-project\\/clang\\/lib\\/Headers\\/}
-+         relsrc=$${src/*external\\/rules_ll*.llvm_project_overlay.llvm-project\\/clang\\/lib\\/Headers\\/}
-+
++         relsrc=$${src/*\\/lib\\/Headers\\/}
           target=$(@D)/staging/include/$$relsrc
           mkdir -p $$(dirname $$target)
           cp $$src $$target
+diff --git a/utils/bazel/llvm-project-overlay/clang/workspace_root.bzl b/utils/bazel/llvm-project-overlay/clang/workspace_root.bzl
+new file mode 100644
+index 000000000..6a0fe7ca6
+--- /dev/null
++++ b/utils/bazel/llvm-project-overlay/clang/workspace_root.bzl
+@@ -0,0 +1,11 @@
++def _workspace_root_impl(ctx):
++    return [
++        platform_common.TemplateVariableInfo({
++            "WORKSPACE_ROOT": ctx.label.workspace_root,
++        }),
++    ]
++
++workspace_root = rule(
++    implementation = _workspace_root_impl,
++    attrs = {},
++)

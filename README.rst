@@ -64,7 +64,7 @@ Copy the following lines into the ``MODULE.bazel`` file:
 
 .. code:: python
 
-   bazel_dep(name="rules_ll", version="20220607.0")
+   bazel_dep(name="rules_ll", version="20220608.0")
    local_path_override(
        module_name="rules_ll",
        path="../rules_ll",
