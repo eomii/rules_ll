@@ -39,7 +39,7 @@ workspace:
 
    touch WORKSPACE.bazel .bazelrc
    echo 6.0.0-pre.20220526.1 >> .bazelversion
-   echo 'bazel_dep(name="rules_ll", version="20220609.0")' >> MODULE.bazel
+   echo 'bazel_dep(name="rules_ll", version="20220609.1")' >> MODULE.bazel
 
 Copy the following lines into the just created ``.bashrc`` file::
 

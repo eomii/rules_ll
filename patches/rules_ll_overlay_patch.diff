@@ -1,0 +1,930 @@
+diff --git a/utils/bazel/llvm-project-overlay/clang-tools-extra/BUILD.bazel b/utils/bazel/llvm-project-overlay/clang-tools-extra/BUILD.bazel
+new file mode 100644
+index 000000000..b160d1074
+--- /dev/null
++++ b/utils/bazel/llvm-project-overlay/clang-tools-extra/BUILD.bazel
+@@ -0,0 +1 @@
++# Empty, but patches break if there is no line here.
+diff --git a/utils/bazel/llvm-project-overlay/clang-tools-extra/clang-tidy/BUILD.bazel b/utils/bazel/llvm-project-overlay/clang-tools-extra/clang-tidy/BUILD.bazel
+new file mode 100644
+index 000000000..1d0156585
+--- /dev/null
++++ b/utils/bazel/llvm-project-overlay/clang-tools-extra/clang-tidy/BUILD.bazel
+@@ -0,0 +1,304 @@
++load(
++    "@llvm-project//clang-tools-extra/clang-tidy:clang_tidy_module.bzl",
++    "clang_tidy_module",
++)
++load("@bazel_skylib//rules:native_binary.bzl", "native_binary")
++
++cc_library(
++    name = "clang_tidy",
++    srcs = [
++        "ClangTidy.cpp",
++        "ClangTidyCheck.cpp",
++        "ClangTidyDiagnosticConsumer.cpp",
++        "ClangTidyModule.cpp",
++        "ClangTidyOptions.cpp",
++        "ClangTidyProfiling.cpp",
++        "ExpandModularHeadersPPCallbacks.cpp",
++        "GlobList.cpp",
++        "NoLintDirectiveHandler.cpp",
++    ],
++    hdrs = [
++        "ClangTidy.h",
++        "ClangTidyCheck.h",
++        "ClangTidyDiagnosticConsumer.h",
++        "ClangTidyForceLinker.h",
++        "ClangTidyModule.h",
++        "ClangTidyModuleRegistry.h",
++        "ClangTidyOptions.h",
++        "ClangTidyProfiling.h",
++        "ExpandModularHeadersPPCallbacks.h",
++        "GlobList.h",
++        "NoLintDirectiveHandler.h",
++
++        # Added manually to the overlay.
++        "clang-tidy-config.h",
++    ],
++    deps = [
++        "@llvm-project//clang:analysis",
++        "@llvm-project//clang:ast",
++        "@llvm-project//clang:ast_matchers",
++        "@llvm-project//clang:basic",
++        "@llvm-project//clang:format",
++        "@llvm-project//clang:frontend",
++        "@llvm-project//clang:frontend_rewrite",
++        "@llvm-project//clang:lex",
++        "@llvm-project//clang:rewrite",
++        "@llvm-project//clang:sema",
++        "@llvm-project//clang:serialization",
++        "@llvm-project//clang:static_analyzer_core",
++        "@llvm-project//clang:static_analyzer_frontend",
++        "@llvm-project//clang:tooling",
++        "@llvm-project//clang:tooling_core",
++        "@llvm-project//llvm:FrontendOpenMP",
++        "@llvm-project//llvm:Support",
++    ],
++)
++
++cc_library(
++    name = "clang_tidy_utils",
++    srcs = glob(["utils/*.cpp"]),
++    hdrs = glob(["utils/*.h"]),
++    deps = [
++        ":clang_tidy",
++        "@llvm-project//clang:ast",
++        "@llvm-project//clang:ast_matchers",
++        "@llvm-project//clang:basic",
++        "@llvm-project//clang:lex",
++        "@llvm-project//clang:sema",
++        "@llvm-project//clang:transformer",
++    ],
++)
++
++clang_tidy_module(
++    name = "abseil",
++    deps = [
++        "@llvm-project//clang:tooling",
++        "@llvm-project//clang:transformer",
++    ],
++)
++
++clang_tidy_module(
++    name = "altera",
++    deps = [
++        "@llvm-project//clang:analysis",
++    ],
++)
++
++clang_tidy_module(name = "android")
++
++clang_tidy_module(name = "boost")
++
++clang_tidy_module(
++    name = "concurrency",
++    deps = [
++        "@llvm-project//clang:analysis",
++        "@llvm-project//clang:serialization",
++        "@llvm-project//clang:tooling",
++    ],
++)
++
++clang_tidy_module(name = "darwin")
++
++clang_tidy_module(
++    name = "readability",
++    deps = [
++        "@llvm-project//clang:analysis",
++        "@llvm-project//clang:tooling",
++    ],
++)
++
++clang_tidy_module(
++    name = "google",
++    deps = [":readability"],
++)
++
++clang_tidy_module(
++    name = "fuchsia",
++    deps = [":google"],
++)
++
++clang_tidy_module(name = "linuxkernel")
++
++clang_tidy_module(
++    name = "llvm",
++    deps = [":readability"],
++)
++
++clang_tidy_module(
++    name = "portability",
++    deps = ["@llvm-project//clang:tooling"],
++)
++
++clang_tidy_module(
++    name = "llvmlibc",
++    deps = [":portability"],
++)
++
++clang_tidy_module(
++    name = "misc",
++    deps = [
++        "@llvm-project//clang:serialization",
++        "@llvm-project//clang:tooling",
++    ],
++)
++
++clang_tidy_module(
++    name = "modernize",
++    deps = [
++        ":readability",
++        "@llvm-project//clang:tooling",
++    ],
++)
++
++clang_tidy_module(
++    name = "mpi",
++    deps = [
++        "@llvm-project//clang:analysis",
++        "@llvm-project//clang:static_analyzer_checkers",
++        "@llvm-project//clang:tooling",
++    ],
++)
++
++clang_tidy_module(name = "objc")
++
++clang_tidy_module(name = "openmp")
++
++clang_tidy_module(
++    name = "performance",
++    deps = ["@llvm-project//clang:analysis"],
++)
++
++clang_tidy_module(name = "zircon")
++
++clang_tidy_module(
++    name = "cppcoreguidelines",
++    deps = [
++        ":misc",
++        ":modernize",
++        ":readability",
++        "@llvm-project//clang:serialization",
++        "@llvm-project//clang:tooling",
++    ],
++)
++
++clang_tidy_module(
++    name = "bugprone",
++    deps = [
++        ":cppcoreguidelines",
++        "@llvm-project//clang:analysis",
++        "@llvm-project//clang:tooling",
++        "@llvm-project//clang:transformer",
++    ],
++)
++
++clang_tidy_module(
++    name = "cert",
++    deps = [
++        ":bugprone",
++        ":concurrency",
++        ":google",
++        ":misc",
++        ":performance",
++        ":readability",
++    ],
++)
++
++clang_tidy_module(
++    name = "hicpp",
++    deps = [
++        ":bugprone",
++        ":cppcoreguidelines",
++        ":google",
++        ":misc",
++        ":modernize",
++        ":performance",
++        ":readability",
++        "@llvm-project//clang:serialization",
++    ],
++)
++
++ALL_CLANG_TIDY_CHECKS = [
++    ":android",
++    ":abseil",
++    ":altera",
++    ":boost",
++    ":bugprone",
++    ":cert",
++    ":concurrency",
++    ":cppcoreguidelines",
++    ":darwin",
++    ":fuchsia",
++    ":google",
++    ":hicpp",
++    ":linuxkernel",
++    ":llvm",
++    ":llvmlibc",
++    ":misc",
++    ":modernize",
++    ":mpi",
++    ":objc",
++    ":openmp",
++    ":performance",
++    ":portability",
++    ":readability",
++    ":zircon",
++]
++
++cc_binary(
++    name = "clang_tidy_plugin",
++    srcs = ["plugin/ClangTidyPlugin.cpp"],
++    linkshared = True,
++    visibility = ["//visibility:public"],
++    deps = ALL_CLANG_TIDY_CHECKS + [
++        ":clang_tidy",
++        "@llvm-project//clang:ast",
++        "@llvm-project//clang:ast_matchers",
++        "@llvm-project//clang:basic",
++        "@llvm-project//clang:frontend",
++        "@llvm-project//clang:sema",
++        "@llvm-project//clang:tooling",
++    ],
++)
++
++cc_library(
++    name = "clang_tidy_main",
++    srcs = [
++        "tool/ClangTidyMain.cpp",
++    ],
++    hdrs = [
++        "tool/ClangTidyMain.h",
++    ],
++    deps = [
++        ":clang_tidy",
++        "@llvm-project//clang:ast",
++        "@llvm-project//clang:ast_matchers",
++        "@llvm-project//clang:basic",
++        "@llvm-project//clang:tooling",
++        "@llvm-project//clang:tooling_core",
++    ],
++)
++
++cc_binary(
++    name = "clang-tidy",
++    srcs = [
++        "tool/ClangTidyToolMain.cpp",
++    ],
++    visibility = ["//visibility:public"],
++    deps = ALL_CLANG_TIDY_CHECKS + [
++        ":clang_tidy",
++        ":clang_tidy_main",
++        "@llvm-project//clang:ast",
++        "@llvm-project//clang:ast_matchers",
++        "@llvm-project//clang:basic",
++        "@llvm-project//clang:tooling",
++        "@llvm-project//clang:tooling_core",
++    ],
++)
++
++native_binary(
++    name = "run-clang-tidy",
++    src = "tool/run-clang-tidy.py",
++    out = "run-clang-tidy",
++    data = [":clang-tidy"],
++    visibility = ["//visibility:public"],
++)
+diff --git a/utils/bazel/llvm-project-overlay/clang-tools-extra/clang-tidy/clang-tidy-config.h b/utils/bazel/llvm-project-overlay/clang-tools-extra/clang-tidy/clang-tidy-config.h
+new file mode 100644
+index 000000000..d19ac4250
+--- /dev/null
++++ b/utils/bazel/llvm-project-overlay/clang-tools-extra/clang-tidy/clang-tidy-config.h
+@@ -0,0 +1,8 @@
++#ifdef CLANG_TIDY_CONFIG_H
++#error clang-tidy-config.h can only be included once
++#else
++#define CLANG_TIDY_CONFIG_H
++
++#define CLANG_TIDY_ENABLE_STATIC_ANALYZER 1
++
++#endif
+diff --git a/utils/bazel/llvm-project-overlay/clang-tools-extra/clang-tidy/clang_tidy_module.bzl b/utils/bazel/llvm-project-overlay/clang-tools-extra/clang-tidy/clang_tidy_module.bzl
+new file mode 100644
+index 000000000..10e2a508d
+--- /dev/null
++++ b/utils/bazel/llvm-project-overlay/clang-tools-extra/clang-tidy/clang_tidy_module.bzl
+@@ -0,0 +1,18 @@
++def clang_tidy_module(name, deps = []):
++    """Wrapper around cc_library to shorten deps."""
++    native.cc_library(
++        name = name,
++        srcs = native.glob([name + "/*.cpp"]),
++        hdrs = native.glob([name + "/*.h"]),
++        deps = deps + [
++            ":clang_tidy",
++            ":clang_tidy_utils",
++            "@llvm-project//clang:ast",
++            "@llvm-project//clang:ast_matchers",
++            "@llvm-project//clang:basic",
++            "@llvm-project//clang:lex",
++            "@llvm-project//llvm:FrontendOpenMP",
++            "@llvm-project//llvm:Support",
++        ],
++        alwayslink = True,
++    )
+diff --git a/utils/bazel/llvm-project-overlay/compiler-rt/BUILD.bazel b/utils/bazel/llvm-project-overlay/compiler-rt/BUILD.bazel
+new file mode 100644
+index 000000000..333cebff8
+--- /dev/null
++++ b/utils/bazel/llvm-project-overlay/compiler-rt/BUILD.bazel
+@@ -0,0 +1,242 @@
++load("@rules_ll//ll:bootstrap_library.bzl", "ll_bootstrap_library")
++
++GENERIC_SOURCES = [
++    "lib/builtins/absvdi2.c",
++    "lib/builtins/absvsi2.c",
++    "lib/builtins/absvti2.c",
++    "lib/builtins/adddf3.c",
++    "lib/builtins/addsf3.c",
++    "lib/builtins/addvdi3.c",
++    "lib/builtins/addvsi3.c",
++    "lib/builtins/addvti3.c",
++    "lib/builtins/apple_versioning.c",
++    "lib/builtins/ashldi3.c",
++    "lib/builtins/ashlti3.c",
++    "lib/builtins/ashrdi3.c",
++    "lib/builtins/ashrti3.c",
++    "lib/builtins/bswapdi2.c",
++    "lib/builtins/bswapsi2.c",
++    "lib/builtins/clzdi2.c",
++    "lib/builtins/clzsi2.c",
++    "lib/builtins/clzti2.c",
++    "lib/builtins/cmpdi2.c",
++    "lib/builtins/cmpti2.c",
++    "lib/builtins/comparedf2.c",
++    "lib/builtins/comparesf2.c",
++    "lib/builtins/ctzdi2.c",
++    "lib/builtins/ctzsi2.c",
++    "lib/builtins/ctzti2.c",
++    "lib/builtins/divdc3.c",
++    "lib/builtins/divdf3.c",
++    "lib/builtins/divdi3.c",
++    "lib/builtins/divmoddi4.c",
++    "lib/builtins/divmodsi4.c",
++    "lib/builtins/divmodti4.c",
++    "lib/builtins/divsc3.c",
++    "lib/builtins/divsf3.c",
++    "lib/builtins/divsi3.c",
++    "lib/builtins/divti3.c",
++    "lib/builtins/extendsfdf2.c",
++    "lib/builtins/extendhfsf2.c",
++    "lib/builtins/ffsdi2.c",
++    "lib/builtins/ffssi2.c",
++    "lib/builtins/ffsti2.c",
++    "lib/builtins/fixdfdi.c",
++    "lib/builtins/fixdfsi.c",
++    "lib/builtins/fixdfti.c",
++    "lib/builtins/fixsfdi.c",
++    "lib/builtins/fixsfsi.c",
++    "lib/builtins/fixsfti.c",
++    "lib/builtins/fixunsdfdi.c",
++    "lib/builtins/fixunsdfsi.c",
++    "lib/builtins/fixunsdfti.c",
++    "lib/builtins/fixunssfdi.c",
++    "lib/builtins/fixunssfsi.c",
++    "lib/builtins/fixunssfti.c",
++    "lib/builtins/floatdidf.c",
++    "lib/builtins/floatdisf.c",
++    "lib/builtins/floatsidf.c",
++    "lib/builtins/floatsisf.c",
++    "lib/builtins/floattidf.c",
++    "lib/builtins/floattisf.c",
++    "lib/builtins/floatundidf.c",
++    "lib/builtins/floatundisf.c",
++    "lib/builtins/floatunsidf.c",
++    "lib/builtins/floatunsisf.c",
++    "lib/builtins/floatuntidf.c",
++    "lib/builtins/floatuntisf.c",
++    "lib/builtins/fp_mode.c",
++    "lib/builtins/int_util.c",
++    "lib/builtins/lshrdi3.c",
++    "lib/builtins/lshrti3.c",
++    "lib/builtins/moddi3.c",
++    "lib/builtins/modsi3.c",
++    "lib/builtins/modti3.c",
++    "lib/builtins/muldc3.c",
++    "lib/builtins/muldf3.c",
++    "lib/builtins/muldi3.c",
++    "lib/builtins/mulodi4.c",
++    "lib/builtins/mulosi4.c",
++    "lib/builtins/muloti4.c",
++    "lib/builtins/mulsc3.c",
++    "lib/builtins/mulsf3.c",
++    "lib/builtins/multi3.c",
++    "lib/builtins/mulvdi3.c",
++    "lib/builtins/mulvsi3.c",
++    "lib/builtins/mulvti3.c",
++    "lib/builtins/negdf2.c",
++    "lib/builtins/negdi2.c",
++    "lib/builtins/negsf2.c",
++    "lib/builtins/negti2.c",
++    "lib/builtins/negvdi2.c",
++    "lib/builtins/negvsi2.c",
++    "lib/builtins/negvti2.c",
++    "lib/builtins/os_version_check.c",
++    "lib/builtins/paritydi2.c",
++    "lib/builtins/paritysi2.c",
++    "lib/builtins/parityti2.c",
++    "lib/builtins/popcountdi2.c",
++    "lib/builtins/popcountsi2.c",
++    "lib/builtins/popcountti2.c",
++    "lib/builtins/powidf2.c",
++    "lib/builtins/powisf2.c",
++    "lib/builtins/subdf3.c",
++    "lib/builtins/subsf3.c",
++    "lib/builtins/subvdi3.c",
++    "lib/builtins/subvsi3.c",
++    "lib/builtins/subvti3.c",
++    "lib/builtins/trampoline_setup.c",
++    "lib/builtins/truncdfhf2.c",
++    "lib/builtins/truncdfsf2.c",
++    "lib/builtins/truncsfhf2.c",
++    "lib/builtins/ucmpdi2.c",
++    "lib/builtins/ucmpti2.c",
++    "lib/builtins/udivdi3.c",
++    "lib/builtins/udivmoddi4.c",
++    "lib/builtins/udivmodsi4.c",
++    "lib/builtins/udivmodti4.c",
++    "lib/builtins/udivsi3.c",
++    "lib/builtins/udivti3.c",
++    "lib/builtins/umoddi3.c",
++    "lib/builtins/umodsi3.c",
++    "lib/builtins/umodti3.c",
++
++    # Not Fuchsia and not a bare-metal build.
++    "lib/builtins/emutls.c",
++    "lib/builtins/enable_execute_stack.c",
++    "lib/builtins/eprintf.c",
++
++    # Not sure whether we want atomic in this or separately.
++    "lib/builtins/atomic.c",
++
++    # Not sure whether this is for libunwind or gcc_s. gotta check.
++    "lib/builtins/gcc_personality_v0.c",
++
++    # Not Fuchsia.
++    "lib/builtins/clear_cache.c",
++]
++
++GENERIC_TF_SOURCES = [
++    "lib/builtins/addtf3.c",
++    "lib/builtins/comparetf2.c",
++    "lib/builtins/divtc3.c",
++    "lib/builtins/divtf3.c",
++    "lib/builtins/extenddftf2.c",
++    "lib/builtins/extendhftf2.c",
++    "lib/builtins/extendsftf2.c",
++    "lib/builtins/fixtfdi.c",
++    "lib/builtins/fixtfsi.c",
++    "lib/builtins/fixtfti.c",
++    "lib/builtins/fixunstfdi.c",
++    "lib/builtins/fixunstfsi.c",
++    "lib/builtins/fixunstfti.c",
++    "lib/builtins/floatditf.c",
++    "lib/builtins/floatsitf.c",
++    "lib/builtins/floattitf.c",
++    "lib/builtins/floatunditf.c",
++    "lib/builtins/floatunsitf.c",
++    "lib/builtins/floatuntitf.c",
++    "lib/builtins/multc3.c",
++    "lib/builtins/multf3.c",
++    "lib/builtins/powitf2.c",
++    "lib/builtins/subtf3.c",
++    "lib/builtins/trunctfdf2.c",
++    "lib/builtins/trunctfhf2.c",
++    "lib/builtins/trunctfsf2.c",
++]
++
++X86_ARCH_SOURCES = [
++    "lib/builtins/cpu_model.c",
++    "lib/builtins/i386/fp_mode.c",  # Used on 64-bit as well.
++]
++
++X86_80_BIT_SOURCES = [
++    "lib/builtins/divxc3.c",
++    "lib/builtins/fixxfdi.c",
++    "lib/builtins/fixxfti.c",
++    "lib/builtins/fixunsxfdi.c",
++    "lib/builtins/fixunsxfsi.c",
++    "lib/builtins/fixunsxfti.c",
++    "lib/builtins/floatdixf.c",
++    "lib/builtins/floattixf.c",
++    "lib/builtins/floatundixf.c",
++    "lib/builtins/floatuntixf.c",
++    "lib/builtins/mulxc3.c",
++    "lib/builtins/powixf2.c",
++]
++
++X86_64_SOURCES = GENERIC_SOURCES + GENERIC_TF_SOURCES + X86_ARCH_SOURCES + X86_80_BIT_SOURCES + [
++    "lib/builtins/x86_64/floatdidf.c",
++    "lib/builtins/x86_64/floatdisf.c",
++    "lib/builtins/x86_64/floatundidf.S",
++    "lib/builtins/x86_64/floatundisf.S",
++    "lib/builtins/x86_64/floatdixf.c",
++    "lib/builtins/x86_64/floatundixf.S",
++]
++
++ll_bootstrap_library(
++    name = "builtins",
++    srcs = X86_64_SOURCES,
++    hdrs = [
++        "lib/builtins/assembly.h",
++        "lib/builtins/fp_add_impl.inc",
++        "lib/builtins/fp_compare_impl.inc",
++        "lib/builtins/fp_div_impl.inc",
++        "lib/builtins/fp_extend.h",
++        "lib/builtins/fp_extend_impl.inc",
++        "lib/builtins/fp_fixint_impl.inc",
++        "lib/builtins/fp_fixuint_impl.inc",
++        "lib/builtins/fp_lib.h",
++        "lib/builtins/fp_mode.h",
++        "lib/builtins/fp_mul_impl.inc",
++        "lib/builtins/fp_trunc.h",
++        "lib/builtins/fp_trunc_impl.inc",
++        "lib/builtins/int_div_impl.inc",
++        "lib/builtins/int_endianness.h",
++        "lib/builtins/int_lib.h",
++        "lib/builtins/int_math.h",
++        "lib/builtins/int_mulo_impl.inc",
++        "lib/builtins/int_mulv_impl.inc",
++        "lib/builtins/int_types.h",
++        "lib/builtins/int_util.h",
++    ],
++    visibility = ["//visibility:public"],
++)
++
++ll_bootstrap_library(
++    name = "crt",
++    srcs = [
++        "lib/crt/crtbegin.c",
++        "lib/crt/crtend.c",
++    ],
++    visibility = ["//visibility:public"],
++)
++
++ll_bootstrap_library(
++    name = "libll_compiler-rt",
++    visibility = ["//visibility:public"],
++    deps = [
++        ":builtins",
++        ":crt",
++    ],
++)
+diff --git a/utils/bazel/llvm-project-overlay/libcxx/BUILD.bazel b/utils/bazel/llvm-project-overlay/libcxx/BUILD.bazel
+new file mode 100644
+index 000000000..0f42d6ef9
+--- /dev/null
++++ b/utils/bazel/llvm-project-overlay/libcxx/BUILD.bazel
+@@ -0,0 +1,124 @@
++load("@rules_ll//ll:bootstrap_library.bzl", "ll_bootstrap_library")
++
++filegroup(
++    name = "libcxx_headers",
++    srcs = glob(["include/**/*"]),
++    visibility = ["//visibility:public"],
++)
++
++filegroup(
++    name = "libcxx_sources",
++    srcs = glob(["src/**/*"]),
++    visibility = ["//visibility:public"],
++)
++
++ll_bootstrap_library(
++    name = "libll_cxx",
++    srcs = [
++        "src/algorithm.cpp",
++        "src/any.cpp",
++        "src/atomic.cpp",
++        "src/barrier.cpp",
++        "src/bind.cpp",
++        "src/charconv.cpp",
++        "src/chrono.cpp",
++        "src/condition_variable.cpp",
++        "src/condition_variable_destructor.cpp",
++        "src/exception.cpp",
++        "src/format.cpp",
++        "src/functional.cpp",
++        "src/future.cpp",
++        "src/hash.cpp",
++        "src/ios.cpp",
++        "src/ios.instantiations.cpp",
++        "src/iostream.cpp",
++        "src/legacy_pointer_safety.cpp",
++        "src/locale.cpp",
++        "src/memory.cpp",
++        "src/mutex.cpp",
++        "src/mutex_destructor.cpp",
++        "src/new.cpp",
++        "src/optional.cpp",
++        "src/random.cpp",
++        "src/random_shuffle.cpp",
++        "src/regex.cpp",
++        "src/ryu/d2fixed.cpp",
++        "src/ryu/d2s.cpp",
++        "src/ryu/f2s.cpp",
++        "src/shared_mutex.cpp",
++        "src/stdexcept.cpp",
++        "src/string.cpp",
++        "src/strstream.cpp",
++        "src/system_error.cpp",
++        "src/thread.cpp",
++        "src/typeinfo.cpp",
++        "src/utility.cpp",
++        "src/valarray.cpp",
++        "src/variant.cpp",
++        "src/vector.cpp",
++    ],
++    hdrs = [
++        # Files in src/include.
++        "src/include/apple_availability.h",
++        "src/include/atomic_support.h",
++        "src/include/config_elast.h",
++        "src/include/refstring.h",
++        "src/include/ryu/common.h",
++        "src/include/ryu/d2fixed.h",
++        "src/include/ryu/d2fixed_full_table.h",
++        "src/include/ryu/d2s.h",
++        "src/include/ryu/d2s_full_table.h",
++        "src/include/ryu/d2s_intrinsics.h",
++        "src/include/ryu/digit_table.h",
++        "src/include/ryu/f2s.h",
++        "src/include/ryu/ryu.h",
++        "src/include/to_chars_floating_point.h",
++
++        # Support ipp files.
++        "src/support/runtime/exception_fallback.ipp",
++        "src/support/runtime/exception_glibcxx.ipp",
++        "src/support/runtime/exception_libcxxabi.ipp",
++        "src/support/runtime/exception_libcxxrt.ipp",
++        "src/support/runtime/exception_msvc.ipp",
++        "src/support/runtime/exception_pointer_cxxabi.ipp",
++        "src/support/runtime/exception_pointer_glibcxx.ipp",
++        "src/support/runtime/exception_pointer_msvc.ipp",
++        "src/support/runtime/exception_pointer_unimplemented.ipp",
++        "src/support/runtime/new_handler_fallback.ipp",
++        "src/support/runtime/stdexcept_default.ipp",
++        "src/support/runtime/stdexcept_vcruntime.ipp",
++
++        # Headers for building iostream.
++        "src/include/sso_allocator.h",
++        "src/iostream_init.h",
++    ],
++    compile_flags = [
++        "-std=c++20",
++        "-faligned-allocation",
++        "-funwind-tables",
++        "-fstrict-aliasing",
++        "-fvisibility-inlines-hidden",
++        "-Wno-user-defined-literals",
++    ],
++    # Adding libcxx headers via the data field lets us include them via
++    # a custom CPLUS_INCLUDE_PATH setting in the compilation environment for
++    # ll_bootstrap_library. So no include attribute needed to match this.
++    data = [
++        "//libcxx:libcxx_headers",
++        "//libcxxabi:libcxxabi_headers",
++    ],
++    defines = [
++        "NDEBUG",
++        "LIBCXX_BUILDING_LIBCXXABI",
++        "_LIBCXXABI_BUILDING_LIBRARY",
++        "_LIBCPP_BUILDING_LIBRARY",
++        "_LIBCPP_DISABLE_NEW_DELETE_DEFINITIONS",
++        "_LIBCPP_LINK_PTHREAD",
++        "_LIBCPP_LINK_RT_LIB",
++        "_LIBCPP_DISABLE_EXTERN_TEMPLATE",
++        "__STDC_CONSTANT_MACROS",
++        "__STDC_FORMAT_MACROS",
++        "__STDC_LIMIT_MACROS",
++    ],
++    visibility = ["//visibility:public"],
++)
+diff --git a/utils/bazel/llvm-project-overlay/libcxx/include/__config_site b/utils/bazel/llvm-project-overlay/libcxx/include/__config_site
+new file mode 100644
+index 000000000..d0d3da96e
+--- /dev/null
++++ b/utils/bazel/llvm-project-overlay/libcxx/include/__config_site
+@@ -0,0 +1,37 @@
++//===----------------------------------------------------------------------===//
++//
++// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
++// See https://llvm.org/LICENSE.txt for license information.
++// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
++//
++//===----------------------------------------------------------------------===//
++
++#ifndef _LIBCPP_CONFIG_SITE
++#define _LIBCPP_CONFIG_SITE
++
++/* #undef _LIBCPP_ABI_VERSION */
++/* #undef _LIBCPP_ABI_UNSTABLE */
++/* #undef _LIBCPP_ABI_FORCE_ITANIUM */
++/* #undef _LIBCPP_ABI_FORCE_MICROSOFT */
++/* #undef _LIBCPP_HIDE_FROM_ABI_PER_TU_BY_DEFAULT */
++/* #undef _LIBCPP_HAS_NO_THREADS */
++/* #undef _LIBCPP_HAS_NO_MONOTONIC_CLOCK */
++/* #undef _LIBCPP_HAS_MUSL_LIBC */
++/* #undef _LIBCPP_HAS_THREAD_API_PTHREAD */
++/* #undef _LIBCPP_HAS_THREAD_API_EXTERNAL */
++/* #undef _LIBCPP_HAS_THREAD_API_WIN32 */
++/* #undef _LIBCPP_HAS_THREAD_LIBRARY_EXTERNAL */
++/* #undef _LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS */
++#define _LIBCPP_HAS_NO_VENDOR_AVAILABILITY_ANNOTATIONS
++/* #undef _LIBCPP_NO_VCRUNTIME */
++/* #undef _LIBCPP_TYPEINFO_COMPARISON_IMPLEMENTATION */
++/* #undef _LIBCPP_ABI_NAMESPACE */
++/* #undef _LIBCPP_HAS_NO_FILESYSTEM_LIBRARY */
++/* #undef _LIBCPP_HAS_PARALLEL_ALGORITHMS */
++/* #undef _LIBCPP_HAS_NO_RANDOM_DEVICE */
++/* #undef _LIBCPP_HAS_NO_LOCALIZATION */
++/* #undef _LIBCPP_HAS_NO_WIDE_CHARACTERS */
++/* #undef _LIBCPP_HAS_NO_INCOMPLETE_FORMAT */
++/* #undef _LIBCPP_HAS_NO_INCOMPLETE_RANGES */
++
++#endif // _LIBCPP_CONFIG_SITE"
+diff --git a/utils/bazel/llvm-project-overlay/libcxxabi/BUILD.bazel b/utils/bazel/llvm-project-overlay/libcxxabi/BUILD.bazel
+new file mode 100644
+index 000000000..9f0a2dbed
+--- /dev/null
++++ b/utils/bazel/llvm-project-overlay/libcxxabi/BUILD.bazel
+@@ -0,0 +1,91 @@
++load("@rules_ll//ll:bootstrap_library.bzl", "ll_bootstrap_library")
++
++filegroup(
++    name = "libcxxabi_headers",
++    srcs = [
++        "include/__cxxabi_config.h",
++        "include/cxxabi.h",
++    ],
++    visibility = ["//visibility:public"],
++)
++
++ll_bootstrap_library(
++    name = "libll_cxxabi",
++    srcs = [
++        # C++ABI files
++        "src/cxa_aux_runtime.cpp",
++        "src/cxa_default_handlers.cpp",
++        "src/cxa_demangle.cpp",
++        "src/cxa_exception_storage.cpp",
++        "src/cxa_guard.cpp",
++        "src/cxa_handlers.cpp",
++        "src/cxa_thread_atexit.cpp",
++        "src/cxa_vector.cpp",
++        "src/cxa_virtual.cpp",
++
++        # C++ STL files
++        "src/stdlib_exception.cpp",
++        "src/stdlib_stdexcept.cpp",
++        "src/stdlib_typeinfo.cpp",
++
++        # Internal files
++        "src/abort_message.cpp",
++        "src/fallback_malloc.cpp",
++        "src/private_typeinfo.cpp",
++
++        # New/Delete
++        "src/stdlib_new_delete.cpp",
++
++        # Exceptions
++        "src/cxa_exception.cpp",
++        "src/cxa_personality.cpp",
++    ],
++    hdrs = glob(["include/**"]) + [
++        # C++ABI files.
++        "src/cxa_handlers.h",
++        "src/cxa_guard_impl.h",
++
++        # C++ STL files.
++        "src/abort_message.h",
++        "src/fallback_malloc.h",
++        "src/private_typeinfo.h",
++
++        # Exceptions.
++        "src/cxa_exception.h",
++
++        # Demangle
++        "src/demangle/DemangleConfig.h",
++        "src/demangle/ItaniumDemangle.h",
++        "src/demangle/ItaniumNodes.def",
++        "src/demangle/StringView.h",
++        "src/demangle/Utility.h",
++    ],
++    compile_flags = [
++        "-std=c++20",
++        "-faligned-allocation",
++        "-funwind-tables",
++        "-fstrict-aliasing",
++        "-fvisibility-inlines-hidden",
++    ],
++    # Adding these headers via the data field lets us include them via
++    # a custom CPLUS_INCLUDE_PATH setting in the compilation environment for
++    # ll_bootstrap_library. So no include attribute needed to match this.
++    data = [
++        ":libcxxabi_headers",
++        "//libcxx:libcxx_headers",
++        "//libcxx:libcxx_sources",
++    ],
++    defines = [
++        "LIBCXX_BUILDING_LIBCXXABI",
++        "HAVE___CXA_THREAD_ATEXIT_IMPL",  # 3 underscores.
++        "LIBCXXABI_USE_LLVM_UNWINDER",
++        "_LIBCPP_BUILDING_LIBRARY",
++        "_LIBCXXABI_BUILDING_LIBRARY",
++        "_LIBCXXABI_LINK_PTHREAD_LIB",
++        "__STDC_CONSTANT_MACROS",
++        "__STDC_FORMAT_MACROS",
++        "__STDC_LIMIT_MACROS",
++    ],
++    transitive_hdrs = [":libcxxabi_headers"],
++    visibility = ["//visibility:public"],
++)
+diff --git a/utils/bazel/llvm-project-overlay/libunwind/BUILD.bazel b/utils/bazel/llvm-project-overlay/libunwind/BUILD.bazel
+index 718eebfb7..da8cd0fa1 100644
+--- a/utils/bazel/llvm-project-overlay/libunwind/BUILD.bazel
++++ b/utils/bazel/llvm-project-overlay/libunwind/BUILD.bazel
+@@ -18,3 +18,52 @@ cc_library(
+     ],
+     strip_include_prefix = "include",
+ )
++load("@rules_ll//ll:bootstrap_library.bzl", "ll_bootstrap_library")
++
++filegroup(
++    name = "libunwind_headers",
++    srcs = glob(["include/**"]),
++    visibility = ["//visibility:public"],
++)
++
++ll_bootstrap_library(
++    name = "libll_unwind",
++    srcs = [
++        "src/Unwind-EHABI.cpp",
++        "src/Unwind-seh.cpp",
++        "src/Unwind-sjlj.c",
++        "src/UnwindLevel1.c",
++        "src/UnwindLevel1-gcc-ext.c",
++        "src/UnwindRegistersRestore.S",
++        "src/UnwindRegistersSave.S",
++        "src/libunwind.cpp",
++    ],
++    hdrs = [
++        "src/AddressSpace.hpp",
++        "src/CompactUnwinder.hpp",
++        "src/DwarfInstructions.hpp",
++        "src/DwarfParser.hpp",
++        "src/EHHeaderParser.hpp",
++        "src/FrameHeaderCache.hpp",
++        "src/RWMutex.hpp",
++        "src/Registers.hpp",
++        "src/Unwind-EHABI.h",
++        "src/UnwindCursor.hpp",
++        "src/assembly.h",
++        "src/cet_unwind.h",
++        "src/config.h",
++        "src/dwarf2.h",
++        "src/libunwind_ext.h",
++    ],
++    compile_flags = [
++        "-faligned-allocation",
++        "-funwind-tables",
++        "-fstrict-aliasing",
++        "-fvisibility-inlines-hidden",
++    ],
++    transitive_hdrs = [
++        ":libunwind_headers",
++    ],
++    visibility = ["//visibility:public"],
++    deps = ["//compiler-rt:libll_compiler-rt"],
++)

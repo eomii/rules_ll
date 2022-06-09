@@ -87,7 +87,6 @@ filegroup(
 )
         """,
         patch_cmds = [
-            "cat ../rules_ll/third-party-overlays/hip.BUILD.bazel >> BUILD",
             """echo "
             #define HIP_VERSION_MAJOR 5
             #define HIP_VERSION_MINOR 1
@@ -117,11 +116,12 @@ filegroup(
         sha256 = "656f336e5ed8705629af811dea83096849298ddf05664051b730d3f104b0e18d",
         strip_prefix = "hipamd-a97f7e4214c4111723d1476942106022d1186c70",
         urls = ["https://github.com/ROCm-Developer-Tools/hipamd/archive/a97f7e4214c4111723d1476942106022d1186c70.zip"],
+        remote_patches = {
+            "https://raw.githubusercontent.com/eomii/rules_ll/main/patches/hipamd_return_fix.diff": "sha256-2S6/rMtKgenTzKK57OwJENlXfAAMJN8IX5AIA7QzIVE=",
+        },
+        remote_patch_strip = 1,
         # patches = ["@rules_ll//patches:hipamd_return_fix.diff"],
-        patch_cmds = [
-            "patch -p1 --input ../rules_ll/patches/hipamd_return_fix.diff",
-        ],
-        patch_args = ["-p1"],
+        # patch_args = ["-p1"],
     )
 
     CUDA_BUILD_FILE_CONTENT = """

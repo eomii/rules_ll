@@ -1,6 +1,9 @@
 # Ignore bazel build directories.
 bazel-*
 
+# rules_ll developers may have a clone of the LLVM project in this repo.
+llvm-project/
+
 # Sphinx generates various files which should not be tracked.
 docs/_static/__init__.py
 __pycache__/
