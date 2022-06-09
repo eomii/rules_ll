@@ -16,9 +16,10 @@ def llvm_target_directory_path(ctx):
     Returns:
         A string.
     """
-    return "bazel-out/{cpu}-{mode}/bin/external/rules_ll.llvm_project_overlay.llvm-project".format(
+    return "bazel-out/{cpu}-{mode}/bin/{llvm_project_workspace}".format(
         cpu = ctx.var["TARGET_CPU"],
         mode = ctx.var["COMPILATION_MODE"],
+        llvm_project_workspace = Label("@llvm-project").workspace_root,
     )
 
 def _get_dirname(file):
@@ -52,13 +53,17 @@ def compile_object_args(ctx, in_file, out_file, cdf, headers, defines, includes,
     # Maybe enable heterogeneous compilation.
     if "//ll:heterogeneous_toolchain_type" in ctx.toolchains and ctx.attr.heterogeneous_mode == "hip_nvidia":
         args.add("-xcuda")
-        args.add("--cuda-path=external/rules_ll.rules_ll_dependencies.cuda_nvcc")
-        args.add("-Iexternal/rules_ll.rules_ll_dependencies.cuda_cudart/include")
-        args.add("-Iexternal/rules_ll.rules_ll_dependencies.cuda_nvprof/include")
-        args.add("-Iexternal/rules_ll.rules_ll_dependencies.libcurand/include")
-
-        args.add("-Iexternal/rules_ll.rules_ll_dependencies.hip/include")
-        args.add("-Iexternal/rules_ll.rules_ll_dependencies.hipamd/include")
+        args.add(Label("@cuda_nvcc").workspace_root, format = "--cuda-path=%s")
+        args.add_all(
+            [
+                Label("@cuda_cudart").workspace_root,
+                Label("@cuda_nvprof").workspace_root,
+                Label("@libcurand").workspace_root,
+                Label("@hip").workspace_root,
+                Label("@hipamd").workspace_root,
+            ],
+            format_each = "-I%s/include",
+        )
 
     # Write compilation database.
     if "//ll:heterogeneous_toolchain_type" in ctx.toolchains and ctx.attr.heterogeneous_mode != "none":
@@ -93,12 +98,13 @@ def compile_object_args(ctx, in_file, out_file, cdf, headers, defines, includes,
 
     # 3. Search directories specified via -isystem for quoted and angled
     #    includes.
-    libcxx_include_path = "external/rules_ll.llvm_project_overlay.llvm-project/libcxx/include"
+    llvm_workspace_root = Label("@llvm-project").workspace_root
+    libcxx_include_path = paths.join(llvm_workspace_root, "libcxx/include")
     args.add(clang_builtin_include_path, format = "-isystem%s")
     args.add(libcxx_include_path, format = "-isystem%s")
-    libcxxabi_include_path = "external/rules_ll.llvm_project_overlay.llvm-project/libcxxabi/include"
+    libcxxabi_include_path = paths.join(llvm_workspace_root, "libcxxabi/include")
     args.add(libcxxabi_include_path, format = "-isystem%s")
-    libunwind_include_path = "external/rules_ll.llvm_project_overlay.llvm-project/libunwind/include"
+    libunwind_include_path = paths.join(llvm_workspace_root, "libunwind/include")
     args.add(libunwind_include_path, format = "-isystem%s")
 
     # 4. Search directories specified via -idirafter for quoted and angled
@@ -184,7 +190,7 @@ def link_executable_args(ctx, in_files, out_file):
 
     if ctx.attr.heterogeneous_mode == "hip_nvidia":
         args.add("-lrt")
-        args.add("-Lexternal/rules_ll.rules_ll_dependencies.cuda_cudart/lib")
+        args.add(Label("@cuda_cudart").workspace_root, format = "-L%s/lib")
         args.add("-lcudart_static")
 
     # Add local crt1.o, crti.o and crtn.o files.

@@ -100,9 +100,9 @@ ll_bootstrap_library(
         "-fvisibility-inlines-hidden",
         "-Wno-user-defined-literals",
     ],
-    # For licxx itself we need to include these headers via -I instead of
-    # Adding libcxx headers via the data and includes fields includes them via
-    # -I instead of -isystem.
+    # Adding libcxx headers via the data field lets us include them via
+    # a custom CPLUS_INCLUDE_PATH setting in the compilation environment for
+    # ll_bootstrap_library. So no include attribute needed to match this.
     data = [
         "//libcxx:libcxx_headers",
         "//libcxxabi:libcxxabi_headers",
@@ -119,10 +119,6 @@ ll_bootstrap_library(
         "__STDC_CONSTANT_MACROS",
         "__STDC_FORMAT_MACROS",
         "__STDC_LIMIT_MACROS",
-    ],
-    includes = [
-        "external/rules_ll.llvm_project_overlay.llvm-project/libcxx/src",
-        "external/rules_ll.llvm_project_overlay.llvm-project/libcxxabi/include",
     ],
     visibility = ["//visibility:public"],
 )

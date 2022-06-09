@@ -30,16 +30,16 @@ C++ code with a Clang/LLVM based toolchain built from upstream.
 Quickstart
 ----------
 
-Install Bazel using `bazelisk <https://bazel.build/install/bazelisk>`_.
+Install `bazelisk <https://bazel.build/install/bazelisk>`_.
 
-The following commands set up a ``rules_ll`` workspace:
+Execute the following commands in an empty directory to set up a ``rules_ll``
+workspace:
 
 .. code:: bash
 
-   git clone git@github.com:eomii/rules_ll.git
-   mkdir myproject
-   cd myproject
-   touch WORKSPACE.bazel MODULE.bazel .bazelrc
+   touch WORKSPACE.bazel .bazelrc
+   echo 6.0.0-pre.20220526.1 >> .bazelversion
+   echo 'bazel_dep(name="rules_ll", version="20220609.0")' >> MODULE.bazel
 
 Copy the following lines into the just created ``.bashrc`` file::
 
@@ -59,16 +59,6 @@ Copy the following lines into the just created ``.bashrc`` file::
    # We use a custom registry.
    build --registry=https://raw.githubusercontent.com/eomii/bazel-eomii-registry/main/
    run --registry=https://raw.githubusercontent.com/eomii/bazel-eomii-registry/main/
-
-Copy the following lines into the ``MODULE.bazel`` file:
-
-.. code:: python
-
-   bazel_dep(name="rules_ll", version="20220608.0")
-   local_path_override(
-       module_name="rules_ll",
-       path="../rules_ll",
-   )
 
 If you are running 64-bit Gentoo or another operating system where ``crt1.o``,
 ``crti.o`` and ``crtn.o`` are located at ``/usr/lib64``, you are done.

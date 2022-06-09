@@ -1,2 +1,2 @@
-bazel_dep(name="rules_ll", version="20220608.0")
+bazel_dep(name="rules_ll", version="20220609.0")
 local_path_override(module_name = "rules_ll", path = "..")

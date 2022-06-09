@@ -22,7 +22,9 @@ def compile_object_environment(ctx, toolchain_type):
             "LD_LIBRARY_PATH": "$LD_LIBRARY_PATH:" + "/usr/local/cuda/lib64",
         }
     elif toolchain_type == "//ll:bootstrap_toolchain_type":
-        return {}
+        return {
+            "CPLUS_INCLUDE_PATH": Label("@llvm-project").workspace_root + "/libcxx/src",
+        }
     else:
         fail("Unregognized toolchain type. rules_ll supports " +
              "//ll:toolchain_type and //ll:bootstrap_toolchain_type.")
