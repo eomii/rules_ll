@@ -36,7 +36,7 @@ def _ll_library_impl(ctx):
         defines,
         includes,
         angled_includes,
-        transitive_headers,
+        transitive_hdrs,
         transitive_defines,
         transitive_includes,
         transitive_angled_includes,
@@ -77,7 +77,7 @@ def _ll_library_impl(ctx):
             files = depset(out_files),
         ),
         LlInfo(
-            transitive_headers = transitive_headers,
+            transitive_hdrs = transitive_hdrs,
             transitive_defines = transitive_defines,
             transitive_includes = transitive_includes,
             transitive_angled_includes = transitive_angled_includes,

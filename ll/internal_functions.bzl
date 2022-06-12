@@ -4,73 +4,68 @@ Internal functions used by `ll_binary` and `ll_library`.
 """
 
 load("//ll:providers.bzl", "LlInfo")
+load("@bazel_skylib//lib:paths.bzl", "paths")
+
+def get_transitive_hdrs(ctx, transitive_hdrs):
+    return depset(
+        transitive_hdrs,
+        transitive = [dep[LlInfo].transitive_hdrs for dep in ctx.attr.deps],
+    )
+
+def get_transitive_defines(ctx, transitive_defines):
+    return depset(
+        transitive_defines,
+        transitive = [dep[LlInfo].transitive_defines for dep in ctx.attr.deps],
+    )
+
+def get_transitive_includes(
+        ctx,
+        transitive_includes,
+        transitive_relative_includes):
+    return depset(
+        transitive_includes + [
+            paths.join(ctx.label.workspace_root, suffix)
+            for suffix in transitive_relative_includes
+        ],
+        transitive = [dep[LlInfo].transitive_includes for dep in ctx.attr.deps],
+    )
+
+def get_transitive_angled_includes(
+        ctx,
+        transitive_angled_includes,
+        transitive_relative_angled_includes):
+    return depset(
+        transitive_angled_includes + [
+            paths.join(ctx.label.workspace_root, suffix)
+            for suffix in transitive_relative_angled_includes
+        ],
+        transitive = [
+            dep[LlInfo].transitive_angled_includes
+            for dep in ctx.attr.deps
+        ],
+    )
 
 def resolve_binary_deps(ctx):
-    dep_headers = [dep[LlInfo].transitive_headers for dep in ctx.attr.deps]
-    dep_defines = [dep[LlInfo].transitive_defines for dep in ctx.attr.deps]
-    dep_includes = [dep[LlInfo].transitive_includes for dep in ctx.attr.deps]
-    dep_angled_includes = [
-        dep[LlInfo].transitive_angled_includes
-        for dep in ctx.attr.deps
-    ]
-
     # Headers.
-    headers = depset(ctx.files.hdrs, transitive = dep_headers)
+    transitive_hdrs = get_transitive_hdrs(ctx, [])
+    headers = depset(ctx.files.hdrs, transitive = [transitive_hdrs])
 
     # Defines.
-    defines = depset(ctx.attr.defines, transitive = dep_defines)
-
-    # Includes.
-    includes = depset(ctx.attr.includes, transitive = dep_includes)
-
-    # Angled includes.
-    angled_includes = depset(
-        ctx.attr.angled_includes,
-        transitive = dep_angled_includes,
-    )
-
-    return (
-        headers,
-        defines,
-        includes,
-        angled_includes,
-    )
-
-def resolve_library_deps(ctx):
-    dep_headers = [dep[LlInfo].transitive_headers for dep in ctx.attr.deps]
-    dep_defines = [dep[LlInfo].transitive_defines for dep in ctx.attr.deps]
-    dep_includes = [dep[LlInfo].transitive_includes for dep in ctx.attr.deps]
-    dep_angled_includes = [
-        dep[LlInfo].transitive_angled_includes
-        for dep in ctx.attr.deps
-    ]
-
-    # Headers.
-    transitive_headers = depset(
-        ctx.files.transitive_hdrs,
-        transitive = dep_headers,
-    )
-    headers = depset(ctx.files.hdrs, transitive = [transitive_headers])
-
-    # Defines.
-    transitive_defines = depset(
-        ctx.attr.transitive_defines,
-        transitive = dep_defines,
-    )
+    transitive_defines = get_transitive_defines(ctx, [])
     defines = depset(ctx.attr.defines, transitive = [transitive_defines])
 
     # Includes.
-    transitive_includes = depset(
-        ctx.attr.transitive_includes,
-        transitive = dep_includes,
+    transitive_includes = get_transitive_includes(ctx, [], [])
+    includes = depset(
+        ctx.attr.includes + [
+            paths.join(ctx.label.workspace_root, suffix)
+            for suffix in ctx.attr.relative_includes
+        ],
+        transitive = [transitive_includes],
     )
-    includes = depset(ctx.attr.includes, transitive = [transitive_includes])
 
     # Angled includes.
-    transitive_angled_includes = depset(
-        ctx.attr.angled_includes,
-        transitive = dep_angled_includes,
-    )
+    transitive_angled_includes = get_transitive_angled_includes(ctx, [], [])
     angled_includes = depset(
         ctx.attr.angled_includes,
         transitive = [transitive_angled_includes],
@@ -81,7 +76,59 @@ def resolve_library_deps(ctx):
         defines,
         includes,
         angled_includes,
-        transitive_headers,
+    )
+
+def resolve_library_deps(ctx):
+    dep_angled_includes = [
+        dep[LlInfo].transitive_angled_includes
+        for dep in ctx.attr.deps
+    ]
+
+    # Headers.
+    transitive_hdrs = get_transitive_hdrs(ctx, ctx.files.transitive_hdrs)
+    headers = depset(ctx.files.hdrs, transitive = [transitive_hdrs])
+
+    # Defines.
+    transitive_defines = get_transitive_defines(
+        ctx,
+        ctx.attr.transitive_defines,
+    )
+    defines = depset(ctx.attr.defines, transitive = [transitive_defines])
+
+    # Includes.
+    transitive_includes = get_transitive_includes(
+        ctx,
+        ctx.attr.transitive_includes,
+        ctx.attr.transitive_relative_includes,
+    )
+    includes = depset(
+        ctx.attr.includes + [
+            paths.join(ctx.label.workspace_root, suffix)
+            for suffix in ctx.attr.relative_includes
+        ],
+        transitive = [transitive_includes],
+    )
+
+    # Angled includes.
+    transitive_angled_includes = get_transitive_angled_includes(
+        ctx,
+        ctx.attr.transitive_angled_includes,
+        ctx.attr.transitive_relative_angled_includes,
+    )
+    angled_includes = depset(
+        ctx.attr.angled_includes + [
+            paths.join(ctx.label.workspace_root, suffix)
+            for suffix in ctx.attr.relative_angled_includes
+        ],
+        transitive = [transitive_angled_includes],
+    )
+
+    return (
+        headers,
+        defines,
+        includes,
+        angled_includes,
+        transitive_hdrs,
         transitive_defines,
         transitive_includes,
         transitive_angled_includes,

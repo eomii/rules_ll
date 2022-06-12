@@ -22,7 +22,7 @@ def compile_object_inputs(ctx, headers, toolchain_type):
             transitive = [
                 headers,
                 ctx.toolchains[toolchain_type].cpp_stdhdrs.files,
-                ctx.toolchains[toolchain_type].cpp_abi[LlInfo].transitive_headers,
+                ctx.toolchains[toolchain_type].cpp_abi[LlInfo].transitive_hdrs,
             ],
         )
     elif toolchain_type == "//ll:heterogeneous_toolchain_type":
@@ -44,7 +44,7 @@ def compile_object_inputs(ctx, headers, toolchain_type):
             transitive = [
                 headers,
                 ctx.toolchains[toolchain_type].cpp_stdhdrs.files,
-                ctx.toolchains[toolchain_type].cpp_abi[LlInfo].transitive_headers,
+                ctx.toolchains[toolchain_type].cpp_abi[LlInfo].transitive_hdrs,
                 heterogeneous_deps,
             ],
         )

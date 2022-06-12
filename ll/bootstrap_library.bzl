@@ -20,7 +20,7 @@ def _ll_bootstrap_library_impl(ctx):
         defines,
         includes,
         angled_includes,
-        transitive_headers,
+        transitive_hdrs,
         transitive_defines,
         transitive_includes,
         transitive_angled_includes,
@@ -48,7 +48,7 @@ def _ll_bootstrap_library_impl(ctx):
     return [
         DefaultInfo(files = depset([out_file])),
         LlInfo(
-            transitive_headers = transitive_headers,
+            transitive_hdrs = transitive_hdrs,
             transitive_defines = transitive_defines,
             transitive_includes = transitive_includes,
             transitive_angled_includes = transitive_angled_includes,
