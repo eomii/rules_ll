@@ -14,6 +14,7 @@ load(
     "create_archive_library_inputs",
     "link_bitcode_library_inputs",
     "link_executable_inputs",
+    "link_shared_object_inputs",
 )
 load(
     "//ll:outputs.bzl",
@@ -21,6 +22,7 @@ load(
     "create_archive_library_outputs",
     "link_bitcode_library_outputs",
     "link_executable_outputs",
+    "link_shared_object_outputs",
 )
 load(
     "//ll:args.bzl",
@@ -29,6 +31,7 @@ load(
     "expose_headers_args",
     "link_bitcode_library_args",
     "link_executable_args",
+    "link_shared_object_args",
 )
 load(
     "//ll:tools.bzl",
@@ -129,6 +132,20 @@ def create_archive_library(
         executable = ctx.toolchains[toolchain_type].archiver,
         arguments = create_archive_library_args(ctx, in_files, out_file),
         mnemonic = "LlCreateArchiveLibrary",
+        use_default_shell_env = False,
+    )
+    return out_file
+
+def link_shared_object(ctx, in_files, toolchain_type):
+    out_file = link_shared_object_outputs(ctx)
+    in_files = link_shared_object_inputs(ctx, in_files)
+
+    ctx.actions.run(
+        outputs = [out_file],
+        inputs = in_files,
+        executable = ctx.toolchains[toolchain_type].linker,
+        arguments = link_shared_object_args(ctx, in_files, out_file),
+        mnemonic = "LlLinkSharedObject",
         use_default_shell_env = False,
     )
     return out_file

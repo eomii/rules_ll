@@ -1,5 +1,5 @@
-#include "lib_1_public.h"
-#include "lib_2_public.h"
+#include "lib_1/lib_1_public.h"
+#include "lib_2/lib_2_public.h"
 #include <iostream>
 
 auto main() -> int {

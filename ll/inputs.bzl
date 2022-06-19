@@ -137,3 +137,9 @@ def link_bitcode_library_inputs(ctx, in_files):
         return depset(in_files + ctx.files.deps + ctx.files.bitcode_libraries)
     else:
         fail("Can only link bitcode when using \"//ll:toolchain_type\".")
+
+def link_shared_object_inputs(ctx, in_files):
+    if "//ll:toolchain_type" in ctx.toolchains:
+        return depset(in_files + ctx.files.deps)
+    else:
+        fail("Can only link shared object when using \"//ll:toolchain_type\".")

@@ -35,7 +35,10 @@ def compile_object_args(ctx, in_file, out_file, cdf, headers, defines, includes,
         args.add("-v")
         args.add("-glldb")
 
-        if "//ll:heterogeneous_toolchain_type" in ctx.toolchains and ctx.attr.heterogeneous_mode != "none":
+        if (
+            "//ll:heterogeneous_toolchain_type" in ctx.toolchains and
+            ctx.attr.heterogeneous_mode != "none"
+        ):
             args.add("--cuda-noopt-device-debug")
 
     # Optimization.
@@ -45,13 +48,20 @@ def compile_object_args(ctx, in_file, out_file, cdf, headers, defines, includes,
         # Long double with 80 bits breaks LTO.
         if ctx.attr.heterogeneous_mode == "none":
             args.add("-mlong-double-128")
+
         args.add("-flto=thin")
 
     # Only compile.
     args.add("-c")
 
+    # Always generate position independent code.
+    args.add("-fPIC")
+
     # Maybe enable heterogeneous compilation.
-    if "//ll:heterogeneous_toolchain_type" in ctx.toolchains and ctx.attr.heterogeneous_mode == "hip_nvidia":
+    if (
+        "//ll:heterogeneous_toolchain_type" in ctx.toolchains and
+        ctx.attr.heterogeneous_mode == "hip_nvidia"
+    ):
         args.add("-xcuda")
         args.add(Label("@cuda_nvcc").workspace_root, format = "--cuda-path=%s")
         args.add_all(
@@ -136,9 +146,12 @@ def link_executable_args(ctx, in_files, out_file):
         args.add("--verbose")
 
     # Optimization.
-    if ctx.var["COMPILATION_MODE"] == "opt":
+    if ctx.var["COMPILATION_MODE"] != "dbg":
         args.add("--lto-O3")
         args.add("--strip-all")
+
+    # Always create position independent executables.
+    args.add("--pie")
 
     # Encapsulation.
     args.add("--nostdlib")
@@ -198,7 +211,12 @@ def link_executable_args(ctx, in_files, out_file):
 
     # Target-specific flags.
     args.add_all(ctx.attr.link_flags)
-    args.add_all(in_files)
+
+    # Add archives and objects.
+    for file in in_files:
+        if file.extension == "a" or file.extension == "o":
+            args.add(file)
+
     args.add("-o", out_file)
 
     return [args]
@@ -213,7 +231,22 @@ def link_bitcode_library_args(ctx, in_files, out_file):
 
     args.add_all(in_files)
 
-    out_file = ctx.actions.declare_file(ctx.label.name + ".bc")
+    args.add("-o", out_file)
+
+    return [args]
+
+def link_shared_object_args(ctx, in_files, out_file):
+    args = ctx.actions.args()
+
+    if ctx.var["COMPILATION_MODE"] == "dbg":
+        args.add("--verbose")
+
+    args.add("--shared")
+
+    args.add_all(ctx.attr.shared_object_link_flags)
+
+    args.add_all(in_files)
+
     args.add("-o", out_file)
 
     return [args]

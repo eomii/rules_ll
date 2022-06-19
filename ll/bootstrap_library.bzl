@@ -36,14 +36,15 @@ def _ll_bootstrap_library_impl(ctx):
     )
 
     out_files = intermediary_objects
-    if ctx.attr.aggregate == "static":
-        out_file = create_archive_library(
-            ctx,
-            in_files = intermediary_objects,
-            toolchain_type = "//ll:bootstrap_toolchain_type",
-        )
-    else:
-        fail("ll_bootstrap_library does not support the aggregate option.")
+
+    if ctx.attr.emit != ["archive"]:
+        fail("ll_bootstrap_library does not support non-default emit options.")
+
+    out_file = create_archive_library(
+        ctx,
+        in_files = intermediary_objects,
+        toolchain_type = "//ll:bootstrap_toolchain_type",
+    )
 
     return [
         DefaultInfo(files = depset([out_file])),

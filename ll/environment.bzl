@@ -10,7 +10,6 @@ def compile_object_environment(ctx, toolchain_type):
             "LINK": ctx.toolchains[toolchain_type].bitcode_linker.path,
             "LLD": ctx.toolchains[toolchain_type].linker.path,
             "PATH": "$PATH:" + ctx.toolchains[toolchain_type].linker_executable.dirname,
-            "LD_LIBRARY_PATH": "$LD_LIBRARY_PATH:" + "/usr/local/cuda/lib64",
         }
     elif toolchain_type == "//ll:heterogeneous_toolchain_type":
         return {
@@ -19,7 +18,6 @@ def compile_object_environment(ctx, toolchain_type):
             "LINK": ctx.toolchains[toolchain_type].bitcode_linker.path,
             "LLD": ctx.toolchains[toolchain_type].linker.path,
             "PATH": "$PATH:" + ctx.toolchains[toolchain_type].linker_executable.dirname,
-            "LD_LIBRARY_PATH": "$LD_LIBRARY_PATH:" + "/usr/local/cuda/lib64",
         }
     elif toolchain_type == "//ll:bootstrap_toolchain_type":
         return {

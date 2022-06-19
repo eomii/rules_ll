@@ -18,6 +18,7 @@ load(
     "expose_headers",
     "link_bitcode_library",
     "link_executable",
+    "link_shared_object",
 )
 load(
     "//ll:attributes.bzl",
@@ -31,6 +32,15 @@ def select_toolchain_type(ctx):
     return "//ll:toolchain_type"
 
 def _ll_library_impl(ctx):
+    for emit in ctx.attr.emit:
+        if emit not in ["archive", "shared_object", "bitcode", "objects"]:
+            fail(
+                """Invalid value passed to emit attribute. Allowed valuse are
+
+                 "archive", "shared_object", "bitcode", "objects". Got {}.
+                 """.format(emit),
+            )
+
     (
         headers,
         defines,
@@ -51,21 +61,33 @@ def _ll_library_impl(ctx):
         toolchain_type = select_toolchain_type(ctx),
     )
 
-    out_files = intermediary_objects
-    if ctx.attr.aggregate == "static":
-        out_file = create_archive_library(
-            ctx,
-            in_files = intermediary_objects,
-            toolchain_type = select_toolchain_type(ctx),
+    out_files = []
+    if "archive" in ctx.attr.emit:
+        out_files.append(
+            create_archive_library(
+                ctx,
+                in_files = intermediary_objects,
+                toolchain_type = select_toolchain_type(ctx),
+            ),
         )
-        out_files = [out_file]
-    elif ctx.attr.aggregate == "bitcode":
-        out_file = link_bitcode_library(
-            ctx,
-            in_files = intermediary_objects,
-            toolchain_type = select_toolchain_type(ctx),
+    if "shared_object" in ctx.attr.emit:
+        out_files.append(
+            link_shared_object(
+                ctx,
+                in_files = intermediary_objects,
+                toolchain_type = select_toolchain_type(ctx),
+            ),
         )
-        out_files = [out_file]
+    if "bitcode" in ctx.attr.emit:
+        out_files.append(
+            link_bitcode_library(
+                ctx,
+                in_files = intermediary_objects,
+                toolchain_type = select_toolchain_type(ctx),
+            ),
+        )
+    if "objects" in ctx.attr.emit:
+        out_files += intermediary_objects
 
     transitive_cdfs = [
         dep[LlCompilationDatabaseFragmentsInfo].cdfs

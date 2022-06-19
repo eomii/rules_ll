@@ -11,6 +11,9 @@ def link_executable_outputs(ctx):
 def link_bitcode_library_outputs(ctx):
     return ctx.actions.declare_file(ctx.label.name + ".bc")
 
+def link_shared_object_outputs(ctx):
+    return ctx.actions.declare_file(ctx.label.name + ".so")
+
 def create_archive_library_outputs(ctx):
     return ctx.actions.declare_file(ctx.label.name + ".a")
 

@@ -143,33 +143,36 @@ HETEROGENEOUS_ATTRS = {
 }
 
 LIBRARY_ATTRS = {
-    "aggregate": attr.string(
-        doc = """Sets the aggregation mode for compiled outputs in `ll_library`.
+    "emit": attr.string_list(
+        doc = """Sets the output mode. Multiple values may be specified.
 
-        `"static"` invokes the archiver and creates an archive with a `.a`
-        extension.
-        `"bitcode"` invokes the bitcode linker and creates a bitcode file with a
-        `.bc` extension.
-        `"none"` will not invoke any aggregator. Instead, loose object files
-        will be output by the rule.
-
-        Not used by `ll_binary`, but `ll_library` targets with
-        `aggregate = "bitcode"` can be used as `deps` for `ll_binary`.
+        `"archive"` invokes the archiver and adds an archive with a `.a`
+        extension to the outputs.
+        `"shared_object"` invokes the linker and adds a shared object with a
+        `.so` extension to the outputs.
+        `"bitcode"` invokes the bitcode linker and adds an LLVM bitcode file
+        with a `.bc` extension to the outputs.
+        `"objects"` adds loose object files to the outputs.
         """,
-        default = "static",
-        values = ["static", "bitcode", "none"],
+        default = ["archive"],
+    ),
+    "shared_object_link_flags": attr.string_list(
+        doc = """Additional flags for the linker when emitting shared objects.
+
+        Only used if `emit` includes `"shared_object"`.
+        """,
     ),
     "bitcode_link_flags": attr.string_list(
-        doc = """Additional flags for the bitcode linker.
+        doc = """Additional flags for the bitcode linker when emitting bitcode.
 
-        If `aggregate = "bitcode"`, these flags are passed to the bitcode
-        linker. The default bitcode linker is `llvm-link`.
+        Only Used if `emit` includes `"bitcode"`.
         """,
     ),
     "bitcode_libraries": attr.label_list(
-        doc = """Bitcode libraries that should always be linked.
+        doc = """Additional bitcode libraries that should be linked to the
+        output.
 
-        Only used if `aggregate = "bitcode"`.
+        Only used if `emit` includes `"bitcode"`.
         """,
         allow_files = [".bc"],
     ),
