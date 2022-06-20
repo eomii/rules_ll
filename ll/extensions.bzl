@@ -123,7 +123,7 @@ def _llvm_configure_extension_impl(ctx):
             RULES_LL_PATCH_URL + "compiler-rt_float128_patch.diff": "sha256-icBWHbeZ9bV3RyXWYS9CCLQ4tnVub2Xic2Rz9iD01xM=",
             RULES_LL_PATCH_URL + "clang_header_patch.diff": "sha256-TLL54/yJCrd5nPSDF5E4OfaodEMLl4VQ5PFd3eEsk1s=",
             RULES_LL_PATCH_URL + "mallinfo2_patch.diff": "sha256-sqeLZVxrUFCR37AWE1yK8zj7wVbKlebKLcvEeSYJa+Y=",
-            RULES_LL_PATCH_URL + "rules_ll_overlay_patch.diff": "sha256-zd7qAlO6K2S731uWokbNCbSBNf+FPiivARWPmj8I910=",
+            RULES_LL_PATCH_URL + "rules_ll_overlay_patch.diff": "sha256-1swizGxw2lf/9FPAeuqwsrIMa8wncdh2uM8ClbBSOng=",
         },
         remote_patch_strip = 1,
         # patches = [
