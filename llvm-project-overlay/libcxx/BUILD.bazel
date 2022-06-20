@@ -25,6 +25,8 @@ ll_bootstrap_library(
         "src/condition_variable.cpp",
         "src/condition_variable_destructor.cpp",
         "src/exception.cpp",
+        "src/filesystem/directory_iterator.cpp",
+        "src/filesystem/operations.cpp",
         "src/format.cpp",
         "src/functional.cpp",
         "src/future.cpp",
@@ -73,6 +75,10 @@ ll_bootstrap_library(
         "src/include/ryu/f2s.h",
         "src/include/ryu/ryu.h",
         "src/include/to_chars_floating_point.h",
+
+        # Filesystem files.
+        "src/filesystem/filesystem_common.h",
+        "src/filesystem/posix_compat.h",
 
         # Support ipp files.
         "src/support/runtime/exception_fallback.ipp",

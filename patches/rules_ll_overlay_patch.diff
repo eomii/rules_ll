@@ -603,10 +603,10 @@ index 000000000..333cebff8
 +)
 diff --git a/utils/bazel/llvm-project-overlay/libcxx/BUILD.bazel b/utils/bazel/llvm-project-overlay/libcxx/BUILD.bazel
 new file mode 100644
-index 000000000..0f42d6ef9
+index 000000000..bb617c987
 --- /dev/null
 +++ b/utils/bazel/llvm-project-overlay/libcxx/BUILD.bazel
-@@ -0,0 +1,124 @@
+@@ -0,0 +1,130 @@
 +load("@rules_ll//ll:bootstrap_library.bzl", "ll_bootstrap_library")
 +
 +filegroup(
@@ -634,6 +634,8 @@ index 000000000..0f42d6ef9
 +        "src/condition_variable.cpp",
 +        "src/condition_variable_destructor.cpp",
 +        "src/exception.cpp",
++        "src/filesystem/directory_iterator.cpp",
++        "src/filesystem/operations.cpp",
 +        "src/format.cpp",
 +        "src/functional.cpp",
 +        "src/future.cpp",
@@ -682,6 +684,10 @@ index 000000000..0f42d6ef9
 +        "src/include/ryu/f2s.h",
 +        "src/include/ryu/ryu.h",
 +        "src/include/to_chars_floating_point.h",
++
++        # Filesystem files.
++        "src/filesystem/filesystem_common.h",
++        "src/filesystem/posix_compat.h",
 +
 +        # Support ipp files.
 +        "src/support/runtime/exception_fallback.ipp",
@@ -733,7 +739,7 @@ index 000000000..0f42d6ef9
 +)
 diff --git a/utils/bazel/llvm-project-overlay/libcxx/include/__config_site b/utils/bazel/llvm-project-overlay/libcxx/include/__config_site
 new file mode 100644
-index 000000000..d0d3da96e
+index 000000000..72a7f9526
 --- /dev/null
 +++ b/utils/bazel/llvm-project-overlay/libcxx/include/__config_site
 @@ -0,0 +1,37 @@
