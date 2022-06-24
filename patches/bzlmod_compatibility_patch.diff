@@ -14,7 +14,7 @@ index e85c8d758..d783a21b9 100644
      ],
  )
  
-+worspace_root(name = "clang_workspace_root")
++workspace_root(name = "clang_workspace_root")
 +
  cc_library(
      name = "ast",

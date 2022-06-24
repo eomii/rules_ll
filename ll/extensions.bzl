@@ -119,7 +119,7 @@ def _llvm_configure_extension_impl(ctx):
         # the patches attribute. The workaround below will be removed as soon as
         # the bug is fixed.
         remote_patches = {
-            RULES_LL_PATCH_URL + "bzlmod_compatibility_patch.diff": "sha256-/HIivgu4q/nYj6DnoL5Y77kXINsGe2NB7XYxvIbbNEY=",
+            RULES_LL_PATCH_URL + "bzlmod_compatibility_patch.diff": "sha256-FONtKMQeaCzYu3EgtpgJIzm648FVrFEaQ8sumJLKS8k=",
             RULES_LL_PATCH_URL + "compiler-rt_float128_patch.diff": "sha256-icBWHbeZ9bV3RyXWYS9CCLQ4tnVub2Xic2Rz9iD01xM=",
             RULES_LL_PATCH_URL + "clang_header_patch.diff": "sha256-TLL54/yJCrd5nPSDF5E4OfaodEMLl4VQ5PFd3eEsk1s=",
             RULES_LL_PATCH_URL + "mallinfo2_patch.diff": "sha256-sqeLZVxrUFCR37AWE1yK8zj7wVbKlebKLcvEeSYJa+Y=",
