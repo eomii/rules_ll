@@ -2,8 +2,8 @@
 
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 load("@bazel_tools//tools/build_defs/repo:utils.bzl", "maybe")
-load("@rules_ll//third-party-overlays:zlib.bzl", "llvm_zlib_disable", "llvm_zlib_system")
 load("@rules_ll//third-party-overlays:terminfo.bzl", "llvm_terminfo_disable", "llvm_terminfo_system")
+load("@rules_ll//third-party-overlays:zlib.bzl", "llvm_zlib_disable", "llvm_zlib_system")
 
 def llvm_disable_optional_support_deps():
     maybe(

@@ -4,7 +4,7 @@ module(
     execution_platforms_to_register = [
         "@rules_ll//ll:ll_linux_exec_platform",
     ],
-    compatibility_level=0,
+    compatibility_level = 0,
     toolchains_to_register = [
         "@rules_ll//ll:ll_toolchain",
     ],
@@ -28,9 +28,9 @@ llvm_project_overlay = use_extension(
     "llvm_project_overlay",
 )
 llvm_project_overlay.configure(
-    commit="1dd2c93a660cd5de0769ff88634fe149904caa17",
+    commit = "1dd2c93a660cd5de0769ff88634fe149904caa17",
     sha256 = "75ae53aebb11171985e198150ba08c9bdab16ac8ca6953f30ac1570e4ea3fe8b",
-    targets=["AMDGPU", "NVPTX", "X86"],
+    targets = ["AMDGPU", "NVPTX", "X86"],
 )
 use_repo(
     llvm_project_overlay,
@@ -41,10 +41,10 @@ use_repo(
 # Set up dependencies for rules_ll.
 rules_ll_dependencies = use_extension(
     "@rules_ll//ll:init.bzl",
-    "rules_ll_dependencies"
+    "rules_ll_dependencies",
 )
 rules_ll_dependencies.configure(
-    local_crt_path="/usr/lib64",
+    local_crt_path = "/usr/lib64",
 )
 use_repo(
     rules_ll_dependencies,

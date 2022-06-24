@@ -3,7 +3,6 @@
 Action inputs.
 """
 
-load("//ll:providers.bzl", "LlInfo")
 load("@bazel_skylib//rules:common_settings.bzl", "BuildSettingInfo")
 
 def compilable_sources(ctx):

@@ -4,9 +4,8 @@
 Initializer function which should be called in the `WORKSPACE.bazel` file.
 """
 
-load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
-load("@bazel_tools//tools/build_defs/repo:utils.bzl", "maybe")
 load("@bazel_skylib//lib:paths.bzl", "paths")
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
 def _ll_local_crt_impl(ctx):
     for filename in ["crt1.o", "crti.o", "crtn.o"]:
@@ -33,8 +32,8 @@ def _ll_local_crt_impl(ctx):
 ll_local_crt = repository_rule(
     implementation = _ll_local_crt_impl,
     attrs = {
-        "path": attr.string(),
         "build_file_content": attr.string(),
+        "path": attr.string(),
     },
 )
 

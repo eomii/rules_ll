@@ -8,6 +8,22 @@ Every function in this file effectively wraps `ctx.actions.run` or
 
 load("@bazel_skylib//lib:paths.bzl", "paths")
 load(
+    "//ll:args.bzl",
+    "compile_object_args",
+    "create_archive_library_args",
+    "expose_headers_args",
+    "link_bitcode_library_args",
+    "link_executable_args",
+)
+load(
+    "//ll:driver.bzl",
+    "compiler_driver",
+)
+load(
+    "//ll:environment.bzl",
+    "compile_object_environment",
+)
+load(
     "//ll:inputs.bzl",
     "compilable_sources",
     "compile_object_inputs",
@@ -25,25 +41,8 @@ load(
     "link_shared_object_outputs",
 )
 load(
-    "//ll:args.bzl",
-    "compile_object_args",
-    "create_archive_library_args",
-    "expose_headers_args",
-    "link_bitcode_library_args",
-    "link_executable_args",
-    "link_shared_object_args",
-)
-load(
     "//ll:tools.bzl",
     "compile_object_tools",
-)
-load(
-    "//ll:driver.bzl",
-    "compiler_driver",
-)
-load(
-    "//ll:environment.bzl",
-    "compile_object_environment",
 )
 
 def expose_headers(ctx):
@@ -66,7 +65,7 @@ def expose_headers(ctx):
             mnemonic = "LlExposeHeaders",
             use_default_shell_env = False,
         )
-        exposed_hdrs += [out_file]
+        exposed_hdrs.append(out_file)
     return exposed_hdrs
 
 def compile_objects(
@@ -90,8 +89,8 @@ def compile_objects(
             angled_includes,
             toolchain_type,
         )
-        out_files += [file_out]
-        cdfs += [cdf_out]
+        out_files.append(file_out)
+        cdfs.append(cdf_out)
 
     return out_files, cdfs
 

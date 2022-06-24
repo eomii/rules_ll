@@ -5,18 +5,10 @@ Rules for building C/C++ with an upstream LLVM/Clang toolchain.
 Build files should import these rules via `@rules_ll//ll:defs.bzl`.
 """
 
-load("//ll:providers.bzl", "LlCompilationDatabaseFragmentsInfo", "LlInfo")
-load("//ll:transitions.bzl", "ll_transition")
-load(
-    "//ll:internal_functions.bzl",
-    "resolve_binary_deps",
-    "resolve_library_deps",
-)
 load(
     "//ll:actions.bzl",
     "compile_objects",
     "create_archive_library",
-    "expose_headers",
     "link_bitcode_library",
     "link_executable",
     "link_shared_object",
@@ -26,6 +18,13 @@ load(
     "LL_BINARY_ATTRS",
     "LL_LIBRARY_ATTRS",
 )
+load(
+    "//ll:internal_functions.bzl",
+    "resolve_binary_deps",
+    "resolve_library_deps",
+)
+load("//ll:providers.bzl", "LlCompilationDatabaseFragmentsInfo", "LlInfo")
+load("//ll:transitions.bzl", "ll_transition")
 
 def select_toolchain_type(ctx):
     return "//ll:toolchain_type"

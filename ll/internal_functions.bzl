@@ -3,8 +3,8 @@
 Internal functions used by `ll_binary` and `ll_library`.
 """
 
-load("//ll:providers.bzl", "LlInfo")
 load("@bazel_skylib//lib:paths.bzl", "paths")
+load("//ll:providers.bzl", "LlInfo")
 
 def get_transitive_hdrs(ctx, transitive_hdrs):
     return depset(

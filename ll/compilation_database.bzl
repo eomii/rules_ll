@@ -6,7 +6,6 @@ Implements the `ll_compilation_database` rule.
 load(
     "//ll:providers.bzl",
     "LlCompilationDatabaseFragmentsInfo",
-    "LlCompilationDatabaseInfo",
 )
 
 def _ll_compilation_database(ctx):
@@ -78,10 +77,10 @@ with open(sys.argv[1], 'r') as in_file, open(sys.argv[2], 'w') as out_file:
 """ $1 $2
 ''',
         execution_requirements = {
-            "no-sandbox": "1",
+            "local": "1",
             "no-cache": "1",
             "no-remote": "1",
-            "local": "1",
+            "no-sandbox": "1",
         },
         arguments = [args],
     )
@@ -118,12 +117,6 @@ ll_compilation_database = rule(
     implementation = _ll_compilation_database,
     executable = True,
     attrs = {
-        "target": attr.label(
-            mandatory = True,
-            doc = """
-            The label for which the compilation database should be built.
-            """,
-        ),
         "config": attr.label(
             doc = """
             The label of a `.clang-tidy` configuration file.
@@ -135,6 +128,12 @@ ll_compilation_database = rule(
         "exclude": attr.string(
             doc = """
             Exclude all targets whose path includes this string.
+            """,
+        ),
+        "target": attr.label(
+            mandatory = True,
+            doc = """
+            The label for which the compilation database should be built.
             """,
         ),
     },
