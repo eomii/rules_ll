@@ -103,24 +103,6 @@
    </code>
   </a>
  </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="deps.html">
-   <code class="docutils literal notranslate">
-    <span class="pre">
-     //ll:deps.bzl
-    </span>
-   </code>
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="init.html">
-   <code class="docutils literal notranslate">
-    <span class="pre">
-     //ll:init.bzl
-    </span>
-   </code>
-  </a>
- </li>
 </ul>
 <p class="caption" role="heading">
  <span class="caption-text">
@@ -156,19 +138,19 @@
   </a>
  </li>
  <li class="toctree-l1">
-  <a class="reference internal" href="bootstrap_library.html">
+  <a class="reference internal" href="compilation_database.html">
    <code class="docutils literal notranslate">
     <span class="pre">
-     //ll:bootstrap_library.bzl
+     //ll:compilation_database.bzl
     </span>
    </code>
   </a>
  </li>
  <li class="toctree-l1">
-  <a class="reference internal" href="compilation_database.html">
+  <a class="reference internal" href="defs.html">
    <code class="docutils literal notranslate">
     <span class="pre">
-     //ll:compilation_database.bzl
+     //ll:defs.bzl
     </span>
    </code>
   </a>
@@ -254,6 +236,15 @@
    </code>
   </a>
  </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="transitions.html">
+   <code class="docutils literal notranslate">
+    <span class="pre">
+     //ll:transitions.bzl
+    </span>
+   </code>
+  </a>
+ </li>
 </ul>
 
     </div>
@@ -335,6 +326,16 @@
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#link-executable-args">
    link_executable_args
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#link-shared-object-args">
+   link_shared_object_args
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#llvm-bindir-path">
+   llvm_bindir_path
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
@@ -501,7 +502,7 @@ link_bitcode_library_args(<a href="#link_bitcode_library_args-ctx">ctx</a>, <a h
 <div class="section" id="link-executable-args">
 <h2>link_executable_args<a class="headerlink" href="#link-executable-args" title="Permalink to this headline">¶</a></h2>
 <pre>
-link_executable_args(<a href="#link_executable_args-ctx">ctx</a>, <a href="#link_executable_args-in_files">in_files</a>, <a href="#link_executable_args-out_file">out_file</a>)
+link_executable_args(<a href="#link_executable_args-ctx">ctx</a>, <a href="#link_executable_args-in_files">in_files</a>, <a href="#link_executable_args-out_file">out_file</a>, <a href="#link_executable_args-mode">mode</a>)
 </pre>
 <p><strong>PARAMETERS</strong></p>
 <table class="colwidths-auto table">
@@ -521,6 +522,62 @@ link_executable_args(<a href="#link_executable_args-ctx">ctx</a>, <a href="#link
 <td class="text-left"><p>none</p></td>
 </tr>
 <tr class="row-even"><td class="text-left"><p><a id="link_executable_args-out_file"></a>out_file</p></td>
+<td class="text-left"><p><p align="center"> - </p></p></td>
+<td class="text-left"><p>none</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><a id="link_executable_args-mode"></a>mode</p></td>
+<td class="text-left"><p><p align="center"> - </p></p></td>
+<td class="text-left"><p>none</p></td>
+</tr>
+</tbody>
+</table>
+<p><a id="#link_shared_object_args"></a></p>
+</div>
+<div class="section" id="link-shared-object-args">
+<h2>link_shared_object_args<a class="headerlink" href="#link-shared-object-args" title="Permalink to this headline">¶</a></h2>
+<pre>
+link_shared_object_args(<a href="#link_shared_object_args-ctx">ctx</a>, <a href="#link_shared_object_args-in_files">in_files</a>, <a href="#link_shared_object_args-out_file">out_file</a>)
+</pre>
+<p><strong>PARAMETERS</strong></p>
+<table class="colwidths-auto table">
+<thead>
+<tr class="row-odd"><th class="text-left head"><p>Name</p></th>
+<th class="text-left head"><p>Description</p></th>
+<th class="text-left head"><p>Default Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-left"><p><a id="link_shared_object_args-ctx"></a>ctx</p></td>
+<td class="text-left"><p><p align="center"> - </p></p></td>
+<td class="text-left"><p>none</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><a id="link_shared_object_args-in_files"></a>in_files</p></td>
+<td class="text-left"><p><p align="center"> - </p></p></td>
+<td class="text-left"><p>none</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p><a id="link_shared_object_args-out_file"></a>out_file</p></td>
+<td class="text-left"><p><p align="center"> - </p></p></td>
+<td class="text-left"><p>none</p></td>
+</tr>
+</tbody>
+</table>
+<p><a id="#llvm_bindir_path"></a></p>
+</div>
+<div class="section" id="llvm-bindir-path">
+<h2>llvm_bindir_path<a class="headerlink" href="#llvm-bindir-path" title="Permalink to this headline">¶</a></h2>
+<pre>
+llvm_bindir_path(<a href="#llvm_bindir_path-ctx">ctx</a>)
+</pre>
+<p><strong>PARAMETERS</strong></p>
+<table class="colwidths-auto table">
+<thead>
+<tr class="row-odd"><th class="text-left head"><p>Name</p></th>
+<th class="text-left head"><p>Description</p></th>
+<th class="text-left head"><p>Default Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-left"><p><a id="llvm_bindir_path-ctx"></a>ctx</p></td>
 <td class="text-left"><p><p align="center"> - </p></p></td>
 <td class="text-left"><p>none</p></td>
 </tr>

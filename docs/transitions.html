@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>//ll:init.bzl &#8212; rules_ll Documentation</title>
+    <title>//ll:transitions.bzl &#8212; rules_ll Documentation</title>
 
   <link href="_static/css/theme.css" rel="stylesheet" />
   <link href="_static/css/index.c5995385ac14fb8791e8eb36b4908be2.css" rel="stylesheet" />
@@ -32,11 +32,10 @@
     <script src="_static/underscore.js"></script>
     <script src="_static/doctools.js"></script>
     <script src="_static/sphinx-book-theme.12a9622fbb08dcb3a2a40b2c02b83a57.js"></script>
-    <link rel="canonical" href="ll.eomii.org/init.html" />
+    <link rel="canonical" href="ll.eomii.org/transitions.html" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="//ll:actions.bzl" href="actions.html" />
-    <link rel="prev" title="//ll:deps.bzl" href="deps.html" />
+    <link rel="prev" title="//ll:tools.bzl" href="tools.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="en" />
 
@@ -93,30 +92,12 @@
   Public API
  </span>
 </p>
-<ul class="current nav bd-sidenav">
+<ul class="nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="defs.html">
    <code class="docutils literal notranslate">
     <span class="pre">
      //ll:defs.bzl
-    </span>
-   </code>
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="deps.html">
-   <code class="docutils literal notranslate">
-    <span class="pre">
-     //ll:deps.bzl
-    </span>
-   </code>
-  </a>
- </li>
- <li class="toctree-l1 current active">
-  <a class="current reference internal" href="#">
-   <code class="docutils literal notranslate">
-    <span class="pre">
-     //ll:init.bzl
     </span>
    </code>
   </a>
@@ -127,7 +108,7 @@
   Private API
  </span>
 </p>
-<ul class="nav bd-sidenav">
+<ul class="current nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="actions.html">
    <code class="docutils literal notranslate">
@@ -156,19 +137,19 @@
   </a>
  </li>
  <li class="toctree-l1">
-  <a class="reference internal" href="bootstrap_library.html">
+  <a class="reference internal" href="compilation_database.html">
    <code class="docutils literal notranslate">
     <span class="pre">
-     //ll:bootstrap_library.bzl
+     //ll:compilation_database.bzl
     </span>
    </code>
   </a>
  </li>
  <li class="toctree-l1">
-  <a class="reference internal" href="compilation_database.html">
+  <a class="reference internal" href="defs.html">
    <code class="docutils literal notranslate">
     <span class="pre">
-     //ll:compilation_database.bzl
+     //ll:defs.bzl
     </span>
    </code>
   </a>
@@ -254,6 +235,15 @@
    </code>
   </a>
  </li>
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   <code class="docutils literal notranslate">
+    <span class="pre">
+     //ll:transitions.bzl
+    </span>
+   </code>
+  </a>
+ </li>
 </ul>
 
     </div>
@@ -307,19 +297,6 @@
         <!-- Table of contents -->
         <div class="d-none d-md-block col-md-2 bd-toc show">
 
-            <div class="tocsection onthispage pt-5 pb-3">
-                <i class="fas fa-list"></i> Contents
-            </div>
-            <nav id="bd-toc-nav" aria-label="Page">
-                <ul class="visible nav section-nav flex-column">
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#initialize-rules-ll">
-   initialize_rules_ll
-  </a>
- </li>
-</ul>
-
-            </nav>
         </div>
     </div>
 </div>
@@ -329,56 +306,9 @@
               <div>
 
   <!-- Generated with Stardoc: http://skydoc.bazel.build -->
-<div class="tex2jax_ignore mathjax_ignore section" id="ll-init-bzl">
-<h1><code class="docutils literal notranslate"><span class="pre">//ll:init.bzl</span></code><a class="headerlink" href="#ll-init-bzl" title="Permalink to this headline">¶</a></h1>
-<p>Initializer function which should be called in the <code class="docutils literal notranslate"><span class="pre">WORKSPACE.bazel</span></code> file.</p>
-<p><a id="#initialize_rules_ll"></a></p>
-<div class="section" id="initialize-rules-ll">
-<h2>initialize_rules_ll<a class="headerlink" href="#initialize-rules-ll" title="Permalink to this headline">¶</a></h2>
-<pre>
-initialize_rules_ll(<a href="#initialize_rules_ll-local_crt_path">local_crt_path</a>, <a href="#initialize_rules_ll-llvm_commit">llvm_commit</a>, <a href="#initialize_rules_ll-llvm_sha256">llvm_sha256</a>)
-</pre>
-<p>Initializes the LLVM repository.</p>
-<p>The correct <code class="docutils literal notranslate"><span class="pre">local_crt_path</span></code> is likely something like <code class="docutils literal notranslate"><span class="pre">/usr/lib64</span></code> or
-<code class="docutils literal notranslate"><span class="pre">/usr/x86_64-unknown-linux-gnu</span></code>.</p>
-<p><code class="docutils literal notranslate"><span class="pre">rules_ll</span></code> modifies the existing bazel overlay in the LLVM repository. If
-the overlay in <code class="docutils literal notranslate"><span class="pre">rules_ll</span></code> breaks because you specified a custom commit, you
-can patch <code class="docutils literal notranslate"><span class="pre">rules_ll</span></code> during import e.g. via</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">http_archive</span><span class="p">(</span>
-    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;rules_ll&quot;</span><span class="p">,</span>
-    <span class="n">sha256</span> <span class="o">=</span> <span class="s2">&quot;&lt;Correct SHA256&gt;&quot;</span><span class="p">,</span>
-    <span class="n">urls</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="s2">&quot;https://github.com/neqochan/rules_ll/archive/&lt;COMMIT_HASH&gt;.zip&quot;</span>
-    <span class="p">],</span>
-    <span class="n">patches</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;:my_patch.diff&quot;</span><span class="p">],</span>
-    <span class="n">patch_args</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;-p1&quot;</span><span class="p">],</span>
-<span class="p">)</span>
-</pre></div>
-</div>
-<p><strong>PARAMETERS</strong></p>
-<table class="colwidths-auto table">
-<thead>
-<tr class="row-odd"><th class="text-left head"><p>Name</p></th>
-<th class="text-left head"><p>Description</p></th>
-<th class="text-left head"><p>Default Value</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td class="text-left"><p><a id="initialize_rules_ll-local_crt_path"></a>local_crt_path</p></td>
-<td class="text-left"><p>The path to the directory containing <code>crt1.o</code>, <code>crti.o</code> and <code>crtn.o</code>.</p></td>
-<td class="text-left"><p>none</p></td>
-</tr>
-<tr class="row-odd"><td class="text-left"><p><a id="initialize_rules_ll-llvm_commit"></a>llvm_commit</p></td>
-<td class="text-left"><p>The llvm-commit to use for the <code>llvm-project</code> repository.</p></td>
-<td class="text-left"><p><code>”ffdbecccafdf96c37921e3e74bb436aa169faefa”</code></p></td>
-</tr>
-<tr class="row-even"><td class="text-left"><p><a id="initialize_rules_ll-llvm_sha256"></a>llvm_sha256</p></td>
-<td class="text-left"><p>The SHA256 for corresponding to <code>llvm_commit</code>. Bazel will print the correct value if this is set to <code>None</code>.</p></td>
-<td class="text-left"><p><code>”b603ffaf8e141f2be751810a0a7def7dfb1844fe95f64fb0cea7901ab3d5948b”</code></p></td>
-</tr>
-</tbody>
-</table>
-</div>
+<div class="tex2jax_ignore mathjax_ignore section" id="ll-transitions-bzl">
+<h1><code class="docutils literal notranslate"><span class="pre">//ll:transitions.bzl</span></code><a class="headerlink" href="#ll-transitions-bzl" title="Permalink to this headline">¶</a></h1>
+<p>Toolchain transitions used by <code class="docutils literal notranslate"><span class="pre">ll_toolchain</span></code>.</p>
 </div>
 
 
@@ -392,23 +322,14 @@ can patch <code class="docutils literal notranslate"><span class="pre">rules_ll<
 <div class='prev-next-bottom'>
 
     <div id="prev">
-        <a class="left-prev" href="deps.html" title="previous page">
+        <a class="left-prev" href="tools.html" title="previous page">
             <i class="prevnext-label fas fa-angle-left"></i>
             <div class="prevnext-info">
                 <p class="prevnext-label">previous</p>
-                <p class="prevnext-title"><code class="docutils literal notranslate"><span class="pre">//ll:deps.bzl</span></code></p>
+                <p class="prevnext-title"><code class="docutils literal notranslate"><span class="pre">//ll:tools.bzl</span></code></p>
             </div>
         </a>
     </div>
-     <div id="next">
-        <a class="right-next" href="actions.html" title="next page">
-            <div class="prevnext-info">
-                <p class="prevnext-label">next</p>
-                <p class="prevnext-title"><code class="docutils literal notranslate"><span class="pre">//ll:actions.bzl</span></code></p>
-            </div>
-            <i class="prevnext-label fas fa-angle-right"></i>
-        </a>
-     </div>
 
 </div>
 

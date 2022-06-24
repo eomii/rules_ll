@@ -103,24 +103,6 @@
    </code>
   </a>
  </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="deps.html">
-   <code class="docutils literal notranslate">
-    <span class="pre">
-     //ll:deps.bzl
-    </span>
-   </code>
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="init.html">
-   <code class="docutils literal notranslate">
-    <span class="pre">
-     //ll:init.bzl
-    </span>
-   </code>
-  </a>
- </li>
 </ul>
 <p class="caption" role="heading">
  <span class="caption-text">
@@ -156,19 +138,19 @@
   </a>
  </li>
  <li class="toctree-l1">
-  <a class="reference internal" href="bootstrap_library.html">
+  <a class="reference internal" href="compilation_database.html">
    <code class="docutils literal notranslate">
     <span class="pre">
-     //ll:bootstrap_library.bzl
+     //ll:compilation_database.bzl
     </span>
    </code>
   </a>
  </li>
  <li class="toctree-l1">
-  <a class="reference internal" href="compilation_database.html">
+  <a class="reference internal" href="defs.html">
    <code class="docutils literal notranslate">
     <span class="pre">
-     //ll:compilation_database.bzl
+     //ll:defs.bzl
     </span>
    </code>
   </a>
@@ -250,6 +232,15 @@
    <code class="docutils literal notranslate">
     <span class="pre">
      //ll:tools.bzl
+    </span>
+   </code>
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="transitions.html">
+   <code class="docutils literal notranslate">
+    <span class="pre">
+     //ll:transitions.bzl
     </span>
    </code>
   </a>
@@ -387,8 +378,7 @@ LlCompilationDatabaseInfo(<a href="#LlCompilationDatabaseInfo-compilation_databa
 <div class="section" id="llinfo">
 <h2>LlInfo<a class="headerlink" href="#llinfo" title="Permalink to this headline">¶</a></h2>
 <pre>
-LlInfo(<a href="#LlInfo-exported_headers">exported_headers</a>, <a href="#LlInfo-transitive_headers">transitive_headers</a>, <a href="#LlInfo-libraries">libraries</a>, <a href="#LlInfo-transitive_defines">transitive_defines</a>, <a href="#LlInfo-transitive_includes">transitive_includes</a>,
-       <a href="#LlInfo-transitive_angled_includes">transitive_angled_includes</a>)
+LlInfo(<a href="#LlInfo-transitive_angled_includes">transitive_angled_includes</a>, <a href="#LlInfo-transitive_defines">transitive_defines</a>, <a href="#LlInfo-transitive_hdrs">transitive_hdrs</a>, <a href="#LlInfo-transitive_includes">transitive_includes</a>)
 </pre>
 <p>Provider returned by ll targets.</p>
 <p><strong>FIELDS</strong></p>
@@ -399,23 +389,17 @@ LlInfo(<a href="#LlInfo-exported_headers">exported_headers</a>, <a href="#LlInfo
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td class="text-left"><p><a id="LlInfo-exported_headers"></a>exported_headers</p></td>
-<td class="text-left"><p>A directory containing exported header files.</p></td>
-</tr>
-<tr class="row-odd"><td class="text-left"><p><a id="LlInfo-transitive_headers"></a>transitive_headers</p></td>
-<td class="text-left"><p>A depset containing header files. These header files are carried to all depending targets.</p></td>
-</tr>
-<tr class="row-even"><td class="text-left"><p><a id="LlInfo-libraries"></a>libraries</p></td>
-<td class="text-left"><p>A depset containing object files.</p></td>
+<tr class="row-even"><td class="text-left"><p><a id="LlInfo-transitive_angled_includes"></a>transitive_angled_includes</p></td>
+<td class="text-left"><p>A depset containing angled include paths. These include paths are carried to all depending targets.</p></td>
 </tr>
 <tr class="row-odd"><td class="text-left"><p><a id="LlInfo-transitive_defines"></a>transitive_defines</p></td>
 <td class="text-left"><p>A depset containing defines. These defines are carried to all depending targets.</p></td>
 </tr>
-<tr class="row-even"><td class="text-left"><p><a id="LlInfo-transitive_includes"></a>transitive_includes</p></td>
-<td class="text-left"><p>A depset containing include paths. These include paths are carried to all depending targets.</p></td>
+<tr class="row-even"><td class="text-left"><p><a id="LlInfo-transitive_hdrs"></a>transitive_hdrs</p></td>
+<td class="text-left"><p>A depset containing header files. These header files are carried to all depending targets.</p></td>
 </tr>
-<tr class="row-odd"><td class="text-left"><p><a id="LlInfo-transitive_angled_includes"></a>transitive_angled_includes</p></td>
-<td class="text-left"><p>A depset containing angled include paths. These include paths are carried to all depending targets.</p></td>
+<tr class="row-odd"><td class="text-left"><p><a id="LlInfo-transitive_includes"></a>transitive_includes</p></td>
+<td class="text-left"><p>A depset containing include paths. These include paths are carried to all depending targets.</p></td>
 </tr>
 </tbody>
 </table>

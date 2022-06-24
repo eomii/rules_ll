@@ -95,7 +95,7 @@ link_bitcode_library_args(<a href="#link_bitcode_library_args-ctx">ctx</a>, <a h
 ## link_executable_args
 
 <pre>
-link_executable_args(<a href="#link_executable_args-ctx">ctx</a>, <a href="#link_executable_args-in_files">in_files</a>, <a href="#link_executable_args-out_file">out_file</a>)
+link_executable_args(<a href="#link_executable_args-ctx">ctx</a>, <a href="#link_executable_args-in_files">in_files</a>, <a href="#link_executable_args-out_file">out_file</a>, <a href="#link_executable_args-mode">mode</a>)
 </pre>
 
 
@@ -108,6 +108,45 @@ link_executable_args(<a href="#link_executable_args-ctx">ctx</a>, <a href="#link
 | <a id="link_executable_args-ctx"></a>ctx |  <p align="center"> - </p>   |  none |
 | <a id="link_executable_args-in_files"></a>in_files |  <p align="center"> - </p>   |  none |
 | <a id="link_executable_args-out_file"></a>out_file |  <p align="center"> - </p>   |  none |
+| <a id="link_executable_args-mode"></a>mode |  <p align="center"> - </p>   |  none |
+
+
+<a id="#link_shared_object_args"></a>
+
+## link_shared_object_args
+
+<pre>
+link_shared_object_args(<a href="#link_shared_object_args-ctx">ctx</a>, <a href="#link_shared_object_args-in_files">in_files</a>, <a href="#link_shared_object_args-out_file">out_file</a>)
+</pre>
+
+
+
+**PARAMETERS**
+
+
+| Name  | Description | Default Value |
+| :------------- | :------------- | :------------- |
+| <a id="link_shared_object_args-ctx"></a>ctx |  <p align="center"> - </p>   |  none |
+| <a id="link_shared_object_args-in_files"></a>in_files |  <p align="center"> - </p>   |  none |
+| <a id="link_shared_object_args-out_file"></a>out_file |  <p align="center"> - </p>   |  none |
+
+
+<a id="#llvm_bindir_path"></a>
+
+## llvm_bindir_path
+
+<pre>
+llvm_bindir_path(<a href="#llvm_bindir_path-ctx">ctx</a>)
+</pre>
+
+
+
+**PARAMETERS**
+
+
+| Name  | Description | Default Value |
+| :------------- | :------------- | :------------- |
+| <a id="llvm_bindir_path-ctx"></a>ctx |  <p align="center"> - </p>   |  none |
 
 
 <a id="#llvm_target_directory_path"></a>

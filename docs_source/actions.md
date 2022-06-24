@@ -48,11 +48,11 @@ compile_objects(<a href="#compile_objects-ctx">ctx</a>, <a href="#compile_object
 | Name  | Description | Default Value |
 | :------------- | :------------- | :------------- |
 | <a id="compile_objects-ctx"></a>ctx |  <p align="center"> - </p>   |  none |
-| <a id="compile_objects-headers"></a>headers |  <p align="center"> - </p>   |  <code>[]</code> |
-| <a id="compile_objects-defines"></a>defines |  <p align="center"> - </p>   |  <code>[]</code> |
-| <a id="compile_objects-includes"></a>includes |  <p align="center"> - </p>   |  <code>[]</code> |
-| <a id="compile_objects-angled_includes"></a>angled_includes |  <p align="center"> - </p>   |  <code>[]</code> |
-| <a id="compile_objects-toolchain_type"></a>toolchain_type |  <p align="center"> - </p>   |  <code>"//ll:toolchain_type"</code> |
+| <a id="compile_objects-headers"></a>headers |  <p align="center"> - </p>   |  none |
+| <a id="compile_objects-defines"></a>defines |  <p align="center"> - </p>   |  none |
+| <a id="compile_objects-includes"></a>includes |  <p align="center"> - </p>   |  none |
+| <a id="compile_objects-angled_includes"></a>angled_includes |  <p align="center"> - </p>   |  none |
+| <a id="compile_objects-toolchain_type"></a>toolchain_type |  <p align="center"> - </p>   |  none |
 
 
 <a id="#create_archive_library"></a>
@@ -71,8 +71,8 @@ create_archive_library(<a href="#create_archive_library-ctx">ctx</a>, <a href="#
 | Name  | Description | Default Value |
 | :------------- | :------------- | :------------- |
 | <a id="create_archive_library-ctx"></a>ctx |  <p align="center"> - </p>   |  none |
-| <a id="create_archive_library-in_files"></a>in_files |  <p align="center"> - </p>   |  <code>[]</code> |
-| <a id="create_archive_library-toolchain_type"></a>toolchain_type |  <p align="center"> - </p>   |  <code>"//ll:toolchain_type"</code> |
+| <a id="create_archive_library-in_files"></a>in_files |  <p align="center"> - </p>   |  none |
+| <a id="create_archive_library-toolchain_type"></a>toolchain_type |  <p align="center"> - </p>   |  none |
 
 
 <a id="#expose_headers"></a>
@@ -110,7 +110,7 @@ link_bitcode_library(<a href="#link_bitcode_library-ctx">ctx</a>, <a href="#link
 | :------------- | :------------- | :------------- |
 | <a id="link_bitcode_library-ctx"></a>ctx |  <p align="center"> - </p>   |  none |
 | <a id="link_bitcode_library-in_files"></a>in_files |  <p align="center"> - </p>   |  none |
-| <a id="link_bitcode_library-toolchain_type"></a>toolchain_type |  <p align="center"> - </p>   |  <code>"//ll:toolchain_type"</code> |
+| <a id="link_bitcode_library-toolchain_type"></a>toolchain_type |  <p align="center"> - </p>   |  none |
 
 
 <a id="#link_executable"></a>
@@ -130,4 +130,24 @@ link_executable(<a href="#link_executable-ctx">ctx</a>, <a href="#link_executabl
 | :------------- | :------------- | :------------- |
 | <a id="link_executable-ctx"></a>ctx |  <p align="center"> - </p>   |  none |
 | <a id="link_executable-in_files"></a>in_files |  <p align="center"> - </p>   |  none |
-| <a id="link_executable-toolchain_type"></a>toolchain_type |  <p align="center"> - </p>   |  <code>"//ll:toolchain_type"</code> |
+| <a id="link_executable-toolchain_type"></a>toolchain_type |  <p align="center"> - </p>   |  none |
+
+
+<a id="#link_shared_object"></a>
+
+## link_shared_object
+
+<pre>
+link_shared_object(<a href="#link_shared_object-ctx">ctx</a>, <a href="#link_shared_object-in_files">in_files</a>, <a href="#link_shared_object-toolchain_type">toolchain_type</a>)
+</pre>
+
+
+
+**PARAMETERS**
+
+
+| Name  | Description | Default Value |
+| :------------- | :------------- | :------------- |
+| <a id="link_shared_object-ctx"></a>ctx |  <p align="center"> - </p>   |  none |
+| <a id="link_shared_object-in_files"></a>in_files |  <p align="center"> - </p>   |  none |
+| <a id="link_shared_object-toolchain_type"></a>toolchain_type |  <p align="center"> - </p>   |  none |

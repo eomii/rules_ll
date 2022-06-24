@@ -10,7 +10,7 @@ Tools used by actions.
 ## compile_object_tools
 
 <pre>
-compile_object_tools(<a href="#compile_object_tools-ctx">ctx</a>)
+compile_object_tools(<a href="#compile_object_tools-ctx">ctx</a>, <a href="#compile_object_tools-toolchain_type">toolchain_type</a>)
 </pre>
 
 
@@ -21,6 +21,7 @@ compile_object_tools(<a href="#compile_object_tools-ctx">ctx</a>)
 | Name  | Description | Default Value |
 | :------------- | :------------- | :------------- |
 | <a id="compile_object_tools-ctx"></a>ctx |  <p align="center"> - </p>   |  none |
+| <a id="compile_object_tools-toolchain_type"></a>toolchain_type |  <p align="center"> - </p>   |  none |
 
 
 <a id="#linking_tools"></a>

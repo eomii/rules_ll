@@ -1,7 +1,7 @@
 #/bin/sh
 
 # Build docs_source.
-bazel build //ll:docs
+bazel build --noexperimental_enable_bzlmod //ll:docs
 chmod 644 bazel-bin/ll/*.md
 cp bazel-bin/ll/*.md docs_source
 

@@ -22,13 +22,12 @@ Example projects can be found at `<https://github.com/eomii/rules_ll/tree/main/e
    :caption: Public API
 
    defs
-   deps
-   init
 
 Private API
 ===========
 
-These are the internal functions used in ``rules_ll``.
+These are the internal functions used in ``rules_ll``, except for
+``//ll:init.bzl``, whose stardoc build is currently broken.
 
 .. toctree::
    :maxdepth: 2
@@ -37,8 +36,8 @@ These are the internal functions used in ``rules_ll``.
    actions
    args
    attributes
-   bootstrap_library
    compilation_database
+   defs
    driver
    environment
    inputs
@@ -48,3 +47,4 @@ These are the internal functions used in ``rules_ll``.
    providers
    toolchain
    tools
+   transitions

@@ -10,4 +10,3 @@ __pycache__/
 .doctrees/
 *.inv
 *.pickle
-docc/CNAME

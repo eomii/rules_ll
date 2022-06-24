@@ -76,3 +76,21 @@ link_executable_outputs(<a href="#link_executable_outputs-ctx">ctx</a>)
 | Name  | Description | Default Value |
 | :------------- | :------------- | :------------- |
 | <a id="link_executable_outputs-ctx"></a>ctx |  <p align="center"> - </p>   |  none |
+
+
+<a id="#link_shared_object_outputs"></a>
+
+## link_shared_object_outputs
+
+<pre>
+link_shared_object_outputs(<a href="#link_shared_object_outputs-ctx">ctx</a>)
+</pre>
+
+
+
+**PARAMETERS**
+
+
+| Name  | Description | Default Value |
+| :------------- | :------------- | :------------- |
+| <a id="link_shared_object_outputs-ctx"></a>ctx |  <p align="center"> - </p>   |  none |
