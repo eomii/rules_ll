@@ -6,8 +6,6 @@ module(
     ],
     compatibility_level=0,
     toolchains_to_register = [
-        "@rules_ll//ll:ll_bootstrap_toolchain",
-        "@rules_ll//ll:ll_heterogeneous_toolchain",
         "@rules_ll//ll:ll_toolchain",
     ],
 )
@@ -30,8 +28,8 @@ llvm_project_overlay = use_extension(
     "llvm_project_overlay",
 )
 llvm_project_overlay.configure(
-    commit="d9de52819dbd37aa8007efce69016175d849cdde",
-    sha256 = "7bd299a1a9726ddadd655ba003c9385df1bb71381f167a7d9a49cf64b2d35fa4",
+    commit="1dd2c93a660cd5de0769ff88634fe149904caa17",
+    sha256 = "75ae53aebb11171985e198150ba08c9bdab16ac8ca6953f30ac1570e4ea3fe8b",
     targets=["AMDGPU", "NVPTX", "X86"],
 )
 use_repo(

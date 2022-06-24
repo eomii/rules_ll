@@ -1,27 +1,25 @@
 diff --git a/utils/bazel/llvm-project-overlay/clang/BUILD.bazel b/utils/bazel/llvm-project-overlay/clang/BUILD.bazel
-index 2156e55bc..de96fd6d4 100644
+index e85c8d758..d783a21b9 100644
 --- a/utils/bazel/llvm-project-overlay/clang/BUILD.bazel
 +++ b/utils/bazel/llvm-project-overlay/clang/BUILD.bazel
-@@ -5,6 +5,7 @@
- load("//llvm:tblgen.bzl", "gentbl")
+@@ -6,6 +6,7 @@ load("//llvm:tblgen.bzl", "gentbl")
  load("//llvm:binary_alias.bzl", "binary_alias")
  load("//llvm:cc_plugin_library.bzl", "cc_plugin_library")
+ load("//llvm:template_rule.bzl", "template_rule")
 +load("//clang:workspace_root.bzl", "workspace_root")
  
  package(
      default_visibility = ["//visibility:public"],
-@@ -685,6 +686,10 @@ gentbl(
+@@ -687,6 +688,8 @@ gentbl(
      ],
  )
  
-+workspace_root(
-+    name = "clang_workspace_root",
-+)
++worspace_root(name = "clang_workspace_root")
 +
  cc_library(
      name = "ast",
      srcs = glob([
-@@ -709,8 +714,11 @@ cc_library(
+@@ -711,8 +714,11 @@ cc_library(
          # least bad approach. Using `includes` is *specifically* problematic for
          # this library because it contains files that collide easily with system
          # headers such as `CXXABI.h`.
@@ -31,11 +29,11 @@ index 2156e55bc..de96fd6d4 100644
 +        "-I$(GENDIR)/$(WORKSPACE_ROOT)/clang/lib/AST/Interp",
 +    ],
 +    toolchains = [
-+        ":clang_workspace_root"
++        ":clang_workspace_root",
      ],
      textual_hdrs = [
          "include/clang/AST/AttrImpl.inc",
-@@ -1464,7 +1472,7 @@ genrule(
+@@ -1471,7 +1477,7 @@ genrule(
      outs = [hdr.replace("lib/Headers/", "staging/include/") for hdr in builtin_headers],
      cmd = """
         for src in $(SRCS); do
