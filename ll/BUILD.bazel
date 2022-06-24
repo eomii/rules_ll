@@ -7,7 +7,6 @@ LL_MODULES = [
     "actions",
     "args",
     "attributes",
-    "bootstrap_library",
     "compilation_database",
     "defs",
     "deps",

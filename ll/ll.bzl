@@ -131,13 +131,6 @@ Example:
 """,
 )
 
-def ll_bootstrap_library(name, **kwargs):
-    ll_library(
-        name = name,
-        compilation_mode = "bootstrap",
-        **kwargs
-    )
-
 def _ll_binary_impl(ctx):
     headers, defines, includes, angled_includes = resolve_binary_deps(ctx)
 
