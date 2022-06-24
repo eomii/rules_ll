@@ -1,11 +1,7 @@
 load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
+load("@bazel_skylib//rules:common_settings.bzl", "string_flag")
 load("@stardoc//stardoc:stardoc.bzl", "stardoc")
-load(
-    ":toolchain.bzl",
-    "ll_bootstrap_toolchain",
-    "ll_heterogeneous_toolchain",
-    "ll_toolchain",
-)
+load("//ll:toolchain.bzl", "ll_toolchain")
 
 LL_MODULES = [
     "actions",
@@ -59,12 +55,16 @@ filegroup(
     ],
 )
 
+# Constraints.
+
 constraint_setting(name = "ll_exec")
 
 constraint_value(
     name = "ll_exec_linux",
     constraint_setting = ":ll_exec",
 )
+
+# Platforms.
 
 platform(
     name = "ll_linux_exec_platform",
@@ -75,50 +75,137 @@ platform(
     ],
 )
 
-ll_bootstrap_toolchain(
-    name = "ll_bootstrap_toolchain_x86-64-unknown-linux-gnu",
-    exec_compatible_with = [":ll_exec_linux"],
+# Configurations.
+
+string_flag(
+    name = "current_ll_toolchain_configuration",
+    build_setting_default = "cpp",
+    values = [
+        "bootstrap",
+        "cpp",
+        "cuda_nvidia",
+        "hip_nvidia",
+    ],
     visibility = ["//visibility:public"],
 )
 
-toolchain_type(name = "bootstrap_toolchain_type")
+config_setting(
+    name = "bootstrap",
+    flag_values = {
+        ":current_ll_toolchain_configuration": "bootstrap",
+    },
+)
 
-toolchain(
-    name = "ll_bootstrap_toolchain",
+config_setting(
+    name = "cpp",
+    flag_values = {
+        ":current_ll_toolchain_configuration": "cpp",
+    },
+)
+
+config_setting(
+    name = "cuda_nvidia",
+    flag_values = {
+        ":current_ll_toolchain_configuration": "cuda_nvidia",
+    },
+)
+
+config_setting(
+    name = "hip_nvidia",
+    flag_values = {
+        ":current_ll_toolchain_configuration": "hip_nvidia",
+    },
+)
+
+# Toolchain Types.
+
+toolchain_type(name = "toolchain_type")
+
+# Toolchains.
+
+ll_toolchain(
+    name = "ll_bootstrap_toolchain_x86_64-unknown-linux-gnu",
     exec_compatible_with = [":ll_exec_linux"],
-    toolchain = "ll_bootstrap_toolchain_x86-64-unknown-linux-gnu",
-    toolchain_type = ":bootstrap_toolchain_type",
+    toolchain_configuration = "bootstrap",
     visibility = ["//visibility:public"],
 )
 
 ll_toolchain(
-    name = "ll_toolchain_x86-64-unknown-linux-gnu",
+    name = "ll_cpp_toolchain_x86_64-unknown-linux-gnu",
+
+    # Standard cpp toolchain.
+    compiler_runtime = "@llvm-project//compiler-rt:libll_compiler-rt",
+    cpp_abihdrs = "@llvm-project//libcxxabi:libcxxabi_headers",
+    cpp_abilib = "@llvm-project//libcxxabi:libll_cxxabi",
+    cpp_stdhdrs = "@llvm-project//libcxx:libcxx_headers",
+    cpp_stdlib = "@llvm-project//libcxx:libll_cxx",
     exec_compatible_with = [":ll_exec_linux"],
+    toolchain_configuration = "cpp",
+    unwind_library = "@llvm-project//libunwind:libll_unwind",
     visibility = ["//visibility:public"],
 )
 
-toolchain_type(name = "toolchain_type")
+ll_toolchain(
+    name = "ll_cuda_nvidia_toolchain_x86_64-unknown-linux-gnu",
+
+    # Standard cpp toolchain.
+    compiler_runtime = "@llvm-project//compiler-rt:libll_compiler-rt",
+    cpp_abihdrs = "@llvm-project//libcxxabi:libcxxabi_headers",
+    cpp_abilib = "@llvm-project//libcxxabi:libll_cxxabi",
+    cpp_stdhdrs = "@llvm-project//libcxx:libcxx_headers",
+    cpp_stdlib = "@llvm-project//libcxx:libll_cxx",
+
+    # CUDA.
+    cuda_toolkit = [
+        "@cuda_cudart//:contents",
+        "@cuda_nvcc//:contents",
+        "@cuda_nvprof//:contents",
+        "@libcurand//:contents",
+    ],
+    exec_compatible_with = [":ll_exec_linux"],
+    toolchain_configuration = "cuda_nvidia",
+    unwind_library = "@llvm-project//libunwind:libll_unwind",
+    visibility = ["//visibility:public"],
+)
+
+ll_toolchain(
+    name = "ll_hip_nvidia_toolchain_x86_64-unknown-linux-gnu",
+
+    # Standard cpp toolchain.
+    compiler_runtime = "@llvm-project//compiler-rt:libll_compiler-rt",
+    cpp_abihdrs = "@llvm-project//libcxxabi:libcxxabi_headers",
+    cpp_abilib = "@llvm-project//libcxxabi:libll_cxxabi",
+    cpp_stdhdrs = "@llvm-project//libcxx:libcxx_headers",
+    cpp_stdlib = "@llvm-project//libcxx:libll_cxx",
+
+    # CUDA.
+    cuda_toolkit = [
+        "@cuda_cudart//:contents",
+        "@cuda_nvcc//:contents",
+        "@cuda_nvprof//:contents",
+        "@libcurand//:contents",
+    ],
+    exec_compatible_with = [":ll_exec_linux"],
+
+    # HIP.
+    hip_libraries = [
+        "@hip//:headers",
+        "@hipamd//:headers",
+    ],
+    toolchain_configuration = "hip_nvidia",
+    unwind_library = "@llvm-project//libunwind:libll_unwind",
+    visibility = ["//visibility:public"],
+)
 
 toolchain(
     name = "ll_toolchain",
     exec_compatible_with = [":ll_exec_linux"],
-    toolchain = ":ll_toolchain_x86-64-unknown-linux-gnu",
+    toolchain = select({
+        ":bootstrap": ":ll_bootstrap_toolchain_x86_64-unknown-linux-gnu",
+        ":cpp": ":ll_cpp_toolchain_x86_64-unknown-linux-gnu",
+        ":cuda_nvidia": ":ll_cuda_nvidia_toolchain_x86_64-unknown-linux-gnu",
+        ":hip_nvidia": ":ll_hip_nvidia_toolchain_x86_64-unknown-linux-gnu",
+    }),
     toolchain_type = ":toolchain_type",
-    visibility = ["//visibility:public"],
-)
-
-ll_heterogeneous_toolchain(
-    name = "ll_heterogeneous_toolchain_x86-64-unknown-linux-gnu",
-    exec_compatible_with = [":ll_exec_linux"],
-    visibility = ["//visibility:public"],
-)
-
-toolchain_type(name = "heterogeneous_toolchain_type")
-
-toolchain(
-    name = "ll_heterogeneous_toolchain",
-    exec_compatible_with = [":ll_exec_linux"],
-    toolchain = "ll_heterogeneous_toolchain_x86-64-unknown-linux-gnu",
-    toolchain_type = ":heterogeneous_toolchain_type",
     visibility = ["//visibility:public"],
 )

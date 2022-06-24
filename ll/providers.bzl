@@ -25,3 +25,9 @@ LlCompilationDatabaseInfo = provider(
         "compilation_database": "A compile_commands.json file containing a compilation database.",
     },
 )
+
+LlToolchainConfigProvider = provider(
+    fields = {
+        "config": "A string indicating the toolchain configuration.",
+    },
+)

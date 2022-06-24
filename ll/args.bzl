@@ -22,10 +22,24 @@ def llvm_target_directory_path(ctx):
         llvm_project_workspace = Label("@llvm-project").workspace_root,
     )
 
+def llvm_bindir_path(ctx):
+    return "{bindir}/{llvm_project_workspace}".format(
+        bindir = ctx.var["BINDIR"],
+        llvm_project_workspace = Label("@llvm-project").workspace_root,
+    )
+
 def _get_dirname(file):
     return file.dirname
 
-def compile_object_args(ctx, in_file, out_file, cdf, headers, defines, includes, angled_includes):
+def compile_object_args(
+        ctx,
+        in_file,
+        out_file,
+        cdf,
+        headers,
+        defines,
+        includes,
+        angled_includes):
     args = ctx.actions.args()
 
     args.add("-fcolor-diagnostics")
@@ -35,18 +49,21 @@ def compile_object_args(ctx, in_file, out_file, cdf, headers, defines, includes,
         args.add("-v")
         args.add("-glldb")
 
-        if (
-            "//ll:heterogeneous_toolchain_type" in ctx.toolchains and
-            ctx.attr.heterogeneous_mode != "none"
-        ):
+        if ctx.attr.compilation_mode != "none":
             args.add("--cuda-noopt-device-debug")
+
+    if ctx.attr.compilation_mode in [
+        "cuda_nvidia",
+        "hip_nvidia",
+    ]:
+        args.add("-O3")
 
     # Optimization.
     if ctx.var["COMPILATION_MODE"] == "opt":
         args.add("-O3")
 
         # Long double with 80 bits breaks LTO.
-        if ctx.attr.heterogeneous_mode == "none":
+        if ctx.attr.compilation_mode == "none":
             args.add("-mlong-double-128")
 
         args.add("-flto=thin")
@@ -58,17 +75,26 @@ def compile_object_args(ctx, in_file, out_file, cdf, headers, defines, includes,
     args.add("-fPIC")
 
     # Maybe enable heterogeneous compilation.
-    if (
-        "//ll:heterogeneous_toolchain_type" in ctx.toolchains and
-        ctx.attr.heterogeneous_mode == "hip_nvidia"
-    ):
+    if ctx.attr.compilation_mode in [
+        "cuda_nvidia",
+        "hip_nvidia",
+    ]:
         args.add("-xcuda")
-        args.add(Label("@cuda_nvcc").workspace_root, format = "--cuda-path=%s")
+        args.add(
+            Label("@cuda_nvcc").workspace_root,
+            format = "--cuda-path=%s",
+        )
         args.add_all(
             [
                 Label("@cuda_cudart").workspace_root,
                 Label("@cuda_nvprof").workspace_root,
                 Label("@libcurand").workspace_root,
+            ],
+            format_each = "-I%s/include",
+        )
+    if ctx.attr.compilation_mode == "hip_nvidia":
+        args.add_all(
+            [
                 Label("@hip").workspace_root,
                 Label("@hipamd").workspace_root,
             ],
@@ -76,11 +102,8 @@ def compile_object_args(ctx, in_file, out_file, cdf, headers, defines, includes,
         )
 
     # Write compilation database.
-    if "//ll:heterogeneous_toolchain_type" in ctx.toolchains and ctx.attr.heterogeneous_mode != "none":
-        args.add("-Xarch_host")
-        args.add(cdf, format = "-MJ%s")
-    else:
-        args.add(cdf, format = "-MJ%s")
+    args.add("-Xarch_host")
+    args.add(cdf, format = "-MJ%s")
 
     # Environment encapsulation.
     # args.add("-nostdinc")
@@ -90,10 +113,54 @@ def compile_object_args(ctx, in_file, out_file, cdf, headers, defines, includes,
     args.add("--gcc-toolchain=NONE")
 
     clang_builtin_include_path = paths.join(
-        llvm_target_directory_path(ctx),
+        llvm_bindir_path(ctx),
         "clang/staging",
     )
+
     args.add(clang_builtin_include_path, format = "-resource-dir=%s")
+
+    args.add(
+        paths.join(
+            Label("@llvm-project").workspace_root,
+            "clang/staging/include",
+        ),
+        format = "-isystem%s",
+    )
+    args.add(
+        paths.join(
+            Label("@llvm-project").workspace_root,
+            "clang/staging/include",
+        ),
+        format = "-isystem%s",
+    )
+
+    # Internal Clang and LLVM header include paths. These are used by compilers
+    # and compiler Plugins.
+    if ctx.attr.llvm_project_deps != []:
+        args.add(
+            paths.join(Label("@llvm-project").workspace_root, "llvm/include"),
+            format = "-idirafter%s",
+        )
+        args.add(
+            paths.join(llvm_target_directory_path(ctx), "llvm/include"),
+            format = "-idirafter%s",
+        )
+        args.add(
+            paths.join(llvm_bindir_path(ctx), "llvm/include"),
+            format = "-idirafter%s",
+        )
+        args.add(
+            paths.join(Label("@llvm-project").workspace_root, "clang/include"),
+            format = "-idirafter%s",
+        )
+        args.add(
+            paths.join(llvm_target_directory_path(ctx), "clang/include"),
+            format = "-idirafter%s",
+        )
+        args.add(
+            paths.join(llvm_bindir_path(ctx), "clang/include"),
+            format = "-idirafter%s",
+        )
 
     # Includes. This reflects the order in which clang will search for included
     # files.
@@ -108,6 +175,19 @@ def compile_object_args(ctx, in_file, out_file, cdf, headers, defines, includes,
 
     # 3. Search directories specified via -isystem for quoted and angled
     #    includes.
+    args.add(
+        paths.join(llvm_bindir_path(ctx), "libcxx/include"),
+        format = "-isystem%s",
+    )
+    args.add(
+        paths.join(llvm_bindir_path(ctx), "libcxxabi/include"),
+        format = "-isystem%s",
+    )
+    args.add(
+        paths.join(llvm_bindir_path(ctx), "libunwind/include"),
+        format = "-isystem%s",
+    )
+
     llvm_workspace_root = Label("@llvm-project").workspace_root
     libcxx_include_path = paths.join(llvm_workspace_root, "libcxx/include")
     args.add(clang_builtin_include_path, format = "-isystem%s")
@@ -136,7 +216,7 @@ def compile_object_args(ctx, in_file, out_file, cdf, headers, defines, includes,
 
     return [args]
 
-def link_executable_args(ctx, in_files, out_file):
+def link_executable_args(ctx, in_files, out_file, mode):
     args = ctx.actions.args()
 
     args.add("--color-diagnostics")
@@ -150,8 +230,14 @@ def link_executable_args(ctx, in_files, out_file):
         args.add("--lto-O3")
         args.add("--strip-all")
 
-    # Always create position independent executables.
-    args.add("--pie")
+    if mode == "executable":
+        # Always create position independent executables.
+        args.add("--pie")
+        pass
+    elif mode == "shared_object":
+        args.add("--shared")
+    else:
+        fail("Invalid linking mode.")
 
     # Encapsulation.
     args.add("--nostdlib")
@@ -159,63 +245,42 @@ def link_executable_args(ctx, in_files, out_file):
     # Add dynamic linker.
     args.add("-dynamic-linker=/lib64/ld-linux-x86-64.so.2")
 
-    # Use compiler-rt as runtime.
-    compiler_rt_path = paths.join(
-        llvm_target_directory_path(ctx),
-        "compiler-rt",
-    )
-    args.add(compiler_rt_path, format = "-L%s")
-    args.add(compiler_rt_path, format = "--rpath=%s")
-    args.add("-lll_compiler-rt")
-
-    # Use libunwind as unwinder library.
-    libunwind_path = paths.join(
-        llvm_target_directory_path(ctx),
-        "libunwind",
-    )
-    args.add(libunwind_path, format = "-L%s")
-    args.add("-lll_unwind")
-
-    # Use custom libc++.
-    libcxx_path = paths.join(
-        llvm_target_directory_path(ctx),
-        "libcxx",
-    )
-    args.add(libcxx_path, format = "-L%s")
-    args.add(libcxx_path, format = "--rpath=%s")
-    args.add("-lll_cxx")
-
-    # Use custom libc++abi.
-    libcxxabi_path = paths.join(
-        llvm_target_directory_path(ctx),
-        "libcxxabi",
-    )
-    args.add(libcxxabi_path, format = "-L%s")
-    args.add(libcxxabi_path, format = "--rpath=%s")
-    args.add("-lll_cxxabi")
-
     # Additional system libraries.
     args.add("-L/usr/lib64")
-    args.add("-lm")  # Required for math-related functions.
-    args.add("-ldl")  # Required by libunwind.
-    args.add("-lpthread")  # Required by libunwind.
-    args.add("-lc")  # Required. This is glibc.
+    args.add("-lm")  # Math.
+    args.add("-ldl")  # Dynamic linking.
+    args.add("-lpthread")  # Thread support.
+    args.add("-lc")  # Glibc.
 
-    if ctx.attr.heterogeneous_mode == "hip_nvidia":
+    if ctx.attr.compilation_mode in [
+        "cuda_nvidia",
+        "hip_nvidia",
+    ]:
         args.add("-lrt")
-        args.add(Label("@cuda_cudart").workspace_root, format = "-L%s/lib")
-        args.add("-lcudart_static")
-
-    # Add local crt1.o, crti.o and crtn.o files.
-    args.add_all(ctx.toolchains["//ll:toolchain_type"].local_crt)
 
     # Target-specific flags.
-    args.add_all(ctx.attr.link_flags)
+    if mode == "executable":
+        args.add_all(ctx.attr.link_flags)
+    elif mode == "shared_object":
+        args.add_all(ctx.attr.shared_object_link_flags)
+    else:
+        fail("Invalid linking mode")
 
     # Add archives and objects.
-    for file in in_files:
-        if file.extension == "a" or file.extension == "o":
-            args.add(file)
+    link_files = [
+        file
+        for file in in_files.to_list()
+        if file.extension in ["a", "o"]
+    ]
+    if mode == "executable":
+        args.add_all(link_files)
+    elif mode == "shared_object":
+        reduced_link_files = [
+            file
+            for file in link_files
+            if file not in ctx.toolchains["//ll:toolchain_type"].local_crt
+        ]
+        args.add_all(reduced_link_files)
 
     args.add("-o", out_file)
 

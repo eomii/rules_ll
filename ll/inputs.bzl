@@ -4,9 +4,10 @@ Action inputs.
 """
 
 load("//ll:providers.bzl", "LlInfo")
+load("@bazel_skylib//rules:common_settings.bzl", "BuildSettingInfo")
 
 def compilable_sources(ctx):
-    compilable_extensions = ["ll", "c", "cl", "cpp", "S", "cc"]
+    compilable_extensions = ["ll", "c", "cl", "cpp", "S", "cc", "cxx"]
     return [
         src
         for src in ctx.files.srcs
@@ -14,123 +15,115 @@ def compilable_sources(ctx):
     ]
 
 def compile_object_inputs(ctx, headers, toolchain_type):
-    if toolchain_type == "//ll:toolchain_type":
+    config = ctx.attr.toolchain_configuration[BuildSettingInfo].value
+
+    llvm_project_deps = [
+        data[OutputGroupInfo].compilation_prerequisites_INTERNAL_
+        for data in ctx.attr.llvm_project_deps
+    ]
+
+    if config == "bootstrap":
         return depset(
             ctx.files.srcs +
             ctx.files.data +
             ctx.toolchains[toolchain_type].builtin_includes,
             transitive = [
                 headers,
-                ctx.toolchains[toolchain_type].cpp_stdhdrs.files,
-                ctx.toolchains[toolchain_type].cpp_abi[LlInfo].transitive_hdrs,
             ],
         )
-    elif toolchain_type == "//ll:heterogeneous_toolchain_type":
-        heterogeneous_deps = depset()
-        if ctx.attr.heterogeneous_mode in ["hip_nvidia", "hip_amd"]:
-            heterogeneous_deps = depset(
-                ctx.toolchains[toolchain_type].hip_libraries,
-                transitive = [heterogeneous_deps],
-            )
-        if ctx.attr.heterogeneous_mode in ["hip_nvidia"]:
-            heterogeneous_deps = depset(
-                ctx.toolchains[toolchain_type].cuda_toolkit,
-                transitive = [heterogeneous_deps],
-            )
+    elif config == "cpp":
         return depset(
             ctx.files.srcs +
             ctx.files.data +
-            ctx.toolchains[toolchain_type].builtin_includes,
+            ctx.toolchains[toolchain_type].builtin_includes +
+            ctx.toolchains[toolchain_type].cpp_stdhdrs +
+            ctx.toolchains[toolchain_type].cpp_abihdrs +
+            ctx.toolchains[toolchain_type].compiler_runtime,
             transitive = [
                 headers,
-                ctx.toolchains[toolchain_type].cpp_stdhdrs.files,
-                ctx.toolchains[toolchain_type].cpp_abi[LlInfo].transitive_hdrs,
-                heterogeneous_deps,
-            ],
+            ] + llvm_project_deps,
         )
-    elif toolchain_type == "//ll:bootstrap_toolchain_type":
+    elif config == "cuda_nvidia":
         return depset(
             ctx.files.srcs +
             ctx.files.data +
-            ctx.toolchains[toolchain_type].builtin_includes,
-            transitive = [headers],
+            ctx.toolchains[toolchain_type].builtin_includes +
+            ctx.toolchains[toolchain_type].cpp_stdhdrs +
+            ctx.toolchains[toolchain_type].cpp_abihdrs +
+            ctx.toolchains[toolchain_type].cuda_toolkit,
+            transitive = [
+                headers,
+            ] + llvm_project_deps,
+        )
+    elif config == "hip_nvidia":
+        return depset(
+            ctx.files.srcs +
+            ctx.files.data +
+            ctx.toolchains[toolchain_type].builtin_includes +
+            ctx.toolchains[toolchain_type].cpp_stdhdrs +
+            ctx.toolchains[toolchain_type].cpp_abihdrs +
+            ctx.toolchains[toolchain_type].cuda_toolkit +
+            ctx.toolchains[toolchain_type].hip_libraries,
+            transitive = [
+                headers,
+            ] + llvm_project_deps,
         )
     else:
-        fail("Unregognized toolchain type. rules_ll supports " +
-             "//ll:toolchain_type and //ll:bootstrap_toolchain_type.")
+        fail("Cannot compile with this toolchain.")
 
 def create_archive_library_inputs(ctx, in_files):
     return depset(in_files + ctx.files.deps)
 
 def link_executable_inputs(ctx, in_files, toolchain_type):
-    if toolchain_type == "//ll:toolchain_type":
-        return depset(
-            in_files +
-            ctx.files.deps +
-            ctx.files.libraries +
-            ctx.files.data +
-            ctx.toolchains[toolchain_type].local_crt,
-            transitive = [
-                ctx.toolchains[toolchain_type].cpp_stdlib.files,
-                ctx.toolchains[toolchain_type].unwind_library.files,
-                ctx.toolchains[toolchain_type].cpp_abi.files,
-                ctx.toolchains[toolchain_type].compiler_runtime.files,
-            ],
-        )
-    elif toolchain_type == "//ll:heterogeneous_toolchain_type":
-        heterogeneous_deps = depset()
-        if ctx.attr.heterogeneous_mode in ["hip_nvidia", "hip_amd"]:
-            heterogeneous_deps = depset(
-                ctx.toolchains[toolchain_type].hip_libraries,
-                transitive = [heterogeneous_deps],
-            )
-        if ctx.attr.heterogeneous_mode in ["hip_nvidia"]:
-            heterogeneous_deps = depset(
-                ctx.toolchains[toolchain_type].cuda_toolkit,
-                transitive = [heterogeneous_deps],
-            )
-        return depset(
-            in_files +
-            ctx.files.deps +
-            ctx.files.libraries +
-            ctx.files.data +
-            ctx.toolchains[toolchain_type].local_crt,
-            transitive = [
-                ctx.toolchains[toolchain_type].cpp_stdlib.files,
-                ctx.toolchains[toolchain_type].unwind_library.files,
-                ctx.toolchains[toolchain_type].cpp_abi.files,
-                ctx.toolchains[toolchain_type].compiler_runtime.files,
-                heterogeneous_deps,
-            ],
-        )
+    config = ctx.attr.toolchain_configuration[BuildSettingInfo].value
 
-    if toolchain_type in ["//ll:toolchain_type", "//ll:heterogeneous_toolchain_type"]:
-        if ctx.attr.heterogeneous_mode in ["hip_nvidia", "hip_amd"]:
-            third_party_deps = depset(
-                ctx.toolchains[toolchain_type].hip_libraries,
-                transitive = [third_party_deps],
-            )
-        if ctx.attr.heterogeneous_mode in ["hip_nvidia"]:
-            third_party_deps = depset(
-                ctx.toolchains[toolchain_type].cuda_toolkit,
-                transitive = [third_party_deps],
-            )
+    if config == "bootstrap":
+        fail("Cannot link with bootstrap toolchain.")
+
+    elif config == "cpp":
         return depset(
             in_files +
             ctx.files.deps +
             ctx.files.libraries +
             ctx.files.data +
-            ctx.toolchains[toolchain_type].local_crt,
-            transitive = [
-                ctx.toolchains[toolchain_type].cpp_stdlib.files,
-                ctx.toolchains[toolchain_type].unwind_library.files,
-                ctx.toolchains[toolchain_type].cpp_abi.files,
-                ctx.toolchains[toolchain_type].compiler_runtime.files,
-                third_party_deps,
-            ],
+            ctx.files.llvm_project_deps +
+            ctx.toolchains[toolchain_type].local_crt +
+            ctx.toolchains[toolchain_type].cpp_stdlib +
+            ctx.toolchains[toolchain_type].unwind_library +
+            ctx.toolchains[toolchain_type].cpp_abilib +
+            ctx.toolchains[toolchain_type].compiler_runtime,
+        )
+    elif config == "cuda_nvidia":
+        return depset(
+            in_files +
+            ctx.files.deps +
+            ctx.files.libraries +
+            ctx.files.data +
+            ctx.files.llvm_project_deps +
+            ctx.toolchains[toolchain_type].local_crt +
+            ctx.toolchains[toolchain_type].cuda_toolkit +
+            ctx.toolchains[toolchain_type].cpp_stdlib +
+            ctx.toolchains[toolchain_type].unwind_library +
+            ctx.toolchains[toolchain_type].cpp_abilib +
+            ctx.toolchains[toolchain_type].compiler_runtime,
+        )
+    elif config == "hip_nvidia":
+        return depset(
+            in_files +
+            ctx.files.deps +
+            ctx.files.libraries +
+            ctx.files.data +
+            ctx.files.llvm_project_deps +
+            ctx.toolchains[toolchain_type].local_crt +
+            ctx.toolchains[toolchain_type].cuda_toolkit +
+            ctx.toolchains[toolchain_type].hip_libraries +
+            ctx.toolchains[toolchain_type].cpp_stdlib +
+            ctx.toolchains[toolchain_type].cpp_abilib +
+            ctx.toolchains[toolchain_type].unwind_library +
+            ctx.toolchains[toolchain_type].compiler_runtime,
         )
     else:
-        fail("Can only link when using \"//ll:toolchain_type\".")
+        fail("Cannot link with this toolchain.")
 
 def link_bitcode_library_inputs(ctx, in_files):
     if "//ll:toolchain_type" in ctx.toolchains:
@@ -138,8 +131,53 @@ def link_bitcode_library_inputs(ctx, in_files):
     else:
         fail("Can only link bitcode when using \"//ll:toolchain_type\".")
 
-def link_shared_object_inputs(ctx, in_files):
-    if "//ll:toolchain_type" in ctx.toolchains:
-        return depset(in_files + ctx.files.deps)
+def link_shared_object_inputs(ctx, in_files, toolchain_type):
+    config = ctx.attr.toolchain_configuration[BuildSettingInfo].value
+
+    if config == "bootstrap":
+        fail("Cannot link with bootstrap toolchain.")
+
+    elif config == "cpp":
+        return depset(
+            in_files +
+            ctx.files.deps +
+            # ctx.files.libraries +
+            ctx.files.data +
+            ctx.files.llvm_project_deps +
+            ctx.toolchains[toolchain_type].local_crt +
+            ctx.toolchains[toolchain_type].cpp_stdlib +
+            ctx.toolchains[toolchain_type].cpp_abilib +
+            ctx.toolchains[toolchain_type].unwind_library +
+            ctx.toolchains[toolchain_type].compiler_runtime,
+        )
+    elif config == "cuda_nvidia":
+        return depset(
+            in_files +
+            ctx.files.deps +
+            # ctx.files.libraries +
+            ctx.files.data +
+            ctx.files.llvm_project_deps +
+            ctx.toolchains[toolchain_type].local_crt +
+            ctx.toolchains[toolchain_type].cpp_stdlib +
+            ctx.toolchains[toolchain_type].cpp_abilib +
+            ctx.toolchains[toolchain_type].unwind_library +
+            ctx.toolchains[toolchain_type].compiler_runtime +
+            ctx.toolchains[toolchain_type].cuda_toolkit,
+        )
+    elif config == "hip_nvidia":
+        return depset(
+            in_files +
+            ctx.files.deps +
+            ctx.files.libraries +
+            ctx.files.data +
+            ctx.files.llvm_project_deps +
+            ctx.toolchains[toolchain_type].local_crt +
+            ctx.toolchains[toolchain_type].cpp_stdlib +
+            ctx.toolchains[toolchain_type].cpp_abilib +
+            ctx.toolchains[toolchain_type].unwind_library +
+            ctx.toolchains[toolchain_type].compiler_runtime +
+            ctx.toolchains[toolchain_type].cuda_toolkit +
+            ctx.toolchains[toolchain_type].hip_libraries,
+        )
     else:
-        fail("Can only link shared object when using \"//ll:toolchain_type\".")
+        fail("Cannot link with this toolchain.")

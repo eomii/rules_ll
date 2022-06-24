@@ -3,15 +3,19 @@
 Tools used by actions.
 """
 
+load("@bazel_skylib//rules:common_settings.bzl", "BuildSettingInfo")
+
 def compile_object_tools(ctx, toolchain_type):
-    if toolchain_type == "//ll:toolchain_type":
+    config = ctx.attr.toolchain_configuration[BuildSettingInfo].value
+
+    if config == "cpp":
         return [
             ctx.toolchains[toolchain_type].symbolizer,
             ctx.toolchains[toolchain_type].bitcode_linker,
             ctx.toolchains[toolchain_type].linker,
             ctx.toolchains[toolchain_type].linker_executable,
         ]
-    elif toolchain_type == "//ll:heterogeneous_toolchain_type":
+    elif config in ["cuda_nvidia", "hip_nvidia"]:
         return [
             ctx.toolchains[toolchain_type].offload_bundler,
             ctx.toolchains[toolchain_type].symbolizer,
@@ -19,16 +23,13 @@ def compile_object_tools(ctx, toolchain_type):
             ctx.toolchains[toolchain_type].linker,
             ctx.toolchains[toolchain_type].linker_executable,
         ]
-    elif toolchain_type == "//ll:bootstrap_toolchain_type":
+    elif config == "bootstrap":
         return []
     else:
-        fail("Unregognized toolchain type. rules_ll supports " +
-             "//ll:toolchain_type and //ll:bootstrap_toolchain_type.")
+        fail("Unregognized toolchain toolchain configuration.")
 
 def linking_tools(ctx):
-    if "//ll:toolchain_type" in ctx.attr.toolchains:
-        return [
-            ctx.toolchains["//ll:toolchain_type"].linker,
-        ]
-    else:
-        fail("Can only link when using \"//ll:toolchain_type\".")
+    if ctx.attr.toolchain_configuration[BuildSettingInfo].value == "bootstrap":
+        fail("Cannot link with bootstrap toolchain.")
+
+    return [ctx.toolchains["//ll:toolchain_type"].linker]

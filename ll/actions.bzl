@@ -138,13 +138,13 @@ def create_archive_library(
 
 def link_shared_object(ctx, in_files, toolchain_type):
     out_file = link_shared_object_outputs(ctx)
-    in_files = link_shared_object_inputs(ctx, in_files)
+    in_files = link_shared_object_inputs(ctx, in_files, toolchain_type)
 
     ctx.actions.run(
         outputs = [out_file],
         inputs = in_files,
         executable = ctx.toolchains[toolchain_type].linker,
-        arguments = link_shared_object_args(ctx, in_files, out_file),
+        arguments = link_executable_args(ctx, in_files, out_file, mode = "shared_object"),
         mnemonic = "LlLinkSharedObject",
         use_default_shell_env = False,
     )
@@ -165,15 +165,16 @@ def link_bitcode_library(ctx, in_files, toolchain_type):
 
 def link_executable(ctx, in_files, toolchain_type):
     out_file = link_executable_outputs(ctx)
+    in_files = link_executable_inputs(ctx, in_files, toolchain_type)
 
     ctx.actions.run(
         outputs = [out_file],
-        inputs = link_executable_inputs(ctx, in_files, toolchain_type),
+        inputs = in_files,
         executable = ctx.toolchains[toolchain_type].linker,
         tools = [
             ctx.toolchains[toolchain_type].linker,
         ],
-        arguments = link_executable_args(ctx, in_files, out_file),
+        arguments = link_executable_args(ctx, in_files, out_file, mode = "executable"),
         mnemonic = "LlLinkExecutable",
         use_default_shell_env = False,
         env = compile_object_environment(ctx, toolchain_type),

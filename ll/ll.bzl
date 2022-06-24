@@ -6,6 +6,7 @@ Build files should import these rules via `@rules_ll//ll:defs.bzl`.
 """
 
 load("//ll:providers.bzl", "LlCompilationDatabaseFragmentsInfo", "LlInfo")
+load("//ll:transitions.bzl", "ll_transition")
 load(
     "//ll:internal_functions.bzl",
     "resolve_binary_deps",
@@ -27,8 +28,6 @@ load(
 )
 
 def select_toolchain_type(ctx):
-    if ctx.attr.heterogeneous_mode in ["hip_nvidia", "hip_amd"]:
-        return "//ll:heterogeneous_toolchain_type"
     return "//ll:toolchain_type"
 
 def _ll_library_impl(ctx):
@@ -114,9 +113,10 @@ ll_library = rule(
     executable = False,
     attrs = LL_LIBRARY_ATTRS,
     output_to_genfiles = True,
+    incompatible_use_toolchain_transition = True,
+    cfg = ll_transition,
     toolchains = [
         "//ll:toolchain_type",
-        "//ll:heterogeneous_toolchain_type",
     ],
     doc = """
 Creates a static archive.
@@ -130,6 +130,13 @@ Example:
   ```
 """,
 )
+
+def ll_bootstrap_library(name, **kwargs):
+    ll_library(
+        name = name,
+        compilation_mode = "bootstrap",
+        **kwargs
+    )
 
 def _ll_binary_impl(ctx):
     headers, defines, includes, angled_includes = resolve_binary_deps(ctx)
@@ -168,9 +175,9 @@ ll_binary = rule(
     implementation = _ll_binary_impl,
     executable = True,
     attrs = LL_BINARY_ATTRS,
+    cfg = ll_transition,
     toolchains = [
         "//ll:toolchain_type",
-        "//ll:heterogeneous_toolchain_type",
     ],
     doc = """
 Creates an executable.

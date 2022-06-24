@@ -3,15 +3,19 @@
 Action environments.
 """
 
+load("@bazel_skylib//rules:common_settings.bzl", "BuildSettingInfo")
+
 def compile_object_environment(ctx, toolchain_type):
-    if toolchain_type == "//ll:toolchain_type":
+    config = ctx.attr.toolchain_configuration[BuildSettingInfo].value
+
+    if config == "cpp":
         return {
             "LLVM_SYMBOLIZER_PATH": ctx.toolchains[toolchain_type].symbolizer.path,
             "LINK": ctx.toolchains[toolchain_type].bitcode_linker.path,
             "LLD": ctx.toolchains[toolchain_type].linker.path,
             "PATH": "$PATH:" + ctx.toolchains[toolchain_type].linker_executable.dirname,
         }
-    elif toolchain_type == "//ll:heterogeneous_toolchain_type":
+    elif config in ["cuda_nvidia", "hip_nvidia"]:
         return {
             "LLVM_SYMBOLIZER_PATH": ctx.toolchains[toolchain_type].symbolizer.path,
             "CLANG_OFFLOAD_BUNDLER": ctx.toolchains[toolchain_type].offload_bundler.path,
@@ -19,7 +23,7 @@ def compile_object_environment(ctx, toolchain_type):
             "LLD": ctx.toolchains[toolchain_type].linker.path,
             "PATH": "$PATH:" + ctx.toolchains[toolchain_type].linker_executable.dirname,
         }
-    elif toolchain_type == "//ll:bootstrap_toolchain_type":
+    elif config == "bootstrap":
         return {
             "CPLUS_INCLUDE_PATH": Label("@llvm-project").workspace_root + "/libcxx/src",
         }

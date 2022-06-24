@@ -14,3 +14,11 @@ run --experimental_enable_bzlmod
 # We use a custom registry.
 build --registry=https://raw.githubusercontent.com/eomii/bazel-eomii-registry/main/
 run --registry=https://raw.githubusercontent.com/eomii/bazel-eomii-registry/main/
+
+# Hash diff (baseline config, transition config) in bazel-out directory names.
+build --experimental_output_directory_naming_scheme=diff_against_baseline
+run --experimental_output_directory_naming_scheme=diff_against_baseline
+
+# Exec configuration handled by experimental_output_directory_layout.
+build --experimental_exec_configuration_distinguisher=off
+run --experimental_exec_configuration_distinguisher=off
