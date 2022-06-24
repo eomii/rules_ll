@@ -38,8 +38,8 @@ workspace:
 .. code:: bash
 
    touch WORKSPACE.bazel .bazelrc
-   echo 6.0.0-pre.20220526.1 >> .bazelversion
-   echo 'bazel_dep(name="rules_ll", version="20220612.0")' >> MODULE.bazel
+   echo 6.0.0-pre.202200624.0 >> .bazelversion
+   echo 'bazel_dep(name="rules_ll", version="20220624.0")' >> MODULE.bazel
 
 Copy the following lines into the just created ``.bashrc`` file::
 
@@ -59,6 +59,14 @@ Copy the following lines into the just created ``.bashrc`` file::
    # We use a custom registry.
    build --registry=https://raw.githubusercontent.com/eomii/bazel-eomii-registry/main/
    run --registry=https://raw.githubusercontent.com/eomii/bazel-eomii-registry/main/
+
+   # Hash diff (baseline config, transition config) in bazel-out directory names.
+   build --experimental_output_directory_naming_scheme=diff_against_baseline
+   run --experimental_output_directory_naming_scheme=diff_against_baseline
+
+   # Exec configuration handled by experimental_output_directory_layout.
+   build --experimental_exec_configuration_distinguisher=off
+   run --experimental_exec_configuration_distinguisher=off
 
 If you are running 64-bit Gentoo or another operating system where ``crt1.o``,
 ``crti.o`` and ``crtn.o`` are located at ``/usr/lib64``, you are done.
