@@ -1,4 +1,4 @@
-load("@rules_ll//ll:bootstrap_library.bzl", "ll_bootstrap_library")
+load("@rules_ll//ll:defs.bzl", "ll_library")
 
 filegroup(
     name = "libunwind_headers",
@@ -6,7 +6,7 @@ filegroup(
     visibility = ["//visibility:public"],
 )
 
-ll_bootstrap_library(
+ll_library(
     name = "libll_unwind",
     srcs = [
         "src/Unwind-EHABI.cpp",
@@ -35,6 +35,7 @@ ll_bootstrap_library(
         "src/dwarf2.h",
         "src/libunwind_ext.h",
     ],
+    compilation_mode = "bootstrap",
     compile_flags = [
         "-faligned-allocation",
         "-funwind-tables",

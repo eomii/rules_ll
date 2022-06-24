@@ -1,4 +1,4 @@
-load("@rules_ll//ll:bootstrap_library.bzl", "ll_bootstrap_library")
+load("@rules_ll//ll:defs.bzl", "ll_library")
 
 GENERIC_SOURCES = [
     "lib/builtins/absvdi2.c",
@@ -194,7 +194,7 @@ X86_64_SOURCES = GENERIC_SOURCES + GENERIC_TF_SOURCES + X86_ARCH_SOURCES + X86_8
     "lib/builtins/x86_64/floatundixf.S",
 ]
 
-ll_bootstrap_library(
+ll_library(
     name = "builtins",
     srcs = X86_64_SOURCES,
     hdrs = [
@@ -220,20 +220,23 @@ ll_bootstrap_library(
         "lib/builtins/int_types.h",
         "lib/builtins/int_util.h",
     ],
+    compilation_mode = "bootstrap",
     visibility = ["//visibility:public"],
 )
 
-ll_bootstrap_library(
+ll_library(
     name = "crt",
     srcs = [
         "lib/crt/crtbegin.c",
         "lib/crt/crtend.c",
     ],
+    compilation_mode = "bootstrap",
     visibility = ["//visibility:public"],
 )
 
-ll_bootstrap_library(
+ll_library(
     name = "libll_compiler-rt",
+    compilation_mode = "bootstrap",
     visibility = ["//visibility:public"],
     deps = [
         ":builtins",

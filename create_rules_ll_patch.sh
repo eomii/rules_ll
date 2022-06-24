@@ -1,9 +1,6 @@
 # Using this file requires cloning the LLVM project into this repo.
 # git clone --depth 1 git@github.com:llvm/llvm-project.git
 
-# Remove the existing patch.
-rm patches/rules_ll_overlay_patch.diff
-
 # Overlay the existing overlay at llvm-project/utils/bazel/llvm-project-overlay
 # with the files in rules_ll/llvm-bazel-overlay.
 #
@@ -22,4 +19,5 @@ done
 # Create a diff and write it to the patches directory.
 cd llvm-project
 git add utils/bazel/*
-git diff --staged >> ../patches/rules_ll_overlay_patch.diff
+git diff --staged > ../patches/rules_ll_overlay_patch.diff
+git reset --hard

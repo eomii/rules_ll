@@ -355,11 +355,11 @@ index 000000000..10e2a508d
 +    )
 diff --git a/utils/bazel/llvm-project-overlay/compiler-rt/BUILD.bazel b/utils/bazel/llvm-project-overlay/compiler-rt/BUILD.bazel
 new file mode 100644
-index 000000000..333cebff8
+index 000000000..81dd03346
 --- /dev/null
 +++ b/utils/bazel/llvm-project-overlay/compiler-rt/BUILD.bazel
-@@ -0,0 +1,242 @@
-+load("@rules_ll//ll:bootstrap_library.bzl", "ll_bootstrap_library")
+@@ -0,0 +1,245 @@
++load("@rules_ll//ll:defs.bzl", "ll_library")
 +
 +GENERIC_SOURCES = [
 +    "lib/builtins/absvdi2.c",
@@ -555,7 +555,7 @@ index 000000000..333cebff8
 +    "lib/builtins/x86_64/floatundixf.S",
 +]
 +
-+ll_bootstrap_library(
++ll_library(
 +    name = "builtins",
 +    srcs = X86_64_SOURCES,
 +    hdrs = [
@@ -582,32 +582,35 @@ index 000000000..333cebff8
 +        "lib/builtins/int_util.h",
 +    ],
 +    visibility = ["//visibility:public"],
++    compilation_mode = "bootstrap",
 +)
 +
-+ll_bootstrap_library(
++ll_library(
 +    name = "crt",
 +    srcs = [
 +        "lib/crt/crtbegin.c",
 +        "lib/crt/crtend.c",
 +    ],
 +    visibility = ["//visibility:public"],
++    compilation_mode = "bootstrap",
 +)
 +
-+ll_bootstrap_library(
++ll_library(
 +    name = "libll_compiler-rt",
 +    visibility = ["//visibility:public"],
 +    deps = [
 +        ":builtins",
 +        ":crt",
 +    ],
++    compilation_mode = "bootstrap",
 +)
 diff --git a/utils/bazel/llvm-project-overlay/libcxx/BUILD.bazel b/utils/bazel/llvm-project-overlay/libcxx/BUILD.bazel
 new file mode 100644
-index 000000000..bb617c987
+index 000000000..17f1fff09
 --- /dev/null
 +++ b/utils/bazel/llvm-project-overlay/libcxx/BUILD.bazel
-@@ -0,0 +1,130 @@
-+load("@rules_ll//ll:bootstrap_library.bzl", "ll_bootstrap_library")
+@@ -0,0 +1,131 @@
++load("@rules_ll//ll:defs.bzl", "ll_library")
 +
 +filegroup(
 +    name = "libcxx_headers",
@@ -621,7 +624,7 @@ index 000000000..bb617c987
 +    visibility = ["//visibility:public"],
 +)
 +
-+ll_bootstrap_library(
++ll_library(
 +    name = "libll_cxx",
 +    srcs = [
 +        "src/algorithm.cpp",
@@ -736,6 +739,7 @@ index 000000000..bb617c987
 +        "__STDC_LIMIT_MACROS",
 +    ],
 +    visibility = ["//visibility:public"],
++    compilation_mode = "bootstrap",
 +)
 diff --git a/utils/bazel/llvm-project-overlay/libcxx/include/__config_site b/utils/bazel/llvm-project-overlay/libcxx/include/__config_site
 new file mode 100644
@@ -782,11 +786,11 @@ index 000000000..72a7f9526
 +#endif // _LIBCPP_CONFIG_SITE"
 diff --git a/utils/bazel/llvm-project-overlay/libcxxabi/BUILD.bazel b/utils/bazel/llvm-project-overlay/libcxxabi/BUILD.bazel
 new file mode 100644
-index 000000000..9f0a2dbed
+index 000000000..31f8d0466
 --- /dev/null
 +++ b/utils/bazel/llvm-project-overlay/libcxxabi/BUILD.bazel
-@@ -0,0 +1,91 @@
-+load("@rules_ll//ll:bootstrap_library.bzl", "ll_bootstrap_library")
+@@ -0,0 +1,92 @@
++load("@rules_ll//ll:defs.bzl", "ll_library")
 +
 +filegroup(
 +    name = "libcxxabi_headers",
@@ -797,7 +801,7 @@ index 000000000..9f0a2dbed
 +    visibility = ["//visibility:public"],
 +)
 +
-+ll_bootstrap_library(
++ll_library(
 +    name = "libll_cxxabi",
 +    srcs = [
 +        # C++ABI files
@@ -876,16 +880,17 @@ index 000000000..9f0a2dbed
 +    ],
 +    transitive_hdrs = [":libcxxabi_headers"],
 +    visibility = ["//visibility:public"],
++    compilation_mode = "bootstrap",
 +)
 diff --git a/utils/bazel/llvm-project-overlay/libunwind/BUILD.bazel b/utils/bazel/llvm-project-overlay/libunwind/BUILD.bazel
-index 718eebfb7..da8cd0fa1 100644
+index 718eebfb7..5edde8a8b 100644
 --- a/utils/bazel/llvm-project-overlay/libunwind/BUILD.bazel
 +++ b/utils/bazel/llvm-project-overlay/libunwind/BUILD.bazel
-@@ -18,3 +18,52 @@ cc_library(
+@@ -18,3 +18,53 @@ cc_library(
      ],
      strip_include_prefix = "include",
  )
-+load("@rules_ll//ll:bootstrap_library.bzl", "ll_bootstrap_library")
++load("@rules_ll//ll:defs.bzl", "ll_library")
 +
 +filegroup(
 +    name = "libunwind_headers",
@@ -893,7 +898,7 @@ index 718eebfb7..da8cd0fa1 100644
 +    visibility = ["//visibility:public"],
 +)
 +
-+ll_bootstrap_library(
++ll_library(
 +    name = "libll_unwind",
 +    srcs = [
 +        "src/Unwind-EHABI.cpp",
@@ -933,4 +938,5 @@ index 718eebfb7..da8cd0fa1 100644
 +    ],
 +    visibility = ["//visibility:public"],
 +    deps = ["//compiler-rt:libll_compiler-rt"],
++    compilation_mode = "bootstrap",
 +)

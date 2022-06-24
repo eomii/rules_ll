@@ -1,4 +1,4 @@
-load("@rules_ll//ll:bootstrap_library.bzl", "ll_bootstrap_library")
+load("@rules_ll//ll:defs.bzl", "ll_library")
 
 filegroup(
     name = "libcxxabi_headers",
@@ -9,7 +9,7 @@ filegroup(
     visibility = ["//visibility:public"],
 )
 
-ll_bootstrap_library(
+ll_library(
     name = "libll_cxxabi",
     srcs = [
         # C++ABI files
@@ -60,6 +60,7 @@ ll_bootstrap_library(
         "src/demangle/StringView.h",
         "src/demangle/Utility.h",
     ],
+    compilation_mode = "bootstrap",
     compile_flags = [
         "-std=c++20",
         "-faligned-allocation",
