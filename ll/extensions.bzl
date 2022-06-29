@@ -103,8 +103,6 @@ def _llvm_configure_extension_impl(ctx):
         sha256 = module.tags.configure[0].sha256
         targets += [target for target in module.tags.configure[0].targets]
 
-    RULES_LL_PATCH_URL = "https://raw.githubusercontent.com/eomii/rules_ll/main/patches/"
-
     http_archive(
         name = "llvm-raw",
         build_file_content = "# empty",
@@ -115,24 +113,14 @@ def _llvm_configure_extension_impl(ctx):
                 commit,
             ),
         ],
-        # Bazel bug #14659 prevents us from using labels to reference files in
-        # the patches attribute. The workaround below will be removed as soon as
-        # the bug is fixed.
-        remote_patches = {
-            RULES_LL_PATCH_URL + "bzlmod_compatibility_patch.diff": "sha256-FONtKMQeaCzYu3EgtpgJIzm648FVrFEaQ8sumJLKS8k=",
-            RULES_LL_PATCH_URL + "compiler-rt_float128_patch.diff": "sha256-icBWHbeZ9bV3RyXWYS9CCLQ4tnVub2Xic2Rz9iD01xM=",
-            RULES_LL_PATCH_URL + "clang_header_patch.diff": "sha256-TLL54/yJCrd5nPSDF5E4OfaodEMLl4VQ5PFd3eEsk1s=",
-            RULES_LL_PATCH_URL + "mallinfo2_patch.diff": "sha256-sqeLZVxrUFCR37AWE1yK8zj7wVbKlebKLcvEeSYJa+Y=",
-            RULES_LL_PATCH_URL + "rules_ll_overlay_patch.diff": "sha256-tOKSodSZIE2NSvMJfAR8tTL5AezHqJPGfYsD+8dwW14=",
-        },
-        remote_patch_strip = 1,
-        # patches = [
-        #     "@rules_ll//patches:bzlmod_compatibility_patch.diff",
-        #     "@rules_ll//patches:compiler-rt_float128_patch.diff",
-        #     "@rules_ll//patches:clang_header_patch.diff",
-        #     "@rules_ll//patches:mallinfo2_patch.diff",
-        # ],
-        # patch_args = ["-p1"],
+        patches = [
+            "@rules_ll//patches:bzlmod_compatibility_patch.diff",
+            "@rules_ll//patches:compiler-rt_float128_patch.diff",
+            "@rules_ll//patches:clang_header_patch.diff",
+            "@rules_ll//patches:mallinfo2_patch.diff",
+            "@rules_ll//patches:rules_ll_overlay_patch.diff",
+        ],
+        patch_args = ["-p1"],
     )
 
     llvm_configure(name = "llvm-project", targets = targets)

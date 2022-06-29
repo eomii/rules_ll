@@ -71,20 +71,9 @@ def initialize_rules_ll(local_crt_path):
         path = local_crt_path,
     )
 
-    # Bazel bug #14659 prevents us from using labels to reference BUILD.bazel
-    # files in the build_file attribute. The workarounds below will be removed
-    # as soon as the bug is fixed.
-
     http_archive(
         name = "hip",
-        # build_file = "@rules_ll//third-party-overlays:hip.BUILD.bazel",
-        build_file_content = """
-filegroup(
-    name = "headers",
-    srcs = glob(["include/**", "include/hip/hip_version.h"]),
-    visibility = ["//visibility:public"],
-)
-        """,
+        build_file = "@rules_ll//third-party-overlays:hip.BUILD.bazel",
         patch_cmds = [
             """echo "
             #define HIP_VERSION_MAJOR 5
@@ -106,34 +95,15 @@ filegroup(
 
     http_archive(
         name = "hipamd",
-        # build_file = "@rules_ll//third-party-overlays:hipamd.BUILD.bazel",
-        build_file_content = """
-filegroup(
-    name = "headers",
-    srcs = glob(["include/**"]),
-    visibility = ["//visibility:public"],
-)
-        """,
+        build_file = "@rules_ll//third-party-overlays:hipamd.BUILD.bazel",
         sha256 = "656f336e5ed8705629af811dea83096849298ddf05664051b730d3f104b0e18d",
         strip_prefix = "hipamd-a97f7e4214c4111723d1476942106022d1186c70",
         urls = [
             "https://github.com/ROCm-Developer-Tools/hipamd/archive/a97f7e4214c4111723d1476942106022d1186c70.zip",
         ],
-        remote_patches = {
-            "https://raw.githubusercontent.com/eomii/rules_ll/main/patches/hipamd_return_fix.diff": "sha256-2S6/rMtKgenTzKK57OwJENlXfAAMJN8IX5AIA7QzIVE=",
-        },
-        remote_patch_strip = 1,
-        # patches = ["@rules_ll//patches:hipamd_return_fix.diff"],
-        # patch_args = ["-p1"],
+        patches = ["@rules_ll//patches:hipamd_return_fix.diff"],
+        patch_args = ["-p1"],
     )
-
-    CUDA_BUILD_FILE_CONTENT = """
-filegroup(
-    name = "contents",
-    srcs = glob(["**"]),
-    visibility = ["//visibility:public"],
-)
-    """
 
     http_archive(
         name = "cuda_cudart",
@@ -142,8 +112,7 @@ filegroup(
         ],
         strip_prefix = "cuda_cudart-linux-x86_64-11.7.60-archive",
         sha256 = "1c079add60a107f6dd9e72a0cc9cde03eb9d833506f355c22b9177c47a977552",
-        # build_file = "@rules_ll//third-party-overlays:cuda_cudart.BUILD.bazel",
-        build_file_content = CUDA_BUILD_FILE_CONTENT,
+        build_file = "@rules_ll//third-party-overlays:cuda_cudart.BUILD.bazel",
     )
 
     http_archive(
@@ -153,8 +122,7 @@ filegroup(
         ],
         strip_prefix = "cuda_nvcc-linux-x86_64-11.7.64-archive",
         sha256 = "7721fcfa3eb183ecb1d7fe138ce52d8238f0a6ecf1e9964cf8cfe5d8b7ec3c92",
-        # build_file = "@rules_ll//third-party-overlays:cuda_nvcc.BUILD.bazel",
-        build_file_content = CUDA_BUILD_FILE_CONTENT,
+        build_file = "@rules_ll//third-party-overlays:cuda_nvcc.BUILD.bazel",
     )
 
     http_archive(
@@ -164,8 +132,7 @@ filegroup(
         ],
         strip_prefix = "cuda_nvprof-linux-x86_64-11.7.50-archive",
         sha256 = "8222eebaf3fe6ca1e4df6fda09cbd58f11de6d5b80b5596dcf5c5c45ae246028",
-        # build_file = "@rules_ll//third-party-overlays:cuda_nvprof.BUILD.bazel",
-        build_file_content = CUDA_BUILD_FILE_CONTENT,
+        build_file = "@rules_ll//third-party-overlays:cuda_nvprof.BUILD.bazel",
     )
 
     http_archive(
@@ -175,8 +142,7 @@ filegroup(
         ],
         strip_prefix = "libcurand-linux-x86_64-10.2.10.50-archive",
         sha256 = "a05411f1775d5783800b71f6b43fae660e3baf900ae07efb853e615116ee479b",
-        # build_file = "@rules_ll//third-party-overlays:libcurand.BUILD.bazel",
-        build_file_content = CUDA_BUILD_FILE_CONTENT,
+        build_file = "@rules_ll//third-party-overlays:libcurand.BUILD.bazel",
     )
 
 def _initialize_rules_ll_impl(module_ctx):
