@@ -50,7 +50,7 @@ def _transition_to_bootstrap_impl(settings, attr):
 
 transition_to_bootstrap = transition(
     implementation = _transition_to_bootstrap_impl,
-    inputs = [],
+    inputs = ["//ll:current_ll_toolchain_configuration"],
     outputs = ["//ll:current_ll_toolchain_configuration"],
 )
 
@@ -60,7 +60,7 @@ def _transition_to_cpp_impl(settings, attr):
 
 transition_to_cpp = transition(
     implementation = _transition_to_cpp_impl,
-    inputs = [],
+    inputs = ["//ll:current_ll_toolchain_configuration"],
     outputs = ["//ll:current_ll_toolchain_configuration"],
 )
 
@@ -70,7 +70,7 @@ def _transition_to_cuda_nvidia_impl(settings, attr):
 
 transition_to_cuda_nvidia = transition(
     implementation = _transition_to_cuda_nvidia_impl,
-    inputs = [],
+    inputs = ["//ll:current_ll_toolchain_configuration"],
     outputs = ["//ll:current_ll_toolchain_configuration"],
 )
 
@@ -80,6 +80,6 @@ def _transition_to_hip_nvidia_impl(settings, attr):
 
 transition_to_hip_nvidia = transition(
     implementation = _transition_to_hip_nvidia_impl,
-    inputs = [],
+    inputs = ["//ll:current_ll_toolchain_configuration"],
     outputs = ["//ll:current_ll_toolchain_configuration"],
 )

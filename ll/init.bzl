@@ -8,7 +8,7 @@ load("@bazel_skylib//lib:paths.bzl", "paths")
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
 def _ll_local_crt_impl(ctx):
-    for filename in ["crt1.o", "crti.o", "crtn.o"]:
+    for filename in ["Scrt1.o", "crti.o", "crtn.o"]:
         ctx.symlink(paths.join(ctx.attr.path, filename), filename)
 
     ctx.file(
@@ -21,7 +21,7 @@ def _ll_local_crt_impl(ctx):
         content = """filegroup(
             name = "crt",
             srcs = [
-                ":crt1.o",
+                ":Scrt1.o",
                 ":crti.o",
                 ":crtn.o",
             ],

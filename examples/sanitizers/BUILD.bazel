@@ -1,0 +1,32 @@
+load("@rules_ll//ll:defs.bzl", "ll_binary")
+
+ll_binary(
+    name = "address",
+    srcs = ["address.cpp"],
+    link_flags = ["--verbose"],
+    sanitize = ["address"],
+)
+
+ll_binary(
+    name = "leak",
+    srcs = ["leak.cpp"],
+    sanitize = ["leak"],
+)
+
+ll_binary(
+    name = "memory",
+    srcs = ["memory.cpp"],
+    sanitize = ["memory"],
+)
+
+ll_binary(
+    name = "thread",
+    srcs = ["thread.cpp"],
+    sanitize = ["thread"],
+)
+
+ll_binary(
+    name = "undefined_behavior",
+    srcs = ["undefined_behavior.cpp"],
+    sanitize = ["undefined_behavior"],
+)

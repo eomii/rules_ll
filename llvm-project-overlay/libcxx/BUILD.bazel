@@ -102,6 +102,7 @@ ll_library(
     compile_flags = [
         "-std=c++20",
         "-faligned-allocation",
+        "-fno-omit-frame-pointer",
         "-funwind-tables",
         "-fstrict-aliasing",
         "-fvisibility-inlines-hidden",

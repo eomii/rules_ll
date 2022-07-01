@@ -23,8 +23,20 @@ def compile_object_tools(ctx, toolchain_type):
             ctx.toolchains[toolchain_type].linker,
             ctx.toolchains[toolchain_type].linker_executable,
         ]
+    elif config == "sycl_nvidia":
+        return [
+            ctx.toolchains[toolchain_type].offload_bundler,
+            ctx.toolchains[toolchain_type].symbolizer,
+            ctx.toolchains[toolchain_type].bitcode_linker,
+            ctx.toolchains[toolchain_type].linker,
+            ctx.toolchains[toolchain_type].linker_executable,
+            ctx.toolchains[toolchain_type].hipsycl_plugin,
+            ctx.toolchains[toolchain_type].hipsycl_runtime[0],
+        ]
     elif config == "bootstrap":
-        return []
+        return [
+            ctx.toolchains[toolchain_type].symbolizer,
+        ]
     else:
         fail("Unregognized toolchain toolchain configuration.")
 

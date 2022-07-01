@@ -24,6 +24,11 @@ def _ll_toolchain_impl(ctx):
             bitcode_linker = ctx.executable.bitcode_linker,
             linker = lld_alias,
             linker_executable = ctx.executable.linker,
+            address_sanitizer = ctx.files.address_sanitizer,
+            leak_sanitizer = ctx.files.leak_sanitizer,
+            memory_sanitizer = ctx.files.memory_sanitizer,
+            thread_sanitizer = ctx.files.thread_sanitizer,
+            undefined_behavior_sanitizer = ctx.files.undefined_behavior_sanitizer,
             offload_bundler = ctx.executable.offload_bundler,
             builtin_includes = ctx.files.builtin_includes,
             cpp_stdlib = ctx.files.cpp_stdlib,
@@ -39,7 +44,6 @@ def _ll_toolchain_impl(ctx):
             machine_code_tool = ctx.executable.machine_code_tool,
             cuda_toolkit = ctx.files.cuda_toolkit,
             hip_libraries = ctx.files.hip_libraries,
-            toolchain_configuration = ctx.attr.toolchain_configuration,
         ),
     ]
 
@@ -47,6 +51,4 @@ ll_toolchain = rule(
     implementation = _ll_toolchain_impl,
     executable = False,
     attrs = LL_TOOLCHAIN_ATTRS,
-    cfg = ll_toolchain_transition,
-    incompatible_use_toolchain_transition = True,
 )

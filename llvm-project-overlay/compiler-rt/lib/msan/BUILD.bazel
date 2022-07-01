@@ -1,0 +1,74 @@
+load("@rules_ll//ll:defs.bzl", "ll_library")
+
+filegroup(
+    name = "msan_headers",
+    srcs = [
+        "msan.h",
+        "msan_allocator.h",
+        "msan_chained_origin_depot.h",
+        "msan_flags.h",
+        "msan_flags.inc",
+        "msan_interface_internal.h",
+        "msan_origin.h",
+        "msan_poisoning.h",
+        "msan_report.h",
+        "msan_thread.h",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+ll_library(
+    name = "clang_rt.msan",
+    srcs = [
+        "msan.cpp",
+        "msan_allocator.cpp",
+        "msan_chained_origin_depot.cpp",
+        "msan_interceptors.cpp",
+        "msan_linux.cpp",
+        "msan_poisoning.cpp",
+        "msan_report.cpp",
+        "msan_thread.cpp",
+    ],
+    hdrs = [
+        ":msan_headers",
+        "//compiler-rt/lib/interception:interception_headers",
+        "//compiler-rt/lib/sanitizer_common:sanitizer_impl_headers",
+        "//compiler-rt/lib/ubsan:ubsan_headers",
+    ],
+    compilation_mode = "bootstrap",
+    compile_flags = [
+        "-ffreestanding",
+    ],
+    relative_includes = ["compiler-rt/lib"],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//compiler-rt/lib/interception:RTInterception",
+        "//compiler-rt/lib/sanitizer_common:RTSanitizerCommon",
+        "//compiler-rt/lib/sanitizer_common:RTSanitizerCommonCoverage",
+        "//compiler-rt/lib/sanitizer_common:RTSanitizerCommonLibc",
+        "//compiler-rt/lib/sanitizer_common:RTSanitizerCommonSymbolizer",
+        "//compiler-rt/lib/ubsan:RTUbsan",
+    ],
+)
+
+ll_library(
+    name = "clang_rt.msan_cxx",
+    srcs = [
+        "msan_new_delete.cpp",
+    ],
+    hdrs = [
+        ":msan_headers",
+        "//compiler-rt/lib/interception:interception_headers",
+        "//compiler-rt/lib/sanitizer_common:sanitizer_impl_headers",
+        "//compiler-rt/lib/ubsan:ubsan_headers",
+    ],
+    compilation_mode = "bootstrap",
+    compile_flags = [
+        "-ffreestanding",
+    ],
+    relative_includes = ["compiler-rt/lib"],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//compiler-rt/lib/ubsan:RTUbsan_cxx",
+    ],
+)

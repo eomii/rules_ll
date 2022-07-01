@@ -118,7 +118,7 @@ DEFAULT_ATTRS = {
 
         This attribute hijacks cc_library. Use with caution.
         """,
-        cfg = transition_to_cpp,
+        cfg = transition_to_bootstrap,
     ),
     "relative_angled_includes": attr.string_list(
         doc = """Additional angled include paths, relative to the target
@@ -144,6 +144,33 @@ DEFAULT_ATTRS = {
         will be added automatically.
 
         Only used for this target.
+        """,
+    ),
+    "sanitize": attr.string_list(
+        doc = """Enable sanitizers for this target.
+
+        Some sanitizers come with heavy performance penalties. Use
+        `config_setting`s to only use them in debug builds. Many combinations of
+        multiple enabled sanitizers are invalid. If possible, use one at a time.
+
+        `"address"`: Enable AddressSanitizer to detect memory errors. Typical
+            slowdown introduced is 2x. Executables that invoke CUDA-based
+            kernels, including those created via HIP and SYCL, need to be run
+            with `ASAN_OPTIONS=protect_shadow_gap=0`.
+        `"leak"`: Enable LeakSanitizer to detect memory leaks. This is already
+            integrated in AddressSanitizer. Enable LeakSanitizer if you want to
+            use it in standalone mode. Almost no performance overhead until the
+            end of the process where leaks are detected.
+        `"memory"`: Enable MemorySanitizer to detect uninitialized reads.
+            Typical slowdown introduced is 3x. Add
+            `"-fsanitize-memory-track-origins=2"` to the `compile_flags`
+            attribute to track the origins of uninitialized values.
+        `"undefined_behavior"`: Enable UndefinedBehaviorSanitizer to detect
+            undefined behavior. Small performance overhead.
+        `"thread"`: Enable ThreadSanitizer to detect data races. Typical
+            slowdown is 5x-15x. Typical memory overhead is 5x-10x.
+            ThreadSanitizer is nondeterminisic. Run sanitized executables
+            multiple times and build them with different optimization levels.
         """,
     ),
     "srcs": attr.label_list(
@@ -272,6 +299,14 @@ BINARY_ATTRS = {
 }
 
 LL_TOOLCHAIN_ATTRS = {
+    "address_sanitizer": attr.label_list(
+        doc = """AddressSanitizer libraries.""",
+        # default = [
+        #     "@llvm-project//compiler-rt/lib/asan:clang_rt.asan",
+        #     "@llvm-porject//compiler-rt/lib/asan:clang_rt.asan_cxx",
+        # ],
+        # cfg = transition_to_bootstrap,
+    ),
     "archiver": attr.label(
         doc = "The archiver.",
         allow_single_file = True,
@@ -312,7 +347,7 @@ LL_TOOLCHAIN_ATTRS = {
         default = "@llvm-project//clang-tools-extra/clang-tidy:run-clang-tidy",
         executable = True,
     ),
-    "compiler_runtime": attr.label(
+    "compiler_runtime": attr.label_list(
         doc = "The compiler runtime.",
         cfg = transition_to_bootstrap,
         providers = [LlInfo],
@@ -373,6 +408,12 @@ LL_TOOLCHAIN_ATTRS = {
         # ],
         cfg = transition_to_cpp,
     ),
+    "leak_sanitizer": attr.label_list(
+        doc = "LeakSanitizer libraries.",
+        # default = [
+        #     "@llvm-project-overlay//compiler-rt/lib/lsan:clang_rt.lsan",
+        # ],
+    ),
     "linker": attr.label(
         doc = "The linker.",
         allow_single_file = True,
@@ -398,20 +439,32 @@ LL_TOOLCHAIN_ATTRS = {
         default = "@llvm-project//clang:clang-offload-bundler",
         executable = True,
     ),
+    "memory_sanitizer": attr.label_list(
+        doc = """MemorySanitizer libraries.""",
+        # default = [
+        #     "@llvm-project//compiler-rt/lib/msan:clang_rt.msan",
+        #     "@llvm-project//compiler-rt/lib/msan:clang_rt.msan_cxx",
+        # ],
+    ),
     "symbolizer": attr.label(
         doc = "The llvm-symbolizer.",
         cfg = transition_to_bootstrap,
         default = "@llvm-project//llvm:llvm-symbolizer",
         executable = True,
     ),
-    "toolchain_configuration": attr.string(
-        doc = """Configuration for the toolchain.
-
-        This setting decides whether we require only a basic toolchain or more
-        elaborate tool setups including CUDA/HIP/SYCL compiler plugins and
-        libraries.
-        """,
-        mandatory = True,
+    "thread_sanitizer": attr.label_list(
+        doc = """ThreadSanitizer libraries.""",
+        # default = [
+        #     "@llvm-project//compiler-rt/lib/tsan:clang_rt.tsan",
+        #     "@llvm-project//compiler-rt/lib/tsan:clang_rt.tsan_cxx",
+        # ],
+    ),
+    "undefined_behavior_sanitizer": attr.label_list(
+        doc = """UndefinedBehaviorSanitizer libraries.""",
+        # default = [
+        #     "@llvm-project//compiler-rt/lib/ubsan:clang_rt.ubsan_standalone",
+        #     "@llvm-porject//compiler-rt/lib/ubsan:clang_rt.ubsan_standalone_cxx",
+        # ],
     ),
     "unwind_library": attr.label(
         doc = "The unwinder library.",

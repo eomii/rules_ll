@@ -28,8 +28,40 @@ def llvm_bindir_path(ctx):
         llvm_project_workspace = Label("@llvm-project").workspace_root,
     )
 
+def llvm_gendir_path(ctx):
+    return "{gendir}/{llvm_project_workspace}".format(
+        gendir = ctx.var["GENDIR"],
+        llvm_project_workspace = Label("@llvm-project").workspace_root,
+    )
+
 def _get_dirname(file):
     return file.dirname
+
+def _construct_llvm_include_path(file):
+    """Construct the paths to LLVM include directories.
+
+    This function looks at a file, and strips everything after "llvm/include",
+    so that the returned path is "<some_leading_path>/llvm/include". This lets
+    us handle outputs in transitioned output directories.
+    """
+    filepath = file.path
+    if filepath.find("/llvm/include/") != -1:
+        first_segment = filepath.partition("/llvm/include/")[0]
+        out = paths.join(first_segment, "llvm/include")
+        return out
+
+def _construct_clang_include_path(file):
+    """Construct the paths to LLVM include directories.
+
+    This function looks at a file, and strips everything after "clang/include",
+    so that the returned path is "<some_leading_path>/clang/include". This lets
+    us handle outputs in transitioned output directories.
+    """
+    filepath = file.path
+    if filepath.find("/clang/include/") != -1:
+        first_segment = filepath.partition("/clang/include/")[0]
+        out = paths.join(first_segment, "clang/include")
+        return out
 
 def compile_object_args(
         ctx,
@@ -48,17 +80,54 @@ def compile_object_args(
     if ctx.var["COMPILATION_MODE"] == "dbg":
         args.add("-v")
         args.add("-glldb")
+        args.add("-gdwarf-5")
+        args.add("-gdwarf64")
+        args.add("-gembed-source")
 
         if ctx.attr.compilation_mode != "none":
             args.add("--cuda-noopt-device-debug")
 
+    # Sanitizers.
+    has_sanitizers = (ctx.attr.sanitize != [])
+
+    if "address" in ctx.attr.sanitize and "leak" in ctx.attr.sanitize:
+        fail("AddressSanitizer and LeakSanitizer are mutually exclusive.")
+
+    if has_sanitizers:
+        args.add("-fno-omit-frame-pointer")
+        args.add_all(["-Xarch_host", "-glldb"])
+        args.add_all(["-Xarch_host", "-gdwarf-5"])
+        args.add_all(["-Xarch_host", "-gdwarf64"])
+
+        if ctx.attr.compilation_mode in [
+            "cuda_nvidia",
+            "hip_nvidia",
+        ]:
+            args.add_all(["-Xarch_device", "-gdwarf-2"])
+            args.add("--cuda-noopt-device-debug")
+
+    if "address" in ctx.attr.sanitize:
+        args.add("-fsanitize=address")
+
+    if "memory" in ctx.attr.sanitize:
+        args.add("-fsanitize=memory")
+
+    if "leak" in ctx.attr.sanitize:
+        args.add("-fsanitize=leak")
+
+    if "thread" in ctx.attr.sanitize:
+        args.add("-fsanitize=thread")
+
+    if "undefined_behavior" in ctx.attr.sanitize:
+        args.add("-fsanitize=undefined")
+
+    # Optimization.
     if ctx.attr.compilation_mode in [
         "cuda_nvidia",
         "hip_nvidia",
-    ]:
-        args.add("-O3")
+    ] and ctx.var["COMPILATION_MODE"] != "dbg":
+        args.add_all(["-Xarch_device", "-O3"])
 
-    # Optimization.
     if ctx.var["COMPILATION_MODE"] == "opt":
         args.add("-O3")
 
@@ -119,47 +188,26 @@ def compile_object_args(
 
     args.add(clang_builtin_include_path, format = "-resource-dir=%s")
 
-    args.add(
-        paths.join(
-            Label("@llvm-project").workspace_root,
-            "clang/staging/include",
-        ),
-        format = "-isystem%s",
-    )
-    args.add(
-        paths.join(
-            Label("@llvm-project").workspace_root,
-            "clang/staging/include",
-        ),
-        format = "-isystem%s",
-    )
-
     # Internal Clang and LLVM header include paths. These are used by compilers
     # and compiler Plugins.
     if ctx.attr.llvm_project_deps != []:
-        args.add(
-            paths.join(Label("@llvm-project").workspace_root, "llvm/include"),
-            format = "-idirafter%s",
+        llvm_project_deps = depset(transitive = [
+            data[OutputGroupInfo].compilation_prerequisites_INTERNAL_
+            for data in ctx.attr.llvm_project_deps
+        ])
+        args.add_all(
+            llvm_project_deps,
+            map_each = _construct_llvm_include_path,
+            format_each = "-idirafter%s",
+            uniquify = True,
+            omit_if_empty = True,
         )
-        args.add(
-            paths.join(llvm_target_directory_path(ctx), "llvm/include"),
-            format = "-idirafter%s",
-        )
-        args.add(
-            paths.join(llvm_bindir_path(ctx), "llvm/include"),
-            format = "-idirafter%s",
-        )
-        args.add(
-            paths.join(Label("@llvm-project").workspace_root, "clang/include"),
-            format = "-idirafter%s",
-        )
-        args.add(
-            paths.join(llvm_target_directory_path(ctx), "clang/include"),
-            format = "-idirafter%s",
-        )
-        args.add(
-            paths.join(llvm_bindir_path(ctx), "clang/include"),
-            format = "-idirafter%s",
+        args.add_all(
+            llvm_project_deps,
+            map_each = _construct_clang_include_path,
+            format_each = "-idirafter%s",
+            uniquify = True,
+            omit_if_empty = True,
         )
 
     # Includes. This reflects the order in which clang will search for included
@@ -225,15 +273,45 @@ def link_executable_args(ctx, in_files, out_file, mode):
     if ctx.var["COMPILATION_MODE"] == "dbg":
         args.add("--verbose")
 
+    # Sanitizers.
+    has_sanitizers = (ctx.attr.sanitize != [])
+    if has_sanitizers:
+        args.add("--eh-frame-hdr")
+        args.add("--whole-archive")
+
+    if "address" in ctx.attr.sanitize and "leak" in ctx.attr.sanitize:
+        fail("AddressSanitizer and LeakSanitizer are mutually exclusive.")
+
+    if "address" in ctx.attr.sanitize:
+        args.add_all(ctx.toolchains["//ll:toolchain_type"].address_sanitizer)
+
+    if "leak" in ctx.attr.sanitize:
+        args.add_all(ctx.toolchains["//ll:toolchain_type"].leak_sanitizer)
+
+    if "memory" in ctx.attr.sanitize:
+        args.add_all(ctx.toolchains["//ll:toolchain_type"].memory_sanitizer)
+
+    if "thread" in ctx.attr.sanitize:
+        args.add_all(ctx.toolchains["//ll:toolchain_type"].thread_sanitizer)
+
+    if "undefined_behavior" in ctx.attr.sanitize:
+        args.add_all(
+            ctx.toolchains["//ll:toolchain_type"].undefined_behavior_sanitizer,
+        )
+
+    if has_sanitizers:
+        args.add("--no-whole-archive")
+
     # Optimization.
     if ctx.var["COMPILATION_MODE"] != "dbg":
         args.add("--lto-O3")
-        args.add("--strip-all")
+
+        if not has_sanitizers:
+            args.add("--strip-all")
 
     if mode == "executable":
         # Always create position independent executables.
         args.add("--pie")
-        pass
     elif mode == "shared_object":
         args.add("--shared")
     else:
@@ -257,6 +335,7 @@ def link_executable_args(ctx, in_files, out_file, mode):
         "hip_nvidia",
     ]:
         args.add("-lrt")
+        args.add("-lcuda")
 
     # Target-specific flags.
     if mode == "executable":
@@ -293,22 +372,6 @@ def link_bitcode_library_args(ctx, in_files, out_file):
         args.add("-v")
 
     args.add_all(ctx.attr.bitcode_link_flags)
-
-    args.add_all(in_files)
-
-    args.add("-o", out_file)
-
-    return [args]
-
-def link_shared_object_args(ctx, in_files, out_file):
-    args = ctx.actions.args()
-
-    if ctx.var["COMPILATION_MODE"] == "dbg":
-        args.add("--verbose")
-
-    args.add("--shared")
-
-    args.add_all(ctx.attr.shared_object_link_flags)
 
     args.add_all(in_files)
 

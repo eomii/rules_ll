@@ -4,6 +4,7 @@ Action inputs.
 """
 
 load("@bazel_skylib//rules:common_settings.bzl", "BuildSettingInfo")
+load("@bazel_skylib//lib:paths.bzl", "paths")
 
 def compilable_sources(ctx):
     compilable_extensions = ["ll", "c", "cl", "cpp", "S", "cc", "cxx"]
@@ -34,22 +35,22 @@ def compile_object_inputs(ctx, headers, toolchain_type):
         return depset(
             ctx.files.srcs +
             ctx.files.data +
-            ctx.toolchains[toolchain_type].builtin_includes +
             ctx.toolchains[toolchain_type].cpp_stdhdrs +
             ctx.toolchains[toolchain_type].cpp_abihdrs +
-            ctx.toolchains[toolchain_type].compiler_runtime,
+            ctx.toolchains[toolchain_type].compiler_runtime +
+            ctx.toolchains[toolchain_type].builtin_includes,
             transitive = [
                 headers,
             ] + llvm_project_deps,
         )
-    elif config == "cuda_nvidia":
+    elif config in ["cuda_nvidia"]:
         return depset(
             ctx.files.srcs +
             ctx.files.data +
-            ctx.toolchains[toolchain_type].builtin_includes +
             ctx.toolchains[toolchain_type].cpp_stdhdrs +
             ctx.toolchains[toolchain_type].cpp_abihdrs +
-            ctx.toolchains[toolchain_type].cuda_toolkit,
+            ctx.toolchains[toolchain_type].cuda_toolkit +
+            ctx.toolchains[toolchain_type].builtin_includes,
             transitive = [
                 headers,
             ] + llvm_project_deps,
@@ -58,11 +59,11 @@ def compile_object_inputs(ctx, headers, toolchain_type):
         return depset(
             ctx.files.srcs +
             ctx.files.data +
-            ctx.toolchains[toolchain_type].builtin_includes +
             ctx.toolchains[toolchain_type].cpp_stdhdrs +
             ctx.toolchains[toolchain_type].cpp_abihdrs +
             ctx.toolchains[toolchain_type].cuda_toolkit +
-            ctx.toolchains[toolchain_type].hip_libraries,
+            ctx.toolchains[toolchain_type].hip_libraries +
+            ctx.toolchains[toolchain_type].builtin_includes,
             transitive = [
                 headers,
             ] + llvm_project_deps,
