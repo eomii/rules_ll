@@ -111,26 +111,6 @@ link_executable_args(<a href="#link_executable_args-ctx">ctx</a>, <a href="#link
 | <a id="link_executable_args-mode"></a>mode |  <p align="center"> - </p>   |  none |
 
 
-<a id="#link_shared_object_args"></a>
-
-## link_shared_object_args
-
-<pre>
-link_shared_object_args(<a href="#link_shared_object_args-ctx">ctx</a>, <a href="#link_shared_object_args-in_files">in_files</a>, <a href="#link_shared_object_args-out_file">out_file</a>)
-</pre>
-
-
-
-**PARAMETERS**
-
-
-| Name  | Description | Default Value |
-| :------------- | :------------- | :------------- |
-| <a id="link_shared_object_args-ctx"></a>ctx |  <p align="center"> - </p>   |  none |
-| <a id="link_shared_object_args-in_files"></a>in_files |  <p align="center"> - </p>   |  none |
-| <a id="link_shared_object_args-out_file"></a>out_file |  <p align="center"> - </p>   |  none |
-
-
 <a id="#llvm_bindir_path"></a>
 
 ## llvm_bindir_path
@@ -147,6 +127,24 @@ llvm_bindir_path(<a href="#llvm_bindir_path-ctx">ctx</a>)
 | Name  | Description | Default Value |
 | :------------- | :------------- | :------------- |
 | <a id="llvm_bindir_path-ctx"></a>ctx |  <p align="center"> - </p>   |  none |
+
+
+<a id="#llvm_gendir_path"></a>
+
+## llvm_gendir_path
+
+<pre>
+llvm_gendir_path(<a href="#llvm_gendir_path-ctx">ctx</a>)
+</pre>
+
+
+
+**PARAMETERS**
+
+
+| Name  | Description | Default Value |
+| :------------- | :------------- | :------------- |
+| <a id="llvm_gendir_path-ctx"></a>ctx |  <p align="center"> - </p>   |  none |
 
 
 <a id="#llvm_target_directory_path"></a>

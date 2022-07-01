@@ -327,10 +327,11 @@
 <div class="section" id="ll-toolchain">
 <h2>ll_toolchain<a class="headerlink" href="#ll-toolchain" title="Permalink to this headline">¶</a></h2>
 <pre>
-ll_toolchain(<a href="#ll_toolchain-name">name</a>, <a href="#ll_toolchain-archiver">archiver</a>, <a href="#ll_toolchain-bitcode_linker">bitcode_linker</a>, <a href="#ll_toolchain-builtin_includes">builtin_includes</a>, <a href="#ll_toolchain-c_driver">c_driver</a>, <a href="#ll_toolchain-clang_tidy">clang_tidy</a>,
-             <a href="#ll_toolchain-clang_tidy_runner">clang_tidy_runner</a>, <a href="#ll_toolchain-compiler_runtime">compiler_runtime</a>, <a href="#ll_toolchain-cpp_abihdrs">cpp_abihdrs</a>, <a href="#ll_toolchain-cpp_abilib">cpp_abilib</a>, <a href="#ll_toolchain-cpp_driver">cpp_driver</a>, <a href="#ll_toolchain-cpp_stdhdrs">cpp_stdhdrs</a>,
-             <a href="#ll_toolchain-cpp_stdlib">cpp_stdlib</a>, <a href="#ll_toolchain-cuda_toolkit">cuda_toolkit</a>, <a href="#ll_toolchain-hip_libraries">hip_libraries</a>, <a href="#ll_toolchain-linker">linker</a>, <a href="#ll_toolchain-local_crt">local_crt</a>, <a href="#ll_toolchain-machine_code_tool">machine_code_tool</a>,
-             <a href="#ll_toolchain-offload_bundler">offload_bundler</a>, <a href="#ll_toolchain-symbolizer">symbolizer</a>, <a href="#ll_toolchain-toolchain_configuration">toolchain_configuration</a>, <a href="#ll_toolchain-unwind_library">unwind_library</a>)
+ll_toolchain(<a href="#ll_toolchain-name">name</a>, <a href="#ll_toolchain-address_sanitizer">address_sanitizer</a>, <a href="#ll_toolchain-archiver">archiver</a>, <a href="#ll_toolchain-bitcode_linker">bitcode_linker</a>, <a href="#ll_toolchain-builtin_includes">builtin_includes</a>, <a href="#ll_toolchain-c_driver">c_driver</a>,
+             <a href="#ll_toolchain-clang_tidy">clang_tidy</a>, <a href="#ll_toolchain-clang_tidy_runner">clang_tidy_runner</a>, <a href="#ll_toolchain-compiler_runtime">compiler_runtime</a>, <a href="#ll_toolchain-cpp_abihdrs">cpp_abihdrs</a>, <a href="#ll_toolchain-cpp_abilib">cpp_abilib</a>, <a href="#ll_toolchain-cpp_driver">cpp_driver</a>,
+             <a href="#ll_toolchain-cpp_stdhdrs">cpp_stdhdrs</a>, <a href="#ll_toolchain-cpp_stdlib">cpp_stdlib</a>, <a href="#ll_toolchain-cuda_toolkit">cuda_toolkit</a>, <a href="#ll_toolchain-hip_libraries">hip_libraries</a>, <a href="#ll_toolchain-leak_sanitizer">leak_sanitizer</a>, <a href="#ll_toolchain-linker">linker</a>, <a href="#ll_toolchain-local_crt">local_crt</a>,
+             <a href="#ll_toolchain-machine_code_tool">machine_code_tool</a>, <a href="#ll_toolchain-memory_sanitizer">memory_sanitizer</a>, <a href="#ll_toolchain-offload_bundler">offload_bundler</a>, <a href="#ll_toolchain-symbolizer">symbolizer</a>, <a href="#ll_toolchain-thread_sanitizer">thread_sanitizer</a>,
+             <a href="#ll_toolchain-undefined_behavior_sanitizer">undefined_behavior_sanitizer</a>, <a href="#ll_toolchain-unwind_library">unwind_library</a>)
 </pre>
 <p><strong>ATTRIBUTES</strong></p>
 <table class="colwidths-auto table">
@@ -349,86 +350,98 @@ ll_toolchain(<a href="#ll_toolchain-name">name</a>, <a href="#ll_toolchain-archi
 <td class="text-left"><p>required</p></td>
 <td class="text-left"><p></p></td>
 </tr>
-<tr class="row-odd"><td class="text-left"><p><a id="ll_toolchain-archiver"></a>archiver</p></td>
+<tr class="row-odd"><td class="text-left"><p><a id="ll_toolchain-address_sanitizer"></a>address_sanitizer</p></td>
+<td class="text-left"><p>AddressSanitizer libraries.</p></td>
+<td class="text-left"><p><a href="https://bazel.build/docs/build-ref.html#labels">List of labels</a></p></td>
+<td class="text-left"><p>optional</p></td>
+<td class="text-left"><p>[]</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p><a id="ll_toolchain-archiver"></a>archiver</p></td>
 <td class="text-left"><p>The archiver.</p></td>
 <td class="text-left"><p><a href="https://bazel.build/docs/build-ref.html#labels">Label</a></p></td>
 <td class="text-left"><p>optional</p></td>
 <td class="text-left"><p>&#64;llvm-project//llvm:llvm-ar</p></td>
 </tr>
-<tr class="row-even"><td class="text-left"><p><a id="ll_toolchain-bitcode_linker"></a>bitcode_linker</p></td>
+<tr class="row-odd"><td class="text-left"><p><a id="ll_toolchain-bitcode_linker"></a>bitcode_linker</p></td>
 <td class="text-left"><p>The linker for LLVM bitcode files. While <code>llvm-ar</code> is able         to archive bitcode files into an archive, it cannot link them into         a single bitcode file. We need <code>llvm-link</code> to do this.</p></td>
 <td class="text-left"><p><a href="https://bazel.build/docs/build-ref.html#labels">Label</a></p></td>
 <td class="text-left"><p>optional</p></td>
 <td class="text-left"><p>&#64;llvm-project//llvm:llvm-link</p></td>
 </tr>
-<tr class="row-odd"><td class="text-left"><p><a id="ll_toolchain-builtin_includes"></a>builtin_includes</p></td>
+<tr class="row-even"><td class="text-left"><p><a id="ll_toolchain-builtin_includes"></a>builtin_includes</p></td>
 <td class="text-left"><p>Builtin header files. Defaults to &#64;llvm-project//clang:builtin_headers_gen</p></td>
 <td class="text-left"><p><a href="https://bazel.build/docs/build-ref.html#labels">Label</a></p></td>
 <td class="text-left"><p>optional</p></td>
 <td class="text-left"><p>&#64;llvm-project//clang:builtin_headers_gen</p></td>
 </tr>
-<tr class="row-even"><td class="text-left"><p><a id="ll_toolchain-c_driver"></a>c_driver</p></td>
+<tr class="row-odd"><td class="text-left"><p><a id="ll_toolchain-c_driver"></a>c_driver</p></td>
 <td class="text-left"><p>The C compiler driver.</p></td>
 <td class="text-left"><p><a href="https://bazel.build/docs/build-ref.html#labels">Label</a></p></td>
 <td class="text-left"><p>optional</p></td>
 <td class="text-left"><p>&#64;llvm-project//clang:clang</p></td>
 </tr>
-<tr class="row-odd"><td class="text-left"><p><a id="ll_toolchain-clang_tidy"></a>clang_tidy</p></td>
+<tr class="row-even"><td class="text-left"><p><a id="ll_toolchain-clang_tidy"></a>clang_tidy</p></td>
 <td class="text-left"><p>The clang-tidy executable.</p></td>
 <td class="text-left"><p><a href="https://bazel.build/docs/build-ref.html#labels">Label</a></p></td>
 <td class="text-left"><p>optional</p></td>
 <td class="text-left"><p>&#64;llvm-project//clang-tools-extra/clang-tidy:clang-tidy</p></td>
 </tr>
-<tr class="row-even"><td class="text-left"><p><a id="ll_toolchain-clang_tidy_runner"></a>clang_tidy_runner</p></td>
+<tr class="row-odd"><td class="text-left"><p><a id="ll_toolchain-clang_tidy_runner"></a>clang_tidy_runner</p></td>
 <td class="text-left"><p>The run-clang-tidy.py wrapper script for clang-tidy. Enables multithreading.</p></td>
 <td class="text-left"><p><a href="https://bazel.build/docs/build-ref.html#labels">Label</a></p></td>
 <td class="text-left"><p>optional</p></td>
 <td class="text-left"><p>&#64;llvm-project//clang-tools-extra/clang-tidy:run-clang-tidy</p></td>
 </tr>
-<tr class="row-odd"><td class="text-left"><p><a id="ll_toolchain-compiler_runtime"></a>compiler_runtime</p></td>
+<tr class="row-even"><td class="text-left"><p><a id="ll_toolchain-compiler_runtime"></a>compiler_runtime</p></td>
 <td class="text-left"><p>The compiler runtime.</p></td>
-<td class="text-left"><p><a href="https://bazel.build/docs/build-ref.html#labels">Label</a></p></td>
+<td class="text-left"><p><a href="https://bazel.build/docs/build-ref.html#labels">List of labels</a></p></td>
 <td class="text-left"><p>optional</p></td>
-<td class="text-left"><p>None</p></td>
+<td class="text-left"><p>[]</p></td>
 </tr>
-<tr class="row-even"><td class="text-left"><p><a id="ll_toolchain-cpp_abihdrs"></a>cpp_abihdrs</p></td>
+<tr class="row-odd"><td class="text-left"><p><a id="ll_toolchain-cpp_abihdrs"></a>cpp_abihdrs</p></td>
 <td class="text-left"><p>The C++ ABI headers.</p></td>
 <td class="text-left"><p><a href="https://bazel.build/docs/build-ref.html#labels">Label</a></p></td>
 <td class="text-left"><p>optional</p></td>
 <td class="text-left"><p>None</p></td>
 </tr>
-<tr class="row-odd"><td class="text-left"><p><a id="ll_toolchain-cpp_abilib"></a>cpp_abilib</p></td>
+<tr class="row-even"><td class="text-left"><p><a id="ll_toolchain-cpp_abilib"></a>cpp_abilib</p></td>
 <td class="text-left"><p>The C++ ABI library archive.</p></td>
 <td class="text-left"><p><a href="https://bazel.build/docs/build-ref.html#labels">Label</a></p></td>
 <td class="text-left"><p>optional</p></td>
 <td class="text-left"><p>None</p></td>
 </tr>
-<tr class="row-even"><td class="text-left"><p><a id="ll_toolchain-cpp_driver"></a>cpp_driver</p></td>
+<tr class="row-odd"><td class="text-left"><p><a id="ll_toolchain-cpp_driver"></a>cpp_driver</p></td>
 <td class="text-left"><p>The C++ compiler driver.</p></td>
 <td class="text-left"><p><a href="https://bazel.build/docs/build-ref.html#labels">Label</a></p></td>
 <td class="text-left"><p>optional</p></td>
 <td class="text-left"><p>&#64;llvm-project//clang:clang++</p></td>
 </tr>
-<tr class="row-odd"><td class="text-left"><p><a id="ll_toolchain-cpp_stdhdrs"></a>cpp_stdhdrs</p></td>
+<tr class="row-even"><td class="text-left"><p><a id="ll_toolchain-cpp_stdhdrs"></a>cpp_stdhdrs</p></td>
 <td class="text-left"><p>The C++ standard library headers.</p></td>
 <td class="text-left"><p><a href="https://bazel.build/docs/build-ref.html#labels">Label</a></p></td>
 <td class="text-left"><p>optional</p></td>
 <td class="text-left"><p>None</p></td>
 </tr>
-<tr class="row-even"><td class="text-left"><p><a id="ll_toolchain-cpp_stdlib"></a>cpp_stdlib</p></td>
+<tr class="row-odd"><td class="text-left"><p><a id="ll_toolchain-cpp_stdlib"></a>cpp_stdlib</p></td>
 <td class="text-left"><p>The C++ standard library archive.</p></td>
 <td class="text-left"><p><a href="https://bazel.build/docs/build-ref.html#labels">Label</a></p></td>
 <td class="text-left"><p>optional</p></td>
 <td class="text-left"><p>None</p></td>
 </tr>
-<tr class="row-odd"><td class="text-left"><p><a id="ll_toolchain-cuda_toolkit"></a>cuda_toolkit</p></td>
+<tr class="row-even"><td class="text-left"><p><a id="ll_toolchain-cuda_toolkit"></a>cuda_toolkit</p></td>
 <td class="text-left"><p>CUDA toolkit files. <code>rules_ll</code> will still use <code>clang</code> as         the CUDA device compiler. Building targets that make use of the         CUDA libraries imply acceptance of their respective licenses.</p></td>
 <td class="text-left"><p><a href="https://bazel.build/docs/build-ref.html#labels">List of labels</a></p></td>
 <td class="text-left"><p>optional</p></td>
 <td class="text-left"><p>[]</p></td>
 </tr>
-<tr class="row-even"><td class="text-left"><p><a id="ll_toolchain-hip_libraries"></a>hip_libraries</p></td>
+<tr class="row-odd"><td class="text-left"><p><a id="ll_toolchain-hip_libraries"></a>hip_libraries</p></td>
 <td class="text-left"><p>HIP library files. <code>rules_ll</code> will use <code>clang</code> as the         device compiler. Building targets that make use of the HIP toolkit         implies acceptance of its license.<br><br>        Using HIP for AMD devices implies the use of the ROCm stack and the         acceptance of its licenses.<br><br>        Using HIP for Nvidia devices implies use of the CUDA toolkit and the         acceptance of its licenses.</p></td>
+<td class="text-left"><p><a href="https://bazel.build/docs/build-ref.html#labels">List of labels</a></p></td>
+<td class="text-left"><p>optional</p></td>
+<td class="text-left"><p>[]</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p><a id="ll_toolchain-leak_sanitizer"></a>leak_sanitizer</p></td>
+<td class="text-left"><p>LeakSanitizer libraries.</p></td>
 <td class="text-left"><p><a href="https://bazel.build/docs/build-ref.html#labels">List of labels</a></p></td>
 <td class="text-left"><p>optional</p></td>
 <td class="text-left"><p>[]</p></td>
@@ -451,23 +464,35 @@ ll_toolchain(<a href="#ll_toolchain-name">name</a>, <a href="#ll_toolchain-archi
 <td class="text-left"><p>optional</p></td>
 <td class="text-left"><p>&#64;llvm-project//llvm:llvm-mc</p></td>
 </tr>
-<tr class="row-even"><td class="text-left"><p><a id="ll_toolchain-offload_bundler"></a>offload_bundler</p></td>
+<tr class="row-even"><td class="text-left"><p><a id="ll_toolchain-memory_sanitizer"></a>memory_sanitizer</p></td>
+<td class="text-left"><p>MemorySanitizer libraries.</p></td>
+<td class="text-left"><p><a href="https://bazel.build/docs/build-ref.html#labels">List of labels</a></p></td>
+<td class="text-left"><p>optional</p></td>
+<td class="text-left"><p>[]</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><a id="ll_toolchain-offload_bundler"></a>offload_bundler</p></td>
 <td class="text-left"><p>Offload bundler used to bundle code objects for languages         targeting multiple devices in a single source file, e.g. GPU code.</p></td>
 <td class="text-left"><p><a href="https://bazel.build/docs/build-ref.html#labels">Label</a></p></td>
 <td class="text-left"><p>optional</p></td>
 <td class="text-left"><p>&#64;llvm-project//clang:clang-offload-bundler</p></td>
 </tr>
-<tr class="row-odd"><td class="text-left"><p><a id="ll_toolchain-symbolizer"></a>symbolizer</p></td>
+<tr class="row-even"><td class="text-left"><p><a id="ll_toolchain-symbolizer"></a>symbolizer</p></td>
 <td class="text-left"><p>The llvm-symbolizer.</p></td>
 <td class="text-left"><p><a href="https://bazel.build/docs/build-ref.html#labels">Label</a></p></td>
 <td class="text-left"><p>optional</p></td>
 <td class="text-left"><p>&#64;llvm-project//llvm:llvm-symbolizer</p></td>
 </tr>
-<tr class="row-even"><td class="text-left"><p><a id="ll_toolchain-toolchain_configuration"></a>toolchain_configuration</p></td>
-<td class="text-left"><p>Configuration for the toolchain.<br><br>        This setting decides whether we require only a basic toolchain or more         elaborate tool setups including CUDA/HIP/SYCL compiler plugins and         libraries.</p></td>
-<td class="text-left"><p>String</p></td>
-<td class="text-left"><p>required</p></td>
-<td class="text-left"><p></p></td>
+<tr class="row-odd"><td class="text-left"><p><a id="ll_toolchain-thread_sanitizer"></a>thread_sanitizer</p></td>
+<td class="text-left"><p>ThreadSanitizer libraries.</p></td>
+<td class="text-left"><p><a href="https://bazel.build/docs/build-ref.html#labels">List of labels</a></p></td>
+<td class="text-left"><p>optional</p></td>
+<td class="text-left"><p>[]</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p><a id="ll_toolchain-undefined_behavior_sanitizer"></a>undefined_behavior_sanitizer</p></td>
+<td class="text-left"><p>UndefinedBehaviorSanitizer libraries.</p></td>
+<td class="text-left"><p><a href="https://bazel.build/docs/build-ref.html#labels">List of labels</a></p></td>
+<td class="text-left"><p>optional</p></td>
+<td class="text-left"><p>[]</p></td>
 </tr>
 <tr class="row-odd"><td class="text-left"><p><a id="ll_toolchain-unwind_library"></a>unwind_library</p></td>
 <td class="text-left"><p>The unwinder library.</p></td>

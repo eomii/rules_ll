@@ -340,7 +340,7 @@
 <pre>
 ll_binary(<a href="#ll_binary-name">name</a>, <a href="#ll_binary-angled_includes">angled_includes</a>, <a href="#ll_binary-compilation_mode">compilation_mode</a>, <a href="#ll_binary-compile_flags">compile_flags</a>, <a href="#ll_binary-data">data</a>, <a href="#ll_binary-defines">defines</a>, <a href="#ll_binary-deps">deps</a>, <a href="#ll_binary-hdrs">hdrs</a>,
           <a href="#ll_binary-includes">includes</a>, <a href="#ll_binary-libraries">libraries</a>, <a href="#ll_binary-link_flags">link_flags</a>, <a href="#ll_binary-llvm_project_deps">llvm_project_deps</a>, <a href="#ll_binary-relative_angled_includes">relative_angled_includes</a>,
-          <a href="#ll_binary-relative_includes">relative_includes</a>, <a href="#ll_binary-srcs">srcs</a>, <a href="#ll_binary-toolchain_configuration">toolchain_configuration</a>)
+          <a href="#ll_binary-relative_includes">relative_includes</a>, <a href="#ll_binary-sanitize">sanitize</a>, <a href="#ll_binary-srcs">srcs</a>, <a href="#ll_binary-toolchain_configuration">toolchain_configuration</a>)
 </pre>
 <p>Creates an executable.</p>
 <p>Example:</p>
@@ -444,13 +444,19 @@ ll_binary(<a href="#ll_binary-name">name</a>, <a href="#ll_binary-angled_include
 <td class="text-left"><p>optional</p></td>
 <td class="text-left"><p>[]</p></td>
 </tr>
-<tr class="row-even"><td class="text-left"><p><a id="ll_binary-srcs"></a>srcs</p></td>
+<tr class="row-even"><td class="text-left"><p><a id="ll_binary-sanitize"></a>sanitize</p></td>
+<td class="text-left"><p>Enable sanitizers for this target.<br><br>        Some sanitizers come with heavy performance penalties. Use         <code>config_setting</code>s to only use them in debug builds. Many combinations of         multiple enabled sanitizers are invalid. If possible, use one at a time.<br><br>        <code>”address”</code>: Enable AddressSanitizer to detect memory errors. Typical             slowdown introduced is 2x. Executables that invoke CUDA-based             kernels, including those created via HIP and SYCL, need to be run             with <code>ASAN_OPTIONS=protect_shadow_gap=0</code>.         <code>”leak”</code>: Enable LeakSanitizer to detect memory leaks. This is already             integrated in AddressSanitizer. Enable LeakSanitizer if you want to             use it in standalone mode. Almost no performance overhead until the             end of the process where leaks are detected.         <code>”memory”</code>: Enable MemorySanitizer to detect uninitialized reads.             Typical slowdown introduced is 3x. Add             <code>”-fsanitize-memory-track-origins=2”</code> to the <code>compile_flags</code>             attribute to track the origins of uninitialized values.         <code>”undefined_behavior”</code>: Enable UndefinedBehaviorSanitizer to detect             undefined behavior. Small performance overhead.         <code>”thread”</code>: Enable ThreadSanitizer to detect data races. Typical             slowdown is 5x-15x. Typical memory overhead is 5x-10x.             ThreadSanitizer is nondeterminisic. Run sanitized executables             multiple times and build them with different optimization levels.</p></td>
+<td class="text-left"><p>List of strings</p></td>
+<td class="text-left"><p>optional</p></td>
+<td class="text-left"><p>[]</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><a id="ll_binary-srcs"></a>srcs</p></td>
 <td class="text-left"><p>Compilable source files for this target.<br><br>        Only compilable files and object files         <code>[“.ll”, “.o”, “.S”, “.c”, “.cl”, “.cpp”]</code> are allowed here.<br><br>        Headers should be placed in the <code>hdrs</code> attribute.</p></td>
 <td class="text-left"><p><a href="https://bazel.build/docs/build-ref.html#labels">List of labels</a></p></td>
 <td class="text-left"><p>optional</p></td>
 <td class="text-left"><p>[]</p></td>
 </tr>
-<tr class="row-odd"><td class="text-left"><p><a id="ll_binary-toolchain_configuration"></a>toolchain_configuration</p></td>
+<tr class="row-even"><td class="text-left"><p><a id="ll_binary-toolchain_configuration"></a>toolchain_configuration</p></td>
 <td class="text-left"><p>TODO</p></td>
 <td class="text-left"><p><a href="https://bazel.build/docs/build-ref.html#labels">Label</a></p></td>
 <td class="text-left"><p>optional</p></td>
@@ -465,7 +471,7 @@ ll_binary(<a href="#ll_binary-name">name</a>, <a href="#ll_binary-angled_include
 <pre>
 ll_library(<a href="#ll_library-name">name</a>, <a href="#ll_library-angled_includes">angled_includes</a>, <a href="#ll_library-bitcode_libraries">bitcode_libraries</a>, <a href="#ll_library-bitcode_link_flags">bitcode_link_flags</a>, <a href="#ll_library-compilation_mode">compilation_mode</a>,
            <a href="#ll_library-compile_flags">compile_flags</a>, <a href="#ll_library-data">data</a>, <a href="#ll_library-defines">defines</a>, <a href="#ll_library-deps">deps</a>, <a href="#ll_library-emit">emit</a>, <a href="#ll_library-hdrs">hdrs</a>, <a href="#ll_library-includes">includes</a>, <a href="#ll_library-llvm_project_deps">llvm_project_deps</a>,
-           <a href="#ll_library-relative_angled_includes">relative_angled_includes</a>, <a href="#ll_library-relative_includes">relative_includes</a>, <a href="#ll_library-shared_object_link_flags">shared_object_link_flags</a>, <a href="#ll_library-srcs">srcs</a>,
+           <a href="#ll_library-relative_angled_includes">relative_angled_includes</a>, <a href="#ll_library-relative_includes">relative_includes</a>, <a href="#ll_library-sanitize">sanitize</a>, <a href="#ll_library-shared_object_link_flags">shared_object_link_flags</a>, <a href="#ll_library-srcs">srcs</a>,
            <a href="#ll_library-toolchain_configuration">toolchain_configuration</a>, <a href="#ll_library-transitive_angled_includes">transitive_angled_includes</a>, <a href="#ll_library-transitive_defines">transitive_defines</a>, <a href="#ll_library-transitive_hdrs">transitive_hdrs</a>,
            <a href="#ll_library-transitive_includes">transitive_includes</a>, <a href="#ll_library-transitive_relative_angled_includes">transitive_relative_angled_includes</a>, <a href="#ll_library-transitive_relative_includes">transitive_relative_includes</a>)
 </pre>
@@ -577,55 +583,61 @@ ll_library(<a href="#ll_library-name">name</a>, <a href="#ll_library-angled_incl
 <td class="text-left"><p>optional</p></td>
 <td class="text-left"><p>[]</p></td>
 </tr>
-<tr class="row-odd"><td class="text-left"><p><a id="ll_library-shared_object_link_flags"></a>shared_object_link_flags</p></td>
+<tr class="row-odd"><td class="text-left"><p><a id="ll_library-sanitize"></a>sanitize</p></td>
+<td class="text-left"><p>Enable sanitizers for this target.<br><br>        Some sanitizers come with heavy performance penalties. Use         <code>config_setting</code>s to only use them in debug builds. Many combinations of         multiple enabled sanitizers are invalid. If possible, use one at a time.<br><br>        <code>”address”</code>: Enable AddressSanitizer to detect memory errors. Typical             slowdown introduced is 2x. Executables that invoke CUDA-based             kernels, including those created via HIP and SYCL, need to be run             with <code>ASAN_OPTIONS=protect_shadow_gap=0</code>.         <code>”leak”</code>: Enable LeakSanitizer to detect memory leaks. This is already             integrated in AddressSanitizer. Enable LeakSanitizer if you want to             use it in standalone mode. Almost no performance overhead until the             end of the process where leaks are detected.         <code>”memory”</code>: Enable MemorySanitizer to detect uninitialized reads.             Typical slowdown introduced is 3x. Add             <code>”-fsanitize-memory-track-origins=2”</code> to the <code>compile_flags</code>             attribute to track the origins of uninitialized values.         <code>”undefined_behavior”</code>: Enable UndefinedBehaviorSanitizer to detect             undefined behavior. Small performance overhead.         <code>”thread”</code>: Enable ThreadSanitizer to detect data races. Typical             slowdown is 5x-15x. Typical memory overhead is 5x-10x.             ThreadSanitizer is nondeterminisic. Run sanitized executables             multiple times and build them with different optimization levels.</p></td>
+<td class="text-left"><p>List of strings</p></td>
+<td class="text-left"><p>optional</p></td>
+<td class="text-left"><p>[]</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p><a id="ll_library-shared_object_link_flags"></a>shared_object_link_flags</p></td>
 <td class="text-left"><p>Additional flags for the linker when emitting shared objects.<br><br>        Only used if <code>emit</code> includes <code>”shared_object”</code>.</p></td>
 <td class="text-left"><p>List of strings</p></td>
 <td class="text-left"><p>optional</p></td>
 <td class="text-left"><p>[]</p></td>
 </tr>
-<tr class="row-even"><td class="text-left"><p><a id="ll_library-srcs"></a>srcs</p></td>
+<tr class="row-odd"><td class="text-left"><p><a id="ll_library-srcs"></a>srcs</p></td>
 <td class="text-left"><p>Compilable source files for this target.<br><br>        Only compilable files and object files         <code>[“.ll”, “.o”, “.S”, “.c”, “.cl”, “.cpp”]</code> are allowed here.<br><br>        Headers should be placed in the <code>hdrs</code> attribute.</p></td>
 <td class="text-left"><p><a href="https://bazel.build/docs/build-ref.html#labels">List of labels</a></p></td>
 <td class="text-left"><p>optional</p></td>
 <td class="text-left"><p>[]</p></td>
 </tr>
-<tr class="row-odd"><td class="text-left"><p><a id="ll_library-toolchain_configuration"></a>toolchain_configuration</p></td>
+<tr class="row-even"><td class="text-left"><p><a id="ll_library-toolchain_configuration"></a>toolchain_configuration</p></td>
 <td class="text-left"><p>TODO</p></td>
 <td class="text-left"><p><a href="https://bazel.build/docs/build-ref.html#labels">Label</a></p></td>
 <td class="text-left"><p>optional</p></td>
 <td class="text-left"><p>//ll:current_ll_toolchain_configuration</p></td>
 </tr>
-<tr class="row-even"><td class="text-left"><p><a id="ll_library-transitive_angled_includes"></a>transitive_angled_includes</p></td>
+<tr class="row-odd"><td class="text-left"><p><a id="ll_library-transitive_angled_includes"></a>transitive_angled_includes</p></td>
 <td class="text-left"><p>Additional transitive angled include paths for this target.<br><br>        Includes in this attribute will be added to the compile command line         arguments for all downstream targets.</p></td>
 <td class="text-left"><p>List of strings</p></td>
 <td class="text-left"><p>optional</p></td>
 <td class="text-left"><p>[]</p></td>
 </tr>
-<tr class="row-odd"><td class="text-left"><p><a id="ll_library-transitive_defines"></a>transitive_defines</p></td>
+<tr class="row-even"><td class="text-left"><p><a id="ll_library-transitive_defines"></a>transitive_defines</p></td>
 <td class="text-left"><p>Additional transitive defines for this target.<br><br>        These defines will be defined by all depending downstream targets.</p></td>
 <td class="text-left"><p>List of strings</p></td>
 <td class="text-left"><p>optional</p></td>
 <td class="text-left"><p>[]</p></td>
 </tr>
-<tr class="row-even"><td class="text-left"><p><a id="ll_library-transitive_hdrs"></a>transitive_hdrs</p></td>
+<tr class="row-odd"><td class="text-left"><p><a id="ll_library-transitive_hdrs"></a>transitive_hdrs</p></td>
 <td class="text-left"><p>Transitive headers for this target.<br><br>        Any transitive headers will be exported (copied) to the build directory.<br><br>        Transitive headers are available to depending downstream targets.</p></td>
 <td class="text-left"><p><a href="https://bazel.build/docs/build-ref.html#labels">List of labels</a></p></td>
 <td class="text-left"><p>optional</p></td>
 <td class="text-left"><p>[]</p></td>
 </tr>
-<tr class="row-odd"><td class="text-left"><p><a id="ll_library-transitive_includes"></a>transitive_includes</p></td>
+<tr class="row-even"><td class="text-left"><p><a id="ll_library-transitive_includes"></a>transitive_includes</p></td>
 <td class="text-left"><p>Additional transitive include paths for this target.<br><br>        Includes in this attribute will be added to the compile command line         arguments for all downstream targets.</p></td>
 <td class="text-left"><p>List of strings</p></td>
 <td class="text-left"><p>optional</p></td>
 <td class="text-left"><p>[]</p></td>
 </tr>
-<tr class="row-even"><td class="text-left"><p><a id="ll_library-transitive_relative_angled_includes"></a>transitive_relative_angled_includes</p></td>
+<tr class="row-odd"><td class="text-left"><p><a id="ll_library-transitive_relative_angled_includes"></a>transitive_relative_angled_includes</p></td>
 <td class="text-left"><p>Additional transitive angled include paths, relative to the         original target workspace.<br><br>        Includes in this attribute will be added to the compile command line         arguments for all downstream targets.</p></td>
 <td class="text-left"><p>List of strings</p></td>
 <td class="text-left"><p>optional</p></td>
 <td class="text-left"><p>[]</p></td>
 </tr>
-<tr class="row-odd"><td class="text-left"><p><a id="ll_library-transitive_relative_includes"></a>transitive_relative_includes</p></td>
+<tr class="row-even"><td class="text-left"><p><a id="ll_library-transitive_relative_includes"></a>transitive_relative_includes</p></td>
 <td class="text-left"><p>Additional transitive include paths, relative to the original         target workspace.<br><br>        Includes in this attribute will be added to the compile command line         arguments for all downstream targets.</p></td>
 <td class="text-left"><p>List of strings</p></td>
 <td class="text-left"><p>optional</p></td>
