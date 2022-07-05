@@ -6,11 +6,13 @@ C++ code with a Clang/LLVM based toolchain built from upstream.
 
 **Features**
 
-- Clang/LLVM via the
+- Upstream Clang/LLVM via the
   `llvm-bazel-overlay <https://github.com/llvm/llvm-project/tree/main/utils/bazel>`_.
-- Custom overlays for ``libcxx``, ``libcxxabi``, ``libunwind`` and
-  ``compiler-rt`` and ``clang-tidy`` for a modern, encapsulated toolchain.
-- Multithreaded ``clang-tidy`` via an ``ll_compilation_database`` target.
+- Custom overlays for ``libcxx``, ``libcxxabi``, ``libunwind``, ``compiler-rt`` and
+  ``clang-tidy``.
+- Parallel ``clang-tidy`` invocations via an ``ll_compilation_database`` target.
+- Native support for ``AddressSanitizer``, ``LeakSanitizer``, ``MemorySanitizer``,
+  ``UndefinedBehaviorSanitizer``, and ``ThreadSanitizer`` via target attributes.
 - Heterogeneous programming for Nvidia GPUs using HIP and CUDA, including fully
   automated setup of required libraries, toolkits etc.
 
@@ -68,7 +70,7 @@ Copy the following lines into the just created ``.bashrc`` file::
    build --experimental_exec_configuration_distinguisher=off
    run --experimental_exec_configuration_distinguisher=off
 
-If you are running 64-bit Gentoo or another operating system where ``crt1.o``,
+If you are running 64-bit Gentoo or another operating system where ``Scrt1.o``,
 ``crti.o`` and ``crtn.o`` are located at ``/usr/lib64``, you are done.
 
 Otherwise, you need to locate the directory containing the ``crt*.o`` files on
