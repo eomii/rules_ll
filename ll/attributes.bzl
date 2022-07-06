@@ -153,6 +153,10 @@ DEFAULT_ATTRS = {
         `config_setting`s to only use them in debug builds. Many combinations of
         multiple enabled sanitizers are invalid. If possible, use one at a time.
 
+        Since sanitizers find issues during runtime, reports are
+        nondeterministic. Run sanitized executables multiple times and build
+        them with different optimization levels to maximize coverage.
+
         `"address"`: Enable AddressSanitizer to detect memory errors. Typical
             slowdown introduced is 2x. Executables that invoke CUDA-based
             kernels, including those created via HIP and SYCL, need to be run
@@ -169,8 +173,6 @@ DEFAULT_ATTRS = {
             undefined behavior. Small performance overhead.
         `"thread"`: Enable ThreadSanitizer to detect data races. Typical
             slowdown is 5x-15x. Typical memory overhead is 5x-10x.
-            ThreadSanitizer is nondeterminisic. Run sanitized executables
-            multiple times and build them with different optimization levels.
         """,
     ),
     "srcs": attr.label_list(

@@ -79,12 +79,15 @@ def compile_object_args(
     # Visualization.
     if ctx.var["COMPILATION_MODE"] == "dbg":
         args.add("-v")
+        args.add("-fdebug-default-version=5")
+        args.add("-fdebug-compilation-dir=.")
         args.add("-glldb")
-        args.add("-gdwarf-5")
-        args.add("-gdwarf64")
-        args.add("-gembed-source")
 
-        if ctx.attr.compilation_mode != "none":
+        if ctx.attr.compilation_mode in [
+            "cuda_nvidia",
+            "hip_nvidia",
+        ]:
+            args.add_all(["-Xarch_device", "-gdwarf-2"])
             args.add("--cuda-noopt-device-debug")
 
     # Sanitizers.
@@ -97,7 +100,6 @@ def compile_object_args(
         args.add("-fno-omit-frame-pointer")
         args.add_all(["-Xarch_host", "-glldb"])
         args.add_all(["-Xarch_host", "-gdwarf-5"])
-        args.add_all(["-Xarch_host", "-gdwarf64"])
 
         if ctx.attr.compilation_mode in [
             "cuda_nvidia",
@@ -306,7 +308,7 @@ def link_executable_args(ctx, in_files, out_file, mode):
     if ctx.var["COMPILATION_MODE"] != "dbg":
         args.add("--lto-O3")
 
-        if not has_sanitizers:
+        if not has_sanitizers and ctx.var["COMPILATION_MODE"] == "opt":
             args.add("--strip-all")
 
     if mode == "executable":
@@ -335,7 +337,9 @@ def link_executable_args(ctx, in_files, out_file, mode):
         "hip_nvidia",
     ]:
         args.add("-lrt")
-        args.add("-lcuda")
+        args.add(Label("@cuda_cudart").workspace_root, format = "-L%s/lib")
+        args.add("-lcudadevrt")
+        args.add("-lcudart_static")
 
     # Target-specific flags.
     if mode == "executable":
