@@ -1,5 +1,5 @@
 diff --git a/utils/bazel/llvm-project-overlay/clang/BUILD.bazel b/utils/bazel/llvm-project-overlay/clang/BUILD.bazel
-index e85c8d758..d783a21b9 100644
+index b9a81797a..71a6e5f29 100644
 --- a/utils/bazel/llvm-project-overlay/clang/BUILD.bazel
 +++ b/utils/bazel/llvm-project-overlay/clang/BUILD.bazel
 @@ -6,6 +6,7 @@ load("//llvm:tblgen.bzl", "gentbl")
@@ -19,7 +19,7 @@ index e85c8d758..d783a21b9 100644
  cc_library(
      name = "ast",
      srcs = glob([
-@@ -711,8 +714,11 @@ cc_library(
+@@ -711,8 +714,8 @@ cc_library(
          # least bad approach. Using `includes` is *specifically* problematic for
          # this library because it contains files that collide easily with system
          # headers such as `CXXABI.h`.
@@ -27,18 +27,49 @@ index e85c8d758..d783a21b9 100644
 -        "-I$(GENDIR)/external/llvm-project/clang/lib/AST/Interp",
 +        "-I$(GENDIR)/$(WORKSPACE_ROOT)/clang/lib/AST",
 +        "-I$(GENDIR)/$(WORKSPACE_ROOT)/clang/lib/AST/Interp",
-+    ],
-+    toolchains = [
-+        ":clang_workspace_root",
      ],
      textual_hdrs = [
          "include/clang/AST/AttrImpl.inc",
-@@ -1471,7 +1477,7 @@ genrule(
+@@ -732,6 +735,9 @@ cc_library(
+     ] + glob([
+         "include/clang/AST/*.def",
+     ]),
++    toolchains = [
++        ":clang_workspace_root",
++    ],
+     deps = [
+         ":ast_attr_gen",
+         ":ast_comment_command_info_gen",
+@@ -1455,10 +1461,19 @@ gentbl(
+ # We generate the set of builtin headers under a special subdirectory in the
+ # 'bin' section of the bazel output so that they can be used as data
+ # dependencies. It requires listing explicitly all the generated inputs here.
+-builtin_headers = glob(["lib/Headers/**/*.h"], exclude = [
+-    # FIXME: They are not handled in CMake side.
+-    "lib/Headers/openmp_wrappers/time.h",
+-    "lib/Headers/ppc_wrappers/nmmintrin.h",
++builtin_headers = glob([
++        "lib/Headers/**/*.h",
++        "lib/Headers/cuda_wrappers/algorithm",
++        "lib/Headers/cuda_wrappers/complex",
++        "lib/Headers/cuda_wrappers/new",
++        "lib/Headers/openmp_wrappers/cmath",
++        "lib/Headers/openmp_wrappers/complex",
++        "lib/Headers/openmp_wrappers/new",
++    ],
++    exclude = [
++        # FIXME: They are not handled in CMake side.
++        "lib/Headers/openmp_wrappers/time.h",
++        "lib/Headers/ppc_wrappers/nmmintrin.h",
+ ]) + [
+     "lib/Headers/arm_cde.h",
+     "lib/Headers/arm_fp16.h",
+@@ -1475,7 +1490,7 @@ genrule(
      outs = [hdr.replace("lib/Headers/", "staging/include/") for hdr in builtin_headers],
      cmd = """
         for src in $(SRCS); do
 -         relsrc=$${src/*external\\/llvm-project\\/clang\\/lib\\/Headers\\/}
-+         relsrc=$${src/*\\/lib\\/Headers\\/}
++         relsrc=$${src/*\\/clang\\/lib\\/Headers\\/}
           target=$(@D)/staging/include/$$relsrc
           mkdir -p $$(dirname $$target)
           cp $$src $$target

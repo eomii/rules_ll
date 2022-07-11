@@ -28,8 +28,8 @@ llvm_project_overlay = use_extension(
     "llvm_project_overlay",
 )
 llvm_project_overlay.configure(
-    commit = "1dd2c93a660cd5de0769ff88634fe149904caa17",
-    sha256 = "75ae53aebb11171985e198150ba08c9bdab16ac8ca6953f30ac1570e4ea3fe8b",
+    commit = "474c873148b1441f1dd7a2b269441a1b20e30aa2",
+    sha256 = "9cd2fbb8e53f1179072bf7b97e63009cef58fc8b91bf27400963a379ed623818",
     targets = ["AMDGPU", "NVPTX", "X86"],
 )
 use_repo(
