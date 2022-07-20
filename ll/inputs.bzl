@@ -43,7 +43,7 @@ def compile_object_inputs(ctx, headers, toolchain_type):
                 headers,
             ] + llvm_project_deps,
         )
-    elif config in ["cuda_nvidia"]:
+    elif config == "cuda_nvidia":
         return depset(
             ctx.files.srcs +
             ctx.files.data +
@@ -64,6 +64,18 @@ def compile_object_inputs(ctx, headers, toolchain_type):
             ctx.toolchains[toolchain_type].cuda_toolkit +
             ctx.toolchains[toolchain_type].hip_libraries +
             ctx.toolchains[toolchain_type].builtin_includes,
+            transitive = [
+                headers,
+            ] + llvm_project_deps,
+        )
+    elif config == "sycl_cpu":
+        return depset(
+            ctx.files.srcs +
+            ctx.files.data +
+            ctx.toolchains[toolchain_type].cpp_stdhdrs +
+            ctx.toolchains[toolchain_type].cpp_abihdrs +
+            ctx.toolchains[toolchain_type].builtin_includes +
+            ctx.toolchains[toolchain_type].hipsycl_hdrs,
             transitive = [
                 headers,
             ] + llvm_project_deps,
@@ -122,6 +134,20 @@ def link_executable_inputs(ctx, in_files, toolchain_type):
             ctx.toolchains[toolchain_type].unwind_library +
             ctx.toolchains[toolchain_type].compiler_runtime,
         )
+    elif config == "sycl_cpu":
+        return depset(
+            in_files +
+            ctx.files.deps +
+            ctx.files.libraries +
+            ctx.files.data +
+            ctx.files.llvm_project_deps +
+            ctx.toolchains[toolchain_type].local_crt +
+            ctx.toolchains[toolchain_type].cpp_stdlib +
+            ctx.toolchains[toolchain_type].unwind_library +
+            ctx.toolchains[toolchain_type].cpp_abilib +
+            ctx.toolchains[toolchain_type].compiler_runtime +
+            [ctx.toolchains[toolchain_type].hipsycl_runtime],
+        )
     else:
         fail("Cannot link with this toolchain.")
 
@@ -135,13 +161,16 @@ def link_shared_object_inputs(ctx, in_files, toolchain_type):
     config = ctx.attr.toolchain_configuration[BuildSettingInfo].value
 
     if config == "bootstrap":
-        fail("Cannot link with bootstrap toolchain.")
+        return depset(
+            ctx.files.deps +
+            ctx.files.data +
+            ctx.files.llvm_project_deps,
+        )
 
     elif config == "cpp":
         return depset(
             in_files +
             ctx.files.deps +
-            # ctx.files.libraries +
             ctx.files.data +
             ctx.files.llvm_project_deps +
             ctx.toolchains[toolchain_type].local_crt +
@@ -154,7 +183,6 @@ def link_shared_object_inputs(ctx, in_files, toolchain_type):
         return depset(
             in_files +
             ctx.files.deps +
-            # ctx.files.libraries +
             ctx.files.data +
             ctx.files.llvm_project_deps +
             ctx.toolchains[toolchain_type].local_crt +
@@ -168,7 +196,6 @@ def link_shared_object_inputs(ctx, in_files, toolchain_type):
         return depset(
             in_files +
             ctx.files.deps +
-            ctx.files.libraries +
             ctx.files.data +
             ctx.files.llvm_project_deps +
             ctx.toolchains[toolchain_type].local_crt +
@@ -180,4 +207,4 @@ def link_shared_object_inputs(ctx, in_files, toolchain_type):
             ctx.toolchains[toolchain_type].hip_libraries,
         )
     else:
-        fail("Cannot link with this toolchain.")
+        fail("Cannot link shared objects with this toolchain.")

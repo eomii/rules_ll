@@ -144,6 +144,13 @@ def link_shared_object(ctx, in_files, toolchain_type):
         inputs = in_files,
         executable = ctx.toolchains[toolchain_type].linker,
         arguments = link_executable_args(ctx, in_files, out_file, mode = "shared_object"),
+        tools = [
+                    ctx.toolchains[toolchain_type].linker,
+                ] + ctx.toolchains[toolchain_type].address_sanitizer +
+                ctx.toolchains[toolchain_type].leak_sanitizer +
+                ctx.toolchains[toolchain_type].thread_sanitizer +
+                ctx.toolchains[toolchain_type].memory_sanitizer +
+                ctx.toolchains[toolchain_type].undefined_behavior_sanitizer,
         mnemonic = "LlLinkSharedObject",
         use_default_shell_env = False,
     )
@@ -177,7 +184,12 @@ def link_executable(ctx, in_files, toolchain_type):
                 ctx.toolchains[toolchain_type].thread_sanitizer +
                 ctx.toolchains[toolchain_type].memory_sanitizer +
                 ctx.toolchains[toolchain_type].undefined_behavior_sanitizer,
-        arguments = link_executable_args(ctx, in_files, out_file, mode = "executable"),
+        arguments = link_executable_args(
+            ctx,
+            in_files,
+            out_file,
+            mode = "executable",
+        ),
         mnemonic = "LlLinkExecutable",
         use_default_shell_env = False,
         env = compile_object_environment(ctx, toolchain_type),

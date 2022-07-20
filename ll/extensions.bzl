@@ -114,10 +114,9 @@ def _llvm_configure_extension_impl(ctx):
             ),
         ],
         patches = [
-            "@rules_ll//patches:bzlmod_compatibility_patch.diff",
             "@rules_ll//patches:compiler-rt_float128_patch.diff",
-            "@rules_ll//patches:clang_header_patch.diff",
             "@rules_ll//patches:mallinfo2_patch.diff",
+            "@rules_ll//patches:rules_ll_compatibility_patch.diff",
             "@rules_ll//patches:rules_ll_overlay_patch.diff",
         ],
         patch_args = ["-p1"],
@@ -125,7 +124,7 @@ def _llvm_configure_extension_impl(ctx):
 
     llvm_configure(name = "llvm-project", targets = targets)
 
-    llvm_disable_optional_support_deps()
+    llvm_use_system_support_deps()
 
 llvm_project_overlay = module_extension(
     implementation = _llvm_configure_extension_impl,

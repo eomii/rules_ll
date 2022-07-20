@@ -38,12 +38,15 @@ DEFAULT_ATTRS = {
 
         `"hip_nvidia"` will treat compilable sources as HIP kernels.
 
+        `"sycl_cpu"` will enable highly experimental SYCL CPU support using
+        hipSYCL. Do not use this. It is not fully implemented yet.
+
         `"bootstrap"` is used for the internal dependencies of the
             `ll_toolchain` such as `libcxxabi` etc.
         """,
         default = "cpp",
         # TODO: hip_amd, sycl_nvidia, sycl_amd
-        values = ["cpp", "cuda_nvidia", "hip_nvidia", "bootstrap"],
+        values = ["cpp", "cuda_nvidia", "hip_nvidia", "sycl_cpu", "bootstrap"],
     ),
     "compile_flags": attr.string_list(
         doc = """Additional flags for the compiler.
@@ -149,13 +152,14 @@ DEFAULT_ATTRS = {
     "sanitize": attr.string_list(
         doc = """Enable sanitizers for this target.
 
-        Some sanitizers come with heavy performance penalties. Use
-        `config_setting`s to only use them in debug builds. Many combinations of
-        multiple enabled sanitizers are invalid. If possible, use one at a time.
+        Some sanitizers come with heavy performance penalties. Many combinations
+        of multiple enabled sanitizers are invalid. If possible, use only one at
+        a time.
 
-        Since sanitizers find issues during runtime, reports are
-        nondeterministic. Run sanitized executables multiple times and build
-        them with different optimization levels to maximize coverage.
+        Since sanitizers find issues during runtime, error reports are
+        nondeterministic and not reproducible at an address level. Run sanitized
+        executables multiple times and build them with different optimization
+        levels to maximize coverage.
 
         `"address"`: Enable AddressSanitizer to detect memory errors. Typical
             slowdown introduced is 2x. Executables that invoke CUDA-based
@@ -307,7 +311,7 @@ LL_TOOLCHAIN_ATTRS = {
         #     "@llvm-project//compiler-rt/lib/asan:clang_rt.asan",
         #     "@llvm-porject//compiler-rt/lib/asan:clang_rt.asan_cxx",
         # ],
-        # cfg = transition_to_bootstrap,
+        cfg = transition_to_bootstrap,
     ),
     "archiver": attr.label(
         doc = "The archiver.",
@@ -409,6 +413,23 @@ LL_TOOLCHAIN_ATTRS = {
         #     "@hipamd//:headers",
         # ],
         cfg = transition_to_cpp,
+    ),
+    "hipsycl_plugin": attr.label(
+        doc = """TODO""",
+        cfg = transition_to_cpp,
+        allow_single_file = True,
+    ),
+    "hipsycl_runtime": attr.label(
+        doc = """TODO""",
+        allow_single_file = True,
+        cfg = transition_to_cpp,
+    ),
+    "hipsycl_backends": attr.label_list(
+        doc = """TODO""",
+        # TODO: Split backends into CPU, CUDA and HIP.
+    ),
+    "hipsycl_hdrs": attr.label_list(
+        doc = """TODO""",
     ),
     "leak_sanitizer": attr.label_list(
         doc = "LeakSanitizer libraries.",

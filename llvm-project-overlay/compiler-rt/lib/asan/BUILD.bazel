@@ -30,8 +30,8 @@ filegroup(
     ],
 )
 
-ll_library(
-    name = "RTAsan",
+filegroup(
+    name = "asan_sources",
     srcs = [
         "asan_activation.cpp",
         "asan_allocator.cpp",
@@ -64,6 +64,36 @@ ll_library(
         "asan_thread.cpp",
         "asan_win.cpp",
     ],
+)
+
+filegroup(
+    name = "asan_cxx_sources",
+    srcs = [
+        "asan_new_delete.cpp",
+    ],
+)
+
+filegroup(
+    name = "asan_static_sources",
+    srcs = [
+        "asan_rtl_static.cpp",
+        "asan_rtl_x86_64.S",  # Not Win32 and not Apple.
+    ],
+)
+
+filegroup(
+    name = "asan_preinit_sources",
+    srcs = [
+        "asan_preinit.cpp",
+    ],
+)
+
+ll_library(
+    name = "RTAsan_dynamic",
+    srcs = [
+        ":asan_cxx_sources",
+        ":asan_sources",
+    ],
     hdrs = [
         ":asan_headers",
         "//compiler-rt/lib/interception:interception_headers",
@@ -72,6 +102,29 @@ ll_library(
         "//compiler-rt/lib/ubsan:ubsan_headers",
     ],
     compilation_mode = "bootstrap",
+    compile_flags = [
+        "-fvisibility=hidden",
+    ],
+    defines = ["ASAN_DYNAMIC=1"],
+    emit = ["objects"],
+    relative_includes = ["compiler-rt/lib"],
+    visibility = ["//visibility:public"],
+)
+
+ll_library(
+    name = "RTAsan",
+    srcs = [
+        ":asan_sources",
+    ],
+    hdrs = [
+        ":asan_headers",
+        "//compiler-rt/lib/interception:interception_headers",
+        "//compiler-rt/lib/lsan:lsan_headers",
+        "//compiler-rt/lib/sanitizer_common:sanitizer_impl_headers",
+        "//compiler-rt/lib/ubsan:ubsan_headers",
+    ],
+    compilation_mode = "bootstrap",
+    emit = ["objects"],
     relative_includes = ["compiler-rt/lib"],
     visibility = ["//visibility:public"],
 )
@@ -79,7 +132,7 @@ ll_library(
 ll_library(
     name = "RTAsan_cxx",
     srcs = [
-        "asan_new_delete.cpp",
+        ":asan_cxx_sources",
     ],
     hdrs = [
         ":asan_headers",
@@ -87,6 +140,7 @@ ll_library(
         "//compiler-rt/lib/sanitizer_common:sanitizer_impl_headers",
     ],
     compilation_mode = "bootstrap",
+    emit = ["objects"],
     relative_includes = ["compiler-rt/lib"],
     visibility = ["//visibility:public"],
 )
@@ -102,6 +156,7 @@ ll_library(
         "//compiler-rt/lib/sanitizer_common:sanitizer_impl_headers",
     ],
     compilation_mode = "bootstrap",
+    emit = ["objects"],
     relative_includes = ["compiler-rt/lib"],
     visibility = ["//visibility:public"],
 )
@@ -109,13 +164,14 @@ ll_library(
 ll_library(
     name = "RTAsan_preinit",
     srcs = [
-        "asan_preinit.cpp",
+        ":asan_preinit_sources",
     ],
     hdrs = [
         ":asan_headers",
         "//compiler-rt/lib/sanitizer_common:sanitizer_impl_headers",
     ],
     compilation_mode = "bootstrap",
+    emit = ["objects"],
     relative_includes = ["compiler-rt/lib"],
     visibility = ["//visibility:public"],
 )
@@ -134,6 +190,29 @@ ll_library(
         "//compiler-rt/lib/sanitizer_common:RTSanitizerCommonLibc",
         "//compiler-rt/lib/sanitizer_common:RTSanitizerCommonSymbolizer",
         "//compiler-rt/lib/ubsan:RTUbsan",
+    ],
+)
+
+ll_library(
+    # We want the output library to be named libasan.so. Otherwise it will not
+    # be recognized by IsDynamicRTName in asan_linux.cpp.
+    name = "libasan",
+    compilation_mode = "bootstrap",
+    emit = ["shared_object"],
+    shared_object_link_flags = [
+        "--eh-frame-hdr",
+    ],
+    visibility = ["//visibility:public"],
+    deps = [
+        ":RTAsan_dynamic",
+        "//compiler-rt/lib/interception:RTInterception",
+        "//compiler-rt/lib/lsan:RTLSanCommon",
+        "//compiler-rt/lib/sanitizer_common:RTSanitizerCommon",
+        "//compiler-rt/lib/sanitizer_common:RTSanitizerCommonCoverage",
+        "//compiler-rt/lib/sanitizer_common:RTSanitizerCommonLibc",
+        "//compiler-rt/lib/sanitizer_common:RTSanitizerCommonSymbolizer",
+        "//compiler-rt/lib/ubsan:RTUbsan",
+        "//compiler-rt/lib/ubsan:RTUbsan_cxx",
     ],
 )
 

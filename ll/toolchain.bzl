@@ -44,6 +44,10 @@ def _ll_toolchain_impl(ctx):
             machine_code_tool = ctx.executable.machine_code_tool,
             cuda_toolkit = ctx.files.cuda_toolkit,
             hip_libraries = ctx.files.hip_libraries,
+            hipsycl_plugin = ctx.file.hipsycl_plugin,
+            hipsycl_runtime = ctx.file.hipsycl_runtime,
+            hipsycl_backends = ctx.files.hipsycl_backends,
+            hipsycl_hdrs = ctx.files.hipsycl_hdrs,
         ),
     ]
 

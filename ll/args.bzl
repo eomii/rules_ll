@@ -81,7 +81,7 @@ def compile_object_args(
         args.add("-v")
         args.add("-fdebug-default-version=5")
         args.add("-fdebug-compilation-dir=.")
-        args.add("-glldb")
+        args.add("-Xarch_host", "-glldb")
 
         if ctx.attr.compilation_mode in [
             "cuda_nvidia",
@@ -110,6 +110,7 @@ def compile_object_args(
 
     if "address" in ctx.attr.sanitize:
         args.add("-fsanitize=address")
+        args.add_all(["-mllvm", "-asan-force-dynamic-shadow=1"])
 
     if "memory" in ctx.attr.sanitize:
         args.add("-fsanitize=memory")
@@ -171,6 +172,26 @@ def compile_object_args(
             ],
             format_each = "-I%s/include",
         )
+    if ctx.attr.compilation_mode == "sycl_cpu":
+        args.add(
+            Label("@hipsycl//hipsycl_headers"),
+            format = "-I%s",
+        )
+
+        args.add("-fopenmp")
+        args.add("-D_ENABLE_EXTENDED_ALIGNED_STORAGE")
+        args.add("-D__HIPSYCL_ENABLE_OMPHOST_TARGET__")
+        args.add(
+            ctx.toolchains["//ll:toolchain_type"].hipsycl_plugin,
+            format = "-fplugin=%s",
+        )
+
+        # TODO: We need this to get rid of hipSYCLs boost dependencies.
+        # args.add(
+        #     ctx.toolchains["//ll:toolchain_type"].hipsycl_plugin,
+        #     format="-fpass-plugin=%s",
+        # )
+        args.add("-D__HIPSYCL_USE_ACCELERATED_CPU__")
 
     # Write compilation database.
     args.add("-Xarch_host")
@@ -304,6 +325,9 @@ def link_executable_args(ctx, in_files, out_file, mode):
     if has_sanitizers:
         args.add("--no-whole-archive")
 
+    # Add dynamic linker.
+    args.add("-dynamic-linker=/lib64/ld-linux-x86-64.so.2")
+
     # Optimization.
     if ctx.var["COMPILATION_MODE"] != "dbg":
         args.add("--lto-O3")
@@ -322,14 +346,13 @@ def link_executable_args(ctx, in_files, out_file, mode):
     # Encapsulation.
     args.add("--nostdlib")
 
-    # Add dynamic linker.
-    args.add("-dynamic-linker=/lib64/ld-linux-x86-64.so.2")
-
     # Additional system libraries.
     args.add("-L/usr/lib64")
     args.add("-lm")  # Math.
     args.add("-ldl")  # Dynamic linking.
     args.add("-lpthread")  # Thread support.
+    args.add("-ltinfo")  # Terminfo.
+    args.add("-lz")  # Zlib.
     args.add("-lc")  # Glibc.
 
     if ctx.attr.compilation_mode in [
@@ -340,6 +363,9 @@ def link_executable_args(ctx, in_files, out_file, mode):
         args.add(Label("@cuda_cudart").workspace_root, format = "-L%s/lib")
         args.add("-lcudadevrt")
         args.add("-lcudart_static")
+
+    if ctx.attr.compilation_mode == "sycl_cpu":
+        args.add(ctx.toolchains["//ll:toolchain_type"].hipsycl_runtime)
 
     # Target-specific flags.
     if mode == "executable":

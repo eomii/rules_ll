@@ -379,10 +379,10 @@ index 000000000..1bb8bf6d7
 +# empty
 diff --git a/utils/bazel/llvm-project-overlay/compiler-rt/lib/asan/BUILD.bazel b/utils/bazel/llvm-project-overlay/compiler-rt/lib/asan/BUILD.bazel
 new file mode 100644
-index 000000000..ac5ba8720
+index 000000000..e4652c7dc
 --- /dev/null
 +++ b/utils/bazel/llvm-project-overlay/compiler-rt/lib/asan/BUILD.bazel
-@@ -0,0 +1,166 @@
+@@ -0,0 +1,245 @@
 +load("@rules_ll//ll:defs.bzl", "ll_library")
 +
 +filegroup(
@@ -415,8 +415,8 @@ index 000000000..ac5ba8720
 +    ],
 +)
 +
-+ll_library(
-+    name = "RTAsan",
++filegroup(
++    name = "asan_sources",
 +    srcs = [
 +        "asan_activation.cpp",
 +        "asan_allocator.cpp",
@@ -449,14 +449,67 @@ index 000000000..ac5ba8720
 +        "asan_thread.cpp",
 +        "asan_win.cpp",
 +    ],
++)
++
++filegroup(
++    name = "asan_cxx_sources",
++    srcs = [
++        "asan_new_delete.cpp",
++    ],
++)
++
++filegroup(
++    name = "asan_static_sources",
++    srcs = [
++        "asan_rtl_static.cpp",
++        "asan_rtl_x86_64.S",  # Not Win32 and not Apple.
++    ],
++)
++
++filegroup(
++    name = "asan_preinit_sources",
++    srcs = [
++        "asan_preinit.cpp",
++    ],
++)
++
++ll_library(
++    name = "RTAsan_dynamic",
++    srcs = [
++        ":asan_cxx_sources",
++        ":asan_sources",
++    ],
 +    hdrs = [
 +        ":asan_headers",
-+        "//compiler-rt/lib/sanitizer_common:sanitizer_impl_headers",
 +        "//compiler-rt/lib/interception:interception_headers",
 +        "//compiler-rt/lib/lsan:lsan_headers",
++        "//compiler-rt/lib/sanitizer_common:sanitizer_impl_headers",
 +        "//compiler-rt/lib/ubsan:ubsan_headers",
 +    ],
 +    compilation_mode = "bootstrap",
++    compile_flags = [
++        "-fvisibility=hidden",
++    ],
++    defines = ["ASAN_DYNAMIC=1"],
++    emit = ["objects"],
++    relative_includes = ["compiler-rt/lib"],
++    visibility = ["//visibility:public"],
++)
++
++ll_library(
++    name = "RTAsan",
++    srcs = [
++        ":asan_sources",
++    ],
++    hdrs = [
++        ":asan_headers",
++        "//compiler-rt/lib/interception:interception_headers",
++        "//compiler-rt/lib/lsan:lsan_headers",
++        "//compiler-rt/lib/sanitizer_common:sanitizer_impl_headers",
++        "//compiler-rt/lib/ubsan:ubsan_headers",
++    ],
++    compilation_mode = "bootstrap",
++    emit = ["objects"],
 +    relative_includes = ["compiler-rt/lib"],
 +    visibility = ["//visibility:public"],
 +)
@@ -464,14 +517,15 @@ index 000000000..ac5ba8720
 +ll_library(
 +    name = "RTAsan_cxx",
 +    srcs = [
-+        "asan_new_delete.cpp",
++        ":asan_cxx_sources",
 +    ],
 +    hdrs = [
 +        ":asan_headers",
-+        "//compiler-rt/lib/sanitizer_common:sanitizer_impl_headers",
 +        "//compiler-rt/lib/interception:interception_headers",
++        "//compiler-rt/lib/sanitizer_common:sanitizer_impl_headers",
 +    ],
 +    compilation_mode = "bootstrap",
++    emit = ["objects"],
 +    relative_includes = ["compiler-rt/lib"],
 +    visibility = ["//visibility:public"],
 +)
@@ -487,6 +541,7 @@ index 000000000..ac5ba8720
 +        "//compiler-rt/lib/sanitizer_common:sanitizer_impl_headers",
 +    ],
 +    compilation_mode = "bootstrap",
++    emit = ["objects"],
 +    relative_includes = ["compiler-rt/lib"],
 +    visibility = ["//visibility:public"],
 +)
@@ -494,13 +549,14 @@ index 000000000..ac5ba8720
 +ll_library(
 +    name = "RTAsan_preinit",
 +    srcs = [
-+        "asan_preinit.cpp",
++        ":asan_preinit_sources",
 +    ],
 +    hdrs = [
 +        ":asan_headers",
 +        "//compiler-rt/lib/sanitizer_common:sanitizer_impl_headers",
 +    ],
 +    compilation_mode = "bootstrap",
++    emit = ["objects"],
 +    relative_includes = ["compiler-rt/lib"],
 +    visibility = ["//visibility:public"],
 +)
@@ -508,6 +564,7 @@ index 000000000..ac5ba8720
 +ll_library(
 +    name = "clang_rt.asan",
 +    compilation_mode = "bootstrap",
++    visibility = ["//visibility:public"],
 +    deps = [
 +        ":RTAsan",
 +        ":RTAsan_preinit",
@@ -519,35 +576,57 @@ index 000000000..ac5ba8720
 +        "//compiler-rt/lib/sanitizer_common:RTSanitizerCommonSymbolizer",
 +        "//compiler-rt/lib/ubsan:RTUbsan",
 +    ],
++)
++
++ll_library(
++    # We want the output library to be named libasan.so. Otherwise it will not
++    # be recognized by IsDynamicRTName in asan_linux.cpp.
++    name = "libasan",
++    compilation_mode = "bootstrap",
++    emit = ["shared_object"],
++    shared_object_link_flags = [
++        "--eh-frame-hdr",
++    ],
 +    visibility = ["//visibility:public"],
++    deps = [
++        ":RTAsan_dynamic",
++        "//compiler-rt/lib/interception:RTInterception",
++        "//compiler-rt/lib/lsan:RTLSanCommon",
++        "//compiler-rt/lib/sanitizer_common:RTSanitizerCommon",
++        "//compiler-rt/lib/sanitizer_common:RTSanitizerCommonCoverage",
++        "//compiler-rt/lib/sanitizer_common:RTSanitizerCommonLibc",
++        "//compiler-rt/lib/sanitizer_common:RTSanitizerCommonSymbolizer",
++        "//compiler-rt/lib/ubsan:RTUbsan",
++        "//compiler-rt/lib/ubsan:RTUbsan_cxx",
++    ],
 +)
 +
 +ll_library(
 +    name = "clang_rt.asan_cxx",
 +    compilation_mode = "bootstrap",
++    visibility = ["//visibility:public"],
 +    deps = [
 +        ":RTAsan_cxx",
 +        "//compiler-rt/lib/ubsan:RTUbsan_cxx",
 +    ],
-+    visibility = ["//visibility:public"],
 +)
 +
 +ll_library(
 +    name = "clang_rt.asan_static",
 +    compilation_mode = "bootstrap",
++    visibility = ["//visibility:public"],
 +    deps = [
 +        ":RTAsan_static",
 +    ],
-+    visibility = ["//visibility:public"],
 +)
 +
 +ll_library(
 +    name = "clang_rt.asan-preinit",
 +    compilation_mode = "bootstrap",
++    visibility = ["//visibility:public"],
 +    deps = [
 +        ":RTAsan_preinit",
 +    ],
-+    visibility = ["//visibility:public"],
 +)
 diff --git a/utils/bazel/llvm-project-overlay/compiler-rt/lib/builtins/BUILD.bazel b/utils/bazel/llvm-project-overlay/compiler-rt/lib/builtins/BUILD.bazel
 new file mode 100644
@@ -816,21 +895,21 @@ index 000000000..fc768e047
 +)
 diff --git a/utils/bazel/llvm-project-overlay/compiler-rt/lib/interception/BUILD.bazel b/utils/bazel/llvm-project-overlay/compiler-rt/lib/interception/BUILD.bazel
 new file mode 100644
-index 000000000..3aa7964f9
+index 000000000..831b2eb68
 --- /dev/null
 +++ b/utils/bazel/llvm-project-overlay/compiler-rt/lib/interception/BUILD.bazel
 @@ -0,0 +1,29 @@
 +load("@rules_ll//ll:defs.bzl", "ll_library")
 +
 +filegroup(
-+   name = "interception_headers",
-+   srcs = [
++    name = "interception_headers",
++    srcs = [
 +        "interception.h",
 +        "interception_linux.h",
 +        "interception_mac.h",
 +        "interception_win.h",
-+   ],
-+   visibility = ["//visibility:public"],
++    ],
++    visibility = ["//visibility:public"],
 +)
 +
 +ll_library(
@@ -851,7 +930,7 @@ index 000000000..3aa7964f9
 +)
 diff --git a/utils/bazel/llvm-project-overlay/compiler-rt/lib/lsan/BUILD.bazel b/utils/bazel/llvm-project-overlay/compiler-rt/lib/lsan/BUILD.bazel
 new file mode 100644
-index 000000000..990fb7eff
+index 000000000..7188ec565
 --- /dev/null
 +++ b/utils/bazel/llvm-project-overlay/compiler-rt/lib/lsan/BUILD.bazel
 @@ -0,0 +1,63 @@
@@ -903,8 +982,8 @@ index 000000000..990fb7eff
 +    ],
 +    hdrs = [
 +        ":lsan_headers",
-+        "//compiler-rt/lib/sanitizer_common:sanitizer_impl_headers",
 +        "//compiler-rt/lib/interception:interception_headers",
++        "//compiler-rt/lib/sanitizer_common:sanitizer_impl_headers",
 +    ],
 +    compilation_mode = "bootstrap",
 +    relative_includes = ["compiler-rt/lib"],
@@ -920,15 +999,15 @@ index 000000000..990fb7eff
 +)
 diff --git a/utils/bazel/llvm-project-overlay/compiler-rt/lib/msan/BUILD.bazel b/utils/bazel/llvm-project-overlay/compiler-rt/lib/msan/BUILD.bazel
 new file mode 100644
-index 000000000..11ca3c02f
+index 000000000..cba7a625a
 --- /dev/null
 +++ b/utils/bazel/llvm-project-overlay/compiler-rt/lib/msan/BUILD.bazel
-@@ -0,0 +1,75 @@
+@@ -0,0 +1,74 @@
 +load("@rules_ll//ll:defs.bzl", "ll_library")
 +
 +filegroup(
 +    name = "msan_headers",
-+    srcs  = [
++    srcs = [
 +        "msan.h",
 +        "msan_allocator.h",
 +        "msan_chained_origin_depot.h",
@@ -943,7 +1022,6 @@ index 000000000..11ca3c02f
 +    visibility = ["//visibility:public"],
 +)
 +
-+
 +ll_library(
 +    name = "clang_rt.msan",
 +    srcs = [
@@ -952,30 +1030,30 @@ index 000000000..11ca3c02f
 +        "msan_chained_origin_depot.cpp",
 +        "msan_interceptors.cpp",
 +        "msan_linux.cpp",
++        "msan_poisoning.cpp",
 +        "msan_report.cpp",
 +        "msan_thread.cpp",
-+        "msan_poisoning.cpp",
 +    ],
 +    hdrs = [
 +        ":msan_headers",
++        "//compiler-rt/lib/interception:interception_headers",
 +        "//compiler-rt/lib/sanitizer_common:sanitizer_impl_headers",
 +        "//compiler-rt/lib/ubsan:ubsan_headers",
-+        "//compiler-rt/lib/interception:interception_headers",
 +    ],
-+    relative_includes = ["compiler-rt/lib"],
 +    compilation_mode = "bootstrap",
 +    compile_flags = [
 +        "-ffreestanding",
 +    ],
++    relative_includes = ["compiler-rt/lib"],
++    visibility = ["//visibility:public"],
 +    deps = [
 +        "//compiler-rt/lib/interception:RTInterception",
 +        "//compiler-rt/lib/sanitizer_common:RTSanitizerCommon",
-+        "//compiler-rt/lib/sanitizer_common:RTSanitizerCommonLibc",
 +        "//compiler-rt/lib/sanitizer_common:RTSanitizerCommonCoverage",
++        "//compiler-rt/lib/sanitizer_common:RTSanitizerCommonLibc",
 +        "//compiler-rt/lib/sanitizer_common:RTSanitizerCommonSymbolizer",
 +        "//compiler-rt/lib/ubsan:RTUbsan",
 +    ],
-+    visibility = ["//visibility:public"],
 +)
 +
 +ll_library(
@@ -983,28 +1061,28 @@ index 000000000..11ca3c02f
 +    srcs = [
 +        "msan_new_delete.cpp",
 +    ],
-+    relative_includes = ["compiler-rt/lib"],
 +    hdrs = [
 +        ":msan_headers",
++        "//compiler-rt/lib/interception:interception_headers",
 +        "//compiler-rt/lib/sanitizer_common:sanitizer_impl_headers",
 +        "//compiler-rt/lib/ubsan:ubsan_headers",
-+        "//compiler-rt/lib/interception:interception_headers",
 +    ],
 +    compilation_mode = "bootstrap",
 +    compile_flags = [
 +        "-ffreestanding",
 +    ],
++    relative_includes = ["compiler-rt/lib"],
++    visibility = ["//visibility:public"],
 +    deps = [
 +        "//compiler-rt/lib/ubsan:RTUbsan_cxx",
 +    ],
-+    visibility = ["//visibility:public"],
 +)
 diff --git a/utils/bazel/llvm-project-overlay/compiler-rt/lib/sanitizer_common/BUILD.bazel b/utils/bazel/llvm-project-overlay/compiler-rt/lib/sanitizer_common/BUILD.bazel
 new file mode 100644
-index 000000000..7fadcb8ec
+index 000000000..cce94bea1
 --- /dev/null
 +++ b/utils/bazel/llvm-project-overlay/compiler-rt/lib/sanitizer_common/BUILD.bazel
-@@ -0,0 +1,245 @@
+@@ -0,0 +1,244 @@
 +load("@rules_ll//ll:defs.bzl", "ll_library")
 +
 +filegroup(
@@ -1048,7 +1126,6 @@ index 000000000..7fadcb8ec
 +        "sanitizer_common_interceptors_vfork_i386.inc.S",
 +        "sanitizer_common_interceptors_vfork_riscv64.inc.S",
 +        "sanitizer_common_interceptors_vfork_x86_64.inc.S",
-+
 +        "sanitizer_common_interface.inc",
 +        "sanitizer_common_interface_posix.inc",
 +        "sanitizer_common_syscalls.inc",
@@ -1252,7 +1329,7 @@ index 000000000..7fadcb8ec
 +)
 diff --git a/utils/bazel/llvm-project-overlay/compiler-rt/lib/tsan/BUILD.bazel b/utils/bazel/llvm-project-overlay/compiler-rt/lib/tsan/BUILD.bazel
 new file mode 100644
-index 000000000..5cfd97b13
+index 000000000..45becbca8
 --- /dev/null
 +++ b/utils/bazel/llvm-project-overlay/compiler-rt/lib/tsan/BUILD.bazel
 @@ -0,0 +1,114 @@
@@ -1332,23 +1409,23 @@ index 000000000..5cfd97b13
 +    ],
 +    hdrs = [
 +        ":tsan_headers",
++        "//compiler-rt/lib/interception:interception_headers",
 +        "//compiler-rt/lib/sanitizer_common:sanitizer_impl_headers",
 +        "//compiler-rt/lib/ubsan:ubsan_headers",
-+        "//compiler-rt/lib/interception:interception_headers",
 +    ],
-+    compile_flags = ["-msse4.2"],
-+    relative_includes = ["compiler-rt/lib"],
-+    relative_angled_includes = ["compiler-rt/lib"],
 +    compilation_mode = "bootstrap",
++    compile_flags = ["-msse4.2"],
++    relative_angled_includes = ["compiler-rt/lib"],
++    relative_includes = ["compiler-rt/lib"],
++    visibility = ["//visibility:public"],
 +    deps = [
 +        "//compiler-rt/lib/interception:RTInterception",
 +        "//compiler-rt/lib/sanitizer_common:RTSanitizerCommon",
-+        "//compiler-rt/lib/sanitizer_common:RTSanitizerCommonLibc",
 +        "//compiler-rt/lib/sanitizer_common:RTSanitizerCommonCoverage",
++        "//compiler-rt/lib/sanitizer_common:RTSanitizerCommonLibc",
 +        "//compiler-rt/lib/sanitizer_common:RTSanitizerCommonSymbolizer",
 +        "//compiler-rt/lib/ubsan:RTUbsan",
 +    ],
-+    visibility = ["//visibility:public"],
 +)
 +
 +ll_library(
@@ -1358,21 +1435,21 @@ index 000000000..5cfd97b13
 +    ],
 +    hdrs = [
 +        ":tsan_headers",
-+        "//compiler-rt/lib/sanitizer_common:sanitizer_impl_headers",
 +        "//compiler-rt/lib/interception:interception_headers",
++        "//compiler-rt/lib/sanitizer_common:sanitizer_impl_headers",
 +        "//compiler-rt/lib/ubsan:ubsan_headers",
 +    ],
-+    relative_includes = ["compiler-rt/lib"],
-+    compile_flags = ["-msse4.2"],
 +    compilation_mode = "bootstrap",
++    compile_flags = ["-msse4.2"],
++    relative_includes = ["compiler-rt/lib"],
++    visibility = ["//visibility:public"],
 +    deps = [
 +        "//compiler-rt/lib/ubsan:RTUbsan_cxx",
 +    ],
-+    visibility = ["//visibility:public"],
 +)
 diff --git a/utils/bazel/llvm-project-overlay/compiler-rt/lib/ubsan/BUILD.bazel b/utils/bazel/llvm-project-overlay/compiler-rt/lib/ubsan/BUILD.bazel
 new file mode 100644
-index 000000000..0606a8be6
+index 000000000..736606a26
 --- /dev/null
 +++ b/utils/bazel/llvm-project-overlay/compiler-rt/lib/ubsan/BUILD.bazel
 @@ -0,0 +1,109 @@
@@ -1402,9 +1479,9 @@ index 000000000..0606a8be6
 +    name = "RTUbsan",
 +    srcs = [
 +        "ubsan_diag.cpp",
-+        "ubsan_init.cpp",
 +        "ubsan_flags.cpp",
 +        "ubsan_handlers.cpp",
++        "ubsan_init.cpp",
 +        "ubsan_monitor.cpp",
 +        "ubsan_value.cpp",
 +    ],
@@ -1446,8 +1523,8 @@ index 000000000..0606a8be6
 +    ],
 +    hdrs = [
 +        ":ubsan_headers",
-+        "//compiler-rt/lib/sanitizer_common:sanitizer_impl_headers",
 +        "//compiler-rt/lib/interception:interception_headers",
++        "//compiler-rt/lib/sanitizer_common:sanitizer_impl_headers",
 +    ],
 +    compilation_mode = "bootstrap",
 +    relative_includes = ["compiler-rt/lib"],

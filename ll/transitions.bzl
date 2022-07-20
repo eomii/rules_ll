@@ -16,6 +16,9 @@ def _ll_transition_impl(settings, attr):
     if attr.compilation_mode == "hip_nvidia":
         return {"//ll:current_ll_toolchain_configuration": "hip_nvidia"}
 
+    if attr.compilation_mode == "sycl_cpu":
+        return {"//ll:current_ll_toolchain_configuration": "sycl_cpu"}
+
     fail("Invalid compilation_mode. Could not transition.")
 
 ll_transition = transition(
@@ -36,6 +39,9 @@ def _ll_toolchain_transition_impl(settings, attr):
 
     if attr.toolchain_configuration == "hip_nvidia":
         return {"//ll:current_ll_toolchain_configuration": "hip_nvidia"}
+
+    if attr.toolchain_configuration == "sycl_cpu":
+        return {"//ll:current_ll_toolchain_configuration": "sycl_cpu"}
 
     fail("Invalid toolchain_configuration. Could not transition.")
 
