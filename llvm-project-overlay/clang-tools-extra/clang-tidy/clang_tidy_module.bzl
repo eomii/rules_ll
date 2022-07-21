@@ -3,7 +3,7 @@ def clang_tidy_module(name, deps = []):
     native.cc_library(
         name = name,
         srcs = native.glob([name + "/*.cpp"]),
-        hdrs = native.glob([name + "/*.h"]),
+        hdrs = native.glob([name + "/*.h", name + "/*.inc"]),
         deps = deps + [
             ":clang_tidy",
             ":clang_tidy_utils",

@@ -134,9 +134,35 @@ clang_tidy_module(
     deps = [":portability"],
 )
 
+cc_binary(
+    name = "make_confusable_table",
+    srcs = [
+        "misc/ConfusableTable/BuildConfusableTable.cpp",
+    ],
+    deps = [
+        "@llvm-project//llvm:Support",
+    ],
+)
+
+genrule(
+    name = "confusables_inc",
+    srcs = ["misc/ConfusableTable/confusables.txt"],
+    outs = ["Confusables.inc"],
+    cmd = "$(location :make_confusable_table) $< $@",
+    message = "Generating confusables table.",
+    tools = [":make_confusable_table"],
+)
+
+cc_library(
+    name = "confusables_gen",
+    hdrs = [":confusables_inc"],
+    include_prefix = ".",
+)
+
 clang_tidy_module(
     name = "misc",
     deps = [
+        ":confusables_gen",
         "@llvm-project//clang:serialization",
         "@llvm-project//clang:tooling",
     ],

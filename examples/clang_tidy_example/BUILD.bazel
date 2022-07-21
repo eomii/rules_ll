@@ -46,3 +46,10 @@ ll_compilation_database(
     config = "//:clang_tidy_config",
     target = ":executable",
 )
+
+ll_compilation_database(
+    name = "compilation_database_with_excludes",
+    config = "//:clang_tidy_config",
+    exclude = ["lib_1"],
+    target = ":executable",
+)

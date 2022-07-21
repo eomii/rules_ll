@@ -7,10 +7,10 @@ index 000000000..b160d1074
 +# Empty, but patches break if there is no line here.
 diff --git a/utils/bazel/llvm-project-overlay/clang-tools-extra/clang-tidy/BUILD.bazel b/utils/bazel/llvm-project-overlay/clang-tools-extra/clang-tidy/BUILD.bazel
 new file mode 100644
-index 000000000..1d0156585
+index 000000000..eed0d4427
 --- /dev/null
 +++ b/utils/bazel/llvm-project-overlay/clang-tools-extra/clang-tidy/BUILD.bazel
-@@ -0,0 +1,304 @@
+@@ -0,0 +1,330 @@
 +load(
 +    "@llvm-project//clang-tools-extra/clang-tidy:clang_tidy_module.bzl",
 +    "clang_tidy_module",
@@ -147,9 +147,35 @@ index 000000000..1d0156585
 +    deps = [":portability"],
 +)
 +
++cc_binary(
++    name = "make_confusable_table",
++    srcs = [
++        "misc/ConfusableTable/BuildConfusableTable.cpp",
++    ],
++    deps = [
++        "@llvm-project//llvm:Support",
++    ],
++)
++
++genrule(
++    name = "confusables_inc",
++    srcs = ["misc/ConfusableTable/confusables.txt"],
++    outs = ["Confusables.inc"],
++    cmd = "$(location :make_confusable_table) $< $@",
++    message = "Generating confusables table.",
++    tools = [":make_confusable_table"],
++)
++
++cc_library(
++    name = "confusables_gen",
++    hdrs = [":confusables_inc"],
++    include_prefix = ".",
++)
++
 +clang_tidy_module(
 +    name = "misc",
 +    deps = [
++        ":confusables_gen",
 +        "@llvm-project//clang:serialization",
 +        "@llvm-project//clang:tooling",
 +    ],
@@ -331,7 +357,7 @@ index 000000000..d19ac4250
 +#endif
 diff --git a/utils/bazel/llvm-project-overlay/clang-tools-extra/clang-tidy/clang_tidy_module.bzl b/utils/bazel/llvm-project-overlay/clang-tools-extra/clang-tidy/clang_tidy_module.bzl
 new file mode 100644
-index 000000000..10e2a508d
+index 000000000..ff7b3d153
 --- /dev/null
 +++ b/utils/bazel/llvm-project-overlay/clang-tools-extra/clang-tidy/clang_tidy_module.bzl
 @@ -0,0 +1,18 @@
@@ -340,7 +366,7 @@ index 000000000..10e2a508d
 +    native.cc_library(
 +        name = name,
 +        srcs = native.glob([name + "/*.cpp"]),
-+        hdrs = native.glob([name + "/*.h"]),
++        hdrs = native.glob([name + "/*.h", name + "/*.inc"]),
 +        deps = deps + [
 +            ":clang_tidy",
 +            ":clang_tidy_utils",

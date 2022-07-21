@@ -12,8 +12,11 @@ def _ll_compilation_database(ctx):
     inputs = [
         cdf
         for cdf in ctx.attr.target[LlCompilationDatabaseFragmentsInfo].cdfs.to_list()
-        if ctx.attr.exclude not in cdf.path
     ]
+
+    # Filter excluded files.
+    for exclude in ctx.attr.exclude:
+        inputs = [cdf for cdf in inputs if exclude not in cdf.path]
 
     unmodified_cdb = ctx.actions.declare_file(
         "unmodified_compile_commands.json",
@@ -125,10 +128,12 @@ ll_compilation_database = rule(
             """,
             allow_single_file = True,
         ),
-        "exclude": attr.string(
+        "exclude": attr.string_list(
             doc = """
-            Exclude all targets whose path includes this string.
+            Exclude all targets whose path includes one at least one of the
+            provided strings.
             """,
+            default = [],
         ),
         "target": attr.label(
             mandatory = True,
