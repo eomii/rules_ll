@@ -20,7 +20,7 @@ KNOWN_LIBRARY_PATHS = {
 def _os_id(repository_ctx):
     os_id = None
     for line in repository_ctx.read("/etc/os-release").splitlines():
-        if line.startswith("ID"):
+        if line.startswith("ID="):
             os_id = line.split("=")[-1]
 
     if os_id == None:

@@ -41,7 +41,7 @@ system requirements for ``rules_ll`` tend to be comparatively high.
 
 Minimum system requirements:
 
-- An `x86_64`` processor. You can check this via `uname -a`.
+- An ``x86_64`` processor. You can check this via `uname -a`.
 - A Linux kernel with 64-bit support. You can check this via
   ``getconf LONG_BIT``.
 - A ``glibc`` version that supports ``mallinfo2``. This will be the case if
@@ -74,7 +74,7 @@ workspace:
 
    touch WORKSPACE.bazel .bazelrc
    echo cbb4eb1973a7fb49d15ced3fea6498f714f3ab0c > .bazelversion
-   echo 'bazel_dep(name="rules_ll", version="20220722.1")' > MODULE.bazel
+   echo 'bazel_dep(name="rules_ll", version="20220723.0")' > MODULE.bazel
 
 Copy the following lines into the just created ``.bazelrc`` file:
 
