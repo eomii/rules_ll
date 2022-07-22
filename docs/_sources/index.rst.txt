@@ -43,6 +43,7 @@ These are the internal functions used in ``rules_ll``, except for
    inputs
    internal_functions
    ll
+   os
    outputs
    providers
    toolchain
