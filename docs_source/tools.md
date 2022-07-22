@@ -29,7 +29,7 @@ compile_object_tools(<a href="#compile_object_tools-ctx">ctx</a>, <a href="#comp
 ## linking_tools
 
 <pre>
-linking_tools(<a href="#linking_tools-ctx">ctx</a>)
+linking_tools(<a href="#linking_tools-ctx">ctx</a>, <a href="#linking_tools-toolchain_type">toolchain_type</a>)
 </pre>
 
 
@@ -40,3 +40,4 @@ linking_tools(<a href="#linking_tools-ctx">ctx</a>)
 | Name  | Description | Default Value |
 | :------------- | :------------- | :------------- |
 | <a id="linking_tools-ctx"></a>ctx |  <p align="center"> - </p>   |  none |
+| <a id="linking_tools-toolchain_type"></a>toolchain_type |  <p align="center"> - </p>   |  none |

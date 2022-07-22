@@ -74,7 +74,7 @@ workspace:
 
    touch WORKSPACE.bazel .bazelrc
    echo cbb4eb1973a7fb49d15ced3fea6498f714f3ab0c >> .bazelversion
-   echo 'bazel_dep(name="rules_ll", version="20220722.0")' >> MODULE.bazel
+   echo 'bazel_dep(name="rules_ll", version="20220722.1")' >> MODULE.bazel
 
 Copy the following lines into the just created ``.bashrc`` file::
 
@@ -102,22 +102,6 @@ Copy the following lines into the just created ``.bashrc`` file::
    # Exec configuration handled by experimental_output_directory_layout.
    build --experimental_exec_configuration_distinguisher=off
    run --experimental_exec_configuration_distinguisher=off
-
-If you are running 64-bit Gentoo or another operating system where ``Scrt1.o``,
-``crti.o`` and ``crtn.o`` are located at ``/usr/lib64``, you are done.
-
-Otherwise, you need to locate the directory containing the ``crt*.o`` files on
-your operating system
-
-.. code:: bash
-
-   find /usr/ -name crt*.o
-
-and create a symbolic link ``/usr/lib64 -> <your crt directory>``.
-
-.. code:: bash
-
-   ln -s <your crt directory> /usr/lib64
 
 You can now load the ``ll_library`` and ``ll_binary`` rule definitions in your
 ``BUILD.bazel`` files via

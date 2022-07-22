@@ -38,10 +38,19 @@ def compile_object_tools(ctx, toolchain_type):
     else:
         fail("Unregognized toolchain toolchain configuration.")
 
-def linking_tools(ctx):
+def linking_tools(ctx, toolchain_type):
     config = ctx.attr.toolchain_configuration[BuildSettingInfo].value
 
     if config == "bootstrap":
         fail("Cannot link with bootstrap toolchain.")
 
-    return [ctx.toolchains["//ll:toolchain_type"].linker]
+    return [
+        ctx.toolchains[toolchain_type].linker,
+        ctx.toolchains[toolchain_type].local_library_path,
+    ] + (
+        ctx.toolchains[toolchain_type].address_sanitizer +
+        ctx.toolchains[toolchain_type].leak_sanitizer +
+        ctx.toolchains[toolchain_type].thread_sanitizer +
+        ctx.toolchains[toolchain_type].memory_sanitizer +
+        ctx.toolchains[toolchain_type].undefined_behavior_sanitizer
+    )

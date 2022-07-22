@@ -15,6 +15,7 @@ LL_MODULES = [
     "inputs",
     "internal_functions",
     "ll",
+    "os",
     "outputs",
     "providers",
     "toolchain",

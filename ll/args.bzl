@@ -4,6 +4,7 @@ Convenience function for setting compile arguments.
 """
 
 load("@bazel_skylib//lib:paths.bzl", "paths")
+load("//ll:os.bzl", "library_path")
 
 def llvm_target_directory_path(ctx):
     """Returns the path to the `llvm-project` build output directory.
@@ -296,6 +297,17 @@ def link_executable_args(ctx, in_files, out_file, mode):
     if ctx.var["COMPILATION_MODE"] == "dbg":
         args.add("--verbose")
 
+    # Startup files.
+    if mode == "executable":
+        args.add(
+            ctx.toolchains["//ll:toolchain_type"].local_library_path.path,
+            format = "%s/Scrt1.o",
+        )
+        args.add(
+            ctx.toolchains["//ll:toolchain_type"].local_library_path.path,
+            format = "%s/crti.o",
+        )
+
     # Sanitizers.
     has_sanitizers = (ctx.attr.sanitize != [])
     if has_sanitizers:
@@ -347,7 +359,12 @@ def link_executable_args(ctx, in_files, out_file, mode):
     args.add("--nostdlib")
 
     # Additional system libraries.
-    args.add("-L/usr/lib64")
+    args.add(
+        ctx.toolchains["//ll:toolchain_type"].local_library_path.path,
+        format = "-L%s",
+    )
+
+    # args.add("-L/usr/lib64")
     args.add("-lm")  # Math.
     args.add("-ldl")  # Dynamic linking.
     args.add("-lpthread")  # Thread support.
@@ -386,9 +403,15 @@ def link_executable_args(ctx, in_files, out_file, mode):
         reduced_link_files = [
             file
             for file in link_files
-            if file not in ctx.toolchains["//ll:toolchain_type"].local_crt
         ]
         args.add_all(reduced_link_files)
+
+    # End files.
+    if mode == "executable":
+        args.add(
+            ctx.toolchains["//ll:toolchain_type"].local_library_path.path,
+            format = "%s/crtn.o",
+        )
 
     args.add("-o", out_file)
 

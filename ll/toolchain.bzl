@@ -37,7 +37,7 @@ def _ll_toolchain_impl(ctx):
             cpp_abihdrs = ctx.files.cpp_abihdrs,
             compiler_runtime = ctx.files.compiler_runtime,
             unwind_library = ctx.files.unwind_library,
-            local_crt = ctx.files.local_crt,
+            local_library_path = ctx.file.local_library_path,
             clang_tidy = ctx.executable.clang_tidy,
             clang_tidy_runner = ctx.executable.clang_tidy_runner,
             symbolizer = ctx.executable.symbolizer,

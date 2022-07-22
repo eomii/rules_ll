@@ -444,9 +444,11 @@ LL_TOOLCHAIN_ATTRS = {
         cfg = transition_to_bootstrap,
         default = "@llvm-project//lld:lld",
     ),
-    "local_crt": attr.label(
-        doc = "A filegroup containing the system's local crt1.o, crti.o and crtn.o files.",
-        default = "@local_crt//:crt",
+    "local_library_path": attr.label(
+        doc = """A symlink to the local library path. This is usually either
+        `/usr/lib64` or `/usr/local/x86_64-linux-gnu`.""",
+        default = "@local_library_path//:local_library_path",
+        allow_single_file = True,
     ),
     "machine_code_tool": attr.label(
         doc = "The llvm-mc tool. Used for separarable compilation (CUDA/HIP).",

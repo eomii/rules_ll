@@ -1,6 +1,6 @@
 module(
     name = "rules_ll",
-    version = "20220722.0",
+    version = "20220722.1",
     execution_platforms_to_register = [
         "@rules_ll//ll:ll_linux_exec_platform",
     ],
@@ -50,11 +50,11 @@ rules_ll_dependencies = use_extension(
     "rules_ll_dependencies",
 )
 rules_ll_dependencies.configure(
-    local_crt_path = "/usr/lib64",
+    local_library_path = "autodetect",
 )
 use_repo(
     rules_ll_dependencies,
-    "local_crt",
+    "local_library_path",
     "hip",
     "hipamd",
     "cuda_cudart",

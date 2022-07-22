@@ -43,6 +43,7 @@ load(
 load(
     "//ll:tools.bzl",
     "compile_object_tools",
+    "linking_tools",
 )
 
 def expose_headers(ctx):
@@ -143,14 +144,13 @@ def link_shared_object(ctx, in_files, toolchain_type):
         outputs = [out_file],
         inputs = in_files,
         executable = ctx.toolchains[toolchain_type].linker,
-        arguments = link_executable_args(ctx, in_files, out_file, mode = "shared_object"),
-        tools = [
-                    ctx.toolchains[toolchain_type].linker,
-                ] + ctx.toolchains[toolchain_type].address_sanitizer +
-                ctx.toolchains[toolchain_type].leak_sanitizer +
-                ctx.toolchains[toolchain_type].thread_sanitizer +
-                ctx.toolchains[toolchain_type].memory_sanitizer +
-                ctx.toolchains[toolchain_type].undefined_behavior_sanitizer,
+        arguments = link_executable_args(
+            ctx,
+            in_files,
+            out_file,
+            mode = "shared_object",
+        ),
+        tools = linking_tools(ctx, toolchain_type),
         mnemonic = "LlLinkSharedObject",
         use_default_shell_env = False,
     )
@@ -177,13 +177,7 @@ def link_executable(ctx, in_files, toolchain_type):
         outputs = [out_file],
         inputs = in_files,
         executable = ctx.toolchains[toolchain_type].linker,
-        tools = [
-                    ctx.toolchains[toolchain_type].linker,
-                ] + ctx.toolchains[toolchain_type].address_sanitizer +
-                ctx.toolchains[toolchain_type].leak_sanitizer +
-                ctx.toolchains[toolchain_type].thread_sanitizer +
-                ctx.toolchains[toolchain_type].memory_sanitizer +
-                ctx.toolchains[toolchain_type].undefined_behavior_sanitizer,
+        tools = linking_tools(ctx, toolchain_type),
         arguments = link_executable_args(
             ctx,
             in_files,

@@ -99,7 +99,6 @@ def link_executable_inputs(ctx, in_files, toolchain_type):
             ctx.files.libraries +
             ctx.files.data +
             ctx.files.llvm_project_deps +
-            ctx.toolchains[toolchain_type].local_crt +
             ctx.toolchains[toolchain_type].cpp_stdlib +
             ctx.toolchains[toolchain_type].unwind_library +
             ctx.toolchains[toolchain_type].cpp_abilib +
@@ -112,7 +111,6 @@ def link_executable_inputs(ctx, in_files, toolchain_type):
             ctx.files.libraries +
             ctx.files.data +
             ctx.files.llvm_project_deps +
-            ctx.toolchains[toolchain_type].local_crt +
             ctx.toolchains[toolchain_type].cuda_toolkit +
             ctx.toolchains[toolchain_type].cpp_stdlib +
             ctx.toolchains[toolchain_type].unwind_library +
@@ -126,7 +124,6 @@ def link_executable_inputs(ctx, in_files, toolchain_type):
             ctx.files.libraries +
             ctx.files.data +
             ctx.files.llvm_project_deps +
-            ctx.toolchains[toolchain_type].local_crt +
             ctx.toolchains[toolchain_type].cuda_toolkit +
             ctx.toolchains[toolchain_type].hip_libraries +
             ctx.toolchains[toolchain_type].cpp_stdlib +
@@ -141,7 +138,6 @@ def link_executable_inputs(ctx, in_files, toolchain_type):
             ctx.files.libraries +
             ctx.files.data +
             ctx.files.llvm_project_deps +
-            ctx.toolchains[toolchain_type].local_crt +
             ctx.toolchains[toolchain_type].cpp_stdlib +
             ctx.toolchains[toolchain_type].unwind_library +
             ctx.toolchains[toolchain_type].cpp_abilib +
@@ -173,7 +169,6 @@ def link_shared_object_inputs(ctx, in_files, toolchain_type):
             ctx.files.deps +
             ctx.files.data +
             ctx.files.llvm_project_deps +
-            ctx.toolchains[toolchain_type].local_crt +
             ctx.toolchains[toolchain_type].cpp_stdlib +
             ctx.toolchains[toolchain_type].cpp_abilib +
             ctx.toolchains[toolchain_type].unwind_library +
@@ -185,7 +180,6 @@ def link_shared_object_inputs(ctx, in_files, toolchain_type):
             ctx.files.deps +
             ctx.files.data +
             ctx.files.llvm_project_deps +
-            ctx.toolchains[toolchain_type].local_crt +
             ctx.toolchains[toolchain_type].cpp_stdlib +
             ctx.toolchains[toolchain_type].cpp_abilib +
             ctx.toolchains[toolchain_type].unwind_library +
@@ -198,7 +192,6 @@ def link_shared_object_inputs(ctx, in_files, toolchain_type):
             ctx.files.deps +
             ctx.files.data +
             ctx.files.llvm_project_deps +
-            ctx.toolchains[toolchain_type].local_crt +
             ctx.toolchains[toolchain_type].cpp_stdlib +
             ctx.toolchains[toolchain_type].cpp_abilib +
             ctx.toolchains[toolchain_type].unwind_library +

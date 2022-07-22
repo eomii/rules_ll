@@ -1,74 +1,54 @@
 """# `//ll:init.bzl`
 
-
 Initializer function which should be called in the `WORKSPACE.bazel` file.
 """
 
 load("@bazel_skylib//lib:paths.bzl", "paths")
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+load("//ll:os.bzl", "library_path")
 
-def _ll_local_crt_impl(ctx):
-    for filename in ["Scrt1.o", "crti.o", "crtn.o"]:
-        ctx.symlink(paths.join(ctx.attr.path, filename), filename)
-
-    ctx.file(
+def _ll_local_library_path_impl(repository_ctx):
+    repository_ctx.file(
         "WORKSPACE.bazel",
         content = """# empty""",
     )
 
-    ctx.file(
+    repository_ctx.symlink(
+        library_path(repository_ctx),
+        "library_path",
+    )
+
+    repository_ctx.file(
         "BUILD.bazel",
         content = """filegroup(
-            name = "crt",
+            name = "local_library_path",
             srcs = [
-                ":Scrt1.o",
-                ":crti.o",
-                ":crtn.o",
+                ":library_path",
             ],
             visibility = ["//visibility:public"],
         )""",
     )
 
-ll_local_crt = repository_rule(
-    implementation = _ll_local_crt_impl,
+ll_local_library_path = repository_rule(
+    implementation = _ll_local_library_path_impl,
     attrs = {
         "build_file_content": attr.string(),
         "path": attr.string(),
     },
 )
 
-def initialize_rules_ll(local_crt_path):
-    """Initializes the LLVM repository.
-
-    The correct `local_crt_path` is likely something like `/usr/lib64` or
-    `/usr/x86_64-unknown-linux-gnu`.
-
-    `rules_ll` modifies the existing bazel overlay in the LLVM repository. If
-    the overlay in `rules_ll` breaks because you specified a custom commit, you
-    can patch `rules_ll` during import e.g. via
-
-    ```python
-    http_archive(
-        name = "rules_ll",
-        sha256 = "<Correct SHA256>",
-        urls = [
-            "https://github.com/neqochan/rules_ll/archive/<COMMIT_HASH>.zip"
-        ],
-        patches = [":my_patch.diff"],
-        patch_args = ["-p1"],
-    )
-    ```
+def initialize_rules_ll(local_library_path):
+    """Initializes rules_ll and its dependencies.
 
     Args:
-        local_crt_path: The path to the directory containing `crt1.o`, `crti.o`
-            and `crtn.o`.
-        llvm_commit: The llvm-commit to use for the `llvm-project` repository.
-        llvm_sha256: The SHA256 for corresponding to `llvm_commit`. Bazel will
-            print the correct value if this is set to `None`.
+        local_library_path: Either "autodetect" to autodetect this path for
+            supported operating systems, or the path to the directory containing
+            `Scrt1.o`, `crti.o`, `crtn.o` and other library files. This is
+            usually either `/usr/lib64` or `/usr/lib/x86_64-linux-gnu`.
     """
-    ll_local_crt(
-        name = "local_crt",
-        path = local_crt_path,
+    ll_local_library_path(
+        name = "local_library_path",
+        path = local_library_path,
     )
 
     http_archive(
@@ -147,12 +127,12 @@ def initialize_rules_ll(local_crt_path):
 
 def _initialize_rules_ll_impl(module_ctx):
     for module in module_ctx.modules:
-        local_crt_path = module.tags.configure[0].local_crt_path
-    initialize_rules_ll(local_crt_path)
+        local_library_path = module.tags.configure[0].local_library_path
+    initialize_rules_ll(local_library_path)
 
 rules_ll_dependencies = module_extension(
     implementation = _initialize_rules_ll_impl,
     tag_classes = {
-        "configure": tag_class(attrs = {"local_crt_path": attr.string()}),
+        "configure": tag_class(attrs = {"local_library_path": attr.string()}),
     },
 )
