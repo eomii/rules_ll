@@ -73,8 +73,8 @@ workspace:
 .. code:: bash
 
    touch WORKSPACE.bazel .bazelrc
-   echo cbb4eb1973a7fb49d15ced3fea6498f714f3ab0c >> .bazelversion
-   echo 'bazel_dep(name="rules_ll", version="20220722.1")' >> MODULE.bazel
+   echo cbb4eb1973a7fb49d15ced3fea6498f714f3ab0c > .bazelversion
+   echo 'bazel_dep(name="rules_ll", version="20220722.1")' > MODULE.bazel
 
 Copy the following lines into the just created ``.bashrc`` file::
 
