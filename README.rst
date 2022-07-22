@@ -8,11 +8,13 @@ C++ code with a Clang/LLVM based toolchain built from upstream.
 
 - Upstream Clang/LLVM via the
   `llvm-bazel-overlay <https://github.com/llvm/llvm-project/tree/main/utils/bazel>`_.
-- Custom overlays for ``libcxx``, ``libcxxabi``, ``libunwind``, ``compiler-rt`` and
-  ``clang-tidy``.
-- Parallel ``clang-tidy`` invocations via an ``ll_compilation_database`` target.
-- Native support for ``AddressSanitizer``, ``LeakSanitizer``, ``MemorySanitizer``,
-  ``UndefinedBehaviorSanitizer``, and ``ThreadSanitizer`` via target attributes.
+- Custom overlays for ``libcxx``, ``libcxxabi``, ``libunwind``, ``compiler-rt``
+  and ``clang-tidy``.
+- Parallel ``clang-tidy`` invocations via an ``ll_compilation_database``
+  target.
+- Native support for ``AddressSanitizer``, ``LeakSanitizer``,
+  ``MemorySanitizer``, ``UndefinedBehaviorSanitizer``, and ``ThreadSanitizer``
+  via target attributes.
 - Heterogeneous programming for Nvidia GPUs using HIP and CUDA, including fully
   automated setup of required libraries, toolkits etc.
 
@@ -28,6 +30,37 @@ C++ code with a Clang/LLVM based toolchain built from upstream.
 - SYCL.
 - WebAssembly.
 - Aarch64.
+
+System requirements
+-------------------
+
+``rules_ll`` makes heavy use of upstream dependencies and experimental features
+to the point of using CI artifacts of Bazel itself to get bugfixes faster. If
+something gets deprecated, we remove it. This means that the software-side
+system requirements for ``rules_ll`` tend to be comparatively high.
+
+Minimum system requirements:
+
+- An `x86_64`` processor. You can check this via `uname -a`.
+- A Linux kernel with 64-bit support. You can check this via
+  ``getconf LONG_BIT``.
+- A ``glibc`` version that supports ``mallinfo2``. This will be the case if
+  ``ldd --version`` prints a value of at least ``2.33``.
+- A functional host toolchain for C++. Some distros have this by default,
+  others require manual installation of a recent version of Clang or GCC. This
+  toolchain will be used to compile the upstream versions of Clang and
+  clang-tidy that are used to build ``ll_*`` targets.
+- For Nvidia GPU toolchains, a GPU with compute capability of at least ``5.2``.
+  This will be the case for 10xx series GPUs and up, as well as some ``9xx``
+  series GPUs. A full list of compute capabilities can be found at
+  `<https://developer.nvidia.com/cuda-gpus>`_.
+- As a rough guideline, at least 10GB of disk space for fetched dependencies
+  and build artifacts. Using all toolchains, debug and optimization modes may
+  increase this requirement to 30GB of disk space. If the build cache gets too
+  large over time it can be reset using the ``bazel clean``
+  and ``bazel clean --expunge`` commands.
+- As a rough guideline, at least 1GB of Memory per CPU core. You can check the
+  number of CPU cores via ``nproc``.
 
 Quickstart
 ----------
