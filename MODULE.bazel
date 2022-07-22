@@ -25,6 +25,9 @@ bazel_dep(name = "rules_cc", version = "0.0.1")
 # hipSYCL. In development.
 # bazel_dep(name = "hipsycl", version = "0.9.2")
 
+# Build Clang/LLVM with zlib support.
+bazel_dep(name = "zlib", version = "1.2.11")
+
 # Configure the llvm-project Bazel overlay.
 llvm_project_overlay = use_extension(
     "@rules_ll//ll:extensions.bzl",

@@ -2,30 +2,8 @@
 
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 load("@bazel_tools//tools/build_defs/repo:utils.bzl", "maybe")
-load("@rules_ll//third-party-overlays:terminfo.bzl", "llvm_terminfo_disable", "llvm_terminfo_system")
-load("@rules_ll//third-party-overlays:zlib.bzl", "llvm_zlib_disable", "llvm_zlib_system")
-
-def llvm_disable_optional_support_deps():
-    maybe(
-        llvm_zlib_disable,
-        name = "llvm_zlib",
-    )
-
-    maybe(
-        llvm_terminfo_disable,
-        name = "llvm_terminfo",
-    )
-
-def llvm_use_system_support_deps():
-    maybe(
-        llvm_zlib_system,
-        name = "llvm_zlib",
-    )
-
-    maybe(
-        llvm_terminfo_system,
-        name = "llvm_terminfo",
-    )
+load("@rules_ll//third-party-overlays:terminfo.bzl", "llvm_terminfo_disable")
+load("@rules_ll//third-party-overlays:zlib.bzl", "llvm_zlib_external")
 
 def _overlay_directories(repository_ctx):
     src_path = repository_ctx.path(Label("@llvm-raw//:WORKSPACE")).dirname
@@ -124,7 +102,14 @@ def _llvm_configure_extension_impl(ctx):
 
     llvm_configure(name = "llvm-project", targets = targets)
 
-    llvm_use_system_support_deps()
+    # Always use external zlib.
+    llvm_zlib_external(
+        name = "llvm_zlib",
+        external_zlib = "@zlib",
+    )
+
+    # Always disable pointless terminfo dependencies.
+    llvm_terminfo_disable(name = "llvm_terminfo")
 
 llvm_project_overlay = module_extension(
     implementation = _llvm_configure_extension_impl,

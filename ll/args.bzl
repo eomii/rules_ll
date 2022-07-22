@@ -174,8 +174,8 @@ def compile_object_args(
         )
     if ctx.attr.compilation_mode == "sycl_cpu":
         args.add(
-            Label("@hipsycl//hipsycl_headers"),
-            format = "-I%s",
+            Label("@hipsycl//hipsycl_headers").workspace_root,
+            format = "-I%s/include",
         )
 
         args.add("-fopenmp")
@@ -351,8 +351,6 @@ def link_executable_args(ctx, in_files, out_file, mode):
     args.add("-lm")  # Math.
     args.add("-ldl")  # Dynamic linking.
     args.add("-lpthread")  # Thread support.
-    args.add("-ltinfo")  # Terminfo.
-    args.add("-lz")  # Zlib.
     args.add("-lc")  # Glibc.
 
     if ctx.attr.compilation_mode in [
@@ -365,6 +363,7 @@ def link_executable_args(ctx, in_files, out_file, mode):
         args.add("-lcudart_static")
 
     if ctx.attr.compilation_mode == "sycl_cpu":
+        args.add("-lomp")
         args.add(ctx.toolchains["//ll:toolchain_type"].hipsycl_runtime)
 
     # Target-specific flags.
