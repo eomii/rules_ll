@@ -7,8 +7,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>//ll:providers.bzl &#8212; rules_ll Documentation</title>
 
-  <link href="_static/css/theme.css" rel="stylesheet" />
-  <link href="_static/css/index.c5995385ac14fb8791e8eb36b4908be2.css" rel="stylesheet" />
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
 
 
   <link rel="stylesheet"
@@ -18,30 +19,44 @@
   <link rel="preload" as="font" type="font/woff2" crossorigin
     href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
 
-
-
-
-
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="_static/sphinx-book-theme.css?digest=c3fdc42140077d1ad13ad2f1588a4309" />
+    <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=5115cc725059bd94278eecd172e13a965bf8f5a9" type="text/css" />
 
-  <link rel="preload" as="script" href="_static/js/index.1c5a1a01449ed65a7b51.js">
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
 
     <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
     <script src="_static/doctools.js"></script>
-    <script src="_static/sphinx-book-theme.12a9622fbb08dcb3a2a40b2c02b83a57.js"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
     <link rel="canonical" href="ll.eomii.org/providers.html" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="//ll:toolchain.bzl" href="toolchain.html" />
     <link rel="prev" title="//ll:outputs.bzl" href="outputs.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="docsearch:language" content="en" />
+    <meta name="docsearch:language" content="None">
+
+
+    <!-- Google Analytics -->
 
   </head>
-  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"></div>
+<div class="header header-item noprint"></div>
+
 
     <div class="container-fluid" id="banner"></div>
 
@@ -50,9 +65,10 @@
     <div class="container-xl">
       <div class="row">
 
-<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
-
-        <div class="navbar-brand-box">
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top"><div class="navbar-brand-box">
     <a class="navbar-brand text-wrap" href="index.html">
 
 
@@ -65,7 +81,7 @@
   <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
 </form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item active">
-        <p class="caption" role="heading">
+        <p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
   Guides
  </span>
@@ -88,7 +104,7 @@
   </a>
  </li>
 </ul>
-<p class="caption" role="heading">
+<p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
   Public API
  </span>
@@ -104,7 +120,7 @@
   </a>
  </li>
 </ul>
-<p class="caption" role="heading">
+<p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
   Private API
  </span>
@@ -248,8 +264,13 @@
 </ul>
 
     </div>
-</nav> <!-- To handle the deprecated key -->
+</nav></div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
 
+        </div>
+    </div>
+    <div id="rtd-footer-container"></div>
 </div>
 
 
@@ -257,52 +278,70 @@
 
 
 
-<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
 
-    <div class="topbar container-xl fixed-top">
-    <div class="topbar-contents row">
-        <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show"></div>
-        <div class="col pl-md-4 topbar-main">
-
-            <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
-                data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
-                aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
-                title="Toggle navigation" data-toggle="tooltip" data-placement="left">
-                <i class="fas fa-bars"></i>
-                <i class="fas fa-arrow-left"></i>
-                <i class="fas fa-arrow-up"></i>
-            </button>
+    <div class="header-article row sticky-top noprint">
 
 
-            <!-- Source interaction buttons -->
 
-<div class="dropdown-buttons-trigger">
-    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
-        aria-label="Connect with source repository"><i class="fab fa-github"></i></button>
-    <div class="dropdown-buttons sourcebuttons">
-        <a class="repository-button"
-            href="https://github.com/eomii/rules_ll"><button type="button" class="btn btn-secondary topbarbtn"
-                data-toggle="tooltip" data-placement="left" title="Source repository"><i
-                    class="fab fa-github"></i>repository</button></a>
 
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
+
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+
+    </div>
+    <div class="header-article__right"><a href="https://github.com/eomii/rules_ll"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="bottom"
+title="Source repository"
+>
+
+
+<span class="headerbtn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+
+</a>
+<label for="__page-toc"
+  class="headerbtn headerbtn-page-toc"
+
+>
+
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-list"></i>
+  </span>
+
+</label>
 
     </div>
 </div>
 
-            <!-- Full screen (wrap in <a> to have style consistency -->
-
-            <!-- Launch buttons -->
-
-        </div>
-
-        <!-- Table of contents -->
-        <div class="d-none d-md-block col-md-2 bd-toc show">
-
-            <div class="tocsection onthispage pt-5 pb-3">
-                <i class="fas fa-list"></i> Contents
-            </div>
-            <nav id="bd-toc-nav" aria-label="Page">
-                <ul class="visible nav section-nav flex-column">
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+    <div class="tocsection onthispage pt-5 pb-3">
+        <i class="fas fa-list"></i> Contents
+    </div>
+    <nav id="bd-toc-nav" aria-label="Page">
+        <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#llcompilationdatabasefragmentsinfo">
    LlCompilationDatabaseFragmentsInfo
@@ -320,22 +359,55 @@
  </li>
 </ul>
 
-            </nav>
-        </div>
-    </div>
+    </nav>
 </div>
-    <div id="main-content" class="row">
-        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>//ll:providers.bzl</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#llcompilationdatabasefragmentsinfo">
+   LlCompilationDatabaseFragmentsInfo
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#llcompilationdatabaseinfo">
+   LlCompilationDatabaseInfo
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#llinfo">
+   LlInfo
+  </a>
+ </li>
+</ul>
+
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <main id="main-content" role="main">
 
               <div>
 
   <!-- Generated with Stardoc: http://skydoc.bazel.build -->
-<div class="tex2jax_ignore mathjax_ignore section" id="ll-providers-bzl">
-<h1><code class="docutils literal notranslate"><span class="pre">//ll:providers.bzl</span></code><a class="headerlink" href="#ll-providers-bzl" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="ll-providers-bzl">
+<h1><code class="docutils literal notranslate"><span class="pre">//ll:providers.bzl</span></code><a class="headerlink" href="#ll-providers-bzl" title="Permalink to this headline">#</a></h1>
 <p>Providers used by <code class="docutils literal notranslate"><span class="pre">rules_ll</span></code>.</p>
 <p><a id="#LlCompilationDatabaseFragmentsInfo"></a></p>
 <div class="section" id="llcompilationdatabasefragmentsinfo">
-<h2>LlCompilationDatabaseFragmentsInfo<a class="headerlink" href="#llcompilationdatabasefragmentsinfo" title="Permalink to this headline">¶</a></h2>
+<h2>LlCompilationDatabaseFragmentsInfo<a class="headerlink" href="#llcompilationdatabasefragmentsinfo" title="Permalink to this headline">#</a></h2>
 <pre>
 LlCompilationDatabaseFragmentsInfo(<a href="#LlCompilationDatabaseFragmentsInfo-cdfs">cdfs</a>)
 </pre>
@@ -356,7 +428,7 @@ LlCompilationDatabaseFragmentsInfo(<a href="#LlCompilationDatabaseFragmentsInfo-
 <p><a id="#LlCompilationDatabaseInfo"></a></p>
 </div>
 <div class="section" id="llcompilationdatabaseinfo">
-<h2>LlCompilationDatabaseInfo<a class="headerlink" href="#llcompilationdatabaseinfo" title="Permalink to this headline">¶</a></h2>
+<h2>LlCompilationDatabaseInfo<a class="headerlink" href="#llcompilationdatabaseinfo" title="Permalink to this headline">#</a></h2>
 <pre>
 LlCompilationDatabaseInfo(<a href="#LlCompilationDatabaseInfo-compilation_database">compilation_database</a>)
 </pre>
@@ -376,7 +448,7 @@ LlCompilationDatabaseInfo(<a href="#LlCompilationDatabaseInfo-compilation_databa
 <p><a id="#LlInfo"></a></p>
 </div>
 <div class="section" id="llinfo">
-<h2>LlInfo<a class="headerlink" href="#llinfo" title="Permalink to this headline">¶</a></h2>
+<h2>LlInfo<a class="headerlink" href="#llinfo" title="Permalink to this headline">#</a></h2>
 <pre>
 LlInfo(<a href="#LlInfo-transitive_angled_includes">transitive_angled_includes</a>, <a href="#LlInfo-transitive_defines">transitive_defines</a>, <a href="#LlInfo-transitive_hdrs">transitive_hdrs</a>, <a href="#LlInfo-transitive_includes">transitive_includes</a>)
 </pre>
@@ -409,53 +481,47 @@ LlInfo(<a href="#LlInfo-transitive_angled_includes">transitive_angled_includes</
 
               </div>
 
+            </main>
+            <footer class="footer-article noprint">
 
-
-
-
-
-<div class='prev-next-bottom'>
-
-    <div id="prev">
-        <a class="left-prev" href="outputs.html" title="previous page">
-            <i class="prevnext-label fas fa-angle-left"></i>
-            <div class="prevnext-info">
-                <p class="prevnext-label">previous</p>
-                <p class="prevnext-title"><code class="docutils literal notranslate"><span class="pre">//ll:outputs.bzl</span></code></p>
-            </div>
-        </a>
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+    <a class='left-prev' id="prev-link" href="outputs.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title"><code class="docutils literal notranslate"><span class="pre">//ll:outputs.bzl</span></code></p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="toolchain.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title"><code class="docutils literal notranslate"><span class="pre">//ll:toolchain.bzl</span></code></p>
     </div>
-     <div id="next">
-        <a class="right-next" href="toolchain.html" title="next page">
-            <div class="prevnext-info">
-                <p class="prevnext-label">next</p>
-                <p class="prevnext-title"><code class="docutils literal notranslate"><span class="pre">//ll:toolchain.bzl</span></code></p>
-            </div>
-            <i class="prevnext-label fas fa-angle-right"></i>
-        </a>
-     </div>
-
+    <i class="fas fa-angle-right"></i>
+    </a>
 </div>
-
+            </footer>
         </div>
     </div>
-    <footer class="footer">
-    <div class="container">
-      <p>
+    <div class="footer-content row">
+        <footer class="col footer"><p>
 
-          By The Qogecoin Authors<br/>
+    By The Qogecoin Authors<br/>
 
-            &copy; Copyright 2021, The Qogecoin Authors.<br/>
-      </p>
+      &copy; Copyright 2021, The Qogecoin Authors.<br/>
+</p>
+        </footer>
     </div>
-  </footer>
-</main>
+
+</div>
 
 
       </div>
     </div>
 
-  <script src="_static/js/index.1c5a1a01449ed65a7b51.js"></script>
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
 
 
   </body>

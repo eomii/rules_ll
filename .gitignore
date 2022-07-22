@@ -10,6 +10,3 @@ __pycache__/
 .doctrees/
 *.inv
 *.pickle
-
-# Do not change CNAME.
-docs/CNAME
