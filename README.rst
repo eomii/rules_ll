@@ -76,7 +76,9 @@ workspace:
    echo cbb4eb1973a7fb49d15ced3fea6498f714f3ab0c > .bazelversion
    echo 'bazel_dep(name="rules_ll", version="20220722.1")' > MODULE.bazel
 
-Copy the following lines into the just created ``.bazelrc`` file::
+Copy the following lines into the just created ``.bazelrc`` file:
+
+.. code:: bash
 
    # Upstream LLVM/Clang requires C++17. This will only configure rules_cc.
    build --repo_env=BAZEL_CXXOPTS='-std=c++17'
