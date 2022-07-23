@@ -21,7 +21,7 @@ def _os_id(repository_ctx):
     os_id = None
     for line in repository_ctx.read("/etc/os-release").splitlines():
         if line.startswith("ID="):
-            os_id = line.split("=")[-1]
+            os_id = line.split("=")[-1].replace('"', "")
 
     if os_id == None:
         fail("Could not read ID from /etc/os-release.")
