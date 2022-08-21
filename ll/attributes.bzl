@@ -187,7 +187,7 @@ DEFAULT_ATTRS = {
 
         Headers should be placed in the `hdrs` attribute.
         """,
-        allow_files = [".ll", ".o", ".S", ".c", ".cc", ".cl", ".cpp"],
+        allow_files = [".ll", ".o", ".S", ".c", ".cc", ".cl", ".cpp", ".cppm"],
     ),
     "toolchain_configuration": attr.label(
         doc = """TODO""",

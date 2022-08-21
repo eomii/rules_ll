@@ -35,9 +35,6 @@ def llvm_gendir_path(ctx):
         llvm_project_workspace = Label("@llvm-project").workspace_root,
     )
 
-def _get_dirname(file):
-    return file.dirname
-
 def _construct_llvm_include_path(file):
     """Construct the paths to LLVM include directories.
 
@@ -64,6 +61,10 @@ def _construct_clang_include_path(file):
         out = paths.join(first_segment, "clang/include")
         return out
 
+def _create_module_import(file):
+    out = "{}={}".format(paths.replace_extension(file.basename, ""), file.path)
+    return out
+
 def compile_object_args(
         ctx,
         in_file,
@@ -72,16 +73,21 @@ def compile_object_args(
         headers,
         defines,
         includes,
-        angled_includes):
+        angled_includes,
+        modules):
     args = ctx.actions.args()
 
     args.add("-fcolor-diagnostics")
 
+    # Reproducibility.
+    args.add("-Wdate-time")
+    args.add("-no-canonical-prefixes")
+    args.add("-fdebug-compilation-dir=.")
+    args.add("-fno-coverage-mapping")  # TODO: Enable with hermetic path.
+
     # Visualization.
     if ctx.var["COMPILATION_MODE"] == "dbg":
         args.add("-v")
-        args.add("-fdebug-default-version=5")
-        args.add("-fdebug-compilation-dir=.")
         args.add("-Xarch_host", "-glldb")
 
         if ctx.attr.compilation_mode in [
@@ -141,8 +147,15 @@ def compile_object_args(
 
         args.add("-flto=thin")
 
-    # Only compile.
-    args.add("-c")
+    # When in_file has the extension .cppm, we precompile to a .pcm file. This
+    # precompiled module is compiled to an object file with a .o extension in a
+    # second step, where in_file has a .pcm extension. This way we can reduce
+    # compile times by importing the precompiled module instead of recompiling
+    # the module upon every import declaration.
+    if in_file.extension == "cppm":
+        args.add("--precompile")
+    else:
+        args.add("-c")
 
     # Always generate position independent code.
     args.add("-fPIC")
@@ -195,8 +208,9 @@ def compile_object_args(
         args.add("-D__HIPSYCL_USE_ACCELERATED_CPU__")
 
     # Write compilation database.
-    args.add("-Xarch_host")
-    args.add(cdf, format = "-MJ%s")
+    if in_file.extension != "cppm":
+        args.add("-Xarch_host")
+        args.add(cdf, format = "-MJ%s")
 
     # Environment encapsulation.
     # args.add("-nostdinc")
@@ -211,6 +225,52 @@ def compile_object_args(
     )
 
     args.add(clang_builtin_include_path, format = "-resource-dir=%s")
+
+    # Includes. This reflects the order in which clang will search for included
+    # files.
+
+    # 0. Search the directory of the including source file for quoted includes.
+
+    # 1. Search directories specified via -iquote for quoted includes.
+    args.add_all(includes, format_each = "-iquote%s", uniquify = True)
+
+    # 2. Search directories specified via -I for quoted and angled includes.
+    args.add_all(angled_includes, format_each = "-I%s", uniquify = True)
+
+    # 3. Search directories specified via -isystem for quoted and angled
+    #    includes.
+
+    # TODO: These may be required when using targets from the LLVM project in
+    # e.g. hipSYCL check back and enable or remove this.
+    #
+    # args.add_all(
+    #     [
+    #         paths.join(llvm_bindir_path(ctx), "libcxx/include"),
+    #         paths.join(llvm_bindir_path(ctx), "libcxxabi/include"),
+    #         paths.join(llvm_bindir_path(ctx), "libunwind/include")
+    #     ],
+    #     format_each = "-isystem%s",
+    # )
+
+    llvm_workspace_root = Label("@llvm-project").workspace_root
+
+    # Objects compiled from modules already contain these from the
+    # precompilation step.
+    if in_file.extension != "pcm":
+        args.add_all(
+            [
+                clang_builtin_include_path,
+                paths.join(llvm_workspace_root, "libcxx/include"),
+                paths.join(llvm_workspace_root, "libcxxabi/include"),
+                paths.join(llvm_workspace_root, "libunwind/include"),
+            ],
+            format_each = "-isystem%s",
+        )
+
+    # 4. Search directories specified via -idirafter for quoted and angled
+    #    includes. Since most users will not need this flag, there is no
+    #    attribute for it. For non-LLVM related include paths, users should
+    #    specify these in the compile_flags attribute.
 
     # Internal Clang and LLVM header include paths. These are used by compilers
     # and compiler Plugins.
@@ -234,51 +294,19 @@ def compile_object_args(
             omit_if_empty = True,
         )
 
-    # Includes. This reflects the order in which clang will search for included
-    # files.
-
-    # 0. Search the directory of the including source file for quoted includes.
-
-    # 1. Search directories specified via -iquote for quoted includes.
-    args.add_all(includes, format_each = "-iquote%s", uniquify = True)
-
-    # 2. Search directories specified via -I for quoted and angled includes.
-    args.add_all(angled_includes, format_each = "-I%s", uniquify = True)
-
-    # 3. Search directories specified via -isystem for quoted and angled
-    #    includes.
-    args.add(
-        paths.join(llvm_bindir_path(ctx), "libcxx/include"),
-        format = "-isystem%s",
-    )
-    args.add(
-        paths.join(llvm_bindir_path(ctx), "libcxxabi/include"),
-        format = "-isystem%s",
-    )
-    args.add(
-        paths.join(llvm_bindir_path(ctx), "libunwind/include"),
-        format = "-isystem%s",
-    )
-
-    llvm_workspace_root = Label("@llvm-project").workspace_root
-    libcxx_include_path = paths.join(llvm_workspace_root, "libcxx/include")
-    args.add(clang_builtin_include_path, format = "-isystem%s")
-    args.add(libcxx_include_path, format = "-isystem%s")
-    libcxxabi_include_path = paths.join(llvm_workspace_root, "libcxxabi/include")
-    args.add(libcxxabi_include_path, format = "-isystem%s")
-    libunwind_include_path = paths.join(llvm_workspace_root, "libunwind/include")
-    args.add(libunwind_include_path, format = "-isystem%s")
-
-    # 4. Search directories specified via -idirafter for quoted and angled
-    #    includes. Since most users will not need this flag, there is no
-    #    attribute for it. Instead, it should be specified in the compile_flags
-    #    attribute.
-
     # Defines.
     args.add_all(defines, format_each = "-D%s")
 
     # Additional compile flags.
     args.add_all(ctx.attr.compile_flags)
+
+    args.add_all(
+        modules,
+        map_each = _create_module_import,
+        format_each = "-fmodule-file=%s",
+        uniquify = True,
+        omit_if_empty = True,
+    )
 
     # Input file.
     args.add(in_file)

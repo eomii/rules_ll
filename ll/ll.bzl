@@ -12,6 +12,7 @@ load(
     "link_bitcode_library",
     "link_executable",
     "link_shared_object",
+    "precompile_modules",
 )
 load(
     "//ll:attributes.bzl",
@@ -31,11 +32,15 @@ def select_toolchain_type(ctx):
 
 def _ll_library_impl(ctx):
     for emit in ctx.attr.emit:
-        if emit not in ["archive", "shared_object", "bitcode", "objects"]:
+        if emit not in [
+            "archive",
+            "shared_object",
+            "bitcode",
+            "objects",
+        ]:
             fail(
                 """Invalid value passed to emit attribute. Allowed valuse are
-
-                 "archive", "shared_object", "bitcode", "objects". Got {}.
+                 "archive", "shared_object", "bitcode", "objects", Got {}.
                  """.format(emit),
             )
 
@@ -48,7 +53,22 @@ def _ll_library_impl(ctx):
         transitive_defines,
         transitive_includes,
         transitive_angled_includes,
+        modules,
     ) = resolve_library_deps(ctx)
+
+    out_files = []
+
+    precompiled_modules = precompile_modules(
+        ctx,
+        headers = headers,
+        defines = defines,
+        includes = includes,
+        angled_includes = angled_includes,
+        modules = modules,
+        toolchain_type = select_toolchain_type(ctx),
+    )
+
+    out_cdfs = []
 
     intermediary_objects, cdfs = compile_objects(
         ctx,
@@ -56,10 +76,12 @@ def _ll_library_impl(ctx):
         defines = defines,
         includes = includes,
         angled_includes = angled_includes,
+        transitive_modules = modules,
+        local_modules = precompiled_modules,
         toolchain_type = select_toolchain_type(ctx),
     )
+    out_cdfs += cdfs
 
-    out_files = []
     if "archive" in ctx.attr.emit:
         out_files.append(
             create_archive_library(
@@ -101,9 +123,10 @@ def _ll_library_impl(ctx):
             transitive_defines = transitive_defines,
             transitive_includes = transitive_includes,
             transitive_angled_includes = transitive_angled_includes,
+            modules = depset(precompiled_modules, transitive = [modules]),
         ),
         LlCompilationDatabaseFragmentsInfo(
-            cdfs = depset(cdfs, transitive = transitive_cdfs),
+            cdfs = depset(out_cdfs, transitive = transitive_cdfs),
         ),
     ]
 
@@ -131,7 +154,21 @@ Example:
 )
 
 def _ll_binary_impl(ctx):
-    headers, defines, includes, angled_includes = resolve_binary_deps(ctx)
+    headers, defines, includes, angled_includes, modules = resolve_binary_deps(
+        ctx,
+    )
+
+    precompiled_modules = precompile_modules(
+        ctx,
+        headers = headers,
+        defines = defines,
+        includes = includes,
+        angled_includes = angled_includes,
+        modules = modules,
+        toolchain_type = select_toolchain_type(ctx),
+    )
+
+    out_cdfs = []
 
     intermediary_objects, cdfs = compile_objects(
         ctx,
@@ -139,8 +176,11 @@ def _ll_binary_impl(ctx):
         defines = defines,
         includes = includes,
         angled_includes = angled_includes,
+        transitive_modules = modules,
+        local_modules = precompiled_modules,
         toolchain_type = select_toolchain_type(ctx),
     )
+    out_cdfs += cdfs
 
     out_file = link_executable(
         ctx,
@@ -159,7 +199,7 @@ def _ll_binary_impl(ctx):
             executable = out_file,
         ),
         LlCompilationDatabaseFragmentsInfo(
-            cdfs = depset(cdfs, transitive = transitive_cdfs),
+            cdfs = depset(out_cdfs, transitive = transitive_cdfs),
         ),
     ]
 

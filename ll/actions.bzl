@@ -31,6 +31,7 @@ load(
     "link_bitcode_library_inputs",
     "link_executable_inputs",
     "link_shared_object_inputs",
+    "precompilable_sources",
 )
 load(
     "//ll:outputs.bzl",
@@ -39,6 +40,7 @@ load(
     "link_bitcode_library_outputs",
     "link_executable_outputs",
     "link_shared_object_outputs",
+    "precompile_module_outputs",
 )
 load(
     "//ll:tools.bzl",
@@ -75,12 +77,18 @@ def compile_objects(
         defines,
         includes,
         angled_includes,
+        transitive_modules,
+        local_modules,
         toolchain_type):
-    in_files = compilable_sources(ctx)
+    in_files = (
+        compilable_sources(ctx) +
+        local_modules +
+        transitive_modules.to_list()
+    )
     out_files = []
     cdfs = []
 
-    for in_file in in_files:
+    for in_file in compilable_sources(ctx) + local_modules:
         file_out, cdf_out = compile_object(
             ctx,
             in_file,
@@ -88,6 +96,7 @@ def compile_objects(
             defines,
             includes,
             angled_includes,
+            transitive_modules,
             toolchain_type,
         )
         out_files.append(file_out)
@@ -95,13 +104,21 @@ def compile_objects(
 
     return out_files, cdfs
 
-def compile_object(ctx, in_file, headers, defines, includes, angled_includes, toolchain_type):
+def compile_object(
+        ctx,
+        in_file,
+        headers,
+        defines,
+        includes,
+        angled_includes,
+        modules,
+        toolchain_type):
     file_out, cdf_out = compile_object_outputs(ctx, in_file)
 
     ctx.actions.run(
         outputs = [file_out, cdf_out],
-        inputs = compile_object_inputs(ctx, headers, toolchain_type),
-        executable = compiler_driver(ctx, toolchain_type),
+        inputs = compile_object_inputs(ctx, in_file, headers, modules, toolchain_type),
+        executable = compiler_driver(ctx, in_file, toolchain_type),
         tools = compile_object_tools(ctx, toolchain_type),
         arguments = compile_object_args(
             ctx,
@@ -112,12 +129,77 @@ def compile_object(ctx, in_file, headers, defines, includes, angled_includes, to
             defines,
             includes,
             angled_includes,
+            modules,
         ),
         mnemonic = "LlCompileObject",
         use_default_shell_env = False,
         env = compile_object_environment(ctx, toolchain_type),
     )
     return file_out, cdf_out
+
+def precompile_modules(
+        ctx,
+        headers,
+        defines,
+        includes,
+        angled_includes,
+        modules,
+        toolchain_type):
+    in_files = precompilable_sources(ctx)
+    out_files = []
+
+    for in_file in in_files:
+        file_out = precompile_module(
+            ctx,
+            in_file,
+            headers,
+            defines,
+            includes,
+            angled_includes,
+            modules,
+            toolchain_type,
+        )
+        out_files.append(file_out)
+
+    return out_files
+
+def precompile_module(
+        ctx,
+        in_file,
+        headers,
+        defines,
+        includes,
+        angled_includes,
+        modules,
+        toolchain_type):
+    file_out = precompile_module_outputs(ctx, in_file)
+
+    ctx.actions.run(
+        outputs = [file_out],
+        inputs = compile_object_inputs(ctx, in_file, headers, modules, toolchain_type),
+        executable = compiler_driver(ctx, in_file, toolchain_type),
+        tools = compile_object_tools(ctx, toolchain_type),
+        arguments = compile_object_args(
+            ctx,
+            in_file,
+            file_out,
+            None,  # cdf_out,
+            headers,
+            defines,
+            includes,
+            angled_includes,
+            modules,
+        ),
+        mnemonic = "LlPrecomileModule",
+        execution_requirements = {
+            # Required so that module paths do not depend on the specific
+            # sandbox instance used during precompilation.
+            "no-sandbox": "1",
+        },
+        use_default_shell_env = False,
+        env = compile_object_environment(ctx, toolchain_type),
+    )
+    return file_out
 
 def create_archive_library(
         ctx,

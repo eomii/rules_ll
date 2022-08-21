@@ -1,16 +1,17 @@
 diff --git a/utils/bazel/llvm-project-overlay/clang/BUILD.bazel b/utils/bazel/llvm-project-overlay/clang/BUILD.bazel
-index b9a81797a..71a6e5f29 100644
+index 45fbca18c..4618514a4 100644
 --- a/utils/bazel/llvm-project-overlay/clang/BUILD.bazel
 +++ b/utils/bazel/llvm-project-overlay/clang/BUILD.bazel
-@@ -6,6 +6,7 @@ load("//llvm:tblgen.bzl", "gentbl")
+@@ -6,6 +6,8 @@ load("//llvm:tblgen.bzl", "gentbl")
  load("//llvm:binary_alias.bzl", "binary_alias")
  load("//llvm:cc_plugin_library.bzl", "cc_plugin_library")
  load("//llvm:template_rule.bzl", "template_rule")
 +load("//clang:workspace_root.bzl", "workspace_root")
++
  
  package(
      default_visibility = ["//visibility:public"],
-@@ -687,6 +688,8 @@ gentbl(
+@@ -700,6 +702,8 @@ gentbl(
      ],
  )
  
@@ -19,7 +20,7 @@ index b9a81797a..71a6e5f29 100644
  cc_library(
      name = "ast",
      srcs = glob([
-@@ -711,8 +714,8 @@ cc_library(
+@@ -724,8 +728,8 @@ cc_library(
          # least bad approach. Using `includes` is *specifically* problematic for
          # this library because it contains files that collide easily with system
          # headers such as `CXXABI.h`.
@@ -30,7 +31,7 @@ index b9a81797a..71a6e5f29 100644
      ],
      textual_hdrs = [
          "include/clang/AST/AttrImpl.inc",
-@@ -732,6 +735,9 @@ cc_library(
+@@ -745,6 +749,9 @@ cc_library(
      ] + glob([
          "include/clang/AST/*.def",
      ]),
@@ -40,16 +41,15 @@ index b9a81797a..71a6e5f29 100644
      deps = [
          ":ast_attr_gen",
          ":ast_comment_command_info_gen",
-@@ -1455,10 +1461,19 @@ gentbl(
+@@ -1470,8 +1477,16 @@ gentbl(
  # We generate the set of builtin headers under a special subdirectory in the
  # 'bin' section of the bazel output so that they can be used as data
  # dependencies. It requires listing explicitly all the generated inputs here.
--builtin_headers = glob(["lib/Headers/**/*.h"], exclude = [
--    # FIXME: They are not handled in CMake side.
--    "lib/Headers/openmp_wrappers/time.h",
--    "lib/Headers/ppc_wrappers/nmmintrin.h",
+-builtin_headers = glob(
+-    ["lib/Headers/**/*.h"],
 +builtin_headers = glob([
 +        "lib/Headers/**/*.h",
++        "lib/Headers/module.modulemap",
 +        "lib/Headers/cuda_wrappers/algorithm",
 +        "lib/Headers/cuda_wrappers/complex",
 +        "lib/Headers/cuda_wrappers/new",
@@ -57,14 +57,10 @@ index b9a81797a..71a6e5f29 100644
 +        "lib/Headers/openmp_wrappers/complex",
 +        "lib/Headers/openmp_wrappers/new",
 +    ],
-+    exclude = [
-+        # FIXME: They are not handled in CMake side.
-+        "lib/Headers/openmp_wrappers/time.h",
-+        "lib/Headers/ppc_wrappers/nmmintrin.h",
- ]) + [
-     "lib/Headers/arm_cde.h",
-     "lib/Headers/arm_fp16.h",
-@@ -1475,7 +1490,7 @@ genrule(
+     exclude = [
+         # FIXME: They are not handled in CMake side.
+         "lib/Headers/openmp_wrappers/time.h",
+@@ -1493,7 +1508,7 @@ genrule(
      outs = [hdr.replace("lib/Headers/", "staging/include/") for hdr in builtin_headers],
      cmd = """
         for src in $(SRCS); do
