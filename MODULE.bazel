@@ -1,6 +1,6 @@
 module(
     name = "rules_ll",
-    version = "20220723.1",
+    version = "20220822.0",
     execution_platforms_to_register = [
         "@rules_ll//ll:ll_linux_exec_platform",
     ],

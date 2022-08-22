@@ -1,8 +1,8 @@
 An Upstream LLVM/Clang Toolchain for Bazel
 ------------------------------------------
 
-This repository exposes ``ll_library`` and ``ll_binary`` rules to build C and
-C++ code with a Clang/LLVM based toolchain built from upstream.
+This repository exposes ``ll_library`` and ``ll_binary`` rules to build modern
+C++ with a Clang/LLVM based toolchain built from upstream.
 
 **Features**
 
@@ -12,11 +12,10 @@ C++ code with a Clang/LLVM based toolchain built from upstream.
   and ``clang-tidy``.
 - Parallel ``clang-tidy`` invocations via an ``ll_compilation_database``
   target.
-- Native support for ``AddressSanitizer``, ``LeakSanitizer``,
-  ``MemorySanitizer``, ``UndefinedBehaviorSanitizer``, and ``ThreadSanitizer``
-  via target attributes.
+- Native support for sanitizers via target attributes.
 - Heterogeneous programming for Nvidia GPUs using HIP and CUDA, including fully
   automated setup of required libraries, toolkits etc.
+- Precompiled modules for C++20.
 
 **Links**
 
@@ -74,7 +73,7 @@ workspace:
 
    touch WORKSPACE.bazel .bazelrc
    echo cbb4eb1973a7fb49d15ced3fea6498f714f3ab0c > .bazelversion
-   echo 'bazel_dep(name="rules_ll", version="20220723.1")' > MODULE.bazel
+   echo 'bazel_dep(name="rules_ll", version="20220822.0")' > MODULE.bazel
 
 Copy the following lines into the just created ``.bazelrc`` file:
 
