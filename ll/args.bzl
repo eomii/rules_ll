@@ -297,6 +297,9 @@ def compile_object_args(
     # Defines.
     args.add_all(defines, format_each = "-D%s")
 
+    # Always use experimental libcxx features.
+    args.add("-D_LIBCPP_ENABLE_EXPERIMENTAL")
+
     # Additional compile flags.
     args.add_all(ctx.attr.compile_flags)
 

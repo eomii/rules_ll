@@ -124,6 +124,7 @@ ll_library(
         "_LIBCPP_LINK_PTHREAD",
         "_LIBCPP_LINK_RT_LIB",
         "_LIBCPP_DISABLE_EXTERN_TEMPLATE",
+        "_LIBCPP_ENABLE_EXPERIMENTAL",
         "__STDC_CONSTANT_MACROS",
         "__STDC_FORMAT_MACROS",
         "__STDC_LIMIT_MACROS",
