@@ -61,8 +61,15 @@ def _construct_clang_include_path(file):
         out = paths.join(first_segment, "clang/include")
         return out
 
-def _create_module_import(file):
-    out = "{}={}".format(paths.replace_extension(file.basename, ""), file.path)
+def _create_module_import(interface):
+    file, module_name = interface
+    out = "{}={}".format(module_name, file.path)
+    return out
+
+def _create_local_module_import(interface):
+    print("FILE: ", interface)
+    file, module_name = interface
+    out = "{}".format(file.path)
     return out
 
 def compile_object_args(
@@ -74,7 +81,8 @@ def compile_object_args(
         defines,
         includes,
         angled_includes,
-        modules):
+        interfaces,
+        local_interfaces):
     args = ctx.actions.args()
 
     args.add("-fcolor-diagnostics")
@@ -303,8 +311,22 @@ def compile_object_args(
     # Additional compile flags.
     args.add_all(ctx.attr.compile_flags)
 
+    # Load local module interfaces unconditionally without declaring a module
+    # name. When these are made available to downstream targets, they will be
+    # treated as modules.
+    # TODO: See whether this is a bug in Clang. Discussion at
+    #       https://github.com/llvm/llvm-project/issues/57293.
     args.add_all(
-        modules,
+        local_interfaces,
+        map_each = _create_local_module_import,
+        format_each = "-fmodule-file=%s",
+        uniquify = True,
+        omit_if_empty = True,
+    )
+
+    # Load modules conditionally by declaring the module name.
+    args.add_all(
+        interfaces,
         map_each = _create_module_import,
         format_each = "-fmodule-file=%s",
         uniquify = True,

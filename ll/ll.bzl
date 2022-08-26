@@ -12,7 +12,7 @@ load(
     "link_bitcode_library",
     "link_executable",
     "link_shared_object",
-    "precompile_modules",
+    "precompile_interfaces",
 )
 load(
     "//ll:attributes.bzl",
@@ -53,19 +53,20 @@ def _ll_library_impl(ctx):
         transitive_defines,
         transitive_includes,
         transitive_angled_includes,
-        modules,
+        transitive_interfaces,
     ) = resolve_library_deps(ctx)
 
     out_files = []
 
-    precompiled_modules = precompile_modules(
+    internal_interfaces, exported_interfaces = precompile_interfaces(
         ctx,
         headers = headers,
         defines = defines,
         includes = includes,
         angled_includes = angled_includes,
-        modules = modules,
+        interfaces = transitive_interfaces,
         toolchain_type = select_toolchain_type(ctx),
+        binary = False,
     )
 
     out_cdfs = []
@@ -76,8 +77,8 @@ def _ll_library_impl(ctx):
         defines = defines,
         includes = includes,
         angled_includes = angled_includes,
-        transitive_modules = modules,
-        local_modules = precompiled_modules,
+        interfaces = transitive_interfaces,
+        local_interfaces = internal_interfaces + exported_interfaces,
         toolchain_type = select_toolchain_type(ctx),
     )
     out_cdfs += cdfs
@@ -123,7 +124,10 @@ def _ll_library_impl(ctx):
             transitive_defines = transitive_defines,
             transitive_includes = transitive_includes,
             transitive_angled_includes = transitive_angled_includes,
-            modules = depset(precompiled_modules, transitive = [modules]),
+            transitive_interfaces = depset(
+                exported_interfaces,
+                transitive = [transitive_interfaces],
+            ),
         ),
         LlCompilationDatabaseFragmentsInfo(
             cdfs = depset(out_cdfs, transitive = transitive_cdfs),
@@ -154,21 +158,26 @@ Example:
 )
 
 def _ll_binary_impl(ctx):
-    headers, defines, includes, angled_includes, modules = resolve_binary_deps(
-        ctx,
-    )
+    (
+        headers,
+        defines,
+        includes,
+        angled_includes,
+        interfaces,
+    ) = resolve_binary_deps(ctx)
 
-    precompiled_modules = precompile_modules(
+    out_cdfs = []
+
+    internal_interfaces, exported_interfaces = precompile_interfaces(
         ctx,
         headers = headers,
         defines = defines,
         includes = includes,
         angled_includes = angled_includes,
-        modules = modules,
+        interfaces = interfaces,
         toolchain_type = select_toolchain_type(ctx),
+        binary = True,
     )
-
-    out_cdfs = []
 
     intermediary_objects, cdfs = compile_objects(
         ctx,
@@ -176,8 +185,8 @@ def _ll_binary_impl(ctx):
         defines = defines,
         includes = includes,
         angled_includes = angled_includes,
-        transitive_modules = modules,
-        local_modules = precompiled_modules,
+        interfaces = interfaces,
+        local_interfaces = internal_interfaces + exported_interfaces,
         toolchain_type = select_toolchain_type(ctx),
     )
     out_cdfs += cdfs

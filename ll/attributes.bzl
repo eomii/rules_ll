@@ -109,6 +109,36 @@ DEFAULT_ATTRS = {
         Only used for this target.
         """,
     ),
+    "interfaces": attr.label_keyed_string_dict(
+        doc = """Module interfaces for this target.
+
+        Interfaces need to be declared like
+        ```python
+        interfaces = {
+            "<interface_file>": "<module_name>",
+        }
+        ```
+        The module name is distinct from the filename and the target's name
+        attribute. This makes module naming arbitrarily flexible, for instance:
+        ```python
+        ll_library(
+            name = "mymodule",
+            srcs = [
+                "A_B.cpp"  # Implementation for module A.B.
+            ],
+            interfaces = {
+                "A.cppm": "A",  # Interface without separate implementation.
+                "A_B.cppm": "A.B",  # Interface for module A.B.
+            }
+        )
+        ```
+        Internally, interfaces will be precompiled and then compiled to objects
+        named `<filename>.interface.o`. This way object files for modules
+        implemented via separate interfaces and implementations (such as `A.cpp`
+        in `srcs` and `A.cppm` in `interfaces`) do not clash.
+        """,
+        allow_files = [".cppm"],  # TODO: Consider relaxing this.
+    ),
     "llvm_project_deps": attr.label_list(
         doc = """`cc_library` deps from the LLVM project overlay.
 
@@ -260,6 +290,14 @@ LIBRARY_ATTRS = {
         Includes in this attribute will be added to the compile command line
         arguments for all downstream targets.
         """,
+    ),
+    "transitive_interfaces": attr.label_keyed_string_dict(
+        doc = """Transitive interfaces for this target.
+
+        Like `interfaces`, but both the precompiled modules and the compiled
+        objects derived from files in this attribute are transitive.
+        """,
+        allow_files = ["cppm"],  # TODO: Consider relaxing this.
     ),
     "transitive_relative_angled_includes": attr.string_list(
         doc = """Additional transitive angled include paths, relative to the

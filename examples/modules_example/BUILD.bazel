@@ -1,15 +1,29 @@
 load("@rules_ll//ll:defs.bzl", "ll_binary", "ll_library")
 
 ll_library(
-    name = "B",
-    srcs = ["B.cppm"],
+    name = "module_D",
+    srcs = ["D_implementation.cpp"],
     compile_flags = ["-std=c++20"],
+    transitive_interfaces = {"D_interface.cppm": "D"},
+)
+
+ll_library(
+    name = "C",
+    srcs = ["C.cpp"],
+    compile_flags = ["-std=c++20"],
+    transitive_interfaces = {"C.cppm": "C"},
+)
+
+ll_library(
+    name = "B",
+    compile_flags = ["-std=c++20"],
+    transitive_interfaces = {"B.cppm": "B"},
 )
 
 ll_library(
     name = "A",
-    srcs = ["A.cppm"],
     compile_flags = ["-std=c++20"],
+    transitive_interfaces = {"A.cppm": "A"},
     deps = [":B"],
 )
 
@@ -17,5 +31,9 @@ ll_binary(
     name = "modules_example",
     srcs = ["main.cpp"],
     compile_flags = ["-std=c++20"],
-    deps = [":A"],
+    deps = [
+        ":A",
+        ":C",
+        ":module_D",
+    ],
 )

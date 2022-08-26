@@ -31,7 +31,6 @@ load(
     "link_bitcode_library_inputs",
     "link_executable_inputs",
     "link_shared_object_inputs",
-    "precompilable_sources",
 )
 load(
     "//ll:outputs.bzl",
@@ -40,7 +39,7 @@ load(
     "link_bitcode_library_outputs",
     "link_executable_outputs",
     "link_shared_object_outputs",
-    "precompile_module_outputs",
+    "precompile_interface_outputs",
 )
 load(
     "//ll:tools.bzl",
@@ -77,18 +76,14 @@ def compile_objects(
         defines,
         includes,
         angled_includes,
-        transitive_modules,
-        local_modules,
+        interfaces,
+        local_interfaces,
         toolchain_type):
-    in_files = (
-        compilable_sources(ctx) +
-        local_modules +
-        transitive_modules.to_list()
-    )
+    local_interface_files = [interface for interface, _ in local_interfaces]
     out_files = []
     cdfs = []
 
-    for in_file in compilable_sources(ctx) + local_modules:
+    for in_file in compilable_sources(ctx) + local_interface_files:
         file_out, cdf_out = compile_object(
             ctx,
             in_file,
@@ -96,7 +91,8 @@ def compile_objects(
             defines,
             includes,
             angled_includes,
-            transitive_modules,
+            interfaces,
+            local_interfaces,
             toolchain_type,
         )
         out_files.append(file_out)
@@ -111,13 +107,21 @@ def compile_object(
         defines,
         includes,
         angled_includes,
-        modules,
+        interfaces,
+        local_interfaces,
         toolchain_type):
     file_out, cdf_out = compile_object_outputs(ctx, in_file)
 
     ctx.actions.run(
         outputs = [file_out, cdf_out],
-        inputs = compile_object_inputs(ctx, in_file, headers, modules, toolchain_type),
+        inputs = compile_object_inputs(
+            ctx,
+            in_file,
+            headers,
+            interfaces,
+            local_interfaces,
+            toolchain_type,
+        ),
         executable = compiler_driver(ctx, in_file, toolchain_type),
         tools = compile_object_tools(ctx, toolchain_type),
         arguments = compile_object_args(
@@ -129,7 +133,8 @@ def compile_object(
             defines,
             includes,
             angled_includes,
-            modules,
+            interfaces,
+            local_interfaces,
         ),
         mnemonic = "LlCompileObject",
         use_default_shell_env = False,
@@ -137,46 +142,67 @@ def compile_object(
     )
     return file_out, cdf_out
 
-def precompile_modules(
+def precompile_interfaces(
         ctx,
         headers,
         defines,
         includes,
         angled_includes,
-        modules,
-        toolchain_type):
-    in_files = precompilable_sources(ctx)
-    out_files = []
-
-    for in_file in in_files:
-        file_out = precompile_module(
+        interfaces,
+        toolchain_type,
+        binary):
+    internal_interfaces = []
+    for in_file, module_name in ctx.attr.interfaces.items():
+        file_out = precompile_interface(
             ctx,
-            in_file,
+            in_file.files.to_list()[0],
             headers,
             defines,
             includes,
             angled_includes,
-            modules,
+            interfaces,
             toolchain_type,
         )
-        out_files.append(file_out)
+        internal_interfaces.append((file_out, module_name))
 
-    return out_files
+    exported_interfaces = []
+    if not binary:
+        for in_file, module_name in ctx.attr.transitive_interfaces.items():
+            file_out = precompile_interface(
+                ctx,
+                in_file.files.to_list()[0],
+                headers,
+                defines,
+                includes,
+                angled_includes,
+                interfaces,
+                toolchain_type,
+            )
+            exported_interfaces.append((file_out, module_name))
 
-def precompile_module(
+    return internal_interfaces, exported_interfaces
+
+def precompile_interface(
         ctx,
         in_file,
         headers,
         defines,
         includes,
         angled_includes,
-        modules,
+        interfaces,
         toolchain_type):
-    file_out = precompile_module_outputs(ctx, in_file)
+    file_out = precompile_interface_outputs(ctx, in_file)
 
     ctx.actions.run(
         outputs = [file_out],
-        inputs = compile_object_inputs(ctx, in_file, headers, modules, toolchain_type),
+        inputs = compile_object_inputs(
+            ctx,
+            in_file,
+            headers,
+            interfaces,
+            [],  # local_interfaces,
+            toolchain_type,
+        ),
         executable = compiler_driver(ctx, in_file, toolchain_type),
         tools = compile_object_tools(ctx, toolchain_type),
         arguments = compile_object_args(
@@ -188,7 +214,8 @@ def precompile_module(
             defines,
             includes,
             angled_includes,
-            modules,
+            interfaces,
+            [],  # local_interfaces,
         ),
         mnemonic = "LlPrecomileModule",
         execution_requirements = {

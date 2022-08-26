@@ -45,12 +45,6 @@ def get_transitive_angled_includes(
         ],
     )
 
-def get_modules(ctx):
-    return depset(
-        [],
-        transitive = [dep[LlInfo].modules for dep in ctx.attr.deps],
-    )
-
 def resolve_binary_deps(ctx):
     # Headers.
     transitive_hdrs = get_transitive_hdrs(ctx, [])
@@ -77,15 +71,20 @@ def resolve_binary_deps(ctx):
         transitive = [transitive_angled_includes],
     )
 
-    # Modules.
-    modules = get_modules(ctx)
+    # Interfaces.
+    interfaces = depset(
+        transitive = [
+            dep[LlInfo].transitive_interfaces
+            for dep in ctx.attr.deps
+        ],
+    )
 
     return (
         headers,
         defines,
         includes,
         angled_includes,
-        modules,
+        interfaces,
     )
 
 def resolve_library_deps(ctx):
@@ -133,7 +132,13 @@ def resolve_library_deps(ctx):
         transitive = [transitive_angled_includes],
     )
 
-    modules = get_modules(ctx)
+    # Interfaces.
+    transitive_interfaces = depset(
+        transitive = [
+            dep[LlInfo].transitive_interfaces
+            for dep in ctx.attr.deps
+        ],
+    )
 
     return (
         headers,
@@ -144,5 +149,5 @@ def resolve_library_deps(ctx):
         transitive_defines,
         transitive_includes,
         transitive_angled_includes,
-        modules,
+        transitive_interfaces,
     )
