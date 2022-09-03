@@ -25,12 +25,21 @@ def precompile_interface_outputs(ctx, in_file):
     relative_src_path = paths.relativize(in_file.path, build_file_path)
     relative_src_dir = paths.dirname(relative_src_path)
 
-    return ctx.actions.declare_file(
+    out_file = ctx.actions.declare_file(
         paths.join(
             relative_src_dir,
             paths.replace_extension(in_file.basename, ".pcm"),
         ),
     )
+
+    cdf = ctx.actions.declare_file(
+        paths.join(
+            relative_src_dir,
+            paths.replace_extension(in_file.basename, ".pcm.cdf"),
+        ),
+    )
+
+    return out_file, cdf
 
 def compile_object_outputs(ctx, in_file):
     # TODO: Why did we add these paths?

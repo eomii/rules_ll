@@ -137,7 +137,7 @@ DEFAULT_ATTRS = {
         implemented via separate interfaces and implementations (such as `A.cpp`
         in `srcs` and `A.cppm` in `interfaces`) do not clash.
         """,
-        allow_files = [".cppm"],  # TODO: Consider relaxing this.
+        allow_files = [".cppm"],
     ),
     "llvm_project_deps": attr.label_list(
         doc = """`cc_library` deps from the LLVM project overlay.
@@ -297,7 +297,7 @@ LIBRARY_ATTRS = {
         Like `interfaces`, but both the precompiled modules and the compiled
         objects derived from files in this attribute are transitive.
         """,
-        allow_files = ["cppm"],  # TODO: Consider relaxing this.
+        allow_files = [".cppm"],
     ),
     "transitive_relative_angled_includes": attr.string_list(
         doc = """Additional transitive angled include paths, relative to the

@@ -92,6 +92,7 @@ def _llvm_configure_extension_impl(ctx):
             ),
         ],
         patches = [
+            "@rules_ll//patches:disable_synth_three_way_patch.diff",
             "@rules_ll//patches:compiler-rt_float128_patch.diff",
             "@rules_ll//patches:mallinfo2_patch.diff",
             "@rules_ll//patches:rules_ll_compatibility_patch.diff",

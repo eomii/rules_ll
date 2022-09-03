@@ -151,9 +151,10 @@ def precompile_interfaces(
         interfaces,
         toolchain_type,
         binary):
+    cdfs = []
     internal_interfaces = []
     for in_file, module_name in ctx.attr.interfaces.items():
-        file_out = precompile_interface(
+        file_out, cdf_out = precompile_interface(
             ctx,
             in_file.files.to_list()[0],
             headers,
@@ -164,11 +165,12 @@ def precompile_interfaces(
             toolchain_type,
         )
         internal_interfaces.append((file_out, module_name))
+        cdfs.append(cdf_out)
 
     exported_interfaces = []
     if not binary:
         for in_file, module_name in ctx.attr.transitive_interfaces.items():
-            file_out = precompile_interface(
+            file_out, cdf_out = precompile_interface(
                 ctx,
                 in_file.files.to_list()[0],
                 headers,
@@ -179,8 +181,9 @@ def precompile_interfaces(
                 toolchain_type,
             )
             exported_interfaces.append((file_out, module_name))
+            cdfs.append(cdf_out)
 
-    return internal_interfaces, exported_interfaces
+    return internal_interfaces, exported_interfaces, cdfs
 
 def precompile_interface(
         ctx,
@@ -191,10 +194,10 @@ def precompile_interface(
         angled_includes,
         interfaces,
         toolchain_type):
-    file_out = precompile_interface_outputs(ctx, in_file)
+    file_out, cdf_out = precompile_interface_outputs(ctx, in_file)
 
     ctx.actions.run(
-        outputs = [file_out],
+        outputs = [file_out, cdf_out],
         inputs = compile_object_inputs(
             ctx,
             in_file,
@@ -203,13 +206,13 @@ def precompile_interface(
             [],  # local_interfaces,
             toolchain_type,
         ),
-        executable = compiler_driver(ctx, in_file, toolchain_type),
+        executable = ctx.toolchains[toolchain_type].cpp_driver,
         tools = compile_object_tools(ctx, toolchain_type),
         arguments = compile_object_args(
             ctx,
             in_file,
             file_out,
-            None,  # cdf_out,
+            cdf_out,
             headers,
             defines,
             includes,
@@ -226,7 +229,7 @@ def precompile_interface(
         use_default_shell_env = False,
         env = compile_object_environment(ctx, toolchain_type),
     )
-    return file_out
+    return file_out, cdf_out
 
 def create_archive_library(
         ctx,

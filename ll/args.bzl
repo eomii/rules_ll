@@ -216,9 +216,8 @@ def compile_object_args(
         args.add("-D__HIPSYCL_USE_ACCELERATED_CPU__")
 
     # Write compilation database.
-    if in_file.extension != "cppm":
-        args.add("-Xarch_host")
-        args.add(cdf, format = "-MJ%s")
+    args.add("-Xarch_host")
+    args.add(cdf, format = "-MJ%s")
 
     # Environment encapsulation.
     # args.add("-nostdinc")
@@ -310,6 +309,13 @@ def compile_object_args(
 
     # Additional compile flags.
     args.add_all(ctx.attr.compile_flags)
+
+    # To keep precompilations sandboxed, embed used headers in the pcm.
+    # TODO: This does not work yet. For some reason we are still required to
+    #       disable sandboxint in precompilations.
+    if out_file.extension == "pcm":
+        args.add("-Xclang")
+        args.add("-fmodules-embed-all-files")
 
     # Load local module interfaces unconditionally without declaring a module
     # name. When these are made available to downstream targets, they will be

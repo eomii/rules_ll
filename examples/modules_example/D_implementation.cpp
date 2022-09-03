@@ -1,5 +1,13 @@
+module;
+
+#include <iostream>
+
 module D;
 
 namespace D {
-auto d() -> int { return 5; }
+
+auto d_implementation() -> void {
+  std::cout << "Hello from module D implementation!" << std::endl;
+}
+
 } // namespace D

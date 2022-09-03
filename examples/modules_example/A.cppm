@@ -1,7 +1,13 @@
+module;
+
+#include <iostream>
+
 export module A;
-import B;
+
+export import B;
 
 export namespace A {
-int a = 1;
-int b = B::b;
+
+auto a() -> void { std::cout << "Hello from module A interface!" << std::endl; }
+
 } // namespace A

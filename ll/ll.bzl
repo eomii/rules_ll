@@ -40,7 +40,7 @@ def _ll_library_impl(ctx):
         ]:
             fail(
                 """Invalid value passed to emit attribute. Allowed valuse are
-                 "archive", "shared_object", "bitcode", "objects", Got {}.
+                 "archive", "shared_object", "bitcode", "objects". Got {}.
                  """.format(emit),
             )
 
@@ -58,7 +58,9 @@ def _ll_library_impl(ctx):
 
     out_files = []
 
-    internal_interfaces, exported_interfaces = precompile_interfaces(
+    out_cdfs = []
+
+    internal_interfaces, exported_interfaces, cdfs = precompile_interfaces(
         ctx,
         headers = headers,
         defines = defines,
@@ -69,7 +71,7 @@ def _ll_library_impl(ctx):
         binary = False,
     )
 
-    out_cdfs = []
+    out_cdfs += cdfs
 
     intermediary_objects, cdfs = compile_objects(
         ctx,
@@ -81,6 +83,7 @@ def _ll_library_impl(ctx):
         local_interfaces = internal_interfaces + exported_interfaces,
         toolchain_type = select_toolchain_type(ctx),
     )
+
     out_cdfs += cdfs
 
     if "archive" in ctx.attr.emit:
@@ -168,7 +171,7 @@ def _ll_binary_impl(ctx):
 
     out_cdfs = []
 
-    internal_interfaces, exported_interfaces = precompile_interfaces(
+    internal_interfaces, exported_interfaces, cdfs = precompile_interfaces(
         ctx,
         headers = headers,
         defines = defines,
@@ -178,6 +181,8 @@ def _ll_binary_impl(ctx):
         toolchain_type = select_toolchain_type(ctx),
         binary = True,
     )
+
+    out_cdfs += cdfs
 
     intermediary_objects, cdfs = compile_objects(
         ctx,

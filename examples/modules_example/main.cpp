@@ -5,9 +5,17 @@ import C;
 import D;
 
 auto main() -> int {
-  std::cout << "a: " << A::a << "\n"
-            << "b: " << A::b << "\n"
-            << "c: " << C::c() << "\n"
-            << "d: " << D::d() << std::endl;
+  A::a();
+
+  B::b();
+
+  C::c_interface();
+  C::c_implementation();
+
+  D::d_interface();
+  D::d_implementation();
+
+  std::cout << "Hello from main!" << std::endl;
+
   return 0;
 }

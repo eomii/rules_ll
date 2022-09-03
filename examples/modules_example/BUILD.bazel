@@ -1,5 +1,11 @@
-load("@rules_ll//ll:defs.bzl", "ll_binary", "ll_library")
+load(
+    "@rules_ll//ll:defs.bzl",
+    "ll_binary",
+    "ll_compilation_database",
+    "ll_library",
+)
 
+# Module names may differ from target names and file names.
 ll_library(
     name = "module_D",
     srcs = ["D_implementation.cpp"],
@@ -36,4 +42,10 @@ ll_binary(
         ":C",
         ":module_D",
     ],
+)
+
+ll_compilation_database(
+    name = "compilation_database",
+    config = "//:clang_tidy_config",
+    target = ":modules_example",
 )

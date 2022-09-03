@@ -1,5 +1,13 @@
+module;
+
+#include <iostream>
+
 module C;
 
 namespace C {
-auto c() -> int { return 20; }
+
+auto c_implementation() -> void {
+  std::cout << "Hello from module C implementation!" << std::endl;
+}
+
 } // namespace C
