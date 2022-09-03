@@ -1,13 +1,13 @@
 diff --git a/utils/bazel/llvm-project-overlay/clang-tools-extra/BUILD.bazel b/utils/bazel/llvm-project-overlay/clang-tools-extra/BUILD.bazel
 new file mode 100644
-index 000000000..b160d1074
+index 0000000000..b160d10741
 --- /dev/null
 +++ b/utils/bazel/llvm-project-overlay/clang-tools-extra/BUILD.bazel
 @@ -0,0 +1 @@
 +# Empty, but patches break if there is no line here.
 diff --git a/utils/bazel/llvm-project-overlay/clang-tools-extra/clang-tidy/BUILD.bazel b/utils/bazel/llvm-project-overlay/clang-tools-extra/clang-tidy/BUILD.bazel
 new file mode 100644
-index 000000000..eed0d4427
+index 0000000000..eed0d44279
 --- /dev/null
 +++ b/utils/bazel/llvm-project-overlay/clang-tools-extra/clang-tidy/BUILD.bazel
 @@ -0,0 +1,330 @@
@@ -343,7 +343,7 @@ index 000000000..eed0d4427
 +)
 diff --git a/utils/bazel/llvm-project-overlay/clang-tools-extra/clang-tidy/clang-tidy-config.h b/utils/bazel/llvm-project-overlay/clang-tools-extra/clang-tidy/clang-tidy-config.h
 new file mode 100644
-index 000000000..d19ac4250
+index 0000000000..d19ac4250a
 --- /dev/null
 +++ b/utils/bazel/llvm-project-overlay/clang-tools-extra/clang-tidy/clang-tidy-config.h
 @@ -0,0 +1,8 @@
@@ -357,7 +357,7 @@ index 000000000..d19ac4250
 +#endif
 diff --git a/utils/bazel/llvm-project-overlay/clang-tools-extra/clang-tidy/clang_tidy_module.bzl b/utils/bazel/llvm-project-overlay/clang-tools-extra/clang-tidy/clang_tidy_module.bzl
 new file mode 100644
-index 000000000..ff7b3d153
+index 0000000000..ff7b3d1533
 --- /dev/null
 +++ b/utils/bazel/llvm-project-overlay/clang-tools-extra/clang-tidy/clang_tidy_module.bzl
 @@ -0,0 +1,18 @@
@@ -381,7 +381,7 @@ index 000000000..ff7b3d153
 +    )
 diff --git a/utils/bazel/llvm-project-overlay/compiler-rt/BUILD.bazel b/utils/bazel/llvm-project-overlay/compiler-rt/BUILD.bazel
 new file mode 100644
-index 000000000..9641252aa
+index 0000000000..9641252aa5
 --- /dev/null
 +++ b/utils/bazel/llvm-project-overlay/compiler-rt/BUILD.bazel
 @@ -0,0 +1,11 @@
@@ -398,14 +398,14 @@ index 000000000..9641252aa
 +)
 diff --git a/utils/bazel/llvm-project-overlay/compiler-rt/lib/BUILD.bazel b/utils/bazel/llvm-project-overlay/compiler-rt/lib/BUILD.bazel
 new file mode 100644
-index 000000000..1bb8bf6d7
+index 0000000000..1bb8bf6d7f
 --- /dev/null
 +++ b/utils/bazel/llvm-project-overlay/compiler-rt/lib/BUILD.bazel
 @@ -0,0 +1 @@
 +# empty
 diff --git a/utils/bazel/llvm-project-overlay/compiler-rt/lib/asan/BUILD.bazel b/utils/bazel/llvm-project-overlay/compiler-rt/lib/asan/BUILD.bazel
 new file mode 100644
-index 000000000..e4652c7dc
+index 0000000000..e4652c7dcc
 --- /dev/null
 +++ b/utils/bazel/llvm-project-overlay/compiler-rt/lib/asan/BUILD.bazel
 @@ -0,0 +1,245 @@
@@ -656,7 +656,7 @@ index 000000000..e4652c7dc
 +)
 diff --git a/utils/bazel/llvm-project-overlay/compiler-rt/lib/builtins/BUILD.bazel b/utils/bazel/llvm-project-overlay/compiler-rt/lib/builtins/BUILD.bazel
 new file mode 100644
-index 000000000..68e031bef
+index 0000000000..68e031bef5
 --- /dev/null
 +++ b/utils/bazel/llvm-project-overlay/compiler-rt/lib/builtins/BUILD.bazel
 @@ -0,0 +1,225 @@
@@ -887,7 +887,7 @@ index 000000000..68e031bef
 +)
 diff --git a/utils/bazel/llvm-project-overlay/compiler-rt/lib/crt/BUILD.bazel b/utils/bazel/llvm-project-overlay/compiler-rt/lib/crt/BUILD.bazel
 new file mode 100644
-index 000000000..fc768e047
+index 0000000000..fc768e047e
 --- /dev/null
 +++ b/utils/bazel/llvm-project-overlay/compiler-rt/lib/crt/BUILD.bazel
 @@ -0,0 +1,28 @@
@@ -921,7 +921,7 @@ index 000000000..fc768e047
 +)
 diff --git a/utils/bazel/llvm-project-overlay/compiler-rt/lib/interception/BUILD.bazel b/utils/bazel/llvm-project-overlay/compiler-rt/lib/interception/BUILD.bazel
 new file mode 100644
-index 000000000..831b2eb68
+index 0000000000..831b2eb68f
 --- /dev/null
 +++ b/utils/bazel/llvm-project-overlay/compiler-rt/lib/interception/BUILD.bazel
 @@ -0,0 +1,29 @@
@@ -956,7 +956,7 @@ index 000000000..831b2eb68
 +)
 diff --git a/utils/bazel/llvm-project-overlay/compiler-rt/lib/lsan/BUILD.bazel b/utils/bazel/llvm-project-overlay/compiler-rt/lib/lsan/BUILD.bazel
 new file mode 100644
-index 000000000..7188ec565
+index 0000000000..7188ec5653
 --- /dev/null
 +++ b/utils/bazel/llvm-project-overlay/compiler-rt/lib/lsan/BUILD.bazel
 @@ -0,0 +1,63 @@
@@ -1025,7 +1025,7 @@ index 000000000..7188ec565
 +)
 diff --git a/utils/bazel/llvm-project-overlay/compiler-rt/lib/msan/BUILD.bazel b/utils/bazel/llvm-project-overlay/compiler-rt/lib/msan/BUILD.bazel
 new file mode 100644
-index 000000000..cba7a625a
+index 0000000000..cba7a625a6
 --- /dev/null
 +++ b/utils/bazel/llvm-project-overlay/compiler-rt/lib/msan/BUILD.bazel
 @@ -0,0 +1,74 @@
@@ -1105,7 +1105,7 @@ index 000000000..cba7a625a
 +)
 diff --git a/utils/bazel/llvm-project-overlay/compiler-rt/lib/sanitizer_common/BUILD.bazel b/utils/bazel/llvm-project-overlay/compiler-rt/lib/sanitizer_common/BUILD.bazel
 new file mode 100644
-index 000000000..7f48882b7
+index 0000000000..7f48882b78
 --- /dev/null
 +++ b/utils/bazel/llvm-project-overlay/compiler-rt/lib/sanitizer_common/BUILD.bazel
 @@ -0,0 +1,246 @@
@@ -1357,7 +1357,7 @@ index 000000000..7f48882b7
 +)
 diff --git a/utils/bazel/llvm-project-overlay/compiler-rt/lib/tsan/BUILD.bazel b/utils/bazel/llvm-project-overlay/compiler-rt/lib/tsan/BUILD.bazel
 new file mode 100644
-index 000000000..45becbca8
+index 0000000000..45becbca83
 --- /dev/null
 +++ b/utils/bazel/llvm-project-overlay/compiler-rt/lib/tsan/BUILD.bazel
 @@ -0,0 +1,114 @@
@@ -1477,7 +1477,7 @@ index 000000000..45becbca8
 +)
 diff --git a/utils/bazel/llvm-project-overlay/compiler-rt/lib/ubsan/BUILD.bazel b/utils/bazel/llvm-project-overlay/compiler-rt/lib/ubsan/BUILD.bazel
 new file mode 100644
-index 000000000..736606a26
+index 0000000000..736606a26b
 --- /dev/null
 +++ b/utils/bazel/llvm-project-overlay/compiler-rt/lib/ubsan/BUILD.bazel
 @@ -0,0 +1,109 @@
@@ -1592,10 +1592,10 @@ index 000000000..736606a26
 +)
 diff --git a/utils/bazel/llvm-project-overlay/libcxx/BUILD.bazel b/utils/bazel/llvm-project-overlay/libcxx/BUILD.bazel
 new file mode 100644
-index 000000000..cc3d0e526
+index 0000000000..2b69c9ccce
 --- /dev/null
 +++ b/utils/bazel/llvm-project-overlay/libcxx/BUILD.bazel
-@@ -0,0 +1,132 @@
+@@ -0,0 +1,129 @@
 +load("@rules_ll//ll:defs.bzl", "ll_library")
 +
 +filegroup(
@@ -1714,23 +1714,20 @@ index 000000000..cc3d0e526
 +        "//libcxxabi:libcxxabi_headers",
 +    ],
 +    defines = [
-+        "NDEBUG",
-+        "LIBCXX_BUILDING_LIBCXXABI",
-+        "_LIBCXXABI_BUILDING_LIBRARY",
 +        "_LIBCPP_BUILDING_LIBRARY",
 +        "_LIBCPP_DISABLE_NEW_DELETE_DEFINITIONS",
-+        "_LIBCPP_LINK_PTHREAD",
++        "_LIBCPP_ENABLE_EXPERIMENTAL",
++        "_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER",
++        "_LIBCPP_LINK_PTHREAD_LIB",
 +        "_LIBCPP_LINK_RT_LIB",
-+        "_LIBCPP_DISABLE_EXTERN_TEMPLATE",
-+        "__STDC_CONSTANT_MACROS",
-+        "__STDC_FORMAT_MACROS",
-+        "__STDC_LIMIT_MACROS",
++        "_LIBCXXABI_BUILDING_LIBRARY",
++        "LIBCXX_BUILDING_LIBCXXABI",
 +    ],
 +    visibility = ["//visibility:public"],
 +)
 diff --git a/utils/bazel/llvm-project-overlay/libcxx/include/__config_site b/utils/bazel/llvm-project-overlay/libcxx/include/__config_site
 new file mode 100644
-index 000000000..9719f1ae1
+index 0000000000..16cdddf992
 --- /dev/null
 +++ b/utils/bazel/llvm-project-overlay/libcxx/include/__config_site
 @@ -0,0 +1,48 @@
@@ -1759,7 +1756,7 @@ index 000000000..9719f1ae1
 +/* #undef _LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS */
 +#define _LIBCPP_HAS_NO_VENDOR_AVAILABILITY_ANNOTATIONS
 +/* #undef _LIBCPP_NO_VCRUNTIME */
-+/* #undef _LIBCPP_TYPEINFO_COMPARISON_IMPLEMENTATION */
++#define _LIBCPP_TYPEINFO_COMPARISON_IMPLEMENTATION 1
 +/* #undef _LIBCPP_HAS_NO_FILESYSTEM_LIBRARY */
 +/* #undef _LIBCPP_HAS_PARALLEL_ALGORITHMS */
 +/* #undef _LIBCPP_HAS_NO_RANDOM_DEVICE */
@@ -1784,7 +1781,7 @@ index 000000000..9719f1ae1
 +#endif // _LIBCPP___CONFIG_SITE
 diff --git a/utils/bazel/llvm-project-overlay/libcxx/include/module.modulemap b/utils/bazel/llvm-project-overlay/libcxx/include/module.modulemap
 new file mode 100644
-index 000000000..6d788743f
+index 0000000000..c48427885a
 --- /dev/null
 +++ b/utils/bazel/llvm-project-overlay/libcxx/include/module.modulemap
 @@ -0,0 +1,1401 @@
@@ -1828,7 +1825,7 @@ index 000000000..6d788743f
 +    // <iso646.h> provided by compiler.
 +    // <limits.h> provided by compiler or C library.
 +    module locale_h {
-+      
++
 +      header "locale.h"
 +      export *
 +    }
@@ -1841,7 +1838,7 @@ index 000000000..6d788743f
 +      export *
 +    }
 +    module stdatomic_h {
-+      
++
 +      requires cplusplus23
 +      header "stdatomic.h"
 +      export *
@@ -1885,13 +1882,13 @@ index 000000000..6d788743f
 +    }
 +    // <time.h> provided by C library.
 +    module wchar_h {
-+      
++
 +      // <wchar.h>'s __need_* macros require textual inclusion.
 +      textual header "wchar.h"
 +      export *
 +    }
 +    module wctype_h {
-+      
++
 +      header "wctype.h"
 +      export *
 +    }
@@ -1952,7 +1949,7 @@ index 000000000..6d788743f
 +      export *
 +    }
 +    module clocale {
-+      
++
 +      header "clocale"
 +      export *
 +    }
@@ -2013,13 +2010,13 @@ index 000000000..6d788743f
 +      export *
 +    }
 +    module cwchar {
-+      
++
 +      header "cwchar"
 +      export depr.stdio_h
 +      export *
 +    }
 +    module cwctype {
-+      
++
 +      header "cwctype"
 +      export *
 +    }
@@ -2239,7 +2236,7 @@ index 000000000..6d788743f
 +    export *
 +  }
 +  module barrier {
-+    
++
 +    header "barrier"
 +    export *
 +  }
@@ -2303,7 +2300,7 @@ index 000000000..6d788743f
 +    }
 +  }
 +  module codecvt {
-+    
++
 +    header "codecvt"
 +    export *
 +  }
@@ -2391,7 +2388,7 @@ index 000000000..6d788743f
 +    export *
 +  }
 +  module filesystem {
-+    
++
 +    header "filesystem"
 +    export *
 +
@@ -2455,7 +2452,7 @@ index 000000000..6d788743f
 +    export *
 +  }
 +  module fstream {
-+    
++
 +    header "fstream"
 +    export *
 +  }
@@ -2495,7 +2492,7 @@ index 000000000..6d788743f
 +    }
 +  }
 +  module future {
-+    
++
 +    header "future"
 +    export *
 +  }
@@ -2504,12 +2501,12 @@ index 000000000..6d788743f
 +    export *
 +  }
 +  module iomanip {
-+    
++
 +    header "iomanip"
 +    export *
 +  }
 +  module ios {
-+    
++
 +    header "ios"
 +    export iosfwd
 +    export *
@@ -2523,7 +2520,7 @@ index 000000000..6d788743f
 +    export *
 +  }
 +  module iostream {
-+    
++
 +    header "iostream"
 +    export ios
 +    export streambuf
@@ -2532,7 +2529,7 @@ index 000000000..6d788743f
 +    export *
 +  }
 +  module istream {
-+    
++
 +    header "istream"
 +    // FIXME: should re-export ios, streambuf?
 +    export *
@@ -2586,7 +2583,7 @@ index 000000000..6d788743f
 +    }
 +  }
 +  module latch {
-+    
++
 +    header "latch"
 +    export *
 +  }
@@ -2605,7 +2602,7 @@ index 000000000..6d788743f
 +    export *
 +  }
 +  module locale {
-+    
++
 +    header "locale"
 +    export *
 +  }
@@ -2644,7 +2641,7 @@ index 000000000..6d788743f
 +    }
 +  }
 +  module mutex {
-+    
++
 +    header "mutex"
 +    export *
 +  }
@@ -2681,7 +2678,7 @@ index 000000000..6d788743f
 +    export *
 +  }
 +  module ostream {
-+    
++
 +    header "ostream"
 +    // FIXME: should re-export ios, streambuf?
 +    export *
@@ -2794,7 +2791,7 @@ index 000000000..6d788743f
 +    export *
 +  }
 +  module regex {
-+    
++
 +    header "regex"
 +    export initializer_list
 +    export *
@@ -2804,7 +2801,7 @@ index 000000000..6d788743f
 +    export *
 +  }
 +  module semaphore {
-+    
++
 +    header "semaphore"
 +    export *
 +  }
@@ -2814,7 +2811,7 @@ index 000000000..6d788743f
 +    export *
 +  }
 +  module shared_mutex {
-+    
++
 +    header "shared_mutex"
 +    export version
 +  }
@@ -2825,7 +2822,7 @@ index 000000000..6d788743f
 +    module span_fwd { private header "__fwd/span.h" }
 +  }
 +  module sstream {
-+    
++
 +    header "sstream"
 +    // FIXME: should re-export istream, ostream, ios, streambuf, string?
 +    export *
@@ -2840,7 +2837,7 @@ index 000000000..6d788743f
 +    export *
 +  }
 +  module streambuf {
-+    
++
 +    header "streambuf"
 +    export *
 +  }
@@ -2861,7 +2858,7 @@ index 000000000..6d788743f
 +    module string_view_fwd { private header "__fwd/string_view.h" }
 +  }
 +  module strstream {
-+    
++
 +    header "strstream"
 +    export *
 +  }
@@ -2870,7 +2867,7 @@ index 000000000..6d788743f
 +    export *
 +  }
 +  module thread {
-+    
++
 +    header "thread"
 +    export *
 +
@@ -3080,7 +3077,7 @@ index 000000000..6d788743f
 +  module __errc              { private header "__errc"              export * }
 +  module __hash_table        {         header "__hash_table"        export * }
 +  module __locale            {
-+    
++
 +    private header "__locale" export *
 +  }
 +  module __mbstate_t         { private header "__mbstate_t.h"       export * }
@@ -3088,7 +3085,7 @@ index 000000000..6d788743f
 +  module __node_handle       { private header "__node_handle"       export * }
 +  module __split_buffer      { private header "__split_buffer"      export * }
 +  module __std_stream        {
-+    
++
 +    private header "__std_stream" export *
 +  }
 +  module __threading_support {         header "__threading_support" export * }
@@ -3142,7 +3139,7 @@ index 000000000..6d788743f
 +      export *
 +    }
 +    module regex {
-+      
++
 +      header "experimental/regex"
 +      export *
 +    }
@@ -3191,10 +3188,10 @@ index 000000000..6d788743f
 +}
 diff --git a/utils/bazel/llvm-project-overlay/libcxxabi/BUILD.bazel b/utils/bazel/llvm-project-overlay/libcxxabi/BUILD.bazel
 new file mode 100644
-index 000000000..925841ef9
+index 0000000000..f7e1d4d990
 --- /dev/null
 +++ b/utils/bazel/llvm-project-overlay/libcxxabi/BUILD.bazel
-@@ -0,0 +1,92 @@
+@@ -0,0 +1,89 @@
 +load("@rules_ll//ll:defs.bzl", "ll_library")
 +
 +filegroup(
@@ -3280,15 +3277,12 @@ index 000000000..925841ef9
 +        "_LIBCPP_BUILDING_LIBRARY",
 +        "_LIBCXXABI_BUILDING_LIBRARY",
 +        "_LIBCXXABI_LINK_PTHREAD_LIB",
-+        "__STDC_CONSTANT_MACROS",
-+        "__STDC_FORMAT_MACROS",
-+        "__STDC_LIMIT_MACROS",
 +    ],
 +    transitive_hdrs = [":libcxxabi_headers"],
 +    visibility = ["//visibility:public"],
 +)
 diff --git a/utils/bazel/llvm-project-overlay/libunwind/BUILD.bazel b/utils/bazel/llvm-project-overlay/libunwind/BUILD.bazel
-index 718eebfb7..0bd44bcbc 100644
+index 718eebfb73..0bd44bcbca 100644
 --- a/utils/bazel/llvm-project-overlay/libunwind/BUILD.bazel
 +++ b/utils/bazel/llvm-project-overlay/libunwind/BUILD.bazel
 @@ -18,3 +18,53 @@ cc_library(
