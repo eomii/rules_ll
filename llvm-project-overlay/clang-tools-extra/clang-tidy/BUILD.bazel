@@ -33,6 +33,9 @@ cc_library(
         # Added manually to the overlay.
         "clang-tidy-config.h",
     ],
+    copts = [
+        "-O3",
+    ],
     deps = [
         "@llvm-project//clang:analysis",
         "@llvm-project//clang:ast",
@@ -58,6 +61,9 @@ cc_library(
     name = "clang_tidy_utils",
     srcs = glob(["utils/*.cpp"]),
     hdrs = glob(["utils/*.h"]),
+    copts = [
+        "-O3",
+    ],
     deps = [
         ":clang_tidy",
         "@llvm-project//clang:ast",
@@ -273,6 +279,9 @@ ALL_CLANG_TIDY_CHECKS = [
 cc_binary(
     name = "clang_tidy_plugin",
     srcs = ["plugin/ClangTidyPlugin.cpp"],
+    copts = [
+        "-O3",
+    ],
     linkshared = True,
     visibility = ["//visibility:public"],
     deps = ALL_CLANG_TIDY_CHECKS + [
@@ -294,6 +303,9 @@ cc_library(
     hdrs = [
         "tool/ClangTidyMain.h",
     ],
+    copts = [
+        "-O3",
+    ],
     deps = [
         ":clang_tidy",
         "@llvm-project//clang:ast",
@@ -308,6 +320,9 @@ cc_binary(
     name = "clang-tidy",
     srcs = [
         "tool/ClangTidyToolMain.cpp",
+    ],
+    copts = [
+        "-O3",
     ],
     visibility = ["//visibility:public"],
     deps = ALL_CLANG_TIDY_CHECKS + [

@@ -15,4 +15,7 @@ def clang_tidy_module(name, deps = []):
             "@llvm-project//llvm:Support",
         ],
         alwayslink = True,
+        copts = [
+            "-O3",
+        ],
     )

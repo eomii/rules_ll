@@ -319,8 +319,9 @@ def compile_object_args(
 
     # Load local module interfaces unconditionally without declaring a module
     # name. When these are made available to downstream targets, they will be
-    # treated as modules.
-    # TODO: See whether this is a bug in Clang. Discussion at
+    # treated as modules. This issue is caused by `module M;` not implicitly
+    # declaring a dependency on `M` in the same way that `import M` would.
+    # TODO: This is probably a bug in Clang. Discussion at
     #       https://github.com/llvm/llvm-project/issues/57293.
     args.add_all(
         local_interfaces,

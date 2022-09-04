@@ -7,30 +7,30 @@ load(
 
 # Module names may differ from target names and file names.
 ll_library(
-    name = "module_D",
-    srcs = ["D_implementation.cpp"],
+    name = "module_d",
+    srcs = ["d_implementation.cpp"],
     compile_flags = ["-std=c++20"],
-    transitive_interfaces = {"D_interface.cppm": "D"},
+    transitive_interfaces = {"d_interface.cppm": "d"},
 )
 
 ll_library(
-    name = "C",
-    srcs = ["C.cpp"],
+    name = "c",
+    srcs = ["c.cpp"],
     compile_flags = ["-std=c++20"],
-    transitive_interfaces = {"C.cppm": "C"},
+    transitive_interfaces = {"c.cppm": "c"},
 )
 
 ll_library(
-    name = "B",
+    name = "b",
     compile_flags = ["-std=c++20"],
-    transitive_interfaces = {"B.cppm": "B"},
+    transitive_interfaces = {"b.cppm": "b"},
 )
 
 ll_library(
-    name = "A",
+    name = "a",
     compile_flags = ["-std=c++20"],
-    transitive_interfaces = {"A.cppm": "A"},
-    deps = [":B"],
+    transitive_interfaces = {"a.cppm": "a"},
+    deps = [":b"],
 )
 
 ll_binary(
@@ -38,14 +38,14 @@ ll_binary(
     srcs = ["main.cpp"],
     compile_flags = ["-std=c++20"],
     deps = [
-        ":A",
-        ":C",
-        ":module_D",
+        ":a",
+        ":c",
+        ":module_d",
     ],
 )
 
 ll_compilation_database(
-    name = "compilation_database",
+    name = "compile_commands",
     config = "//:clang_tidy_config",
     target = ":modules_example",
 )

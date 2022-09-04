@@ -74,9 +74,16 @@ import json
 with open(sys.argv[1], 'r') as in_file, open(sys.argv[2], 'w') as out_file:
     compilation_database = json.load(in_file)
 
-    for fragment in compilation_database:
+    revised_compilation_database = [
+        fragment
+        for fragment in compilation_database
+        if not fragment['file'].endswith('.pcm')
+    ]
+
+    for fragment in revised_compilation_database:
         fragment['directory'] = '$(pwd)'
-    json.dump(compilation_database, out_file)
+
+    json.dump(revised_compilation_database, out_file)
 """ $1 $2
 ''',
         execution_requirements = {
@@ -127,6 +134,7 @@ ll_compilation_database = rule(
             This file should be at the root of your project directory.
             """,
             allow_single_file = True,
+            mandatory = True,
         ),
         "exclude": attr.string_list(
             doc = """

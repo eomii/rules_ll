@@ -1,19 +1,19 @@
 #include <iostream>
 
-import A;
-import C;
-import D;
+import a;
+import c;
+import d;
 
 auto main() -> int {
-  A::a();
+  a::a();
 
-  B::b();
+  b::b();
 
-  C::c_interface();
-  C::c_implementation();
+  c::c_interface();
+  c::c_implementation();
 
-  D::d_interface();
-  D::d_implementation();
+  d::d_interface();
+  d::d_implementation();
 
   std::cout << "Hello from main!" << std::endl;
 

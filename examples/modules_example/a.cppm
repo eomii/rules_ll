@@ -2,12 +2,12 @@ module;
 
 #include <iostream>
 
-export module A;
+export module a;
 
-export import B;
+export import b;
 
-export namespace A {
+export namespace a {
 
 auto a() -> void { std::cout << "Hello from module A interface!" << std::endl; }
 
-} // namespace A
+} // namespace a

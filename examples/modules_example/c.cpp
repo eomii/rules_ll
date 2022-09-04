@@ -2,12 +2,12 @@ module;
 
 #include <iostream>
 
-module C;
+module c;
 
-namespace C {
+namespace c {
 
 auto c_implementation() -> void {
   std::cout << "Hello from module C implementation!" << std::endl;
 }
 
-} // namespace C
+} // namespace c

@@ -7,10 +7,10 @@ index 0000000000..b160d10741
 +# Empty, but patches break if there is no line here.
 diff --git a/utils/bazel/llvm-project-overlay/clang-tools-extra/clang-tidy/BUILD.bazel b/utils/bazel/llvm-project-overlay/clang-tools-extra/clang-tidy/BUILD.bazel
 new file mode 100644
-index 0000000000..eed0d44279
+index 0000000000..9ca69086e4
 --- /dev/null
 +++ b/utils/bazel/llvm-project-overlay/clang-tools-extra/clang-tidy/BUILD.bazel
-@@ -0,0 +1,330 @@
+@@ -0,0 +1,345 @@
 +load(
 +    "@llvm-project//clang-tools-extra/clang-tidy:clang_tidy_module.bzl",
 +    "clang_tidy_module",
@@ -46,6 +46,9 @@ index 0000000000..eed0d44279
 +        # Added manually to the overlay.
 +        "clang-tidy-config.h",
 +    ],
++    copts = [
++        "-O3",
++    ],
 +    deps = [
 +        "@llvm-project//clang:analysis",
 +        "@llvm-project//clang:ast",
@@ -71,6 +74,9 @@ index 0000000000..eed0d44279
 +    name = "clang_tidy_utils",
 +    srcs = glob(["utils/*.cpp"]),
 +    hdrs = glob(["utils/*.h"]),
++    copts = [
++        "-O3",
++    ],
 +    deps = [
 +        ":clang_tidy",
 +        "@llvm-project//clang:ast",
@@ -286,6 +292,9 @@ index 0000000000..eed0d44279
 +cc_binary(
 +    name = "clang_tidy_plugin",
 +    srcs = ["plugin/ClangTidyPlugin.cpp"],
++    copts = [
++        "-O3",
++    ],
 +    linkshared = True,
 +    visibility = ["//visibility:public"],
 +    deps = ALL_CLANG_TIDY_CHECKS + [
@@ -307,6 +316,9 @@ index 0000000000..eed0d44279
 +    hdrs = [
 +        "tool/ClangTidyMain.h",
 +    ],
++    copts = [
++        "-O3",
++    ],
 +    deps = [
 +        ":clang_tidy",
 +        "@llvm-project//clang:ast",
@@ -321,6 +333,9 @@ index 0000000000..eed0d44279
 +    name = "clang-tidy",
 +    srcs = [
 +        "tool/ClangTidyToolMain.cpp",
++    ],
++    copts = [
++        "-O3",
 +    ],
 +    visibility = ["//visibility:public"],
 +    deps = ALL_CLANG_TIDY_CHECKS + [
@@ -357,10 +372,10 @@ index 0000000000..d19ac4250a
 +#endif
 diff --git a/utils/bazel/llvm-project-overlay/clang-tools-extra/clang-tidy/clang_tidy_module.bzl b/utils/bazel/llvm-project-overlay/clang-tools-extra/clang-tidy/clang_tidy_module.bzl
 new file mode 100644
-index 0000000000..ff7b3d1533
+index 0000000000..2ff01aa500
 --- /dev/null
 +++ b/utils/bazel/llvm-project-overlay/clang-tools-extra/clang-tidy/clang_tidy_module.bzl
-@@ -0,0 +1,18 @@
+@@ -0,0 +1,21 @@
 +def clang_tidy_module(name, deps = []):
 +    """Wrapper around cc_library to shorten deps."""
 +    native.cc_library(
@@ -378,6 +393,9 @@ index 0000000000..ff7b3d1533
 +            "@llvm-project//llvm:Support",
 +        ],
 +        alwayslink = True,
++        copts = [
++            "-O3",
++        ],
 +    )
 diff --git a/utils/bazel/llvm-project-overlay/compiler-rt/BUILD.bazel b/utils/bazel/llvm-project-overlay/compiler-rt/BUILD.bazel
 new file mode 100644
