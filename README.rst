@@ -12,15 +12,15 @@ C++ with a Clang/LLVM based toolchain built from upstream.
   and ``clang-tidy``.
 - Parallel ``clang-tidy`` invocations via an ``ll_compilation_database``
   target.
-- Native support for sanitizers via target attributes.
+- Support for sanitizers via target attributes.
 - Heterogeneous programming for Nvidia GPUs using HIP and CUDA, including fully
   automated setup of required libraries, toolkits etc.
-- Precompiled modules for C++20.
+- C++ modules.
 
 **Links**
 
 - Documentation: `<https://ll.eomii.org>`_
-- Examples: `rules_ll/examples <https://github.com/eomii/rules_ll/tree/main/examples>`_.
+- Examples: `rules_ll/examples <https://github.com/eomii/rules_ll/tree/main/examples>`_
 - Discord: `<https://discord.gg/Ax67899n4y>`_
 
 **Planned features**
