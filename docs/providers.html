@@ -103,6 +103,11 @@
    </code>
   </a>
  </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="guides/modules.html">
+   C++ modules
+  </a>
+ </li>
 </ul>
 <p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
@@ -459,7 +464,8 @@ LlCompilationDatabaseInfo(<a href="#LlCompilationDatabaseInfo-compilation_databa
 <div class="section" id="llinfo">
 <h2>LlInfo<a class="headerlink" href="#llinfo" title="Permalink to this headline">#</a></h2>
 <pre>
-LlInfo(<a href="#LlInfo-transitive_angled_includes">transitive_angled_includes</a>, <a href="#LlInfo-transitive_defines">transitive_defines</a>, <a href="#LlInfo-transitive_hdrs">transitive_hdrs</a>, <a href="#LlInfo-transitive_includes">transitive_includes</a>)
+LlInfo(<a href="#LlInfo-transitive_angled_includes">transitive_angled_includes</a>, <a href="#LlInfo-transitive_defines">transitive_defines</a>, <a href="#LlInfo-transitive_hdrs">transitive_hdrs</a>, <a href="#LlInfo-transitive_includes">transitive_includes</a>,
+       <a href="#LlInfo-transitive_interfaces">transitive_interfaces</a>)
 </pre>
 <p>Provider returned by ll targets.</p>
 <p><strong>FIELDS</strong></p>
@@ -481,6 +487,9 @@ LlInfo(<a href="#LlInfo-transitive_angled_includes">transitive_angled_includes</
 </tr>
 <tr class="row-odd"><td class="text-left"><p><a id="LlInfo-transitive_includes"></a>transitive_includes</p></td>
 <td class="text-left"><p>A depset containing include paths. These include paths are carried to all depending targets.</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p><a id="LlInfo-transitive_interfaces"></a>transitive_interfaces</p></td>
+<td class="text-left"><p>A depset containing precompiled module interfaces. These interfaces are carried to all depending targets.</p></td>
 </tr>
 </tbody>
 </table>

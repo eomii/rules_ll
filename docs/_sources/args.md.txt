@@ -10,7 +10,8 @@ Convenience function for setting compile arguments.
 ## compile_object_args
 
 <pre>
-compile_object_args(<a href="#compile_object_args-ctx">ctx</a>, <a href="#compile_object_args-in_file">in_file</a>, <a href="#compile_object_args-out_file">out_file</a>, <a href="#compile_object_args-cdf">cdf</a>, <a href="#compile_object_args-headers">headers</a>, <a href="#compile_object_args-defines">defines</a>, <a href="#compile_object_args-includes">includes</a>, <a href="#compile_object_args-angled_includes">angled_includes</a>)
+compile_object_args(<a href="#compile_object_args-ctx">ctx</a>, <a href="#compile_object_args-in_file">in_file</a>, <a href="#compile_object_args-out_file">out_file</a>, <a href="#compile_object_args-cdf">cdf</a>, <a href="#compile_object_args-headers">headers</a>, <a href="#compile_object_args-defines">defines</a>, <a href="#compile_object_args-includes">includes</a>, <a href="#compile_object_args-angled_includes">angled_includes</a>,
+                    <a href="#compile_object_args-interfaces">interfaces</a>, <a href="#compile_object_args-local_interfaces">local_interfaces</a>)
 </pre>
 
 
@@ -28,6 +29,8 @@ compile_object_args(<a href="#compile_object_args-ctx">ctx</a>, <a href="#compil
 | <a id="compile_object_args-defines"></a>defines |  <p align="center"> - </p>   |  none |
 | <a id="compile_object_args-includes"></a>includes |  <p align="center"> - </p>   |  none |
 | <a id="compile_object_args-angled_includes"></a>angled_includes |  <p align="center"> - </p>   |  none |
+| <a id="compile_object_args-interfaces"></a>interfaces |  <p align="center"> - </p>   |  none |
+| <a id="compile_object_args-local_interfaces"></a>local_interfaces |  <p align="center"> - </p>   |  none |
 
 
 <a id="#create_archive_library_args"></a>

@@ -11,6 +11,7 @@ Guides
    :caption: Guides
 
    guides/clang_tidy
+   guides/modules
 
 Public API
 ==========

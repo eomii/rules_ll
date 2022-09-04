@@ -28,7 +28,7 @@ compilable_sources(<a href="#compilable_sources-ctx">ctx</a>)
 ## compile_object_inputs
 
 <pre>
-compile_object_inputs(<a href="#compile_object_inputs-ctx">ctx</a>, <a href="#compile_object_inputs-headers">headers</a>, <a href="#compile_object_inputs-toolchain_type">toolchain_type</a>)
+compile_object_inputs(<a href="#compile_object_inputs-ctx">ctx</a>, <a href="#compile_object_inputs-in_file">in_file</a>, <a href="#compile_object_inputs-headers">headers</a>, <a href="#compile_object_inputs-interfaces">interfaces</a>, <a href="#compile_object_inputs-local_interfaces">local_interfaces</a>, <a href="#compile_object_inputs-toolchain_type">toolchain_type</a>)
 </pre>
 
 
@@ -39,7 +39,10 @@ compile_object_inputs(<a href="#compile_object_inputs-ctx">ctx</a>, <a href="#co
 | Name  | Description | Default Value |
 | :------------- | :------------- | :------------- |
 | <a id="compile_object_inputs-ctx"></a>ctx |  <p align="center"> - </p>   |  none |
+| <a id="compile_object_inputs-in_file"></a>in_file |  <p align="center"> - </p>   |  none |
 | <a id="compile_object_inputs-headers"></a>headers |  <p align="center"> - </p>   |  none |
+| <a id="compile_object_inputs-interfaces"></a>interfaces |  <p align="center"> - </p>   |  none |
+| <a id="compile_object_inputs-local_interfaces"></a>local_interfaces |  <p align="center"> - </p>   |  none |
 | <a id="compile_object_inputs-toolchain_type"></a>toolchain_type |  <p align="center"> - </p>   |  none |
 
 

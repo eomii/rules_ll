@@ -46,7 +46,8 @@ LlCompilationDatabaseInfo(<a href="#LlCompilationDatabaseInfo-compilation_databa
 ## LlInfo
 
 <pre>
-LlInfo(<a href="#LlInfo-transitive_angled_includes">transitive_angled_includes</a>, <a href="#LlInfo-transitive_defines">transitive_defines</a>, <a href="#LlInfo-transitive_hdrs">transitive_hdrs</a>, <a href="#LlInfo-transitive_includes">transitive_includes</a>)
+LlInfo(<a href="#LlInfo-transitive_angled_includes">transitive_angled_includes</a>, <a href="#LlInfo-transitive_defines">transitive_defines</a>, <a href="#LlInfo-transitive_hdrs">transitive_hdrs</a>, <a href="#LlInfo-transitive_includes">transitive_includes</a>,
+       <a href="#LlInfo-transitive_interfaces">transitive_interfaces</a>)
 </pre>
 
 Provider returned by ll targets.
@@ -60,3 +61,4 @@ Provider returned by ll targets.
 | <a id="LlInfo-transitive_defines"></a>transitive_defines |  A depset containing defines. These defines are carried to all depending targets.    |
 | <a id="LlInfo-transitive_hdrs"></a>transitive_hdrs |  A depset containing header files. These header files are carried to all depending targets.    |
 | <a id="LlInfo-transitive_includes"></a>transitive_includes |  A depset containing include paths. These include paths are carried to all depending targets.    |
+| <a id="LlInfo-transitive_interfaces"></a>transitive_interfaces |  A depset containing precompiled module interfaces. These interfaces are carried to all depending targets.    |

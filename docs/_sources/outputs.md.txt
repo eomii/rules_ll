@@ -94,3 +94,22 @@ link_shared_object_outputs(<a href="#link_shared_object_outputs-ctx">ctx</a>)
 | Name  | Description | Default Value |
 | :------------- | :------------- | :------------- |
 | <a id="link_shared_object_outputs-ctx"></a>ctx |  <p align="center"> - </p>   |  none |
+
+
+<a id="#precompile_interface_outputs"></a>
+
+## precompile_interface_outputs
+
+<pre>
+precompile_interface_outputs(<a href="#precompile_interface_outputs-ctx">ctx</a>, <a href="#precompile_interface_outputs-in_file">in_file</a>)
+</pre>
+
+
+
+**PARAMETERS**
+
+
+| Name  | Description | Default Value |
+| :------------- | :------------- | :------------- |
+| <a id="precompile_interface_outputs-ctx"></a>ctx |  <p align="center"> - </p>   |  none |
+| <a id="precompile_interface_outputs-in_file"></a>in_file |  <p align="center"> - </p>   |  none |
