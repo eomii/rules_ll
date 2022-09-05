@@ -307,12 +307,18 @@ def compile_object_args(
     # Always use experimental libcxx features.
     args.add("-D_LIBCPP_ENABLE_EXPERIMENTAL")
 
+    # TODO: Module precompilations embed absolute paths in precompiled binaries.
+    # We use this workaround to prevent abi_tag attribute redeclaration errors
+    # in libcxx/include/__bit_reference. We need to figure out how we can
+    # re-enable abi-tagging.
+    args.add("-D_LIBCPP_NO_ABI_TAG")
+
     # Additional compile flags.
     args.add_all(ctx.attr.compile_flags)
 
     # To keep precompilations sandboxed, embed used headers in the pcm.
     # TODO: This does not work yet. For some reason we are still required to
-    #       disable sandboxint in precompilations.
+    #       disable sandboxing in precompilations.
     if out_file.extension == "pcm":
         args.add("-Xclang")
         args.add("-fmodules-embed-all-files")

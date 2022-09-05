@@ -1,0 +1,14 @@
+diff --git a/libcxx/include/__iterator/back_insert_iterator.h b/libcxx/include/__iterator/back_insert_iterator.h
+index da58b860e3..9aec7aa7cf 100644
+--- a/libcxx/include/__iterator/back_insert_iterator.h
++++ b/libcxx/include/__iterator/back_insert_iterator.h
+@@ -67,6 +67,9 @@ back_inserter(_Container& __x)
+     return back_insert_iterator<_Container>(__x);
+ }
+ 
++template <class _Container> _LIBCPP_HIDE_FROM_ABI
++back_insert_iterator(_Container& __x) -> back_insert_iterator<_Container>;
++
+ _LIBCPP_END_NAMESPACE_STD
+ 
+ #endif // _LIBCPP___ITERATOR_BACK_INSERT_ITERATOR_H
