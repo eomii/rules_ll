@@ -1,4 +1,4 @@
-bazel_dep(name="rules_ll", version="20220822.1")
+bazel_dep(name="rules_ll", version="20220905.0")
 local_path_override(module_name = "rules_ll", path = "..")
 
 # local_path_override(module_name = "hipsycl", path="/mnt/hipSYCL")
