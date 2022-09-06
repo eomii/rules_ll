@@ -1,0 +1,76 @@
+load("@rules_ll//ll:defs.bzl", "ll_binary", "ll_library")
+
+# Copy-paste from https://eel.is/c++draft/module.
+
+# The draft does not contain info on file extensions for module implementation
+# and interface units. This example shows how files as in the draft need to be
+# laid out in rules_ll.
+
+# A notable aspect of this example is that a module partition does not require
+# an interface and does not need to specify one to be usable in other parts of
+# the module.
+
+# Technically, there is no "module partition interface unit" and/or "module
+# partition implementation unit". Officially, both of them are "module
+# partitions" that just differ in their contribution to the external interface
+# of the primary module.
+
+# In rules_ll, the `interfaces` attribute declares whether a source file is
+# precompiled or not. rules_ll itself has no notion of module partitions.
+
+# A potentially unintuitive consequence of this is that module partitions
+# generally should go in the `interfaces` attribute. We may also require
+# additional targets for "internal" partitions, despite the C++ syntax
+# suggesting module partitions are all on the "same level" in the
+# module-internal hierarchy.
+
+# Two files in the same `interfaces` attribute cannot see each other's
+# precompiled BMIs. We need an additional target for "internal" partitions to
+# let rules_ll know that the BMI for these internal partitions need to be built
+# before other partitions are built.
+
+# It should be clear from this example, that module layout needs to be
+# well-thought-out. Otherwise, dependency graphs, regardless of build system
+# can become hard to comprehend.
+
+# For more intuitive examples, see the other module_* examples.
+
+ll_library(
+    name = "Internals",
+    compile_flags = ["-std=c++20"],
+    transitive_interfaces = {
+        # Module partition implementation unit. This is imported in TU2, so we
+        # need to build TU3 before we can build TU2.
+        "TU3.cppm": "A:Internals",
+    },
+)
+
+ll_library(
+    name = "A",
+    srcs = [
+        # Primary module implementation unit. Requires the BMI for module
+        # partition A:Internals (TU3), and the BMI for the primary module
+        # interface unit of A (TU1).
+        "TU4.cpp",
+    ],
+    compile_flags = ["-std=c++20"],
+    interfaces = {
+        # Module partition interface unit. Requires the BMI for module partition
+        # A:Internals (TU3).
+        "TU2.cppm": "A:Foo",
+    },
+    transitive_interfaces = {
+        # Primary module interface unit. Requires the BMI for the module
+        # partition A:Foo (TU2).
+        "TU1.cppm": "A",
+    },
+    deps = [":Internals"],
+)
+
+# Main file not in the example. Useful to see that things work.
+ll_binary(
+    name = "modules_draft_example",
+    srcs = ["main.cpp"],
+    compile_flags = ["-std=c++20"],
+    deps = [":A"],
+)
