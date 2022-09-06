@@ -6,23 +6,15 @@ load(
 )
 
 ll_library(
-    name = "hello_world_partitions",
+    name = "hello_world",
+    srcs = ["hello_world_impl.cpp"],
     compile_flags = ["-std=c++20"],
-    transitive_interfaces = {
+    interfaces = {
         "hello_world-hello.cppm": "hello_world:hello",
         "hello_world-world.cppm": "hello_world:world",
         "hello_world-another_world.cppm": "hello_world:another_world",
     },
-)
-
-ll_library(
-    name = "hello_world",
-    srcs = ["hello_world_impl.cpp"],
-    compile_flags = ["-std=c++20"],
-    transitive_interfaces = {
-        "hello_world.cppm": "hello_world",
-    },
-    deps = ["hello_world_partitions"],
+    transitive_interfaces = {"hello_world.cppm": "hello_world"},
 )
 
 ll_binary(

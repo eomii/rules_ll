@@ -177,7 +177,10 @@ def precompile_interfaces(
                 defines,
                 includes,
                 angled_includes,
-                interfaces,
+                depset(
+                    internal_interfaces,
+                    transitive = [interfaces],
+                ),
                 toolchain_type,
             )
             exported_interfaces.append((file_out, module_name))

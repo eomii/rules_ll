@@ -136,6 +136,15 @@ DEFAULT_ATTRS = {
         named `<filename>.interface.o`. This way object files for modules
         implemented via separate interfaces and implementations (such as `A.cpp`
         in `srcs` and `A.cppm` in `interfaces`) do not clash.
+
+        Files in the same `interfaces` attribute cannot see each other's BMIs.
+        This means that multiple `ll_library` targets may be required to build
+        a module. (For instance, if a module partition is used by other module
+        partitions.)
+
+        The BMIs in `interfaces` are visible to `transitive_interfaces`. This
+        way we can often get away with putting all module partitions in
+        `interfaces` and the primary module interface in `transitive_interfaces`.
         """,
         allow_files = [".cppm"],
     ),
@@ -295,7 +304,9 @@ LIBRARY_ATTRS = {
         doc = """Transitive interfaces for this target.
 
         Like `interfaces`, but both the precompiled modules and the compiled
-        objects derived from files in this attribute are transitive.
+        objects derived from files in this attribute are transitive. Files in
+        this attribute can see BMIs from modules in `interfaces`, so a primary
+        module interface would likely go here.
         """,
         allow_files = [".cppm"],
     ),
