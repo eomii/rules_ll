@@ -8,35 +8,29 @@ load("@bazel_skylib//rules:common_settings.bzl", "BuildSettingInfo")
 def compile_object_tools(ctx, toolchain_type):
     config = ctx.attr.toolchain_configuration[BuildSettingInfo].value
 
+    tools = [
+        ctx.toolchains[toolchain_type].symbolizer,
+    ]
+
+    if config == "bootstrap":
+        return tools
+
+    tools += [
+        ctx.toolchains[toolchain_type].bitcode_linker,
+        ctx.toolchains[toolchain_type].linker,
+        ctx.toolchains[toolchain_type].linker_executable,
+    ]
+
     if config == "cpp":
-        return [
-            ctx.toolchains[toolchain_type].symbolizer,
-            ctx.toolchains[toolchain_type].bitcode_linker,
-            ctx.toolchains[toolchain_type].linker,
-            ctx.toolchains[toolchain_type].linker_executable,
-        ]
-    elif config in ["cuda_nvidia", "hip_nvidia"]:
-        return [
-            ctx.toolchains[toolchain_type].offload_bundler,
-            ctx.toolchains[toolchain_type].symbolizer,
-            ctx.toolchains[toolchain_type].bitcode_linker,
-            ctx.toolchains[toolchain_type].linker,
-            ctx.toolchains[toolchain_type].linker_executable,
-        ]
-    elif config == "sycl_cpu":
-        return [
-            ctx.toolchains[toolchain_type].symbolizer,
-            ctx.toolchains[toolchain_type].bitcode_linker,
-            ctx.toolchains[toolchain_type].linker,
-            ctx.toolchains[toolchain_type].linker_executable,
-            ctx.toolchains[toolchain_type].hipsycl_plugin,
-        ]
-    elif config == "bootstrap":
-        return [
-            ctx.toolchains[toolchain_type].symbolizer,
-        ]
-    else:
-        fail("Unregognized toolchain toolchain configuration.")
+        return tools
+
+    if config in ["cuda_nvidia", "hip_nvidia"]:
+        return tools + [ctx.toolchains[toolchain_type].offload_bundler]
+
+    if config == "sycl_cpu":
+        return tools + [ctx.toolchains[toolchain_type].hipsycl_plugin]
+
+    fail("Unregognized toolchain toolchain configuration.")
 
 def linking_tools(ctx, toolchain_type):
     config = ctx.attr.toolchain_configuration[BuildSettingInfo].value

@@ -514,9 +514,3 @@ def create_archive_library_args(ctx, in_files, out_file):
     args.add_all(in_files)
 
     return [args]
-
-def expose_headers_args(ctx, in_file, out_file):
-    args = ctx.actions.args()
-    args.add(in_file)
-    args.add(out_file.dirname)
-    return [args]

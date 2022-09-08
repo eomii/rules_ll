@@ -55,9 +55,9 @@ def _ll_compilation_database(ctx):
         arguments = [args],
     )
 
-    # The "directory" fields reference sandbox locations which do not exist after
-    # executing compile actions. Hence we change them to reference the workspace
-    # location.
+    # The "directory" fields reference sandbox locations which do not exist
+    # after executing compile actions. Hence we change them to reference the
+    # workspace location.
     cdb = ctx.actions.declare_file("compile_commands.json")
     args = ctx.actions.args()
 
@@ -159,7 +159,7 @@ and running [clang-tidy](https://clang.llvm.org/extra/clang-tidy/) on it.
 For a full guide see
 [Using `rules_ll` with `clang-tidy`](https://ll.eomii.org/guides/clang_tidy.html).
 
-An example project using this rule is available at
+Examples using this rule are available at
 [rules_ll/examples](https://github.com/eomii/rules_ll/tree/main/examples).
 """,
 )

@@ -11,7 +11,6 @@ load(
     "//ll:args.bzl",
     "compile_object_args",
     "create_archive_library_args",
-    "expose_headers_args",
     "link_bitcode_library_args",
     "link_executable_args",
 )
@@ -46,29 +45,6 @@ load(
     "compile_object_tools",
     "linking_tools",
 )
-
-def expose_headers(ctx):
-    headers_to_expose = ctx.files.transitive_hdrs
-    exposed_hdrs = []
-
-    for in_file in headers_to_expose:
-        build_file_path = paths.join(
-            ctx.label.workspace_root,
-            paths.dirname(ctx.build_file_path),
-        )
-        relative_hdr_path = paths.relativize(in_file.path, build_file_path)
-        out_file = ctx.actions.declare_file(relative_hdr_path)
-
-        ctx.actions.run_shell(
-            outputs = [out_file],
-            inputs = [in_file],
-            command = "cp $1 $2",
-            arguments = expose_headers_args(ctx, in_file, out_file),
-            mnemonic = "LlExposeHeaders",
-            use_default_shell_env = False,
-        )
-        exposed_hdrs.append(out_file)
-    return exposed_hdrs
 
 def compile_objects(
         ctx,
