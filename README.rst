@@ -34,9 +34,10 @@ System requirements
 -------------------
 
 ``rules_ll`` makes heavy use of upstream dependencies and experimental features
-to the point of using CI artifacts of Bazel itself to get bugfixes faster. If
-something gets deprecated, we remove it. This means that the software-side
-system requirements for ``rules_ll`` tend to be comparatively high.
+to the point of sometimes using non-release CI artifacts of Bazel to get
+bugfixes faster. If something gets deprecated, we remove it. This means that
+the software-side system requirements for ``rules_ll`` tend to be comparatively
+high.
 
 Minimum system requirements:
 
@@ -66,13 +67,14 @@ Quickstart
 
 Install `bazelisk <https://bazel.build/install/bazelisk>`_.
 
-Execute the following commands in an empty directory to set up a ``rules_ll``
+If you do not plan on modifying ``rules_ll``, you do not need to clone its
+repository. Instead, the following commands are enough to set up a `rules_ll`
 workspace:
 
 .. code:: bash
 
    touch WORKSPACE.bazel .bazelrc
-   echo cbb4eb1973a7fb49d15ced3fea6498f714f3ab0c > .bazelversion
+   echo 6.0.0-pre.20220909.2 > .bazelversion
    echo 'bazel_dep(name="rules_ll", version="20220905.0")' > MODULE.bazel
 
 Copy the following lines into the just created ``.bazelrc`` file:
@@ -111,6 +113,9 @@ You can now load the ``ll_library`` and ``ll_binary`` rule definitions in your
 
    load("@rules_ll//ll:defs.bzl", "ll_library", "ll_binary")
 
+See `rules_ll/examples <https://github.com/eomii/rules_ll/tree/main/examples>`_
+for examples on how to use ``rules_ll``, or check out the full documentation at
+https://ll.eomii.org.
 
 Contributing
 ------------
