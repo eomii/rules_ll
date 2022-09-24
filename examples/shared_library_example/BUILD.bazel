@@ -1,0 +1,19 @@
+load("@rules_ll//ll:defs.bzl", "ll_binary", "ll_library")
+
+ll_library(
+    name = "libshared",
+    srcs = ["shared.cpp"],
+    emit = ["shared_object"],
+    transitive_hdrs = ["shared.hpp"],
+)
+
+ll_binary(
+    name = "shared_library_example",
+    srcs = ["main.cpp"],
+    deps = [
+        ":libshared",
+        # For demonstration purposes we have a subdirectory `subdir` containing
+        # another shared object.
+        "//shared_library_example/subdir:subdir_shared",
+    ],
+)

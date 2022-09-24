@@ -72,6 +72,18 @@ def _create_local_module_import(interface):
     out = "{}".format(file.path)
     return out
 
+def _get_dirname(file):
+    """Returns file.dirname."""
+    return file.dirname
+
+def _get_basename(file):
+    """Returns file.dirname."""
+    return file.basename
+
+def _get_owner_package(file):
+    """Returns file.owner.workspace_root + file.owner.package."""
+    return file.owner.workspace_root + file.owner.package
+
 def compile_object_args(
         ctx,
         in_file,
@@ -463,8 +475,40 @@ def link_executable_args(ctx, in_files, out_file, mode):
         for file in in_files.to_list()
         if file.extension in ["a", "o"]
     ]
+
     if mode == "executable":
         args.add_all(link_files)
+
+        # Link shared libraries in a way that is accessible via `bazel run` and
+        # via manual execution, as long as the relative paths to the shared
+        # libraries remain the same.
+        shared_link_files = [
+            file
+            for file in in_files.to_list()
+            if file.extension == "so"
+        ]
+        args.add_all(
+            shared_link_files,
+            map_each = _get_dirname,
+            format_each = "-L%s",
+            uniquify = True,
+            omit_if_empty = True,
+        )
+        args.add_all(
+            shared_link_files,
+            map_each = _get_basename,
+            format_each = "-l:%s",
+            uniquify = True,
+            omit_if_empty = True,
+        )
+        args.add_all(
+            shared_link_files,
+            map_each = _get_owner_package,
+            format_each = "-rpath=$ORIGIN/../%s",
+            uniquify = True,
+            omit_if_empty = True,
+        )
+
     elif mode == "shared_object":
         reduced_link_files = [
             file

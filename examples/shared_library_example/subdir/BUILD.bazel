@@ -1,0 +1,9 @@
+load("@rules_ll//ll:defs.bzl", "ll_library")
+
+ll_library(
+    name = "subdir_shared",
+    srcs = ["shared.cpp"],
+    emit = ["shared_object"],
+    transitive_hdrs = ["shared.hpp"],
+    visibility = ["//visibility:public"],
+)
