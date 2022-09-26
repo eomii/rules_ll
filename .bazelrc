@@ -1,6 +1,6 @@
 # Upstream LLVM/Clang requires C++17. This will only configure rules_cc.
-build --repo_env=BAZEL_CXXOPTS='-std=c++17'
-run --repo_env=BAZEL_CXXOPTS='-std=c++17'
+build --repo_env=BAZEL_CXXOPTS='-std=c++17:-O3'
+run --repo_env=BAZEL_CXXOPTS='-std=c++17:-O3'
 
 # Separate the toolchain from regular code. This will put execution artifacts
 # into bazel-out/ll_linux_exec_platform-opt-exec-<hash>.
