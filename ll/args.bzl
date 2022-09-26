@@ -113,6 +113,7 @@ def compile_object_args(
         if ctx.attr.compilation_mode in [
             "cuda_nvidia",
             "hip_nvidia",
+            "sycl_cuda",
         ]:
             args.add_all(["-Xarch_device", "-gdwarf-2"])
             args.add("--cuda-noopt-device-debug")
@@ -131,6 +132,7 @@ def compile_object_args(
         if ctx.attr.compilation_mode in [
             "cuda_nvidia",
             "hip_nvidia",
+            "sycl_cuda",
         ]:
             args.add_all(["-Xarch_device", "-gdwarf-2"])
             args.add("--cuda-noopt-device-debug")
@@ -155,6 +157,7 @@ def compile_object_args(
     if ctx.attr.compilation_mode in [
         "cuda_nvidia",
         "hip_nvidia",
+        "sycl_cuda",
     ] and ctx.var["COMPILATION_MODE"] != "dbg":
         args.add_all(["-Xarch_device", "-O3"])
 
@@ -184,6 +187,7 @@ def compile_object_args(
     if ctx.attr.compilation_mode in [
         "cuda_nvidia",
         "hip_nvidia",
+        "sycl_cuda",
     ]:
         args.add("-xcuda")
         args.add(
@@ -206,15 +210,21 @@ def compile_object_args(
             ],
             format_each = "-I%s/include",
         )
-    if ctx.attr.compilation_mode == "sycl_cpu":
+    if ctx.attr.compilation_mode in ["sycl_cpu", "sycl_cuda"]:
         args.add(
             Label("@hipsycl//hipsycl_headers").workspace_root,
             format = "-I%s/include",
         )
 
         args.add("-fopenmp")
+
         args.add("-D_ENABLE_EXTENDED_ALIGNED_STORAGE")
         args.add("-D__HIPSYCL_ENABLE_OMPHOST_TARGET__")
+
+        if ctx.attr.compilation_mode == "sycl_cuda":
+            args.add("-D__HIPSYCL_ENABLE_CUDA_TARGET__")
+            args.add("-D__HIPSYCL_CLANG__")
+
         args.add(
             ctx.toolchains["//ll:toolchain_type"].hipsycl_plugin,
             format = "-fplugin=%s",
@@ -451,15 +461,47 @@ def link_executable_args(ctx, in_files, out_file, mode):
     if ctx.attr.compilation_mode in [
         "cuda_nvidia",
         "hip_nvidia",
+        "sycl_cuda",
     ]:
         args.add("-lrt")
         args.add(Label("@cuda_cudart").workspace_root, format = "-L%s/lib")
         args.add("-lcudadevrt")
         args.add("-lcudart_static")
 
-    if ctx.attr.compilation_mode == "sycl_cpu":
+    if ctx.attr.compilation_mode in ["sycl_cpu", "sycl_cuda"]:
         args.add("-lomp")
-        args.add(ctx.toolchains["//ll:toolchain_type"].hipsycl_runtime)
+        sycl_shared_libraries = [
+            ctx.toolchains["//ll:toolchain_type"].hipsycl_runtime,
+            ctx.toolchains["//ll:toolchain_type"].hipsycl_omp_backend,
+        ]
+        if ctx.attr.compilation_mode == "sycl_cuda":
+            sycl_shared_libraries.append(
+                ctx.toolchains["//ll:toolchain_type"].hipsycl_cuda_backend,
+            )
+        args.add_all(
+            sycl_shared_libraries,
+            map_each = _get_dirname,
+            format_each = "-L%s",
+            uniquify = True,
+            omit_if_empty = True,
+        )
+        args.add_all(
+            sycl_shared_libraries,
+            map_each = _get_basename,
+            format_each = "-l:%s",
+            uniquify = True,
+            omit_if_empty = True,
+        )
+        args.add_all(
+            sycl_shared_libraries,
+            map_each = _get_owner_package,
+            format_each = "-rpath=$ORIGIN/../%s",
+            uniquify = True,
+            omit_if_empty = True,
+        )
+        if ctx.attr.compilation_mode in ["sycl_cpu", "sycl_cuda"]:
+            args.add("--rpath=$ORIGIN/../external/@rules_ll.override/ll")
+            args.add("--rpath=$ORIGIN/../external/@rules_ll.override/ll/hipSYCL")
 
     # Target-specific flags.
     if mode == "executable":
@@ -482,32 +524,33 @@ def link_executable_args(ctx, in_files, out_file, mode):
         # Link shared libraries in a way that is accessible via `bazel run` and
         # via manual execution, as long as the relative paths to the shared
         # libraries remain the same.
-        shared_link_files = [
-            file
-            for file in in_files.to_list()
-            if file.extension == "so"
-        ]
-        args.add_all(
-            shared_link_files,
-            map_each = _get_dirname,
-            format_each = "-L%s",
-            uniquify = True,
-            omit_if_empty = True,
-        )
-        args.add_all(
-            shared_link_files,
-            map_each = _get_basename,
-            format_each = "-l:%s",
-            uniquify = True,
-            omit_if_empty = True,
-        )
-        args.add_all(
-            shared_link_files,
-            map_each = _get_owner_package,
-            format_each = "-rpath=$ORIGIN/../%s",
-            uniquify = True,
-            omit_if_empty = True,
-        )
+        if ctx.attr.compilation_mode not in ["sycl_cuda", "cuda", "hip_nvidia"]:
+            shared_link_files = [
+                file
+                for file in in_files.to_list()
+                if file.extension == "so"
+            ]
+            args.add_all(
+                shared_link_files,
+                map_each = _get_dirname,
+                format_each = "-L%s",
+                uniquify = True,
+                omit_if_empty = True,
+            )
+            args.add_all(
+                shared_link_files,
+                map_each = _get_basename,
+                format_each = "-l:%s",
+                uniquify = True,
+                omit_if_empty = True,
+            )
+            args.add_all(
+                shared_link_files,
+                map_each = _get_owner_package,
+                format_each = "-rpath=$ORIGIN/../%s",
+                uniquify = True,
+                omit_if_empty = True,
+            )
 
     elif mode == "shared_object":
         reduced_link_files = [

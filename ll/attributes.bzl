@@ -38,15 +38,25 @@ DEFAULT_ATTRS = {
 
         `"hip_nvidia"` will treat compilable sources as HIP kernels.
 
-        `"sycl_cpu"` will enable highly experimental SYCL CPU support using
+        `"sycl_cpu"` will enable SYCL CPU support using hipSYCL with the OpenMP
+        backend. Do not use this. It is not fully implemented yet.
+
+        `"sycl_cuda"` will enable highly experimental SYCL CUDA support using
         hipSYCL. Do not use this. It is not fully implemented yet.
 
         `"bootstrap"` is used for the internal dependencies of the
             `ll_toolchain` such as `libcxxabi` etc.
         """,
         default = "cpp",
-        # TODO: hip_amd, sycl_nvidia, sycl_amd
-        values = ["cpp", "cuda_nvidia", "hip_nvidia", "sycl_cpu", "bootstrap"],
+        # TODO: hip_amd, sycl_amd
+        values = [
+            "cpp",
+            "cuda_nvidia",
+            "hip_nvidia",
+            "sycl_cpu",
+            "sycl_cuda",
+            "bootstrap",
+        ],
     ),
     "compile_flags": attr.string_list(
         doc = """Additional flags for the compiler.
@@ -473,9 +483,19 @@ LL_TOOLCHAIN_ATTRS = {
         allow_single_file = True,
         cfg = transition_to_cpp,
     ),
-    "hipsycl_backends": attr.label_list(
+    "hipsycl_omp_backend": attr.label(
         doc = """TODO""",
-        # TODO: Split backends into CPU, CUDA and HIP.
+        # default = ["@hipsycl//:rt-backend-omp"],
+        allow_single_file = True,
+    ),
+    "hipsycl_cuda_backend": attr.label(
+        doc = """TODO""",
+        # default = ["@hipsycl//:rt-backend-cuda"],
+        allow_single_file = True,
+    ),
+    "hipsycl_hip_backend": attr.label(
+        doc = """TODO""",
+        # default = ["@hipsycl//:rt-backend-hip"],
     ),
     "hipsycl_hdrs": attr.label_list(
         doc = """TODO""",

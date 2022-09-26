@@ -19,6 +19,9 @@ def _ll_transition_impl(settings, attr):
     if attr.compilation_mode == "sycl_cpu":
         return {"//ll:current_ll_toolchain_configuration": "sycl_cpu"}
 
+    if attr.compilation_mode == "sycl_cuda":
+        return {"//ll:current_ll_toolchain_configuration": "sycl_cuda"}
+
     fail("Invalid compilation_mode. Could not transition.")
 
 ll_transition = transition(
@@ -42,6 +45,9 @@ def _ll_toolchain_transition_impl(settings, attr):
 
     if attr.toolchain_configuration == "sycl_cpu":
         return {"//ll:current_ll_toolchain_configuration": "sycl_cpu"}
+
+    if attr.toolchain_configuration == "sycl_cuda":
+        return {"//ll:current_ll_toolchain_configuration": "sycl_cuda"}
 
     fail("Invalid toolchain_configuration. Could not transition.")
 

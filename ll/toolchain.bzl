@@ -3,6 +3,7 @@
 Implements `ll_toolchain` and the internally used `ll_bootstrap_toolchain`.
 """
 
+load("@bazel_skylib//rules:copy_file.bzl", "copy_file")
 load("//ll:attributes.bzl", "LL_TOOLCHAIN_ATTRS")
 load("//ll:transitions.bzl", "ll_toolchain_transition")
 
@@ -15,6 +16,44 @@ def _ll_toolchain_impl(ctx):
         target_path = None,
         is_executable = True,
     )
+
+    # TODO(aaronmondal): These links to hipSYCL libraries seem very bugprone :D
+    if ctx.file.hipsycl_runtime != None:
+        hipsycl_runtime = ctx.actions.declare_file("hipSYCL-rt.so")
+        ctx.actions.symlink(
+            output = hipsycl_runtime,
+            target_file = ctx.file.hipsycl_runtime,
+            target_path = None,
+            is_executable = False,
+        )
+    else:
+        hipsycl_runtime = ctx.file.hipsycl_runtime
+
+    if ctx.file.hipsycl_omp_backend != None:
+        hipsycl_omp_backend = ctx.actions.declare_file(
+            "hipSYCL/rt-backend-omp.so",
+        )
+        ctx.actions.symlink(
+            output = hipsycl_omp_backend,
+            target_file = ctx.file.hipsycl_omp_backend,
+            target_path = None,
+            is_executable = False,
+        )
+    else:
+        hipsycl_omp_backend = ctx.file.hipsycl_omp_backend
+
+    if ctx.file.hipsycl_cuda_backend != None:
+        hipsycl_cuda_backend = ctx.actions.declare_file(
+            "hipSYCL/rt-backend-cuda.so",
+        )
+        ctx.actions.symlink(
+            output = hipsycl_cuda_backend,
+            target_file = ctx.file.hipsycl_cuda_backend,
+            target_path = None,
+            is_executable = False,
+        )
+    else:
+        hipsycl_cuda_backend = ctx.file.hipsycl_cuda_backend
 
     return [
         platform_common.ToolchainInfo(
@@ -45,8 +84,10 @@ def _ll_toolchain_impl(ctx):
             cuda_toolkit = ctx.files.cuda_toolkit,
             hip_libraries = ctx.files.hip_libraries,
             hipsycl_plugin = ctx.file.hipsycl_plugin,
-            hipsycl_runtime = ctx.file.hipsycl_runtime,
-            hipsycl_backends = ctx.files.hipsycl_backends,
+            hipsycl_runtime = hipsycl_runtime,
+            hipsycl_omp_backend = hipsycl_omp_backend,
+            hipsycl_cuda_backend = hipsycl_cuda_backend,
+            hipsycl_hip_backend = ctx.files.hipsycl_hip_backend,
             hipsycl_hdrs = ctx.files.hipsycl_hdrs,
         ),
     ]

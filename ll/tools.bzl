@@ -27,7 +27,7 @@ def compile_object_tools(ctx, toolchain_type):
     if config in ["cuda_nvidia", "hip_nvidia"]:
         return tools + [ctx.toolchains[toolchain_type].offload_bundler]
 
-    if config == "sycl_cpu":
+    if config in ["sycl_cpu", "sycl_cuda"]:
         return tools + [ctx.toolchains[toolchain_type].hipsycl_plugin]
 
     fail("Unregognized toolchain toolchain configuration.")

@@ -89,6 +89,7 @@ string_flag(
         "cuda_nvidia",
         "hip_nvidia",
         "sycl_cpu",
+        "sycl_cuda",
     ],
     visibility = ["//visibility:public"],
 )
@@ -125,6 +126,13 @@ config_setting(
     name = "sycl_cpu",
     flag_values = {
         ":current_ll_toolchain_configuration": "sycl_cpu",
+    },
+)
+
+config_setting(
+    name = "sycl_cuda",
+    flag_values = {
+        ":current_ll_toolchain_configuration": "sycl_cuda",
     },
 )
 
@@ -277,12 +285,58 @@ ll_toolchain(
     cpp_stdhdrs = "@llvm-project//libcxx:libcxx_headers",
     cpp_stdlib = "@llvm-project//libcxx:libll_cxx",
     exec_compatible_with = [":ll_exec_linux"],
-    hipsycl_backends = [
-        "@hipsycl//:rt-backend-omp",
-    ],
     hipsycl_hdrs = [
         "@hipsycl//:sycl_headers",
     ],
+    hipsycl_omp_backend = "@hipsycl//:rt-backend-omp",
+    hipsycl_plugin = "@hipsycl//:hipSYCL_clang",
+    hipsycl_runtime = "@hipsycl//:hipSYCL-rt",
+    leak_sanitizer = [
+        "@llvm-project//compiler-rt/lib/lsan:clang_rt.lsan",
+    ],
+    memory_sanitizer = [
+        "@llvm-project//compiler-rt/lib/msan:clang_rt.msan",
+        "@llvm-project//compiler-rt/lib/msan:clang_rt.msan_cxx",
+    ],
+    thread_sanitizer = [
+        "@llvm-project//compiler-rt/lib/tsan:clang_rt.tsan",
+        "@llvm-project//compiler-rt/lib/tsan:clang_rt.tsan_cxx",
+    ],
+    undefined_behavior_sanitizer = [
+        "@llvm-project//compiler-rt/lib/ubsan:clang_rt.ubsan_standalone",
+        "@llvm-project//compiler-rt/lib/ubsan:clang_rt.ubsan_standalone_cxx",
+    ],
+    unwind_library = "@llvm-project//libunwind:libll_unwind",
+    visibility = ["//visibility:public"],
+)
+
+ll_toolchain(
+    name = "ll_sycl_cuda_toolchain_x86_64-unknown-linux-gnu",
+    address_sanitizer = [
+        "@llvm-project//compiler-rt/lib/asan:clang_rt.asan",
+        "@llvm-project//compiler-rt/lib/asan:clang_rt.asan_static",
+        "@llvm-project//compiler-rt/lib/asan:clang_rt.asan_cxx",
+    ],
+    compiler_runtime = [
+        "@llvm-project//compiler-rt:libll_compiler-rt",
+        "@llvm-project//compiler-rt/lib/crt:crt",
+    ],
+    cpp_abihdrs = "@llvm-project//libcxxabi:libcxxabi_headers",
+    cpp_abilib = "@llvm-project//libcxxabi:libll_cxxabi",
+    cpp_stdhdrs = "@llvm-project//libcxx:libcxx_headers",
+    cpp_stdlib = "@llvm-project//libcxx:libll_cxx",
+    cuda_toolkit = [
+        "@cuda_cudart//:contents",
+        "@cuda_nvcc//:contents",
+        "@cuda_nvprof//:contents",
+        "@libcurand//:contents",
+    ],
+    exec_compatible_with = [":ll_exec_linux"],
+    hipsycl_cuda_backend = "@hipsycl//:rt-backend-cuda",
+    hipsycl_hdrs = [
+        "@hipsycl//:sycl_headers",
+    ],
+    hipsycl_omp_backend = "@hipsycl//:rt-backend-omp",
     hipsycl_plugin = "@hipsycl//:hipSYCL_clang",
     hipsycl_runtime = "@hipsycl//:hipSYCL-rt",
     leak_sanitizer = [
@@ -313,6 +367,7 @@ toolchain(
         ":cuda_nvidia": ":ll_cuda_nvidia_toolchain_x86_64-unknown-linux-gnu",
         ":hip_nvidia": ":ll_hip_nvidia_toolchain_x86_64-unknown-linux-gnu",
         ":sycl_cpu": ":ll_sycl_cpu_toolchain_x86_64-unknown-linux-gnu",
+        ":sycl_cuda": ":ll_sycl_cuda_toolchain_x86_64-unknown-linux-gnu",
     }),
     toolchain_type = ":toolchain_type",
     visibility = ["//visibility:public"],
