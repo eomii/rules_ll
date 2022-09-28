@@ -55,6 +55,12 @@ def _ll_toolchain_impl(ctx):
     else:
         hipsycl_cuda_backend = ctx.file.hipsycl_cuda_backend
 
+    llvm_project_sources = depset(transitive = [
+        data[OutputGroupInfo].compilation_prerequisites_INTERNAL_
+        for data in ctx.attr.llvm_project_deps
+    ])
+    llvm_project_artifacts = ctx.files.llvm_project_deps
+
     return [
         platform_common.ToolchainInfo(
             c_driver = ctx.executable.c_driver,
@@ -76,6 +82,8 @@ def _ll_toolchain_impl(ctx):
             cpp_abihdrs = ctx.files.cpp_abihdrs,
             compiler_runtime = ctx.files.compiler_runtime,
             unwind_library = ctx.files.unwind_library,
+            llvm_project_sources = llvm_project_sources,
+            llvm_project_artifacts = llvm_project_artifacts,
             local_library_path = ctx.file.local_library_path,
             clang_tidy = ctx.executable.clang_tidy,
             clang_tidy_runner = ctx.executable.clang_tidy_runner,

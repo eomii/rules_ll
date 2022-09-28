@@ -5,6 +5,7 @@ Attribute dictionaries for `ll_*` rules.
 
 load("@bazel_skylib//lib:dicts.bzl", "dicts")
 load("//ll:providers.bzl", "LlInfo")
+load("//ll:llvm_project_deps.bzl", "LLVM_PROJECT_DEPS")
 load(
     "//ll:transitions.bzl",
     "transition_to_bootstrap",
@@ -69,6 +70,18 @@ DEFAULT_ATTRS = {
 
         Only used for this target.
         """,
+    ),
+    "depends_on_llvm": attr.bool(
+        doc = """Whether this target directly depends on targets from the
+        `llvm-project-overlay`.
+
+        Setting this to `True` will make the `cc_library` targets from the LLVM
+        project overlay avaliable to this target. Compile actions add
+        `-idirafter` include paths to `clang/include` and `llvm/include` for
+        Clang/LLVM internal and generated headers so that they are usable
+        without setting any additional flags.
+        """,
+        default = False,
     ),
     "data": attr.label_list(
         doc = """Additional files made available to the sandboxed actions
@@ -157,20 +170,6 @@ DEFAULT_ATTRS = {
         `interfaces` and the primary module interface in `transitive_interfaces`.
         """,
         allow_files = [".cppm"],
-    ),
-    "llvm_project_deps": attr.label_list(
-        doc = """`cc_library` deps from the LLVM project overlay.
-
-        Using this attribute causes compile actions to add `-idirafter` include
-        paths to `clang/include` and `llvm/include` for Clang/LLVM internal and
-        generated headers.
-
-        Dependencies declared in this attribute will be compiled for the
-        `target` platform using the original `rules_cc` overlay targets.
-
-        This attribute hijacks cc_library. Use with caution.
-        """,
-        cfg = transition_to_bootstrap,
     ),
     "relative_angled_includes": attr.string_list(
         doc = """Additional angled include paths, relative to the target
@@ -477,6 +476,7 @@ LL_TOOLCHAIN_ATTRS = {
         doc = """TODO""",
         cfg = transition_to_cpp,
         allow_single_file = True,
+        # default = ["@hipsycl//hipSYCL_clang"],
     ),
     "hipsycl_runtime": attr.label(
         doc = """TODO""",
@@ -512,6 +512,14 @@ LL_TOOLCHAIN_ATTRS = {
         executable = True,
         cfg = transition_to_bootstrap,
         default = "@llvm-project//lld:lld",
+    ),
+    "llvm_project_deps": attr.label_list(
+        doc = """Targets from the `llvm-project-overlay`. Useful for targets
+        that require the `llvm-project`, such as frontend actions, llvm passes,
+        Clang plugins etc.
+        """,
+        cfg = transition_to_bootstrap,
+        default = LLVM_PROJECT_DEPS,
     ),
     "local_library_path": attr.label(
         doc = """A symlink to the local library path. This is usually either

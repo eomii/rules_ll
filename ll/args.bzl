@@ -6,32 +6,9 @@ Convenience function for setting compile arguments.
 load("@bazel_skylib//lib:paths.bzl", "paths")
 load("//ll:os.bzl", "library_path")
 
-def llvm_target_directory_path(ctx):
-    """Returns the path to the `llvm-project` build output directory.
-
-    The path looks like `bazel-out/{cpu}-{mode}/bin/external/llvm-project`.
-
-    Args:
-        ctx: The rule context.
-
-    Returns:
-        A string.
-    """
-    return "bazel-out/{cpu}-{mode}/bin/{llvm_project_workspace}".format(
-        cpu = ctx.var["TARGET_CPU"],
-        mode = ctx.var["COMPILATION_MODE"],
-        llvm_project_workspace = Label("@llvm-project").workspace_root,
-    )
-
 def llvm_bindir_path(ctx):
     return "{bindir}/{llvm_project_workspace}".format(
         bindir = ctx.var["BINDIR"],
-        llvm_project_workspace = Label("@llvm-project").workspace_root,
-    )
-
-def llvm_gendir_path(ctx):
-    return "{gendir}/{llvm_project_workspace}".format(
-        gendir = ctx.var["GENDIR"],
         llvm_project_workspace = Label("@llvm-project").workspace_root,
     )
 
@@ -215,15 +192,17 @@ def compile_object_args(
             Label("@hipsycl//hipsycl_headers").workspace_root,
             format = "-I%s/include",
         )
-
-        args.add("-fopenmp")
-
         args.add("-D_ENABLE_EXTENDED_ALIGNED_STORAGE")
-        args.add("-D__HIPSYCL_ENABLE_OMPHOST_TARGET__")
+        args.add("-D__HIPSYCL__")
+        args.add("-D__HIPSYCL_CLANG__")
+        args.add("-D__HIPSYCL_USE_ACCELERATED_CPU__")
+
+        if ctx.attr.compilation_mode == "sycl_cpu":
+            args.add("-fopenmp")
+            args.add("-D__HIPSYCL_ENABLE_OMPHOST_TARGET__")
 
         if ctx.attr.compilation_mode == "sycl_cuda":
             args.add("-D__HIPSYCL_ENABLE_CUDA_TARGET__")
-            args.add("-D__HIPSYCL_CLANG__")
 
         args.add(
             ctx.toolchains["//ll:toolchain_type"].hipsycl_plugin,
@@ -235,7 +214,6 @@ def compile_object_args(
         #     ctx.toolchains["//ll:toolchain_type"].hipsycl_plugin,
         #     format="-fpass-plugin=%s",
         # )
-        args.add("-D__HIPSYCL_USE_ACCELERATED_CPU__")
 
     # Write compilation database.
     args.add("-Xarch_host")
@@ -252,7 +230,6 @@ def compile_object_args(
         llvm_bindir_path(ctx),
         "clang/staging",
     )
-
     args.add(clang_builtin_include_path, format = "-resource-dir=%s")
 
     # Includes. This reflects the order in which clang will search for included
@@ -267,25 +244,11 @@ def compile_object_args(
     args.add_all(angled_includes, format_each = "-I%s", uniquify = True)
 
     # 3. Search directories specified via -isystem for quoted and angled
-    #    includes.
-
-    # TODO: These may be required when using targets from the LLVM project in
-    # e.g. hipSYCL check back and enable or remove this.
-    #
-    # args.add_all(
-    #     [
-    #         paths.join(llvm_bindir_path(ctx), "libcxx/include"),
-    #         paths.join(llvm_bindir_path(ctx), "libcxxabi/include"),
-    #         paths.join(llvm_bindir_path(ctx), "libunwind/include")
-    #     ],
-    #     format_each = "-isystem%s",
-    # )
-
-    llvm_workspace_root = Label("@llvm-project").workspace_root
-
-    # Objects compiled from modules already contain these from the
-    # precompilation step.
+    #    includes. This is not exposed via target attributes.
     if in_file.extension != "pcm":
+        # Objects compiled from modules already contain these from the
+        # precompilation step.
+        llvm_workspace_root = Label("@llvm-project").workspace_root
         args.add_all(
             [
                 clang_builtin_include_path,
@@ -300,23 +263,16 @@ def compile_object_args(
     #    includes. Since most users will not need this flag, there is no
     #    attribute for it. For non-LLVM related include paths, users should
     #    specify these in the compile_flags attribute.
-
-    # Internal Clang and LLVM header include paths. These are used by compilers
-    # and compiler Plugins.
-    if ctx.attr.llvm_project_deps != []:
-        llvm_project_deps = depset(transitive = [
-            data[OutputGroupInfo].compilation_prerequisites_INTERNAL_
-            for data in ctx.attr.llvm_project_deps
-        ])
+    if ctx.attr.depends_on_llvm:
         args.add_all(
-            llvm_project_deps,
+            ctx.toolchains["//ll:toolchain_type"].llvm_project_sources,
             map_each = _construct_llvm_include_path,
             format_each = "-idirafter%s",
             uniquify = True,
             omit_if_empty = True,
         )
         args.add_all(
-            llvm_project_deps,
+            ctx.toolchains["//ll:toolchain_type"].llvm_project_sources,
             map_each = _construct_clang_include_path,
             format_each = "-idirafter%s",
             uniquify = True,
@@ -524,7 +480,11 @@ def link_executable_args(ctx, in_files, out_file, mode):
         # Link shared libraries in a way that is accessible via `bazel run` and
         # via manual execution, as long as the relative paths to the shared
         # libraries remain the same.
-        if ctx.attr.compilation_mode not in ["sycl_cuda", "cuda", "hip_nvidia"]:
+        # TODO(aaronmondal): This is obviously not ideal. We need to clean up
+        # handling of shared objects.
+        if (ctx.attr.compilation_mode not in
+            ["sycl_cuda", "cuda_nvidia", "hip_nvidia"] and
+            not ctx.attr.depends_on_llvm):
             shared_link_files = [
                 file
                 for file in in_files.to_list()

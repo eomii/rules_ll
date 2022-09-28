@@ -34,106 +34,50 @@ def compile_object_inputs(
         toolchain_type):
     config = ctx.attr.toolchain_configuration[BuildSettingInfo].value
 
-    llvm_project_deps = [
-        data[OutputGroupInfo].compilation_prerequisites_INTERNAL_
-        for data in ctx.attr.llvm_project_deps
-    ]
-
     interfaces = depset([file for file, _ in interfaces.to_list()])
     local_interfaces = [file for file, _ in local_interfaces]
 
+    direct = (
+        [in_file] +
+        local_interfaces +
+        ctx.files.srcs +
+        ctx.files.data +
+        ctx.toolchains[toolchain_type].builtin_includes
+    )
+    transitive = [headers, interfaces]
+
+    if ctx.attr.depends_on_llvm:
+        transitive += [ctx.toolchains[toolchain_type].llvm_project_sources]
+
     if config == "bootstrap":
-        return depset(
-            [in_file] +
-            local_interfaces +
-            ctx.files.srcs +
-            ctx.files.data +
-            ctx.toolchains[toolchain_type].builtin_includes,
-            transitive = [
-                headers,
-                interfaces,
-            ],
-        )
-    elif config == "cpp":
-        return depset(
-            [in_file] +
-            local_interfaces +
-            ctx.files.srcs +
-            ctx.files.data +
-            ctx.toolchains[toolchain_type].cpp_stdhdrs +
-            ctx.toolchains[toolchain_type].cpp_abihdrs +
-            ctx.toolchains[toolchain_type].compiler_runtime +
-            ctx.toolchains[toolchain_type].builtin_includes,
-            transitive = [
-                headers,
-                interfaces,
-            ] + llvm_project_deps,
-        )
+        return depset(direct, transitive = transitive)
+
+    direct += (
+        ctx.toolchains[toolchain_type].cpp_stdhdrs +
+        ctx.toolchains[toolchain_type].cpp_abihdrs +
+        ctx.toolchains[toolchain_type].compiler_runtime
+    )
+
+    if config == "cpp":
+        pass
     elif config == "cuda_nvidia":
-        return depset(
-            [in_file] +
-            local_interfaces +
-            ctx.files.srcs +
-            ctx.files.data +
-            ctx.toolchains[toolchain_type].cpp_stdhdrs +
-            ctx.toolchains[toolchain_type].cpp_abihdrs +
-            ctx.toolchains[toolchain_type].cuda_toolkit +
-            ctx.toolchains[toolchain_type].builtin_includes,
-            transitive = [
-                headers,
-                interfaces,
-            ] + llvm_project_deps,
-        )
+        direct += ctx.toolchains[toolchain_type].cuda_toolkit
     elif config == "hip_nvidia":
-        return depset(
-            [in_file] +
-            local_interfaces +
-            ctx.files.srcs +
-            ctx.files.data +
-            ctx.toolchains[toolchain_type].cpp_stdhdrs +
-            ctx.toolchains[toolchain_type].cpp_abihdrs +
+        direct += (
             ctx.toolchains[toolchain_type].cuda_toolkit +
-            ctx.toolchains[toolchain_type].hip_libraries +
-            ctx.toolchains[toolchain_type].builtin_includes,
-            transitive = [
-                headers,
-                interfaces,
-            ] + llvm_project_deps,
+            ctx.toolchains[toolchain_type].hip_libraries
         )
     elif config == "sycl_cpu":
-        return depset(
-            [in_file] +
-            local_interfaces +
-            ctx.files.srcs +
-            ctx.files.data +
-            ctx.toolchains[toolchain_type].cpp_stdhdrs +
-            ctx.toolchains[toolchain_type].cpp_abihdrs +
-            ctx.toolchains[toolchain_type].builtin_includes +
-            ctx.toolchains[toolchain_type].hipsycl_hdrs,
-            transitive = [
-                headers,
-                interfaces,
-            ] + llvm_project_deps,
-        )
+        direct += ctx.toolchains[toolchain_type].hipsycl_hdrs
     elif config == "sycl_cuda":
-        return depset(
-            [in_file] +
-            local_interfaces +
-            ctx.files.srcs +
-            ctx.files.data +
-            ctx.toolchains[toolchain_type].cpp_stdhdrs +
-            ctx.toolchains[toolchain_type].cpp_abihdrs +
+        direct += (
             ctx.toolchains[toolchain_type].cuda_toolkit +
-            ctx.toolchains[toolchain_type].builtin_includes +
-            ctx.toolchains[toolchain_type].hipsycl_hdrs,
-            transitive = [
-                headers,
-                interfaces,
-            ] + llvm_project_deps,
+            ctx.toolchains[toolchain_type].hipsycl_hdrs
         )
-
     else:
-        fail("Cannot compile with this toolchain.")
+        fail("Cannot compile with this toolchain config: {}.".format(config))
+
+    return depset(direct, transitive = transitive)
 
 def create_archive_library_inputs(ctx, in_files):
     return depset(
@@ -147,85 +91,53 @@ def create_archive_library_inputs(ctx, in_files):
 def link_executable_inputs(ctx, in_files, toolchain_type):
     config = ctx.attr.toolchain_configuration[BuildSettingInfo].value
 
-    if config == "bootstrap":
-        fail("Cannot link with bootstrap toolchain.")
+    direct = (
+        in_files +
+        ctx.files.deps +
+        ctx.files.libraries +
+        ctx.files.data
+    )
 
-    elif config == "cpp":
-        return depset(
-            in_files +
-            ctx.files.deps +
-            ctx.files.libraries +
-            ctx.files.data +
-            ctx.files.llvm_project_deps +
-            ctx.toolchains[toolchain_type].cpp_stdlib +
-            ctx.toolchains[toolchain_type].unwind_library +
-            ctx.toolchains[toolchain_type].cpp_abilib +
-            ctx.toolchains[toolchain_type].compiler_runtime,
-        )
+    if config == "bootstrap":
+        return depset(direct)
+
+    direct += (
+        ctx.toolchains[toolchain_type].cpp_stdlib +
+        ctx.toolchains[toolchain_type].unwind_library +
+        ctx.toolchains[toolchain_type].cpp_abilib +
+        ctx.toolchains[toolchain_type].compiler_runtime
+    )
+
+    if ctx.attr.depends_on_llvm:
+        direct += ctx.toolchains[toolchain_type].llvm_project_artifacts
+
+    if config == "cpp":
+        pass
     elif config == "cuda_nvidia":
-        return depset(
-            in_files +
-            ctx.files.deps +
-            ctx.files.libraries +
-            ctx.files.data +
-            ctx.files.llvm_project_deps +
-            ctx.toolchains[toolchain_type].cuda_toolkit +
-            ctx.toolchains[toolchain_type].cpp_stdlib +
-            ctx.toolchains[toolchain_type].unwind_library +
-            ctx.toolchains[toolchain_type].cpp_abilib +
-            ctx.toolchains[toolchain_type].compiler_runtime,
-        )
+        direct += ctx.toolchains[toolchain_type].cuda_toolkit
     elif config == "hip_nvidia":
-        return depset(
-            in_files +
-            ctx.files.deps +
-            ctx.files.libraries +
-            ctx.files.data +
-            ctx.files.llvm_project_deps +
+        direct += (
             ctx.toolchains[toolchain_type].cuda_toolkit +
-            ctx.toolchains[toolchain_type].hip_libraries +
-            ctx.toolchains[toolchain_type].cpp_stdlib +
-            ctx.toolchains[toolchain_type].cpp_abilib +
-            ctx.toolchains[toolchain_type].unwind_library +
-            ctx.toolchains[toolchain_type].compiler_runtime,
+            ctx.toolchains[toolchain_type].hip_libraries
         )
     elif config == "sycl_cpu":
-        return depset(
-            in_files +
-            ctx.files.deps +
-            ctx.files.libraries +
-            ctx.files.data +
-            ctx.files.llvm_project_deps +
-            ctx.toolchains[toolchain_type].cpp_stdlib +
-            ctx.toolchains[toolchain_type].unwind_library +
-            ctx.toolchains[toolchain_type].cpp_abilib +
-            ctx.toolchains[toolchain_type].compiler_runtime +
-            [
-                ctx.toolchains[toolchain_type].hipsycl_runtime,
-                ctx.toolchains[toolchain_type].hipsycl_omp_backend,
-            ],
-        )
+        direct += [
+            ctx.toolchains[toolchain_type].hipsycl_runtime,
+            ctx.toolchains[toolchain_type].hipsycl_omp_backend,
+        ]
     elif config == "sycl_cuda":
-        return depset(
-            in_files +
-            ctx.files.deps +
-            ctx.files.libraries +
-            ctx.files.data +
-            ctx.files.llvm_project_deps +
+        direct += (
             ctx.toolchains[toolchain_type].cuda_toolkit +
-            ctx.toolchains[toolchain_type].cpp_stdlib +
-            ctx.toolchains[toolchain_type].unwind_library +
-            ctx.toolchains[toolchain_type].cpp_abilib +
-            ctx.toolchains[toolchain_type].compiler_runtime +
             [
                 ctx.toolchains[toolchain_type].hipsycl_runtime,
                 ctx.toolchains[toolchain_type].hipsycl_omp_backend,
                 ctx.toolchains[toolchain_type].hipsycl_cuda_backend,
-            ],
+            ]
         )
-
     else:
         fail("Cannot link with this toolchain.")
+
+    return depset(direct)
 
 def link_bitcode_library_inputs(ctx, in_files):
     if "//ll:toolchain_type" in ctx.toolchains:
@@ -236,48 +148,35 @@ def link_bitcode_library_inputs(ctx, in_files):
 def link_shared_object_inputs(ctx, in_files, toolchain_type):
     config = ctx.attr.toolchain_configuration[BuildSettingInfo].value
 
-    if config == "bootstrap":
-        return depset(
-            ctx.files.deps +
-            ctx.files.data +
-            ctx.files.llvm_project_deps,
-        )
+    direct = (
+        in_files +
+        ctx.files.deps +
+        ctx.files.data
+    )
 
-    elif config == "cpp":
-        return depset(
-            in_files +
-            ctx.files.deps +
-            ctx.files.data +
-            ctx.files.llvm_project_deps +
-            ctx.toolchains[toolchain_type].cpp_stdlib +
-            ctx.toolchains[toolchain_type].cpp_abilib +
-            ctx.toolchains[toolchain_type].unwind_library +
-            ctx.toolchains[toolchain_type].compiler_runtime,
-        )
+    if ctx.attr.depends_on_llvm:
+        direct += ctx.toolchains["//ll:toolchain_type"].llvm_project_artifacts
+
+    if config == "bootstrap":
+        return depset(direct)
+
+    direct += (
+        ctx.toolchains[toolchain_type].cpp_stdlib +
+        ctx.toolchains[toolchain_type].cpp_abilib +
+        ctx.toolchains[toolchain_type].unwind_library +
+        ctx.toolchains[toolchain_type].compiler_runtime
+    )
+
+    if config == "cpp":
+        pass
     elif config == "cuda_nvidia":
-        return depset(
-            in_files +
-            ctx.files.deps +
-            ctx.files.data +
-            ctx.files.llvm_project_deps +
-            ctx.toolchains[toolchain_type].cpp_stdlib +
-            ctx.toolchains[toolchain_type].cpp_abilib +
-            ctx.toolchains[toolchain_type].unwind_library +
-            ctx.toolchains[toolchain_type].compiler_runtime +
-            ctx.toolchains[toolchain_type].cuda_toolkit,
-        )
+        direct += ctx.toolchains[toolchain_type].cuda_toolkit
     elif config == "hip_nvidia":
-        return depset(
-            in_files +
-            ctx.files.deps +
-            ctx.files.data +
-            ctx.files.llvm_project_deps +
-            ctx.toolchains[toolchain_type].cpp_stdlib +
-            ctx.toolchains[toolchain_type].cpp_abilib +
-            ctx.toolchains[toolchain_type].unwind_library +
-            ctx.toolchains[toolchain_type].compiler_runtime +
+        direct += (
             ctx.toolchains[toolchain_type].cuda_toolkit +
-            ctx.toolchains[toolchain_type].hip_libraries,
+            ctx.toolchains[toolchain_type].hip_libraries
         )
     else:
         fail("Cannot link shared objects with this toolchain.")
+
+    return depset(direct)
