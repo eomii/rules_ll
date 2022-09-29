@@ -88,40 +88,40 @@ def initialize_rules_ll(local_library_path):
     http_archive(
         name = "cuda_cudart",
         urls = [
-            "https://developer.download.nvidia.com/compute/cuda/redist/cuda_cudart/linux-x86_64/cuda_cudart-linux-x86_64-11.7.60-archive.tar.xz",
+            "https://developer.download.nvidia.com/compute/cuda/redist/cuda_cudart/linux-x86_64/cuda_cudart-linux-x86_64-11.7.99-archive.tar.xz",
         ],
-        strip_prefix = "cuda_cudart-linux-x86_64-11.7.60-archive",
-        sha256 = "1c079add60a107f6dd9e72a0cc9cde03eb9d833506f355c22b9177c47a977552",
+        strip_prefix = "cuda_cudart-linux-x86_64-11.7.99-archive",
+        sha256 = "7892409299c6865d0652373cb385add31b0faa2e5421a931ae9fbc103e1472ad",
         build_file = "@rules_ll//third-party-overlays:cuda_cudart.BUILD.bazel",
     )
 
     http_archive(
         name = "cuda_nvcc",
         urls = [
-            "https://developer.download.nvidia.com/compute/cuda/redist/cuda_nvcc/linux-x86_64/cuda_nvcc-linux-x86_64-11.7.64-archive.tar.xz",
+            "https://developer.download.nvidia.com/compute/cuda/redist/cuda_nvcc/linux-x86_64/cuda_nvcc-linux-x86_64-11.7.99-archive.tar.xz",
         ],
-        strip_prefix = "cuda_nvcc-linux-x86_64-11.7.64-archive",
-        sha256 = "7721fcfa3eb183ecb1d7fe138ce52d8238f0a6ecf1e9964cf8cfe5d8b7ec3c92",
+        strip_prefix = "cuda_nvcc-linux-x86_64-11.7.99-archive",
+        sha256 = "4a75e5bd6a0e0e664ec5895ba050cf9d7cda08f41db2b6b4c36fb91cfb9627bc",
         build_file = "@rules_ll//third-party-overlays:cuda_nvcc.BUILD.bazel",
     )
 
     http_archive(
         name = "cuda_nvprof",
         urls = [
-            "https://developer.download.nvidia.com/compute/cuda/redist/cuda_nvprof/linux-x86_64/cuda_nvprof-linux-x86_64-11.7.50-archive.tar.xz",
+            "https://developer.download.nvidia.com/compute/cuda/redist/cuda_nvprof/linux-x86_64/cuda_nvprof-linux-x86_64-11.7.101-archive.tar.xz",
         ],
-        strip_prefix = "cuda_nvprof-linux-x86_64-11.7.50-archive",
-        sha256 = "8222eebaf3fe6ca1e4df6fda09cbd58f11de6d5b80b5596dcf5c5c45ae246028",
+        strip_prefix = "cuda_nvprof-linux-x86_64-11.7.101-archive",
+        sha256 = "028c9ae359e037fd8b3b7976304821704818d141284e8878577061dc41e19afe",
         build_file = "@rules_ll//third-party-overlays:cuda_nvprof.BUILD.bazel",
     )
 
     http_archive(
         name = "libcurand",
         urls = [
-            "https://developer.download.nvidia.com/compute/cuda/redist/libcurand/linux-x86_64/libcurand-linux-x86_64-10.2.10.50-archive.tar.xz",
+            "https://developer.download.nvidia.com/compute/cuda/redist/libcurand/linux-x86_64/libcurand-linux-x86_64-10.2.10.91-archive.tar.xz",
         ],
-        strip_prefix = "libcurand-linux-x86_64-10.2.10.50-archive",
-        sha256 = "a05411f1775d5783800b71f6b43fae660e3baf900ae07efb853e615116ee479b",
+        strip_prefix = "libcurand-linux-x86_64-10.2.10.91-archive",
+        sha256 = "283323c93050b3904d58417a6dd4055c156407c2df0c064ae81592e532b69a31",
         build_file = "@rules_ll//third-party-overlays:libcurand.BUILD.bazel",
     )
 
