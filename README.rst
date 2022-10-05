@@ -1,3 +1,7 @@
+☢️ WARNING: We are currently changing the infrastructure behind `rules_ll`.☢️
+
+☢️The repo and all previous releases will be unusable until this warning is removed.☢️
+
 An Upstream LLVM/Clang Toolchain for Bazel
 ------------------------------------------
 
