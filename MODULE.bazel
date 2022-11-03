@@ -1,14 +1,13 @@
 module(
     name = "rules_ll",
-    version = "20220905.0",
+    version = "20221103.0",
     execution_platforms_to_register = [
         "@rules_ll//ll:ll_linux_exec_platform",
     ],
     compatibility_level = 0,
-    toolchains_to_register = [
-        "@rules_ll//ll:ll_toolchain",
-    ],
 )
+
+register_toolchains("@rules_ll//ll:ll_toolchain")
 
 # Platform support.
 bazel_dep(name = "platforms", version = "0.0.4")
@@ -19,25 +18,33 @@ bazel_dep(name = "bazel_skylib", version = "1.2.0")
 # Documentation.
 bazel_dep(name = "stardoc", version = "0.5.0")
 
-# Required by the original Clang/LLVM overlay.
-bazel_dep(name = "rules_cc", version = "0.0.1")
-
 # hipSYCL. In development.
-# bazel_dep(name = "hipsycl", version = "0.9.2")
+# bazel_dep(name = "hipsycl", version = "0.9.3")
 
 # Build Clang/LLVM with zlib support.
-bazel_dep(name = "zlib", version = "1.2.12")
+bazel_dep(name = "zlib", version = "1.2.13")
+
+bazel_dep(name = "llvm-project-overlay", version = "16.0.0-bcr.0")
 
 # Configure the llvm-project Bazel overlay.
 llvm_project_overlay = use_extension(
-    "@rules_ll//ll:extensions.bzl",
+    "@llvm-project-overlay//utils/bazel:extensions.bzl",
     "llvm_project_overlay",
 )
 llvm_project_overlay.configure(
     commit = "539fa1df4634dad7d99e4485e4fc3a82ff1a5481",
     sha256 = "68d36e2cc6c217e4f2e5e5a4c8d82598d194f09b4a1ea60690f671bdedac4983",
     targets = ["AMDGPU", "NVPTX", "X86"],
+    patches = [
+        "@rules_ll//patches:back_inserter_patch.diff",
+        "@rules_ll//patches:synth_three_way_patch.diff",
+        "@rules_ll//patches:compiler-rt_float128_patch.diff",
+        "@rules_ll//patches:mallinfo2_patch.diff",
+        "@rules_ll//patches:rules_ll_compatibility_patch.diff",
+        "@rules_ll//patches:rules_ll_overlay_patch.diff",
+    ],
 )
+
 use_repo(
     llvm_project_overlay,
     "llvm-project",

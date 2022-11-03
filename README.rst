@@ -1,7 +1,3 @@
-☢️ WARNING: We are currently changing the infrastructure behind `rules_ll`.☢️
-
-☢️The repo and all previous releases will be unusable until this warning is removed.☢️
-
 An Upstream LLVM/Clang Toolchain for Bazel
 ------------------------------------------
 
@@ -79,36 +75,27 @@ workspace:
 
    touch WORKSPACE.bazel .bazelrc
    echo 6.0.0-pre.20220909.2 > .bazelversion
-   echo 'bazel_dep(name="rules_ll", version="20220905.0")' > MODULE.bazel
+   echo 'bazel_dep(name="rules_ll", version="20221103.0")' > MODULE.bazel
 
 Copy the following lines into the just created ``.bazelrc`` file:
 
 .. code:: bash
 
    # Upstream LLVM/Clang requires C++17. This will only configure rules_cc.
-   build --repo_env=BAZEL_CXXOPTS='-std=c++17'
-   run --repo_env=BAZEL_CXXOPTS='-std=c++17'
+   common --repo_env=BAZEL_CXXOPTS='-std=c++17:-O3'
 
    # Separate the toolchain from regular code. This will put execution artifacts
    # into bazel-out/ll_linux_exec_platform-opt-exec-<hash>.
-   build --experimental_platform_in_output_dir
-   run --experimental_platform_in_output_dir
+   common --experimental_platform_in_output_dir
 
    # We require bzlmod.
-   build --experimental_enable_bzlmod
-   run --experimental_enable_bzlmod
+   common --experimental_enable_bzlmod
 
    # We use a custom registry.
-   build --registry=https://raw.githubusercontent.com/eomii/bazel-eomii-registry/main/
-   run --registry=https://raw.githubusercontent.com/eomii/bazel-eomii-registry/main/
+   common --registry=https://raw.githubusercontent.com/eomii/bazel-eomii-registry/rules_ll/
 
-   # Hash diff (baseline config, transition config) in bazel-out directory names.
-   build --experimental_output_directory_naming_scheme=diff_against_baseline
-   run --experimental_output_directory_naming_scheme=diff_against_baseline
-
-   # Exec configuration handled by experimental_output_directory_layout.
-   build --experimental_exec_configuration_distinguisher=off
-   run --experimental_exec_configuration_distinguisher=off
+   # We need temporarily unresolved symlinks for CUDA.
+   common --experimental_allow_unresolved_symlinks
 
 You can now load the ``ll_library`` and ``ll_binary`` rule definitions in your
 ``BUILD.bazel`` files via

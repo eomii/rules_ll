@@ -1,24 +1,15 @@
 # Upstream LLVM/Clang requires C++17. This will only configure rules_cc.
-build --repo_env=BAZEL_CXXOPTS='-std=c++17:-O3'
-run --repo_env=BAZEL_CXXOPTS='-std=c++17:-O3'
+common --repo_env=BAZEL_CXXOPTS='-std=c++17:-O3'
 
 # Separate the toolchain from regular code. This will put execution artifacts
 # into bazel-out/ll_linux_exec_platform-opt-exec-<hash>.
-build --experimental_platform_in_output_dir
-run --experimental_platform_in_output_dir
+common --experimental_platform_in_output_dir
 
 # We require bzlmod.
-build --experimental_enable_bzlmod
-run --experimental_enable_bzlmod
+common --experimental_enable_bzlmod
 
 # We use a custom registry.
-build --registry=https://raw.githubusercontent.com/eomii/bazel-eomii-registry/main/
-run --registry=https://raw.githubusercontent.com/eomii/bazel-eomii-registry/main/
+common --registry=https://raw.githubusercontent.com/eomii/bazel-eoii-registry/llvm-project-overlay/
 
-# Hash diff (baseline config, transition config) in bazel-out directory names.
-build --experimental_output_directory_naming_scheme=diff_against_baseline
-run --experimental_output_directory_naming_scheme=diff_against_baseline
-
-# Exec configuration handled by experimental_output_directory_layout.
-build --experimental_exec_configuration_distinguisher=off
-run --experimental_exec_configuration_distinguisher=off
+# We need temporarily unresolved symlinks for CUDA.
+common --experimental_allow_unresolved_symlinks
