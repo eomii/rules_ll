@@ -28,7 +28,14 @@ def compile_object_tools(ctx, toolchain_type):
         return tools + [ctx.toolchains[toolchain_type].offload_bundler]
 
     if config in ["sycl_cpu", "sycl_cuda"]:
-        return tools + [ctx.toolchains[toolchain_type].hipsycl_plugin]
+        return tools + [
+            ctx.toolchains[toolchain_type].hipsycl_plugin,
+            ctx.toolchains[toolchain_type].offload_bundler,
+            ctx.toolchains[toolchain_type].hipsycl_omp_backend,
+            ctx.toolchains[toolchain_type].hipsycl_cuda_backend,
+            ctx.toolchains[toolchain_type].hipsycl_omp_backend,
+            ctx.toolchains[toolchain_type].hipsycl_cuda_backend,
+        ]
 
     fail("Unregognized toolchain toolchain configuration.")
 

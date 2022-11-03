@@ -52,14 +52,14 @@ def compile_objects(
         defines,
         includes,
         angled_includes,
-        interfaces,
-        local_interfaces,
+        bmis,
+        internal_bmis,
         toolchain_type):
-    local_interface_files = [interface for interface, _ in local_interfaces]
+    internal_bmi_files = [bmi for bmi, _ in internal_bmis]
     out_files = []
     cdfs = []
 
-    for in_file in compilable_sources(ctx) + local_interface_files:
+    for in_file in internal_bmi_files:
         file_out, cdf_out = compile_object(
             ctx,
             in_file,
@@ -67,8 +67,23 @@ def compile_objects(
             defines,
             includes,
             angled_includes,
-            interfaces,
-            local_interfaces,
+            bmis,
+            [],  # Internal BMIs can't depend on each other.
+            toolchain_type,
+        )
+        out_files.append(file_out)
+        cdfs.append(cdf_out)
+
+    for in_file in compilable_sources(ctx):
+        file_out, cdf_out = compile_object(
+            ctx,
+            in_file,
+            headers,
+            defines,
+            includes,
+            angled_includes,
+            bmis,
+            internal_bmis,
             toolchain_type,
         )
         out_files.append(file_out)
@@ -83,8 +98,8 @@ def compile_object(
         defines,
         includes,
         angled_includes,
-        interfaces,
-        local_interfaces,
+        bmis,
+        internal_bmis,
         toolchain_type):
     file_out, cdf_out = compile_object_outputs(ctx, in_file)
 
@@ -94,8 +109,8 @@ def compile_object(
             ctx,
             in_file,
             headers,
-            interfaces,
-            local_interfaces,
+            bmis,
+            internal_bmis,
             toolchain_type,
         ),
         executable = compiler_driver(ctx, in_file, toolchain_type),
@@ -109,8 +124,8 @@ def compile_object(
             defines,
             includes,
             angled_includes,
-            interfaces,
-            local_interfaces,
+            bmis,
+            internal_bmis,
         ),
         mnemonic = "LlCompileObject",
         use_default_shell_env = False,
@@ -124,11 +139,13 @@ def precompile_interfaces(
         defines,
         includes,
         angled_includes,
-        interfaces,
+        bmis,
         toolchain_type,
         binary):
     cdfs = []
-    internal_interfaces = []
+
+    # Internal BMIs. Not exposed to downstream targets.
+    internal_bmis = []
     for in_file, module_name in ctx.attr.interfaces.items():
         file_out, cdf_out = precompile_interface(
             ctx,
@@ -137,15 +154,17 @@ def precompile_interfaces(
             defines,
             includes,
             angled_includes,
-            interfaces,
+            bmis,
             toolchain_type,
         )
-        internal_interfaces.append((file_out, module_name))
+        internal_bmis.append((file_out, module_name))
         cdfs.append(cdf_out)
 
-    exported_interfaces = []
+    # Exposed BMIs are available to direct dependents of the target. Internal
+    # BMIs are available to the precompilation steps for these interfaces.
+    exposed_bmis = []
     if not binary:
-        for in_file, module_name in ctx.attr.transitive_interfaces.items():
+        for in_file, module_name in ctx.attr.exposed_interfaces.items():
             file_out, cdf_out = precompile_interface(
                 ctx,
                 in_file.files.to_list()[0],
@@ -154,15 +173,15 @@ def precompile_interfaces(
                 includes,
                 angled_includes,
                 depset(
-                    internal_interfaces,
-                    transitive = [interfaces],
+                    internal_bmis,
+                    transitive = [bmis],
                 ),
                 toolchain_type,
             )
-            exported_interfaces.append((file_out, module_name))
+            exposed_bmis.append((file_out, module_name))
             cdfs.append(cdf_out)
 
-    return internal_interfaces, exported_interfaces, cdfs
+    return internal_bmis, exposed_bmis, cdfs
 
 def precompile_interface(
         ctx,
@@ -171,7 +190,7 @@ def precompile_interface(
         defines,
         includes,
         angled_includes,
-        interfaces,
+        bmis,
         toolchain_type):
     file_out, cdf_out = precompile_interface_outputs(ctx, in_file)
 
@@ -181,8 +200,8 @@ def precompile_interface(
             ctx,
             in_file,
             headers,
-            interfaces,
-            [],  # local_interfaces,
+            bmis,
+            [],  # No local BMIs. we are producing these here.
             toolchain_type,
         ),
         executable = ctx.toolchains[toolchain_type].cpp_driver,
@@ -196,10 +215,10 @@ def precompile_interface(
             defines,
             includes,
             angled_includes,
-            interfaces,
-            [],  # local_interfaces,
+            bmis,
+            [],  # No local BMIs. we are producing these here.
         ),
-        mnemonic = "LlPrecomileModule",
+        mnemonic = "LlPrecomileModuleInterfaceUnit",
         execution_requirements = {
             # Required so that module paths do not depend on the specific
             # sandbox instance used during precompilation.

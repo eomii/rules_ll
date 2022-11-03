@@ -4,6 +4,7 @@ Convenience function for setting compile arguments.
 """
 
 load("@bazel_skylib//lib:paths.bzl", "paths")
+load("//ll:llvm_project_deps.bzl", "LINUX_DEFINES")
 load("//ll:os.bzl", "library_path")
 
 def llvm_bindir_path(ctx):
@@ -44,7 +45,6 @@ def _create_module_import(interface):
     return out
 
 def _create_local_module_import(interface):
-    print("FILE: ", interface)
     file, module_name = interface
     out = "{}".format(file.path)
     return out
@@ -70,8 +70,8 @@ def compile_object_args(
         defines,
         includes,
         angled_includes,
-        interfaces,
-        local_interfaces):
+        bmis,
+        internal_bmis):
     args = ctx.actions.args()
 
     args.add("-fcolor-diagnostics")
@@ -166,6 +166,7 @@ def compile_object_args(
         "hip_nvidia",
         "sycl_cuda",
     ]:
+        args.add("-Wno-unknown-cuda-version")  # Will always be unknown.
         args.add("-xcuda")
         args.add(
             Label("@cuda_nvcc").workspace_root,
@@ -192,28 +193,26 @@ def compile_object_args(
             Label("@hipsycl//hipsycl_headers").workspace_root,
             format = "-I%s/include",
         )
-        args.add("-D_ENABLE_EXTENDED_ALIGNED_STORAGE")
         args.add("-D__HIPSYCL__")
         args.add("-D__HIPSYCL_CLANG__")
-        args.add("-D__HIPSYCL_USE_ACCELERATED_CPU__")
-
-        if ctx.attr.compilation_mode == "sycl_cpu":
-            args.add("-fopenmp")
-            args.add("-D__HIPSYCL_ENABLE_OMPHOST_TARGET__")
+        args.add("-D__HIPSYCL_ENABLE_OMPHOST_TARGET__")
 
         if ctx.attr.compilation_mode == "sycl_cuda":
             args.add("-D__HIPSYCL_ENABLE_CUDA_TARGET__")
+            args.add("-U__FLOAT128__")
+            args.add("-U__SIZEOF_FLOAT128__")
 
         args.add(
             ctx.toolchains["//ll:toolchain_type"].hipsycl_plugin,
             format = "-fplugin=%s",
         )
 
-        # TODO: We need this to get rid of hipSYCLs boost dependencies.
-        # args.add(
-        #     ctx.toolchains["//ll:toolchain_type"].hipsycl_plugin,
-        #     format="-fpass-plugin=%s",
-        # )
+        args.add(
+            ctx.toolchains["//ll:toolchain_type"].hipsycl_plugin,
+            format = "-fpass-plugin=%s",
+        )
+
+        args.add("-D_ENABLE_EXTENDED_ALIGNED_STORAGE")
 
     # Write compilation database.
     args.add("-Xarch_host")
@@ -281,6 +280,11 @@ def compile_object_args(
 
     # Defines.
     args.add_all(defines, format_each = "-D%s")
+    if ctx.attr.depends_on_llvm:
+        args.add_all(
+            LINUX_DEFINES,
+            format_each = "-D%s",
+        )
 
     # Always use experimental libcxx features.
     args.add("-D_LIBCPP_ENABLE_EXPERIMENTAL")
@@ -308,7 +312,7 @@ def compile_object_args(
     # TODO: This is probably a bug in Clang. Discussion at
     #       https://github.com/llvm/llvm-project/issues/57293.
     args.add_all(
-        local_interfaces,
+        internal_bmis,
         map_each = _create_local_module_import,
         format_each = "-fmodule-file=%s",
         uniquify = True,
@@ -317,7 +321,7 @@ def compile_object_args(
 
     # Load modules conditionally by declaring the module name.
     args.add_all(
-        interfaces,
+        bmis,
         map_each = _create_module_import,
         format_each = "-fmodule-file=%s",
         uniquify = True,
@@ -408,7 +412,6 @@ def link_executable_args(ctx, in_files, out_file, mode):
         format = "-L%s",
     )
 
-    # args.add("-L/usr/lib64")
     args.add("-lm")  # Math.
     args.add("-ldl")  # Dynamic linking.
     args.add("-lpthread")  # Thread support.
@@ -421,19 +424,24 @@ def link_executable_args(ctx, in_files, out_file, mode):
     ]:
         args.add("-lrt")
         args.add(Label("@cuda_cudart").workspace_root, format = "-L%s/lib")
-        args.add("-lcudadevrt")
-        args.add("-lcudart_static")
+        args.add(Label("@cuda_nvcc").workspace_root, format = "-L%s/nvvm/lib64")
+        args.add(
+            ctx.toolchains["//ll:toolchain_type"].cuda_libdir.short_path[3:],
+            format = "-rpath=$ORIGIN/../external/%s",
+        )
+        args.add(
+            ctx.toolchains["//ll:toolchain_type"].cuda_nvvm.short_path[3:],
+            format = "-rpath=$ORIGIN/../external/%s",
+        )
+        if ctx.label.name != "rt-backend-cuda":
+            args.add("-lcudart")
 
     if ctx.attr.compilation_mode in ["sycl_cpu", "sycl_cuda"]:
         args.add("-lomp")
         sycl_shared_libraries = [
             ctx.toolchains["//ll:toolchain_type"].hipsycl_runtime,
-            ctx.toolchains["//ll:toolchain_type"].hipsycl_omp_backend,
+            # ctx.toolchains["//ll:toolchain_type"].hipsycl_omp_backend,
         ]
-        if ctx.attr.compilation_mode == "sycl_cuda":
-            sycl_shared_libraries.append(
-                ctx.toolchains["//ll:toolchain_type"].hipsycl_cuda_backend,
-            )
         args.add_all(
             sycl_shared_libraries,
             map_each = _get_dirname,
@@ -468,56 +476,60 @@ def link_executable_args(ctx, in_files, out_file, mode):
         fail("Invalid linking mode")
 
     # Add archives and objects.
+    # if ctx.attr.depends_on_llvm:
     link_files = [
         file
         for file in in_files.to_list()
         if file.extension in ["a", "o"]
     ]
+    # else:
+    #     link_files = [
+    #         file
+    #         for file in in_files.to_list()
+    #         if file.extension == "o"
+    #     ] + [
+    #         file
+    #         for file in ctx.files.deps
+    #         if file.extension == "a"
+    #     ]
+    # link_files = [
+    #     file
+    #     for file in in_files.to_list()
+    #     if file.extension in ["a", "o"]
+    # ]
 
-    if mode == "executable":
-        args.add_all(link_files)
+    args.add_all(link_files)
 
-        # Link shared libraries in a way that is accessible via `bazel run` and
-        # via manual execution, as long as the relative paths to the shared
-        # libraries remain the same.
-        # TODO(aaronmondal): This is obviously not ideal. We need to clean up
-        # handling of shared objects.
-        if (ctx.attr.compilation_mode not in
-            ["sycl_cuda", "cuda_nvidia", "hip_nvidia"] and
-            not ctx.attr.depends_on_llvm):
-            shared_link_files = [
-                file
-                for file in in_files.to_list()
-                if file.extension == "so"
-            ]
-            args.add_all(
-                shared_link_files,
-                map_each = _get_dirname,
-                format_each = "-L%s",
-                uniquify = True,
-                omit_if_empty = True,
-            )
-            args.add_all(
-                shared_link_files,
-                map_each = _get_basename,
-                format_each = "-l:%s",
-                uniquify = True,
-                omit_if_empty = True,
-            )
-            args.add_all(
-                shared_link_files,
-                map_each = _get_owner_package,
-                format_each = "-rpath=$ORIGIN/../%s",
-                uniquify = True,
-                omit_if_empty = True,
-            )
-
-    elif mode == "shared_object":
-        reduced_link_files = [
-            file
-            for file in link_files
-        ]
-        args.add_all(reduced_link_files)
+    # Link shared libraries in a way that is accessible via `bazel run` and
+    # via manual execution, as long as the relative paths to the shared
+    # libraries remain the same.
+    # TODO: Handle LLVM shared libraries.
+    shared_link_files = [
+        file
+        for file in ctx.files.deps
+        if file.extension == "so"
+    ]
+    args.add_all(
+        shared_link_files,
+        map_each = _get_dirname,
+        format_each = "-L%s",
+        uniquify = True,
+        omit_if_empty = True,
+    )
+    args.add_all(
+        shared_link_files,
+        map_each = _get_basename,
+        format_each = "-l:%s",
+        uniquify = True,
+        omit_if_empty = True,
+    )
+    args.add_all(
+        shared_link_files,
+        map_each = _get_owner_package,
+        format_each = "-rpath=$ORIGIN/../%s",
+        uniquify = True,
+        omit_if_empty = True,
+    )
 
     # End files.
     if mode == "executable":

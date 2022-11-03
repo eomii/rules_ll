@@ -38,7 +38,7 @@ load("@rules_ll//ll:defs.bzl", "ll_binary", "ll_library")
 ll_library(
     name = "Internals",
     compile_flags = ["-std=c++20"],
-    transitive_interfaces = {
+    exposed_interfaces = {
         # Module partition implementation unit. This is imported in TU2, so we
         # need to build TU3 before we can build TU2.
         "TU3.cppm": "A:Internals",
@@ -54,15 +54,15 @@ ll_library(
         "TU4.cpp",
     ],
     compile_flags = ["-std=c++20"],
+    exposed_interfaces = {
+        # Primary module interface unit. Requires the BMI for the module
+        # partition A:Foo (TU2).
+        "TU1.cppm": "A",
+    },
     interfaces = {
         # Module partition interface unit. Requires the BMI for module partition
         # A:Internals (TU3).
         "TU2.cppm": "A:Foo",
-    },
-    transitive_interfaces = {
-        # Primary module interface unit. Requires the BMI for the module
-        # partition A:Foo (TU2).
-        "TU1.cppm": "A",
     },
     deps = [":Internals"],
 )

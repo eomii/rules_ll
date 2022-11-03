@@ -42,7 +42,7 @@ ll_library(
         "-fstrict-aliasing",
         "-fvisibility-inlines-hidden",
     ],
-    transitive_hdrs = [
+    exposed_hdrs = [
         ":libunwind_headers",
     ],
     visibility = ["//visibility:public"],

@@ -4,7 +4,7 @@ ll_library(
     name = "libshared",
     srcs = ["shared.cpp"],
     emit = ["shared_object"],
-    transitive_hdrs = ["shared.hpp"],
+    exposed_hdrs = ["shared.hpp"],
 )
 
 ll_binary(

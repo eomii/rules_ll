@@ -22,6 +22,7 @@ def compile_object_environment(ctx, toolchain_type):
             "LLD": ctx.toolchains[toolchain_type].linker.path,
             "LLVM_SYMBOLIZER_PATH": ctx.toolchains[toolchain_type].symbolizer.path,
             "PATH": "$PATH:" + ctx.toolchains[toolchain_type].linker_executable.dirname,
+            "HIPSCYL_DEBUG_LEVEL": "4",
         }
     elif config == "bootstrap":
         return {

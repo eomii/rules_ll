@@ -61,7 +61,9 @@ def compile_object_inputs(
     if config == "cpp":
         pass
     elif config == "cuda_nvidia":
-        direct += ctx.toolchains[toolchain_type].cuda_toolkit
+        direct += (
+            ctx.toolchains[toolchain_type].cuda_toolkit
+        )
     elif config == "hip_nvidia":
         direct += (
             ctx.toolchains[toolchain_type].cuda_toolkit +
@@ -114,10 +116,17 @@ def link_executable_inputs(ctx, in_files, toolchain_type):
     if config == "cpp":
         pass
     elif config == "cuda_nvidia":
-        direct += ctx.toolchains[toolchain_type].cuda_toolkit
+        direct += (
+            ctx.toolchains[toolchain_type].cuda_toolkit +
+            [ctx.toolchains[toolchain_type].cuda_libdir] +
+            [ctx.toolchains[toolchain_type].cuda_nvvm]
+        )
+
     elif config == "hip_nvidia":
         direct += (
             ctx.toolchains[toolchain_type].cuda_toolkit +
+            [ctx.toolchains[toolchain_type].cuda_libdir] +
+            [ctx.toolchains[toolchain_type].cuda_nvvm] +
             ctx.toolchains[toolchain_type].hip_libraries
         )
     elif config == "sycl_cpu":
@@ -129,9 +138,11 @@ def link_executable_inputs(ctx, in_files, toolchain_type):
         direct += (
             ctx.toolchains[toolchain_type].cuda_toolkit +
             [
+                ctx.toolchains[toolchain_type].cuda_libdir,
+                ctx.toolchains[toolchain_type].cuda_nvvm,
                 ctx.toolchains[toolchain_type].hipsycl_runtime,
-                ctx.toolchains[toolchain_type].hipsycl_omp_backend,
-                ctx.toolchains[toolchain_type].hipsycl_cuda_backend,
+                # ctx.toolchains[toolchain_type].hipsycl_omp_backend,
+                # ctx.toolchains[toolchain_type].hipsycl_cuda_backend,
             ]
         )
     else:
@@ -170,10 +181,17 @@ def link_shared_object_inputs(ctx, in_files, toolchain_type):
     if config == "cpp":
         pass
     elif config == "cuda_nvidia":
-        direct += ctx.toolchains[toolchain_type].cuda_toolkit
+        direct += (
+            ctx.toolchains[toolchain_type].cuda_toolkit +
+            [ctx.toolchains[toolchain_type].cuda_libdir] +
+            [ctx.toolchains[toolchain_type].cuda_nvvm]
+        )
+
     elif config == "hip_nvidia":
         direct += (
             ctx.toolchains[toolchain_type].cuda_toolkit +
+            [ctx.toolchains[toolchain_type].cuda_libdir] +
+            [ctx.toolchains[toolchain_type].cuda_nvvm] +
             ctx.toolchains[toolchain_type].hip_libraries
         )
     else:

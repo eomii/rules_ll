@@ -19,13 +19,10 @@ load(
     "LL_BINARY_ATTRS",
     "LL_LIBRARY_ATTRS",
 )
-load(
-    "//ll:internal_functions.bzl",
-    "resolve_binary_deps",
-    "resolve_library_deps",
-)
+load("//ll:resolve_rule_inputs.bzl", "resolve_rule_inputs")
 load("//ll:providers.bzl", "LlCompilationDatabaseFragmentsInfo", "LlInfo")
 load("//ll:transitions.bzl", "ll_transition")
+load("@bazel_skylib//lib:paths.bzl", "paths")
 
 def select_toolchain_type(ctx):
     return "//ll:toolchain_type"
@@ -49,24 +46,22 @@ def _ll_library_impl(ctx):
         defines,
         includes,
         angled_includes,
-        transitive_hdrs,
-        transitive_defines,
-        transitive_includes,
-        transitive_angled_includes,
-        transitive_interfaces,
-    ) = resolve_library_deps(ctx)
+        bmis,
+    ) = resolve_rule_inputs(ctx, "ll_library")
 
     out_files = []
 
     out_cdfs = []
 
-    internal_interfaces, exported_interfaces, cdfs = precompile_interfaces(
+    # Interfaces that are to be precompiled are taken directly from ctx and not
+    # from an argument to this function.
+    internal_bmis, exposed_bmis, cdfs = precompile_interfaces(
         ctx,
         headers = headers,
         defines = defines,
         includes = includes,
         angled_includes = angled_includes,
-        interfaces = transitive_interfaces,
+        bmis = bmis,
         toolchain_type = select_toolchain_type(ctx),
         binary = False,
     )
@@ -79,8 +74,8 @@ def _ll_library_impl(ctx):
         defines = defines,
         includes = includes,
         angled_includes = angled_includes,
-        interfaces = transitive_interfaces,
-        local_interfaces = internal_interfaces + exported_interfaces,
+        bmis = bmis,
+        internal_bmis = internal_bmis + exposed_bmis,
         toolchain_type = select_toolchain_type(ctx),
     )
 
@@ -123,14 +118,21 @@ def _ll_library_impl(ctx):
             files = depset(out_files),
         ),
         LlInfo(
-            transitive_hdrs = transitive_hdrs,
-            transitive_defines = transitive_defines,
-            transitive_includes = transitive_includes,
-            transitive_angled_includes = transitive_angled_includes,
-            transitive_interfaces = depset(
-                exported_interfaces,
-                transitive = [transitive_interfaces],
+            exposed_hdrs = depset(ctx.files.exposed_hdrs),
+            exposed_defines = depset(ctx.attr.exposed_defines),
+            exposed_includes = depset(
+                ctx.attr.exposed_includes + [
+                    paths.join(ctx.label.workspace_root, suffix)
+                    for suffix in ctx.attr.exposed_relative_includes
+                ],
             ),
+            exposed_angled_includes = depset(
+                ctx.attr.angled_includes + [
+                    paths.join(ctx.label.workspace_root, suffix)
+                    for suffix in ctx.attr.exposed_relative_angled_includes
+                ],
+            ),
+            exposed_bmis = depset(exposed_bmis),
         ),
         LlCompilationDatabaseFragmentsInfo(
             cdfs = depset(out_cdfs, transitive = transitive_cdfs),
@@ -166,18 +168,18 @@ def _ll_binary_impl(ctx):
         defines,
         includes,
         angled_includes,
-        interfaces,
-    ) = resolve_binary_deps(ctx)
+        bmis,
+    ) = resolve_rule_inputs(ctx, "ll_binary")
 
     out_cdfs = []
 
-    internal_interfaces, exported_interfaces, cdfs = precompile_interfaces(
+    internal_bmis, exposed_bmis, cdfs = precompile_interfaces(
         ctx,
         headers = headers,
         defines = defines,
         includes = includes,
         angled_includes = angled_includes,
-        interfaces = interfaces,
+        bmis = bmis,
         toolchain_type = select_toolchain_type(ctx),
         binary = True,
     )
@@ -190,8 +192,8 @@ def _ll_binary_impl(ctx):
         defines = defines,
         includes = includes,
         angled_includes = angled_includes,
-        interfaces = interfaces,
-        local_interfaces = internal_interfaces + exported_interfaces,
+        bmis = bmis,
+        internal_bmis = internal_bmis + exposed_bmis,
         toolchain_type = select_toolchain_type(ctx),
     )
     out_cdfs += cdfs

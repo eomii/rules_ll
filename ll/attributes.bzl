@@ -110,6 +110,61 @@ DEFAULT_ATTRS = {
         Every dependency needs to be an `ll_library`.""",
         providers = [LlInfo],
     ),
+    "exposed_angled_includes": attr.string_list(
+        doc = """Additional exposed angled include paths for this target.
+
+        Includes in this attribute will be added to the compile command line
+        arguments for direct dependents.
+        """,
+    ),
+    "exposed_defines": attr.string_list(
+        doc = """Additional exposed defines for this target.
+
+        These defines will be defined in the compile actions of direct
+        dependents.
+        """,
+    ),
+    "exposed_hdrs": attr.label_list(
+        doc = """Exposed headers for this target.
+
+        Exposed headers are available to depending downstream targets. This is
+        the place to put the public API headers for a library.
+        """,
+        allow_files = True,
+    ),
+    "exposed_includes": attr.string_list(
+        doc = """Additional exposed include paths for this target.
+
+        Includes in this attribute will be added to the compile command line
+        arguments for direct dependents.
+        """,
+    ),
+    "exposed_interfaces": attr.label_keyed_string_dict(
+        doc = """Transitive interfaces for this target.
+
+        Like `interfaces`, but both the precompiled modules and the compiled
+        objects derived from files in this attribute are exposed. Files in
+        this attribute can see BMIs from modules in `interfaces`. Primary
+        module interfaces should go here.
+        """,
+        allow_files = [".cppm"],
+    ),
+    "exposed_relative_angled_includes": attr.string_list(
+        doc = """Additional exposed angled include paths, relative to the
+        original target workspace.
+
+        Includes in this attribute will be added to the compile command line
+        arguments for direct dependents.
+        """,
+    ),
+    "exposed_relative_includes": attr.string_list(
+        doc = """Additional exposed include paths, relative to the original
+        target workspace.
+
+        Includes in this attribute will be added to the compile command line
+        arguments for direct dependents.
+        """,
+    ),
     "hdrs": attr.label_list(
         doc = """Header files for this target.
 
@@ -165,9 +220,9 @@ DEFAULT_ATTRS = {
         a module. (For instance, if a module partition is used by other module
         partitions.)
 
-        The BMIs in `interfaces` are visible to `transitive_interfaces`. This
+        The BMIs in `interfaces` are visible to `exposed_interfaces`. This
         way we can often get away with putting all module partitions in
-        `interfaces` and the primary module interface in `transitive_interfaces`.
+        `interfaces` and the primary module interface in `exposed_interfaces`.
         """,
         allow_files = [".cppm"],
     ),
@@ -278,61 +333,6 @@ LIBRARY_ATTRS = {
         doc = """Additional flags for the linker when emitting shared objects.
 
         Only used if `emit` includes `"shared_object"`.
-        """,
-    ),
-    "transitive_angled_includes": attr.string_list(
-        doc = """Additional transitive angled include paths for this target.
-
-        Includes in this attribute will be added to the compile command line
-        arguments for all downstream targets.
-        """,
-    ),
-    "transitive_defines": attr.string_list(
-        doc = """Additional transitive defines for this target.
-
-        These defines will be defined by all depending downstream targets.
-        """,
-    ),
-    "transitive_hdrs": attr.label_list(
-        doc = """Transitive headers for this target.
-
-        Any transitive headers will be exported (copied) to the build directory.
-
-        Transitive headers are available to depending downstream targets.
-        """,
-        allow_files = True,
-    ),
-    "transitive_includes": attr.string_list(
-        doc = """Additional transitive include paths for this target.
-
-        Includes in this attribute will be added to the compile command line
-        arguments for all downstream targets.
-        """,
-    ),
-    "transitive_interfaces": attr.label_keyed_string_dict(
-        doc = """Transitive interfaces for this target.
-
-        Like `interfaces`, but both the precompiled modules and the compiled
-        objects derived from files in this attribute are transitive. Files in
-        this attribute can see BMIs from modules in `interfaces`, so a primary
-        module interface would likely go here.
-        """,
-        allow_files = [".cppm"],
-    ),
-    "transitive_relative_angled_includes": attr.string_list(
-        doc = """Additional transitive angled include paths, relative to the
-        original target workspace.
-
-        Includes in this attribute will be added to the compile command line
-        arguments for all downstream targets.
-        """,
-    ),
-    "transitive_relative_includes": attr.string_list(
-        doc = """Additional transitive include paths, relative to the original
-        target workspace.
-
-        Includes in this attribute will be added to the compile command line
-        arguments for all downstream targets.
         """,
     ),
 }

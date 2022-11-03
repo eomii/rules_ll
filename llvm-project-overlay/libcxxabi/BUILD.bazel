@@ -84,6 +84,6 @@ ll_library(
         "_LIBCXXABI_BUILDING_LIBRARY",
         "_LIBCXXABI_LINK_PTHREAD_LIB",
     ],
-    transitive_hdrs = [":libcxxabi_headers"],
+    exposed_hdrs = [":libcxxabi_headers"],
     visibility = ["//visibility:public"],
 )

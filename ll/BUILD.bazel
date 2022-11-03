@@ -13,11 +13,11 @@ LL_MODULES = [
     "environment",
     # "init",  # Broken until stardoc supports module_extension and tag_class.
     "inputs",
-    "internal_functions",
     "ll",
     "os",
     "outputs",
     "providers",
+    "resolve_rule_inputs",
     "toolchain",
     "tools",
     "transitions",
@@ -289,7 +289,7 @@ ll_toolchain(
         "@hipsycl//:sycl_headers",
     ],
     hipsycl_omp_backend = "@hipsycl//:rt-backend-omp",
-    hipsycl_plugin = "@hipsycl//:hipSYCL_clang",
+    hipsycl_plugin = "@hipsycl//:libhipSYCL_clang",
     hipsycl_runtime = "@hipsycl//:hipSYCL-rt",
     leak_sanitizer = [
         "@llvm-project//compiler-rt/lib/lsan:clang_rt.lsan",
@@ -337,7 +337,7 @@ ll_toolchain(
         "@hipsycl//:sycl_headers",
     ],
     hipsycl_omp_backend = "@hipsycl//:rt-backend-omp",
-    hipsycl_plugin = "@hipsycl//:hipSYCL_clang",
+    hipsycl_plugin = "@hipsycl//:libhipSYCL_clang",
     hipsycl_runtime = "@hipsycl//:hipSYCL-rt",
     leak_sanitizer = [
         "@llvm-project//compiler-rt/lib/lsan:clang_rt.lsan",

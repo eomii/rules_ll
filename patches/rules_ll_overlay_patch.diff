@@ -1,13 +1,13 @@
 diff --git a/utils/bazel/llvm-project-overlay/clang-tools-extra/BUILD.bazel b/utils/bazel/llvm-project-overlay/clang-tools-extra/BUILD.bazel
 new file mode 100644
-index 0000000000..b160d10741
+index 000000000000..b160d1074150
 --- /dev/null
 +++ b/utils/bazel/llvm-project-overlay/clang-tools-extra/BUILD.bazel
 @@ -0,0 +1 @@
 +# Empty, but patches break if there is no line here.
 diff --git a/utils/bazel/llvm-project-overlay/clang-tools-extra/clang-tidy/BUILD.bazel b/utils/bazel/llvm-project-overlay/clang-tools-extra/clang-tidy/BUILD.bazel
 new file mode 100644
-index 0000000000..9ca69086e4
+index 000000000000..9ca69086e485
 --- /dev/null
 +++ b/utils/bazel/llvm-project-overlay/clang-tools-extra/clang-tidy/BUILD.bazel
 @@ -0,0 +1,345 @@
@@ -358,7 +358,7 @@ index 0000000000..9ca69086e4
 +)
 diff --git a/utils/bazel/llvm-project-overlay/clang-tools-extra/clang-tidy/clang-tidy-config.h b/utils/bazel/llvm-project-overlay/clang-tools-extra/clang-tidy/clang-tidy-config.h
 new file mode 100644
-index 0000000000..d19ac4250a
+index 000000000000..d19ac4250a21
 --- /dev/null
 +++ b/utils/bazel/llvm-project-overlay/clang-tools-extra/clang-tidy/clang-tidy-config.h
 @@ -0,0 +1,8 @@
@@ -372,7 +372,7 @@ index 0000000000..d19ac4250a
 +#endif
 diff --git a/utils/bazel/llvm-project-overlay/clang-tools-extra/clang-tidy/clang_tidy_module.bzl b/utils/bazel/llvm-project-overlay/clang-tools-extra/clang-tidy/clang_tidy_module.bzl
 new file mode 100644
-index 0000000000..2ff01aa500
+index 000000000000..2ff01aa5006e
 --- /dev/null
 +++ b/utils/bazel/llvm-project-overlay/clang-tools-extra/clang-tidy/clang_tidy_module.bzl
 @@ -0,0 +1,21 @@
@@ -399,7 +399,7 @@ index 0000000000..2ff01aa500
 +    )
 diff --git a/utils/bazel/llvm-project-overlay/compiler-rt/BUILD.bazel b/utils/bazel/llvm-project-overlay/compiler-rt/BUILD.bazel
 new file mode 100644
-index 0000000000..9641252aa5
+index 000000000000..9641252aa551
 --- /dev/null
 +++ b/utils/bazel/llvm-project-overlay/compiler-rt/BUILD.bazel
 @@ -0,0 +1,11 @@
@@ -416,14 +416,14 @@ index 0000000000..9641252aa5
 +)
 diff --git a/utils/bazel/llvm-project-overlay/compiler-rt/lib/BUILD.bazel b/utils/bazel/llvm-project-overlay/compiler-rt/lib/BUILD.bazel
 new file mode 100644
-index 0000000000..1bb8bf6d7f
+index 000000000000..1bb8bf6d7fd4
 --- /dev/null
 +++ b/utils/bazel/llvm-project-overlay/compiler-rt/lib/BUILD.bazel
 @@ -0,0 +1 @@
 +# empty
 diff --git a/utils/bazel/llvm-project-overlay/compiler-rt/lib/asan/BUILD.bazel b/utils/bazel/llvm-project-overlay/compiler-rt/lib/asan/BUILD.bazel
 new file mode 100644
-index 0000000000..e4652c7dcc
+index 000000000000..e4652c7dcc3f
 --- /dev/null
 +++ b/utils/bazel/llvm-project-overlay/compiler-rt/lib/asan/BUILD.bazel
 @@ -0,0 +1,245 @@
@@ -674,7 +674,7 @@ index 0000000000..e4652c7dcc
 +)
 diff --git a/utils/bazel/llvm-project-overlay/compiler-rt/lib/builtins/BUILD.bazel b/utils/bazel/llvm-project-overlay/compiler-rt/lib/builtins/BUILD.bazel
 new file mode 100644
-index 0000000000..68e031bef5
+index 000000000000..68e031bef550
 --- /dev/null
 +++ b/utils/bazel/llvm-project-overlay/compiler-rt/lib/builtins/BUILD.bazel
 @@ -0,0 +1,225 @@
@@ -905,7 +905,7 @@ index 0000000000..68e031bef5
 +)
 diff --git a/utils/bazel/llvm-project-overlay/compiler-rt/lib/crt/BUILD.bazel b/utils/bazel/llvm-project-overlay/compiler-rt/lib/crt/BUILD.bazel
 new file mode 100644
-index 0000000000..fc768e047e
+index 000000000000..fc768e047e7e
 --- /dev/null
 +++ b/utils/bazel/llvm-project-overlay/compiler-rt/lib/crt/BUILD.bazel
 @@ -0,0 +1,28 @@
@@ -939,7 +939,7 @@ index 0000000000..fc768e047e
 +)
 diff --git a/utils/bazel/llvm-project-overlay/compiler-rt/lib/interception/BUILD.bazel b/utils/bazel/llvm-project-overlay/compiler-rt/lib/interception/BUILD.bazel
 new file mode 100644
-index 0000000000..831b2eb68f
+index 000000000000..831b2eb68fdb
 --- /dev/null
 +++ b/utils/bazel/llvm-project-overlay/compiler-rt/lib/interception/BUILD.bazel
 @@ -0,0 +1,29 @@
@@ -974,7 +974,7 @@ index 0000000000..831b2eb68f
 +)
 diff --git a/utils/bazel/llvm-project-overlay/compiler-rt/lib/lsan/BUILD.bazel b/utils/bazel/llvm-project-overlay/compiler-rt/lib/lsan/BUILD.bazel
 new file mode 100644
-index 0000000000..7188ec5653
+index 000000000000..7188ec5653b4
 --- /dev/null
 +++ b/utils/bazel/llvm-project-overlay/compiler-rt/lib/lsan/BUILD.bazel
 @@ -0,0 +1,63 @@
@@ -1043,7 +1043,7 @@ index 0000000000..7188ec5653
 +)
 diff --git a/utils/bazel/llvm-project-overlay/compiler-rt/lib/msan/BUILD.bazel b/utils/bazel/llvm-project-overlay/compiler-rt/lib/msan/BUILD.bazel
 new file mode 100644
-index 0000000000..cba7a625a6
+index 000000000000..cba7a625a65f
 --- /dev/null
 +++ b/utils/bazel/llvm-project-overlay/compiler-rt/lib/msan/BUILD.bazel
 @@ -0,0 +1,74 @@
@@ -1123,7 +1123,7 @@ index 0000000000..cba7a625a6
 +)
 diff --git a/utils/bazel/llvm-project-overlay/compiler-rt/lib/sanitizer_common/BUILD.bazel b/utils/bazel/llvm-project-overlay/compiler-rt/lib/sanitizer_common/BUILD.bazel
 new file mode 100644
-index 0000000000..7f48882b78
+index 000000000000..7f48882b7893
 --- /dev/null
 +++ b/utils/bazel/llvm-project-overlay/compiler-rt/lib/sanitizer_common/BUILD.bazel
 @@ -0,0 +1,246 @@
@@ -1375,7 +1375,7 @@ index 0000000000..7f48882b78
 +)
 diff --git a/utils/bazel/llvm-project-overlay/compiler-rt/lib/tsan/BUILD.bazel b/utils/bazel/llvm-project-overlay/compiler-rt/lib/tsan/BUILD.bazel
 new file mode 100644
-index 0000000000..45becbca83
+index 000000000000..45becbca839a
 --- /dev/null
 +++ b/utils/bazel/llvm-project-overlay/compiler-rt/lib/tsan/BUILD.bazel
 @@ -0,0 +1,114 @@
@@ -1495,7 +1495,7 @@ index 0000000000..45becbca83
 +)
 diff --git a/utils/bazel/llvm-project-overlay/compiler-rt/lib/ubsan/BUILD.bazel b/utils/bazel/llvm-project-overlay/compiler-rt/lib/ubsan/BUILD.bazel
 new file mode 100644
-index 0000000000..736606a26b
+index 000000000000..736606a26b3d
 --- /dev/null
 +++ b/utils/bazel/llvm-project-overlay/compiler-rt/lib/ubsan/BUILD.bazel
 @@ -0,0 +1,109 @@
@@ -1610,7 +1610,7 @@ index 0000000000..736606a26b
 +)
 diff --git a/utils/bazel/llvm-project-overlay/libcxx/BUILD.bazel b/utils/bazel/llvm-project-overlay/libcxx/BUILD.bazel
 new file mode 100644
-index 0000000000..2b69c9ccce
+index 000000000000..2b69c9ccce89
 --- /dev/null
 +++ b/utils/bazel/llvm-project-overlay/libcxx/BUILD.bazel
 @@ -0,0 +1,129 @@
@@ -1745,7 +1745,7 @@ index 0000000000..2b69c9ccce
 +)
 diff --git a/utils/bazel/llvm-project-overlay/libcxx/include/__config_site b/utils/bazel/llvm-project-overlay/libcxx/include/__config_site
 new file mode 100644
-index 0000000000..16cdddf992
+index 000000000000..1a57f6ab5f6b
 --- /dev/null
 +++ b/utils/bazel/llvm-project-overlay/libcxx/include/__config_site
 @@ -0,0 +1,48 @@
@@ -1774,7 +1774,7 @@ index 0000000000..16cdddf992
 +/* #undef _LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS */
 +#define _LIBCPP_HAS_NO_VENDOR_AVAILABILITY_ANNOTATIONS
 +/* #undef _LIBCPP_NO_VCRUNTIME */
-+#define _LIBCPP_TYPEINFO_COMPARISON_IMPLEMENTATION 1
++/* #define _LIBCPP_TYPEINFO_COMPARISON_IMPLEMENTATION */
 +/* #undef _LIBCPP_HAS_NO_FILESYSTEM_LIBRARY */
 +/* #undef _LIBCPP_HAS_PARALLEL_ALGORITHMS */
 +/* #undef _LIBCPP_HAS_NO_RANDOM_DEVICE */
@@ -1799,7 +1799,7 @@ index 0000000000..16cdddf992
 +#endif // _LIBCPP___CONFIG_SITE
 diff --git a/utils/bazel/llvm-project-overlay/libcxx/include/module.modulemap b/utils/bazel/llvm-project-overlay/libcxx/include/module.modulemap
 new file mode 100644
-index 0000000000..c48427885a
+index 000000000000..c48427885af0
 --- /dev/null
 +++ b/utils/bazel/llvm-project-overlay/libcxx/include/module.modulemap
 @@ -0,0 +1,1401 @@
@@ -3206,7 +3206,7 @@ index 0000000000..c48427885a
 +}
 diff --git a/utils/bazel/llvm-project-overlay/libcxxabi/BUILD.bazel b/utils/bazel/llvm-project-overlay/libcxxabi/BUILD.bazel
 new file mode 100644
-index 0000000000..f7e1d4d990
+index 000000000000..daddb98dbddc
 --- /dev/null
 +++ b/utils/bazel/llvm-project-overlay/libcxxabi/BUILD.bazel
 @@ -0,0 +1,89 @@
@@ -3296,14 +3296,14 @@ index 0000000000..f7e1d4d990
 +        "_LIBCXXABI_BUILDING_LIBRARY",
 +        "_LIBCXXABI_LINK_PTHREAD_LIB",
 +    ],
-+    transitive_hdrs = [":libcxxabi_headers"],
++    exposed_hdrs = [":libcxxabi_headers"],
 +    visibility = ["//visibility:public"],
 +)
 diff --git a/utils/bazel/llvm-project-overlay/libunwind/BUILD.bazel b/utils/bazel/llvm-project-overlay/libunwind/BUILD.bazel
-index 718eebfb73..0bd44bcbca 100644
+index f8448fb0e726..88c1aa2ddced 100644
 --- a/utils/bazel/llvm-project-overlay/libunwind/BUILD.bazel
 +++ b/utils/bazel/llvm-project-overlay/libunwind/BUILD.bazel
-@@ -18,3 +18,53 @@ cc_library(
+@@ -19,3 +19,53 @@ cc_library(
      ],
      strip_include_prefix = "include",
  )
@@ -3351,7 +3351,7 @@ index 718eebfb73..0bd44bcbca 100644
 +        "-fstrict-aliasing",
 +        "-fvisibility-inlines-hidden",
 +    ],
-+    transitive_hdrs = [
++    exposed_hdrs = [
 +        ":libunwind_headers",
 +    ],
 +    visibility = ["//visibility:public"],
