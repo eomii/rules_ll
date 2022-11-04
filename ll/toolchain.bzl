@@ -3,7 +3,6 @@
 Implements `ll_toolchain` and the internally used `ll_bootstrap_toolchain`.
 """
 
-load("@bazel_skylib//rules:copy_file.bzl", "copy_file")
 load("//ll:attributes.bzl", "LL_TOOLCHAIN_ATTRS")
 load("//ll:transitions.bzl", "ll_toolchain_transition")
 

@@ -10,8 +10,8 @@ Convenience function for setting compile arguments.
 ## compile_object_args
 
 <pre>
-compile_object_args(<a href="#compile_object_args-ctx">ctx</a>, <a href="#compile_object_args-in_file">in_file</a>, <a href="#compile_object_args-out_file">out_file</a>, <a href="#compile_object_args-cdf">cdf</a>, <a href="#compile_object_args-headers">headers</a>, <a href="#compile_object_args-defines">defines</a>, <a href="#compile_object_args-includes">includes</a>, <a href="#compile_object_args-angled_includes">angled_includes</a>,
-                    <a href="#compile_object_args-interfaces">interfaces</a>, <a href="#compile_object_args-local_interfaces">local_interfaces</a>)
+compile_object_args(<a href="#compile_object_args-ctx">ctx</a>, <a href="#compile_object_args-in_file">in_file</a>, <a href="#compile_object_args-out_file">out_file</a>, <a href="#compile_object_args-cdf">cdf</a>, <a href="#compile_object_args-headers">headers</a>, <a href="#compile_object_args-defines">defines</a>, <a href="#compile_object_args-includes">includes</a>, <a href="#compile_object_args-angled_includes">angled_includes</a>, <a href="#compile_object_args-bmis">bmis</a>,
+                    <a href="#compile_object_args-internal_bmis">internal_bmis</a>)
 </pre>
 
 
@@ -29,8 +29,8 @@ compile_object_args(<a href="#compile_object_args-ctx">ctx</a>, <a href="#compil
 | <a id="compile_object_args-defines"></a>defines |  <p align="center"> - </p>   |  none |
 | <a id="compile_object_args-includes"></a>includes |  <p align="center"> - </p>   |  none |
 | <a id="compile_object_args-angled_includes"></a>angled_includes |  <p align="center"> - </p>   |  none |
-| <a id="compile_object_args-interfaces"></a>interfaces |  <p align="center"> - </p>   |  none |
-| <a id="compile_object_args-local_interfaces"></a>local_interfaces |  <p align="center"> - </p>   |  none |
+| <a id="compile_object_args-bmis"></a>bmis |  <p align="center"> - </p>   |  none |
+| <a id="compile_object_args-internal_bmis"></a>internal_bmis |  <p align="center"> - </p>   |  none |
 
 
 <a id="#create_archive_library_args"></a>
@@ -51,26 +51,6 @@ create_archive_library_args(<a href="#create_archive_library_args-ctx">ctx</a>, 
 | <a id="create_archive_library_args-ctx"></a>ctx |  <p align="center"> - </p>   |  none |
 | <a id="create_archive_library_args-in_files"></a>in_files |  <p align="center"> - </p>   |  none |
 | <a id="create_archive_library_args-out_file"></a>out_file |  <p align="center"> - </p>   |  none |
-
-
-<a id="#expose_headers_args"></a>
-
-## expose_headers_args
-
-<pre>
-expose_headers_args(<a href="#expose_headers_args-ctx">ctx</a>, <a href="#expose_headers_args-in_file">in_file</a>, <a href="#expose_headers_args-out_file">out_file</a>)
-</pre>
-
-
-
-**PARAMETERS**
-
-
-| Name  | Description | Default Value |
-| :------------- | :------------- | :------------- |
-| <a id="expose_headers_args-ctx"></a>ctx |  <p align="center"> - </p>   |  none |
-| <a id="expose_headers_args-in_file"></a>in_file |  <p align="center"> - </p>   |  none |
-| <a id="expose_headers_args-out_file"></a>out_file |  <p align="center"> - </p>   |  none |
 
 
 <a id="#link_bitcode_library_args"></a>
@@ -130,46 +110,3 @@ llvm_bindir_path(<a href="#llvm_bindir_path-ctx">ctx</a>)
 | Name  | Description | Default Value |
 | :------------- | :------------- | :------------- |
 | <a id="llvm_bindir_path-ctx"></a>ctx |  <p align="center"> - </p>   |  none |
-
-
-<a id="#llvm_gendir_path"></a>
-
-## llvm_gendir_path
-
-<pre>
-llvm_gendir_path(<a href="#llvm_gendir_path-ctx">ctx</a>)
-</pre>
-
-
-
-**PARAMETERS**
-
-
-| Name  | Description | Default Value |
-| :------------- | :------------- | :------------- |
-| <a id="llvm_gendir_path-ctx"></a>ctx |  <p align="center"> - </p>   |  none |
-
-
-<a id="#llvm_target_directory_path"></a>
-
-## llvm_target_directory_path
-
-<pre>
-llvm_target_directory_path(<a href="#llvm_target_directory_path-ctx">ctx</a>)
-</pre>
-
-Returns the path to the `llvm-project` build output directory.
-
-The path looks like `bazel-out/{cpu}-{mode}/bin/external/llvm-project`.
-
-
-**PARAMETERS**
-
-
-| Name  | Description | Default Value |
-| :------------- | :------------- | :------------- |
-| <a id="llvm_target_directory_path-ctx"></a>ctx |  The rule context.   |  none |
-
-**RETURNS**
-
-A string.

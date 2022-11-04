@@ -14,6 +14,7 @@ LL_MODULES = [
     # "init",  # Broken until stardoc supports module_extension and tag_class.
     "inputs",
     "ll",
+    "llvm_project_deps",
     "os",
     "outputs",
     "providers",
