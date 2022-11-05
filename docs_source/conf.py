@@ -20,7 +20,7 @@ extensions = [
     'myst_parser',
 ]
 
-html_baseurl = 'll.eomii.org'
+html_baseurl = 'https://ll.eomii.org'
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
