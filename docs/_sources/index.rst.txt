@@ -42,11 +42,12 @@ These are the internal functions used in ``rules_ll``, except for
    driver
    environment
    inputs
-   internal_functions
    ll
+   llvm_project_deps
    os
    outputs
    providers
+   resolve_rule_inputs
    toolchain
    tools
    transitions

@@ -139,7 +139,7 @@ To build this, we could do something like:
    ll_library(
       name = "hello",
       srcs = ["hello.cpp"],
-      transitive_interfaces = {"hello.cppm": "hello"},
+      exposed_interfaces = {"hello.cppm": "hello"},
       compile_flags = ["-std=c++20"],
    )
 
@@ -150,7 +150,7 @@ To build this, we could do something like:
    )
 
 In this case, we had to make the interface for the ``hello`` module available
-to the ``main`` target, so we used ``transitive_interfaces`` instead of
+to the ``main`` target, so we used ``exposed_interfaces`` instead of
 ``interfaces``.
 
 Under the hood

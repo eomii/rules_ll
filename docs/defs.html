@@ -204,19 +204,19 @@
   </a>
  </li>
  <li class="toctree-l1">
-  <a class="reference internal" href="internal_functions.html">
+  <a class="reference internal" href="ll.html">
    <code class="docutils literal notranslate">
     <span class="pre">
-     //ll:internal_functions.bzl
+     //ll:ll.bzl
     </span>
    </code>
   </a>
  </li>
  <li class="toctree-l1">
-  <a class="reference internal" href="ll.html">
+  <a class="reference internal" href="llvm_project_deps.html">
    <code class="docutils literal notranslate">
     <span class="pre">
-     //ll:ll.bzl
+     //ll:llvm_project_deps.bzl
     </span>
    </code>
   </a>
@@ -244,6 +244,15 @@
    <code class="docutils literal notranslate">
     <span class="pre">
      //ll:providers.bzl
+    </span>
+   </code>
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="resolve_rule_inputs.html">
+   <code class="docutils literal notranslate">
+    <span class="pre">
+     //ll:resolve_rule_inputs.bzl
     </span>
    </code>
   </a>
@@ -554,7 +563,7 @@ ll_binary(<a href="#ll_binary-name">name</a>, <a href="#ll_binary-angled_include
 <td class="text-left"><p>[]</p></td>
 </tr>
 <tr class="row-odd"><td class="text-left"><p><a id="ll_binary-interfaces"></a>interfaces</p></td>
-<td class="text-left"><p>Module interfaces for this target.<br><br>        Interfaces need to be declared like         <pre><code>python         interfaces = {             “&lt;interface_file&gt;”: “&lt;module_name&gt;”,         }         </code></pre>         The module name is distinct from the filename and the target’s name         attribute. This makes module naming arbitrarily flexible, for instance:         <pre><code>python         ll_library(             name = “mymodule”,             srcs = [                 “A_B.cpp”  # Implementation for module A.B.             ],             interfaces = {                 “A.cppm”: “A”,  # Interface without separate implementation.                 “A_B.cppm”: “A.B”,  # Interface for module A.B.             }         )         </code></pre>         Internally, interfaces will be precompiled and then compiled to objects         named <code>&lt;filename&gt;.interface.o</code>. This way object files for modules         implemented via separate interfaces and implementations (such as <code>A.cpp</code>         in <code>srcs</code> and <code>A.cppm</code> in <code>interfaces</code>) do not clash.<br><br>        Files in the same <code>interfaces</code> attribute cannot see each other’s BMIs.         This means that multiple <code>ll_library</code> targets may be required to build         a module. (For instance, if a module partition is used by other module         partitions.)<br><br>        The BMIs in <code>interfaces</code> are visible to <code>exposed_interfaces</code>. This         way we can often get away with putting all module partitions in         <code>interfaces</code> and the primary module interface in <code>exposed_interfaces</code>.</p></td>
+<td class="text-left"><p>Module interfaces for this target.<br><br>        See <a class="reference internal" href="guides/modules.html"><span class="doc std std-doc">C++ modules</span></a> for usage instructions.<br><br>        Internally, interfaces will be precompiled and then compiled to objects         named <code>&lt;filename&gt;.interface.o</code>. This way object files for modules         implemented via separate interfaces and implementations (such as <code>A.cpp</code>         in <code>srcs</code> and <code>A.cppm</code> in <code>interfaces</code>) do not clash.<br><br>        Files in the same <code>interfaces</code> attribute cannot see each other’s BMIs.         This means that multiple <code>ll_library</code> targets may be required to build         a module. (For instance, if a module partition is used by other module         partitions.)<br><br>        The BMIs in <code>interfaces</code> are visible to <code>exposed_interfaces</code>. This         way we can often get away with putting all module partitions in         <code>interfaces</code> and the primary module interface in <code>exposed_interfaces</code>.</p></td>
 <td class="text-left"><p><a href="https://bazel.build/docs/skylark/lib/dict.html">Dictionary: Label -&gt; String</a></p></td>
 <td class="text-left"><p>optional</p></td>
 <td class="text-left"><p>{}</p></td>
@@ -805,7 +814,7 @@ ll_library(<a href="#ll_library-name">name</a>, <a href="#ll_library-angled_incl
 <td class="text-left"><p>[]</p></td>
 </tr>
 <tr class="row-even"><td class="text-left"><p><a id="ll_library-interfaces"></a>interfaces</p></td>
-<td class="text-left"><p>Module interfaces for this target.<br><br>        Interfaces need to be declared like         <pre><code>python         interfaces = {             “&lt;interface_file&gt;”: “&lt;module_name&gt;”,         }         </code></pre>         The module name is distinct from the filename and the target’s name         attribute. This makes module naming arbitrarily flexible, for instance:         <pre><code>python         ll_library(             name = “mymodule”,             srcs = [                 “A_B.cpp”  # Implementation for module A.B.             ],             interfaces = {                 “A.cppm”: “A”,  # Interface without separate implementation.                 “A_B.cppm”: “A.B”,  # Interface for module A.B.             }         )         </code></pre>         Internally, interfaces will be precompiled and then compiled to objects         named <code>&lt;filename&gt;.interface.o</code>. This way object files for modules         implemented via separate interfaces and implementations (such as <code>A.cpp</code>         in <code>srcs</code> and <code>A.cppm</code> in <code>interfaces</code>) do not clash.<br><br>        Files in the same <code>interfaces</code> attribute cannot see each other’s BMIs.         This means that multiple <code>ll_library</code> targets may be required to build         a module. (For instance, if a module partition is used by other module         partitions.)<br><br>        The BMIs in <code>interfaces</code> are visible to <code>exposed_interfaces</code>. This         way we can often get away with putting all module partitions in         <code>interfaces</code> and the primary module interface in <code>exposed_interfaces</code>.</p></td>
+<td class="text-left"><p>Module interfaces for this target.<br><br>        See <a class="reference internal" href="guides/modules.html"><span class="doc std std-doc">C++ modules</span></a> for usage instructions.<br><br>        Internally, interfaces will be precompiled and then compiled to objects         named <code>&lt;filename&gt;.interface.o</code>. This way object files for modules         implemented via separate interfaces and implementations (such as <code>A.cpp</code>         in <code>srcs</code> and <code>A.cppm</code> in <code>interfaces</code>) do not clash.<br><br>        Files in the same <code>interfaces</code> attribute cannot see each other’s BMIs.         This means that multiple <code>ll_library</code> targets may be required to build         a module. (For instance, if a module partition is used by other module         partitions.)<br><br>        The BMIs in <code>interfaces</code> are visible to <code>exposed_interfaces</code>. This         way we can often get away with putting all module partitions in         <code>interfaces</code> and the primary module interface in <code>exposed_interfaces</code>.</p></td>
 <td class="text-left"><p><a href="https://bazel.build/docs/skylark/lib/dict.html">Dictionary: Label -&gt; String</a></p></td>
 <td class="text-left"><p>optional</p></td>
 <td class="text-left"><p>{}</p></td>

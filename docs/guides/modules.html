@@ -204,19 +204,19 @@
   </a>
  </li>
  <li class="toctree-l1">
-  <a class="reference internal" href="../internal_functions.html">
+  <a class="reference internal" href="../ll.html">
    <code class="docutils literal notranslate">
     <span class="pre">
-     //ll:internal_functions.bzl
+     //ll:ll.bzl
     </span>
    </code>
   </a>
  </li>
  <li class="toctree-l1">
-  <a class="reference internal" href="../ll.html">
+  <a class="reference internal" href="../llvm_project_deps.html">
    <code class="docutils literal notranslate">
     <span class="pre">
-     //ll:ll.bzl
+     //ll:llvm_project_deps.bzl
     </span>
    </code>
   </a>
@@ -244,6 +244,15 @@
    <code class="docutils literal notranslate">
     <span class="pre">
      //ll:providers.bzl
+    </span>
+   </code>
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../resolve_rule_inputs.html">
+   <code class="docutils literal notranslate">
+    <span class="pre">
+     //ll:resolve_rule_inputs.bzl
     </span>
    </code>
   </a>
@@ -554,7 +563,7 @@ end with <code class="docutils literal notranslate"><span class="pre">.cppm</spa
 <span class="n">ll_library</span><span class="p">(</span>
    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;hello&quot;</span><span class="p">,</span>
    <span class="n">srcs</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;hello.cpp&quot;</span><span class="p">],</span>
-   <span class="n">transitive_interfaces</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;hello.cppm&quot;</span><span class="p">:</span> <span class="s2">&quot;hello&quot;</span><span class="p">},</span>
+   <span class="n">exposed_interfaces</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;hello.cppm&quot;</span><span class="p">:</span> <span class="s2">&quot;hello&quot;</span><span class="p">},</span>
    <span class="n">compile_flags</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;-std=c++20&quot;</span><span class="p">],</span>
 <span class="p">)</span>
 
@@ -566,7 +575,7 @@ end with <code class="docutils literal notranslate"><span class="pre">.cppm</spa
 </pre></div>
 </div>
 <p>In this case, we had to make the interface for the <code class="docutils literal notranslate"><span class="pre">hello</span></code> module available
-to the <code class="docutils literal notranslate"><span class="pre">main</span></code> target, so we used <code class="docutils literal notranslate"><span class="pre">transitive_interfaces</span></code> instead of
+to the <code class="docutils literal notranslate"><span class="pre">main</span></code> target, so we used <code class="docutils literal notranslate"><span class="pre">exposed_interfaces</span></code> instead of
 <code class="docutils literal notranslate"><span class="pre">interfaces</span></code>.</p>
 </div>
 <div class="section" id="under-the-hood">
