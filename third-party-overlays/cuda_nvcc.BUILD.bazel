@@ -1,5 +1,0 @@
-filegroup(
-    name = "contents",
-    srcs = glob(["**"]),
-    visibility = ["//visibility:public"],
-)

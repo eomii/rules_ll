@@ -1,26 +1,25 @@
 diff --git a/utils/bazel/llvm-project-overlay/clang/BUILD.bazel b/utils/bazel/llvm-project-overlay/clang/BUILD.bazel
-index 45fbca18c..4618514a4 100644
+index 9fba1a865ea9..a4b9253b7908 100644
 --- a/utils/bazel/llvm-project-overlay/clang/BUILD.bazel
 +++ b/utils/bazel/llvm-project-overlay/clang/BUILD.bazel
-@@ -6,6 +6,8 @@ load("//llvm:tblgen.bzl", "gentbl")
+@@ -3,6 +3,7 @@
+ # SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+ 
+ load("@bazel_skylib//rules:expand_template.bzl", "expand_template")
++load("//:workspace_root.bzl", "workspace_root")
+ load("//llvm:tblgen.bzl", "gentbl")
  load("//llvm:binary_alias.bzl", "binary_alias")
  load("//llvm:cc_plugin_library.bzl", "cc_plugin_library")
- load("//llvm:template_rule.bzl", "template_rule")
-+load("//clang:workspace_root.bzl", "workspace_root")
-+
- 
- package(
-     default_visibility = ["//visibility:public"],
-@@ -700,6 +702,8 @@ gentbl(
+@@ -701,6 +702,8 @@ gentbl(
      ],
  )
  
-+workspace_root(name = "clang_workspace_root")
++workspace_root(name = "workspace_root")
 +
  cc_library(
      name = "ast",
      srcs = glob([
-@@ -724,8 +728,8 @@ cc_library(
+@@ -725,8 +728,8 @@ cc_library(
          # least bad approach. Using `includes` is *specifically* problematic for
          # this library because it contains files that collide easily with system
          # headers such as `CXXABI.h`.
@@ -31,51 +30,46 @@ index 45fbca18c..4618514a4 100644
      ],
      textual_hdrs = [
          "include/clang/AST/AttrImpl.inc",
-@@ -745,6 +749,9 @@ cc_library(
+@@ -746,6 +749,9 @@ cc_library(
      ] + glob([
          "include/clang/AST/*.def",
      ]),
 +    toolchains = [
-+        ":clang_workspace_root",
++        ":workspace_root",
 +    ],
      deps = [
          ":ast_attr_gen",
          ":ast_comment_command_info_gen",
-@@ -1470,8 +1477,16 @@ gentbl(
- # We generate the set of builtin headers under a special subdirectory in the
- # 'bin' section of the bazel output so that they can be used as data
- # dependencies. It requires listing explicitly all the generated inputs here.
--builtin_headers = glob(
--    ["lib/Headers/**/*.h"],
-+builtin_headers = glob([
-+        "lib/Headers/**/*.h",
-+        "lib/Headers/module.modulemap",
-+        "lib/Headers/cuda_wrappers/algorithm",
-+        "lib/Headers/cuda_wrappers/complex",
-+        "lib/Headers/cuda_wrappers/new",
-+        "lib/Headers/openmp_wrappers/cmath",
-+        "lib/Headers/openmp_wrappers/complex",
-+        "lib/Headers/openmp_wrappers/new",
-+    ],
-     exclude = [
-         # FIXME: They are not handled in CMake side.
-         "lib/Headers/openmp_wrappers/time.h",
-@@ -1493,7 +1508,7 @@ genrule(
+@@ -1502,12 +1508,15 @@ genrule(
      outs = [hdr.replace("lib/Headers/", "staging/include/") for hdr in builtin_headers],
      cmd = """
         for src in $(SRCS); do
 -         relsrc=$${src/*external\\/llvm-project\\/clang\\/lib\\/Headers\\/}
-+         relsrc=$${src/*\\/clang\\/lib\\/Headers\\/}
++         relsrc=$${src/*"$(WORKSPACE_ROOT)"\\/clang\\/lib\\/Headers}
           target=$(@D)/staging/include/$$relsrc
           mkdir -p $$(dirname $$target)
           cp $$src $$target
-diff --git a/utils/bazel/llvm-project-overlay/clang/workspace_root.bzl b/utils/bazel/llvm-project-overlay/clang/workspace_root.bzl
+        done""",
+     output_to_bindir = 1,
++    toolchains = [
++        ":workspace_root",
++    ],
+ )
+ 
+ cc_library(
+diff --git a/utils/bazel/llvm-project-overlay/workspace_root.bzl b/utils/bazel/llvm-project-overlay/workspace_root.bzl
 new file mode 100644
-index 000000000..6a0fe7ca6
+index 000000000000..2932fb143cef
 --- /dev/null
-+++ b/utils/bazel/llvm-project-overlay/clang/workspace_root.bzl
-@@ -0,0 +1,11 @@
++++ b/utils/bazel/llvm-project-overlay/workspace_root.bzl
+@@ -0,0 +1,17 @@
 +def _workspace_root_impl(ctx):
++    """Dynamically determine the workspace root from the current context.
++
++    The path is made available as a `WORKSPACE_ROOT` environmment variable and
++    may for instance be consumed in the `toolchains` attributes for `cc_library`
++    and `genrule` targets.
++    """
 +    return [
 +        platform_common.TemplateVariableInfo({
 +            "WORKSPACE_ROOT": ctx.label.workspace_root,

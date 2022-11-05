@@ -176,6 +176,7 @@ def compile_object_args(
             [
                 Label("@cuda_cudart").workspace_root,
                 Label("@cuda_nvprof").workspace_root,
+                Label("@cuda_profiler_api").workspace_root,
                 Label("@libcurand").workspace_root,
             ],
             format_each = "-I%s/include",

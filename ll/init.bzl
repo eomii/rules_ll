@@ -37,6 +37,14 @@ ll_local_library_path = repository_rule(
     },
 )
 
+CUDA_BUILD_FILE = """
+filegroup(
+    name = "contents",
+    srcs = glob(["**"]),
+    visibility = ["//visibility:public"],
+)
+"""
+
 def initialize_rules_ll(local_library_path):
     """Initializes rules_ll and its dependencies.
 
@@ -88,41 +96,51 @@ def initialize_rules_ll(local_library_path):
     http_archive(
         name = "cuda_cudart",
         urls = [
-            "https://developer.download.nvidia.com/compute/cuda/redist/cuda_cudart/linux-x86_64/cuda_cudart-linux-x86_64-11.7.99-archive.tar.xz",
+            "https://developer.download.nvidia.com/compute/cuda/redist/cuda_cudart/linux-x86_64/cuda_cudart-linux-x86_64-11.8.89-archive.tar.xz",
         ],
-        strip_prefix = "cuda_cudart-linux-x86_64-11.7.99-archive",
-        sha256 = "7892409299c6865d0652373cb385add31b0faa2e5421a931ae9fbc103e1472ad",
-        build_file = Label("@rules_ll//third-party-overlays:cuda_cudart.BUILD.bazel"),
+        strip_prefix = "cuda_cudart-linux-x86_64-11.8.89-archive",
+        sha256 = "56129e0c42df03ecb50a7bb23fc3285fa39af1a818f8826b183cf793529098bb",
+        build_file_content = CUDA_BUILD_FILE,
     )
 
     http_archive(
         name = "cuda_nvcc",
         urls = [
-            "https://developer.download.nvidia.com/compute/cuda/redist/cuda_nvcc/linux-x86_64/cuda_nvcc-linux-x86_64-11.7.99-archive.tar.xz",
+            "https://developer.download.nvidia.com/compute/cuda/redist/cuda_nvcc/linux-x86_64/cuda_nvcc-linux-x86_64-11.8.89-archive.tar.xz",
         ],
-        strip_prefix = "cuda_nvcc-linux-x86_64-11.7.99-archive",
-        sha256 = "4a75e5bd6a0e0e664ec5895ba050cf9d7cda08f41db2b6b4c36fb91cfb9627bc",
-        build_file = Label("@rules_ll//third-party-overlays:cuda_nvcc.BUILD.bazel"),
+        strip_prefix = "cuda_nvcc-linux-x86_64-11.8.89-archive",
+        sha256 = "7ee8450dbcc16e9fe5d2a7b567d6dec220c5894a94ac6640459e06231e3b39a5",
+        build_file_content = CUDA_BUILD_FILE,
     )
 
     http_archive(
         name = "cuda_nvprof",
         urls = [
-            "https://developer.download.nvidia.com/compute/cuda/redist/cuda_nvprof/linux-x86_64/cuda_nvprof-linux-x86_64-11.7.101-archive.tar.xz",
+            "https://developer.download.nvidia.com/compute/cuda/redist/cuda_nvprof/linux-x86_64/cuda_nvprof-linux-x86_64-11.8.87-archive.tar.xz",
         ],
-        strip_prefix = "cuda_nvprof-linux-x86_64-11.7.101-archive",
-        sha256 = "028c9ae359e037fd8b3b7976304821704818d141284e8878577061dc41e19afe",
-        build_file = Label("@rules_ll//third-party-overlays:cuda_nvprof.BUILD.bazel"),
+        strip_prefix = "cuda_nvprof-linux-x86_64-11.8.87-archive",
+        sha256 = "cc01bc16f11b3aca89539a750c458121a4390d7694842627ca0221cc0b537107",
+        build_file_content = CUDA_BUILD_FILE,
+    )
+
+    http_archive(
+        name = "cuda_profiler_api",
+        urls = [
+            "https://developer.download.nvidia.com/compute/cuda/redist/cuda_profiler_api/linux-x86_64/cuda_profiler_api-linux-x86_64-11.8.86-archive.tar.xz",
+        ],
+        strip_prefix = "cuda_profiler_api-linux-x86_64-11.8.86-archive",
+        sha256 = "0845942ac7f6fac6081780c32e0d95c883c786638b54d5a8eda05fde8089d532",
+        build_file_content = CUDA_BUILD_FILE,
     )
 
     http_archive(
         name = "libcurand",
         urls = [
-            "https://developer.download.nvidia.com/compute/cuda/redist/libcurand/linux-x86_64/libcurand-linux-x86_64-10.2.10.91-archive.tar.xz",
+            "https://developer.download.nvidia.com/compute/cuda/redist/libcurand/linux-x86_64/libcurand-linux-x86_64-10.3.0.86-archive.tar.xz",
         ],
-        strip_prefix = "libcurand-linux-x86_64-10.2.10.91-archive",
-        sha256 = "283323c93050b3904d58417a6dd4055c156407c2df0c064ae81592e532b69a31",
-        build_file = Label("@rules_ll//third-party-overlays:libcurand.BUILD.bazel"),
+        strip_prefix = "libcurand-linux-x86_64-10.3.0.86-archive",
+        sha256 = "9d30be251c1a0463b52203f6514dac5062844c606d13e234d1386e80c83db279",
+        build_file_content = CUDA_BUILD_FILE,
     )
 
 def _initialize_rules_ll_impl(module_ctx):
