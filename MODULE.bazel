@@ -32,8 +32,8 @@ llvm_project_overlay = use_extension(
     "llvm_project_overlay",
 )
 llvm_project_overlay.configure(
-    commit = "7ded25c0cb298f474ffc1d9691a7d7c57c08c9f6",
-    sha256 = "7dc4720857512aa6bb3c00900a5fc79df2f9f3b97ae5a0627f66648ea6a18a2f",
+    commit = "ff111a997f1b40a531bc68b543542746d4b08a5f",
+    sha256 = "8c7caf62bd4c5f38f9cdff6732fa619a4c4cc91252ba3facc85f00d8c651f893",
     targets = ["AMDGPU", "NVPTX", "X86"],
     patches = [
         "@rules_ll//patches:back_inserter_patch.diff",
