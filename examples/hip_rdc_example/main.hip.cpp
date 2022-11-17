@@ -1,47 +1,27 @@
-#include <array>
-#include <iostream>
-#include <vector>
-
 #include "hip/hip_runtime.h"
+#include <iostream>
+
+#include "add.hip.hpp"
+#include "multiply.hip.hpp"
 
 constexpr float kInputA = 1.0F;
 constexpr float kInputB = 2.0F;
-constexpr float kExpectedOutput = 3.0F;
+constexpr float kInputC = 3.0F;
+constexpr float kExpectedOutput = 9.0F;
 constexpr int kDimension = 1 << 20;
 constexpr auto kThreadsPerBlockX = 128;
 constexpr auto kThreadsPerBlockY = 1;
 constexpr auto kThreadsPerBlockZ = 1;
 
-template <typename T> constexpr void hip_assert(const T value) {
+constexpr auto hip_assert(const hipError_t value) -> void {
   assert((value == hipSuccess));
 }
 
-__global__ auto add_vector(float *input_a, const float *input_b,
-                           const int dimension) -> void {
-  int index = hipBlockIdx_x * hipBlockDim_x + hipThreadIdx_x;
-  if (index < dimension) {
-    // NOLINTNEXTLINE cppcoreguidelines-pro-bounds-pointer-arithmetic
-    input_a[index] += input_b[index];
-  }
-}
-
-void print_device_info() {
-  int count = 0;
-  hipError_t err = hipGetDeviceCount(&count);
-  if (err == hipErrorInvalidDevice) {
-    std::cout << "FAIL: invalid device" << std::endl;
-  }
-  std::cout << "Number of devices is " << count << std::endl;
-
-  hipDeviceProp_t device_prop;
-  hip_assert(hipGetDeviceProperties(&device_prop, 0));
-  std::cout << "System major: " << device_prop.major << std::endl;
-  std::cout << "System minor: " << device_prop.minor << std::endl;
-  std::cout << "Device name : ";
-  for (auto character : device_prop.name) {
-    std::cout << character;
-  }
-  std::cout << std::endl;
+__global__ auto multiply_add(float *input_a, const float *input_b,
+                             const float *input_c, const int dimension)
+    -> void {
+  add_vector(input_a, input_b, dimension);
+  multiply_vector(input_a, input_c, dimension);
 }
 
 auto count_errors(const float *result) -> int {
@@ -62,15 +42,17 @@ auto count_errors(const float *result) -> int {
 }
 
 auto main() -> int {
-  print_device_info();
 
   float *host_input_a = nullptr;
   float *host_input_b = nullptr;
+  float *host_input_c = nullptr;
 
   // NOLINTBEGIN cppcoreguidelines-pro-type-reinterpret-cast
   hip_assert(hipMallocHost(reinterpret_cast<void **>(&host_input_a),
                            kDimension * sizeof(float)));
   hip_assert(hipMallocHost(reinterpret_cast<void **>(&host_input_b),
+                           kDimension * sizeof(float)));
+  hip_assert(hipMallocHost(reinterpret_cast<void **>(&host_input_c),
                            kDimension * sizeof(float)));
   // NOLINTEND cppcoreguidelines-pro-type-reinterpret-cast
 
@@ -78,25 +60,31 @@ auto main() -> int {
   for (int i = 0; i < kDimension; i++) {
     host_input_a[i] = kInputA;
     host_input_b[i] = kInputB;
+    host_input_c[i] = kInputC;
   }
   // NOLINTEND cppcoreguidelines-pro-bounds-pointer-arithmetic
 
   float *device_input_a = nullptr;
   float *device_input_b = nullptr;
+  float *device_input_c = nullptr;
 
   hip_assert(hipMalloc(&device_input_a, kDimension * sizeof(float)));
   hip_assert(hipMalloc(&device_input_b, kDimension * sizeof(float)));
+  hip_assert(hipMalloc(&device_input_c, kDimension * sizeof(float)));
 
   hip_assert(hipMemcpy(device_input_a, host_input_a, kDimension * sizeof(float),
                        hipMemcpyHostToDevice));
   hip_assert(hipMemcpy(device_input_b, host_input_b, kDimension * sizeof(float),
                        hipMemcpyHostToDevice));
+  hip_assert(hipMemcpy(device_input_c, host_input_c, kDimension * sizeof(float),
+                       hipMemcpyHostToDevice));
 
   dim3 grid_dim = dim3(kDimension / kThreadsPerBlockX);
   dim3 block_dim = dim3(kThreadsPerBlockX);
 
-  hipLaunchKernelGGL(add_vector, grid_dim, block_dim, 0, nullptr,
-                     device_input_a, device_input_b, kDimension);
+  hipLaunchKernelGGL(multiply_add, grid_dim, block_dim, 0, nullptr,
+                     device_input_a, device_input_b, device_input_c,
+                     kDimension);
 
   hip_assert(hipMemcpy(host_input_a, device_input_a, kDimension * sizeof(float),
                        hipMemcpyDeviceToHost));
@@ -105,9 +93,11 @@ auto main() -> int {
 
   hip_assert(hipFree(device_input_a));
   hip_assert(hipFree(device_input_b));
+  hip_assert(hipFree(device_input_c));
 
   hip_assert(hipHostFree(host_input_a));
   hip_assert(hipHostFree(host_input_b));
+  hip_assert(hipHostFree(host_input_c));
 
   return errors;
 }

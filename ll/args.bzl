@@ -168,6 +168,7 @@ def compile_object_args(
     ]:
         args.add("-Wno-unknown-cuda-version")  # Will always be unknown.
         args.add("-xcuda")
+        args.add("--offload-new-driver")
         args.add(
             Label("@cuda_nvcc").workspace_root,
             format = "--cuda-path=%s",
@@ -339,6 +340,15 @@ def compile_object_args(
 
 def link_executable_args(ctx, in_files, out_file, mode):
     args = ctx.actions.args()
+
+    # Provide host and device linker info to clang-linker-wrapper.
+    args.add("--cuda-path={}".format(Label("@cuda_nvcc").workspace_root))
+    args.add("--host-triple=x86_64-pc-linux-gnu")
+    args.add(
+        "--linker-path={}".format(
+            ctx.toolchains["//ll:toolchain_type"].linker.path,
+        ),
+    )
 
     args.add("--color-diagnostics")
 

@@ -495,6 +495,14 @@ LL_TOOLCHAIN_ATTRS = {
         cfg = transition_to_bootstrap,
         default = "@llvm-project//lld:lld",
     ),
+    "linker_wrapper": attr.label(
+        doc = """The clang-linker-wrapper. This invokes the host linker and
+        device linkers.""",
+        allow_single_file = True,
+        executable = True,
+        cfg = transition_to_bootstrap,
+        default = "@llvm-project//clang:clang-linker-wrapper",
+    ),
     "llvm_project_deps": attr.label_list(
         doc = """Targets from the `llvm-project-overlay`. Useful for targets
         that require the `llvm-project`, such as frontend actions, llvm passes,
@@ -521,6 +529,13 @@ LL_TOOLCHAIN_ATTRS = {
         """,
         cfg = transition_to_bootstrap,
         default = "@llvm-project//clang:clang-offload-bundler",
+        executable = True,
+    ),
+    "offload_packager": attr.label(
+        doc = """Offload packager used to bundle device files with metadata into
+        a single image.""",
+        cfg = transition_to_bootstrap,
+        default = "@llvm-project//clang:clang-offload-packager",
         executable = True,
     ),
     "memory_sanitizer": attr.label_list(

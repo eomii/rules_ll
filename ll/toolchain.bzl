@@ -28,9 +28,15 @@ def _ll_toolchain_impl(ctx):
             output = cuda_nvvm,
             target_path = "{}/nvvm/lib64".format(Label("@cuda_nvcc").workspace_root),
         )
+        cuda_bindir = ctx.actions.declare_symlink("cuda/bin")
+        ctx.actions.symlink(
+            output = cuda_bindir,
+            target_path = "{}/bin".format(Label("@cuda_nvcc").workspace_root),
+        )
     else:
         cuda_toolkit = []
         cuda_libdir = None
+        cuda_bindir = None
 
     if ctx.file.hipsycl_runtime != None:
         hipsycl_runtime = ctx.actions.declare_file("hipSYCL-rt.so")
@@ -81,12 +87,14 @@ def _ll_toolchain_impl(ctx):
             bitcode_linker = ctx.executable.bitcode_linker,
             linker = lld_alias,
             linker_executable = ctx.executable.linker,
+            linker_wrapper = ctx.executable.linker_wrapper,
             address_sanitizer = ctx.files.address_sanitizer,
             leak_sanitizer = ctx.files.leak_sanitizer,
             memory_sanitizer = ctx.files.memory_sanitizer,
             thread_sanitizer = ctx.files.thread_sanitizer,
             undefined_behavior_sanitizer = ctx.files.undefined_behavior_sanitizer,
             offload_bundler = ctx.executable.offload_bundler,
+            offload_packager = ctx.executable.offload_packager,
             builtin_includes = ctx.files.builtin_includes,
             cpp_stdlib = ctx.files.cpp_stdlib,
             cpp_stdhdrs = ctx.files.cpp_stdhdrs,
@@ -103,6 +111,7 @@ def _ll_toolchain_impl(ctx):
             machine_code_tool = ctx.executable.machine_code_tool,
             cuda_toolkit = cuda_toolkit,
             cuda_libdir = cuda_libdir,
+            cuda_bindir = cuda_bindir,
             cuda_nvvm = cuda_nvvm,
             hip_libraries = ctx.files.hip_libraries,
             hipsycl_plugin = ctx.file.hipsycl_plugin,

@@ -42,6 +42,7 @@ llvm_project_overlay.configure(
         "@rules_ll//patches:mallinfo2_patch.diff",
         "@rules_ll//patches:rules_ll_compatibility_patch.diff",
         "@rules_ll//patches:rules_ll_overlay_patch.diff",
+        "@rules_ll//patches:clang_new_offload_driver.diff",
     ],
 )
 

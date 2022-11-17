@@ -253,7 +253,7 @@ def link_shared_object(ctx, in_files, toolchain_type):
     ctx.actions.run(
         outputs = [out_file],
         inputs = in_files,
-        executable = ctx.toolchains[toolchain_type].linker,
+        executable = ctx.toolchains[toolchain_type].linker_wrapper,
         arguments = link_executable_args(
             ctx,
             in_files,
@@ -286,7 +286,7 @@ def link_executable(ctx, in_files, toolchain_type):
     ctx.actions.run(
         outputs = [out_file],
         inputs = in_files,
-        executable = ctx.toolchains[toolchain_type].linker,
+        executable = ctx.toolchains[toolchain_type].linker_wrapper,
         tools = linking_tools(ctx, toolchain_type),
         arguments = link_executable_args(
             ctx,

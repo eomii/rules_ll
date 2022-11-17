@@ -19,18 +19,23 @@ def compile_object_tools(ctx, toolchain_type):
         ctx.toolchains[toolchain_type].bitcode_linker,
         ctx.toolchains[toolchain_type].linker,
         ctx.toolchains[toolchain_type].linker_executable,
+        ctx.toolchains[toolchain_type].linker_wrapper,
     ]
 
     if config == "cpp":
         return tools
 
     if config in ["cuda_nvidia", "hip_nvidia"]:
-        return tools + [ctx.toolchains[toolchain_type].offload_bundler]
+        return tools + [
+            ctx.toolchains[toolchain_type].offload_bundler,
+            ctx.toolchains[toolchain_type].offload_packager,
+        ]
 
     if config in ["sycl_cpu", "sycl_cuda"]:
         return tools + [
             ctx.toolchains[toolchain_type].hipsycl_plugin,
             ctx.toolchains[toolchain_type].offload_bundler,
+            ctx.toolchains[toolchain_type].offload_packager,
             ctx.toolchains[toolchain_type].hipsycl_omp_backend,
             ctx.toolchains[toolchain_type].hipsycl_cuda_backend,
             ctx.toolchains[toolchain_type].hipsycl_omp_backend,
@@ -47,6 +52,8 @@ def linking_tools(ctx, toolchain_type):
 
     return [
         ctx.toolchains[toolchain_type].linker,
+        ctx.toolchains[toolchain_type].linker_executable,
+        ctx.toolchains[toolchain_type].linker_wrapper,
         ctx.toolchains[toolchain_type].local_library_path,
     ] + (
         ctx.toolchains[toolchain_type].address_sanitizer +
