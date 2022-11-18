@@ -67,7 +67,6 @@ def _ll_toolchain_impl(ctx):
         ctx.actions.symlink(
             output = hipsycl_cuda_backend,
             target_file = ctx.file.hipsycl_cuda_backend,
-            target_path = None,
             is_executable = False,
         )
     else:

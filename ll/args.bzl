@@ -59,7 +59,7 @@ def _get_basename(file):
 
 def _get_owner_package(file):
     """Returns file.owner.workspace_root + file.owner.package."""
-    return file.owner.workspace_root + file.owner.package
+    return file.owner.workspace_root + "/" + file.owner.package
 
 def compile_object_args(
         ctx,
@@ -451,7 +451,6 @@ def link_executable_args(ctx, in_files, out_file, mode):
         args.add("-lomp")
         sycl_shared_libraries = [
             ctx.toolchains["//ll:toolchain_type"].hipsycl_runtime,
-            # ctx.toolchains["//ll:toolchain_type"].hipsycl_omp_backend,
         ]
         args.add_all(
             sycl_shared_libraries,

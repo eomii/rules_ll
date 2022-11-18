@@ -140,7 +140,7 @@ def link_executable_inputs(ctx, in_files, toolchain_type):
         direct += (
             ctx.toolchains[toolchain_type].cuda_toolkit +
             [
-                ctx.toolchains[toolchain_type].cuda_bindir +
+                ctx.toolchains[toolchain_type].cuda_bindir,
                 ctx.toolchains[toolchain_type].cuda_libdir,
                 ctx.toolchains[toolchain_type].cuda_nvvm,
                 ctx.toolchains[toolchain_type].hipsycl_runtime,

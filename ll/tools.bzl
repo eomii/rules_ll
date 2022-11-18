@@ -38,8 +38,6 @@ def compile_object_tools(ctx, toolchain_type):
             ctx.toolchains[toolchain_type].offload_packager,
             ctx.toolchains[toolchain_type].hipsycl_omp_backend,
             ctx.toolchains[toolchain_type].hipsycl_cuda_backend,
-            ctx.toolchains[toolchain_type].hipsycl_omp_backend,
-            ctx.toolchains[toolchain_type].hipsycl_cuda_backend,
         ]
 
     fail("Unregognized toolchain toolchain configuration.")
