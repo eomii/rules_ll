@@ -10,11 +10,9 @@ C++ with a Clang/LLVM based toolchain built from upstream.
   `llvm-bazel-overlay <https://github.com/llvm/llvm-project/tree/main/utils/bazel>`_.
 - Custom overlays for ``libcxx``, ``libcxxabi``, ``libunwind``, ``compiler-rt``
   and ``clang-tidy``.
-- Parallel ``clang-tidy`` invocations via an ``ll_compilation_database``
-  target.
+- Builtin ``clang-tidy`` invocations via an ``ll_compilation_database`` target.
 - Support for sanitizers via target attributes.
-- Heterogeneous programming for Nvidia GPUs using HIP and CUDA, including fully
-  automated setup of required libraries, toolkits etc.
+- Toolchains for heterogeneous code targeting Nvidia GPUs with HIP or CUDA.
 - C++ modules.
 
 **Links**
@@ -75,7 +73,7 @@ workspace:
 
    touch WORKSPACE.bazel .bazelrc
    echo 5.3.2 > .bazelversion
-   echo 'bazel_dep(name="rules_ll", version="20221105.0")' > MODULE.bazel
+   echo 'bazel_dep(name="rules_ll", version="20221119.0")' > MODULE.bazel
 
 Copy the following lines into the just created ``.bazelrc`` file:
 
