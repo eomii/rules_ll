@@ -3,8 +3,8 @@
 # -- Project information -----------------------------------------------------
 
 project = 'rules_ll'
-copyright = '2021, The Qogecoin Authors'
-author = 'The Qogecoin Authors'
+copyright = '2022 eomii'
+author = 'eomii'
 
 # The full version, including alpha/beta/rc tags
 release = '0.0.0-rc0'
