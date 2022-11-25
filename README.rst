@@ -95,6 +95,9 @@ Copy the following lines into the just created ``.bazelrc`` file:
    # We need temporarily unresolved symlinks for CUDA.
    common --experimental_allow_unresolved_symlinks
 
+   # Encapsulate the build environment.
+   common --incompatible_strict_action_env
+
 You can now load the ``ll_library`` and ``ll_binary`` rule definitions in your
 ``BUILD.bazel`` files via
 

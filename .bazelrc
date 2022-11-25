@@ -13,3 +13,6 @@ common --registry=https://raw.githubusercontent.com/eomii/bazel-eoii-registry/ll
 
 # We need temporarily unresolved symlinks for CUDA.
 common --experimental_allow_unresolved_symlinks
+
+# Encapsulate the build environment.
+common --incompatible_strict_action_env
