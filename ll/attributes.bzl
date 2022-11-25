@@ -147,7 +147,7 @@ DEFAULT_ATTRS = {
         this attribute can see BMIs from modules in `interfaces`. Primary
         module interfaces should go here.
         """,
-        allow_files = [".cppm"],
+        allow_files = [".cppm", ".cpp", ".cc"],
     ),
     "exposed_relative_angled_includes": attr.string_list(
         doc = """Additional exposed angled include paths, relative to the
@@ -272,7 +272,7 @@ DEFAULT_ATTRS = {
 
         Headers should be placed in the `hdrs` attribute.
         """,
-        allow_files = [".ll", ".o", ".S", ".c", ".cc", ".cl", ".cpp", ".cppm", "cu"],
+        allow_files = [".ll", ".o", ".S", ".c", ".cc", ".cl", ".cpp", ".cppm", ".cu", ".cxx"],
     ),
     "toolchain_configuration": attr.label(
         doc = """TODO""",

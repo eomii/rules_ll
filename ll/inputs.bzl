@@ -11,6 +11,7 @@ COMPILABLE_EXTENSIONS = [
     "c",
     "cl",
     "cpp",
+    "cu",
     "S",
     "cc",
     "cxx",
