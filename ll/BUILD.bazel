@@ -201,6 +201,7 @@ ll_toolchain(
     cpp_stdlib = "@llvm-project//libcxx:libll_cxx",
     cuda_toolkit = [
         "@cuda_cudart//:contents",
+        "@cuda_cupti//:contents",
         "@cuda_nvcc//:contents",
         "@cuda_nvprof//:contents",
         "@cuda_profiler_api//:contents",
@@ -243,6 +244,7 @@ ll_toolchain(
     cpp_stdlib = "@llvm-project//libcxx:libll_cxx",
     cuda_toolkit = [
         "@cuda_cudart//:contents",
+        "@cuda_cupti//:contents",
         "@cuda_nvcc//:contents",
         "@cuda_nvprof//:contents",
         "@cuda_profiler_api//:contents",
@@ -330,6 +332,7 @@ ll_toolchain(
     cpp_stdlib = "@llvm-project//libcxx:libll_cxx",
     cuda_toolkit = [
         "@cuda_cudart//:contents",
+        "@cuda_cupti//:contents",
         "@cuda_nvcc//:contents",
         "@cuda_nvprof//:contents",
         "@cuda_profiler_api//:contents",

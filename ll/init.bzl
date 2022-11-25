@@ -35,6 +35,7 @@ ll_local_library_path = repository_rule(
         "build_file_content": attr.string(),
         "path": attr.string(),
     },
+    local = True,
 )
 
 CUDA_BUILD_FILE = """
@@ -100,6 +101,16 @@ def initialize_rules_ll(local_library_path):
         ],
         strip_prefix = "cuda_cudart-linux-x86_64-11.8.89-archive",
         sha256 = "56129e0c42df03ecb50a7bb23fc3285fa39af1a818f8826b183cf793529098bb",
+        build_file_content = CUDA_BUILD_FILE,
+    )
+
+    http_archive(
+        name = "cuda_cupti",
+        urls = [
+            "https://developer.download.nvidia.com/compute/cuda/redist/cuda_cupti/linux-x86_64/cuda_cupti-linux-x86_64-11.8.87-archive.tar.xz",
+        ],
+        strip_prefix = "cuda_cupti-linux-x86_64-11.8.87-archive",
+        sha256 = "b2ebc5672aa7b896b5986200d132933c37e72df6b0bf5ac25c9cb18c2c03057f",
         build_file_content = CUDA_BUILD_FILE,
     )
 

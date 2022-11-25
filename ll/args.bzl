@@ -176,6 +176,7 @@ def compile_object_args(
         args.add_all(
             [
                 Label("@cuda_cudart").workspace_root,
+                Label("@cuda_cupti").workspace_root,
                 Label("@cuda_nvprof").workspace_root,
                 Label("@cuda_profiler_api").workspace_root,
                 Label("@libcurand").workspace_root,
@@ -352,6 +353,9 @@ def link_executable_args(ctx, in_files, out_file, mode):
 
     args.add("--color-diagnostics")
 
+    # Encapsulation.
+    args.add("--nostdlib")
+
     # Visualization.
     if ctx.var["COMPILATION_MODE"] == "dbg":
         args.add("--verbose")
@@ -414,8 +418,28 @@ def link_executable_args(ctx, in_files, out_file, mode):
     else:
         fail("Invalid linking mode.")
 
-    # Encapsulation.
-    args.add("--nostdlib")
+    if ctx.attr.compilation_mode in [
+        "cuda_nvidia",
+        "hip_nvidia",
+        "sycl_cuda",
+    ]:
+        args.add("-lrt")
+        args.add(Label("@cuda_cudart").workspace_root, format = "-L%s/lib")
+
+        args.add(Label("@cuda_cupti").workspace_root, format = "-L%s/lib")
+        args.add(Label("@cuda_nvcc").workspace_root, format = "-L%s/nvvm/lib64")
+        args.add(
+            ctx.toolchains["//ll:toolchain_type"].cuda_libdir.short_path[3:],
+            format = "-rpath=$ORIGIN/../external/%s",
+        )
+        args.add(
+            ctx.toolchains["//ll:toolchain_type"].cuda_nvvm.short_path[3:],
+            format = "-rpath=$ORIGIN/../external/%s",
+        )
+        if ctx.label.name != "rt-backend-cuda":
+            args.add("-l:stubs/libcuda.so")
+            args.add("-lcudart")
+            args.add("-lcupti_static")
 
     # Additional system libraries.
     args.add(
@@ -427,25 +451,6 @@ def link_executable_args(ctx, in_files, out_file, mode):
     args.add("-ldl")  # Dynamic linking.
     args.add("-lpthread")  # Thread support.
     args.add("-lc")  # Glibc.
-
-    if ctx.attr.compilation_mode in [
-        "cuda_nvidia",
-        "hip_nvidia",
-        "sycl_cuda",
-    ]:
-        args.add("-lrt")
-        args.add(Label("@cuda_cudart").workspace_root, format = "-L%s/lib")
-        args.add(Label("@cuda_nvcc").workspace_root, format = "-L%s/nvvm/lib64")
-        args.add(
-            ctx.toolchains["//ll:toolchain_type"].cuda_libdir.short_path[3:],
-            format = "-rpath=$ORIGIN/../external/%s",
-        )
-        args.add(
-            ctx.toolchains["//ll:toolchain_type"].cuda_nvvm.short_path[3:],
-            format = "-rpath=$ORIGIN/../external/%s",
-        )
-        if ctx.label.name != "rt-backend-cuda":
-            args.add("-lcudart")
 
     if ctx.attr.compilation_mode in ["sycl_cpu", "sycl_cuda"]:
         args.add("-lomp")
