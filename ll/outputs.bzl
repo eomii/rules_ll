@@ -22,6 +22,7 @@ def precompile_interface_outputs(ctx, in_file):
         ctx.label.workspace_root,
         paths.dirname(ctx.build_file_path),
     )
+
     relative_src_path = paths.relativize(in_file.path, build_file_path)
     relative_src_dir = paths.dirname(relative_src_path)
 
@@ -48,7 +49,10 @@ def compile_object_outputs(ctx, in_file):
         paths.dirname(ctx.build_file_path),
     )
     if in_file.extension == "pcm":
-        relative_src_path = paths.relativize(in_file.short_path, build_file_path)
+        relative_src_path = paths.relativize(
+            in_file.path,
+            paths.join(in_file.root.path, build_file_path),
+        )
         extension = ".interface.o"
         cdf_extension = ".interface.cdf"
     else:
