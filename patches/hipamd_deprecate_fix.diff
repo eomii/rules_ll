@@ -1,0 +1,45 @@
+diff --git a/include/hip/nvidia_detail/nvidia_hip_runtime_api.h b/include/hip/nvidia_detail/nvidia_hip_runtime_api.h
+index f5fcf646..f826d18f 100644
+--- a/include/hip/nvidia_detail/nvidia_hip_runtime_api.h
++++ b/include/hip/nvidia_detail/nvidia_hip_runtime_api.h
+@@ -2265,7 +2265,7 @@ inline static hipError_t hipCtxGetFlags(unsigned int* flags) {
+     return hipCUResultTohipError(cuCtxGetFlags(flags));
+ }
+ 
+-inline static hipError_t hipCtxDetach(hipCtx_t ctx) {
++__HIP_DEPRECATED inline static hipError_t hipCtxDetach(hipCtx_t ctx) {
+     return hipCUResultTohipError(cuCtxDetach(ctx));
+ }
+ 
+@@ -2273,7 +2273,7 @@ inline static hipError_t hipDeviceGet(hipDevice_t* device, int ordinal) {
+     return hipCUResultTohipError(cuDeviceGet(device, ordinal));
+ }
+ 
+-inline static hipError_t hipDeviceComputeCapability(int* major, int* minor, hipDevice_t device) {
++__HIP_DEPRECATED inline static hipError_t hipDeviceComputeCapability(int* major, int* minor, hipDevice_t device) {
+     return hipCUResultTohipError(cuDeviceComputeCapability(major, minor, device));
+ }
+ 
+@@ -2451,7 +2451,7 @@ inline static hipError_t hipLaunchCooperativeKernel(const void* f, dim3 gridDim,
+             cudaLaunchCooperativeKernel(f, gridDim, blockDim, kernelParams, sharedMemBytes, stream));
+ }
+ 
+-inline static hipError_t hipLaunchCooperativeKernelMultiDevice(hipLaunchParams* launchParamsList,
++__HIP_DEPRECATED inline static hipError_t hipLaunchCooperativeKernelMultiDevice(hipLaunchParams* launchParamsList,
+                                                  int  numDevices, unsigned int  flags) {
+     return hipCUDAErrorTohipError(cudaLaunchCooperativeKernelMultiDevice(launchParamsList, numDevices, flags));
+ }
+@@ -2674,11 +2674,11 @@ __HIP_DEPRECATED inline static hipError_t hipTexRefSetFilterMode(hipTexRef hTexR
+     return hipCUResultTohipError(cuTexRefSetFilterMode(hTexRef,fm));
+ }
+ 
+-inline static hipError_t hipTexRefSetAddress(size_t *ByteOffset, hipTexRef hTexRef, hipDeviceptr_t dptr, size_t bytes){
++__HIP_DEPRECATED inline static hipError_t hipTexRefSetAddress(size_t *ByteOffset, hipTexRef hTexRef, hipDeviceptr_t dptr, size_t bytes){
+     return hipCUResultTohipError(cuTexRefSetAddress(ByteOffset,hTexRef,dptr,bytes));
+ }
+ 
+-inline static hipError_t hipTexRefSetAddress2D(hipTexRef hTexRef, const CUDA_ARRAY_DESCRIPTOR *desc, hipDeviceptr_t dptr, size_t Pitch){
++__HIP_DEPRECATED inline static hipError_t hipTexRefSetAddress2D(hipTexRef hTexRef, const CUDA_ARRAY_DESCRIPTOR *desc, hipDeviceptr_t dptr, size_t Pitch){
+     return hipCUResultTohipError(cuTexRefSetAddress2D(hTexRef,desc,dptr,Pitch));
+ }
+ 

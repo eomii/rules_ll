@@ -66,31 +66,33 @@ def initialize_rules_ll(local_library_path):
         patch_cmds = [
             """echo "
             #define HIP_VERSION_MAJOR 5
-            #define HIP_VERSION_MINOR 1
-            #define HIP_VERSION_PATCH 0
-            #define HIP_VERSION 50100000
-            #define HIP_VERSION_GITHASH "1389236aef23440d8fa2ccf36abc3ccd52c88127"
+            #define HIP_VERSION_MINOR 3
+            #define HIP_VERSION_PATCH 3
+            #define HIP_VERSION 50303000
+            #define HIP_VERSION_GITHASH "0000"
             #define HIP_VERSION_BUILD_NAME "rules_hip_custom_build_name_string"
             #define HIP_VERSION_BUILD_ID 0
             "
             >> include/hip/hip_version.h""",
         ],
-        sha256 = "2cefc5ea23fb6d7bdb1437133d8c95c01ddb1ce12c4a32ca5d24fe3a4236cb57",
-        strip_prefix = "HIP-1389236aef23440d8fa2ccf36abc3ccd52c88127",
+        sha256 = "51d4049dc37d261afb9e1270e60e112708ff06b470721ff21023e16e040e4403",
+        strip_prefix = "HIP-rocm-5.3.3",
         urls = [
-            "https://github.com/ROCm-Developer-Tools/HIP/archive/1389236aef23440d8fa2ccf36abc3ccd52c88127.zip",
+            "https://github.com/ROCm-Developer-Tools/HIP/archive/refs/tags/rocm-5.3.3.tar.gz",
         ],
     )
 
     http_archive(
         name = "hipamd",
         build_file = Label("@rules_ll//third-party-overlays:hipamd.BUILD.bazel"),
-        sha256 = "656f336e5ed8705629af811dea83096849298ddf05664051b730d3f104b0e18d",
-        strip_prefix = "hipamd-a97f7e4214c4111723d1476942106022d1186c70",
+        sha256 = "4b62bd403284d4bf66b836cdf0292d445c1bc46538f84b3395740e304f41cec4",
+        strip_prefix = "hipamd-rocm-5.3.3",
         urls = [
-            "https://github.com/ROCm-Developer-Tools/hipamd/archive/a97f7e4214c4111723d1476942106022d1186c70.zip",
+            "https://github.com/ROCm-Developer-Tools/hipamd/archive/refs/tags/rocm-5.3.3.zip",
         ],
-        patches = [Label("@rules_ll//patches:hipamd_return_fix.diff")],
+        patches = [
+            Label("@rules_ll//patches:hipamd_deprecate_fix.diff"),
+        ],
         patch_args = ["-p1"],
     )
 
