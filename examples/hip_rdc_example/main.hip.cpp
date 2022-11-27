@@ -1,7 +1,7 @@
-#include "hip/hip_runtime.h"
 #include <iostream>
 
 #include "add.hip.hpp"
+#include "hip/hip_runtime.h"
 #include "multiply.hip.hpp"
 
 constexpr float kInputA = 1.0F;
@@ -42,7 +42,6 @@ auto count_errors(const float *result) -> int {
 }
 
 auto main() -> int {
-
   float *host_input_a = nullptr;
   float *host_input_b = nullptr;
   float *host_input_c = nullptr;

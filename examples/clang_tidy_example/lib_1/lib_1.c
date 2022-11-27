@@ -1,4 +1,5 @@
 #include <stdio.h>
+
 #include "lib_1_private.h"
 
 void print_lib_1_string(void) {
@@ -21,5 +22,4 @@ void print_lib_1_string(void) {
 #endif
 
   printf("%s", lib_1_private_string);
-
 }

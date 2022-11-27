@@ -1,9 +1,10 @@
-#include "lib_1/lib_1_public.h"
-#include "lib_2/lib_2_public.h"
 #include <iostream>
 
+#include "lib_1/lib_1_public.h"
+#include "lib_2/lib_2_public.h"
+
 auto main() -> int {
-  int an_unitinialized_variable; // Triggers clang-tidy.
+  int an_unitinialized_variable;  // Triggers clang-tidy.
 
 #ifndef A_LOCAL_DEFINE
   std::cout << "PASS: A_LOCAL_DEFINE was not defined in executable."

@@ -10,4 +10,4 @@ auto c_implementation() -> void {
   std::cout << "Hello from module C implementation!" << std::endl;
 }
 
-} // namespace c
+}  // namespace c

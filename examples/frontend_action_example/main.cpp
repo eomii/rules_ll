@@ -10,7 +10,7 @@
 
 class FindNamedClassVisitor
     : public clang::RecursiveASTVisitor<FindNamedClassVisitor> {
-public:
+ public:
   explicit FindNamedClassVisitor(clang::ASTContext *Context)
       : Context_(Context) {}
 
@@ -27,12 +27,12 @@ public:
     return true;
   }
 
-private:
+ private:
   clang::ASTContext *Context_;
 };
 
 class FindNamedClassConsumer : public clang::ASTConsumer {
-public:
+ public:
   explicit FindNamedClassConsumer(clang::ASTContext *Context)
       : Visitor_(Context) {}
 
@@ -40,12 +40,12 @@ public:
     Visitor_.TraverseDecl(Context.getTranslationUnitDecl());
   }
 
-private:
+ private:
   FindNamedClassVisitor Visitor_;
 };
 
 class FindNamedClassAction : public clang::ASTFrontendAction {
-public:
+ public:
   auto CreateASTConsumer(clang::CompilerInstance &Compiler,
                          llvm::StringRef /*InFile*/)
       -> std::unique_ptr<clang::ASTConsumer> final {

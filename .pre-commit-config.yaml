@@ -31,7 +31,13 @@ repos:
         args: ["--config=setup.cfg"]
         language: python
         types: [python]
+
 -   repo: https://github.com/jlebar/pre-commit-hooks.git
     rev: fb5e481f35f5a9b32a06ccfc28b8d6dda4525f75
     hooks:
       -   id: bazel-buildifier
+
+-   repo: https://github.com/pre-commit/mirrors-clang-format
+    rev: v15.0.4
+    hooks:
+    -   id: clang-format

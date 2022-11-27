@@ -13,7 +13,8 @@ constexpr auto kThreadsPerBlockX = 128;
 constexpr auto kThreadsPerBlockY = 1;
 constexpr auto kThreadsPerBlockZ = 1;
 
-template <typename T> constexpr void cuda_assert(const T value) {
+template <typename T>
+constexpr void cuda_assert(const T value) {
   assert((value == cudaSuccess));
 }
 
@@ -76,9 +77,9 @@ auto main() -> int {
   // NOLINTEND cppcoreguidelines-pro-type-reinterpret-cast
 
   for (int i = 0; i < kDimension; i++) {
-    host_input_a[i] = // NOLINT cppcoreguidelines-pro-bounds-pointer-arithmetic
+    host_input_a[i] =  // NOLINT cppcoreguidelines-pro-bounds-pointer-arithmetic
         kInputA;
-    host_input_b[i] = // NOLINT cppcoreguidelines-pro-bounds-pointer-arithmetic
+    host_input_b[i] =  // NOLINT cppcoreguidelines-pro-bounds-pointer-arithmetic
         kInputB;
   }
 

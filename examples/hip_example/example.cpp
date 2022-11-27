@@ -12,7 +12,8 @@ constexpr auto kThreadsPerBlockX = 128;
 constexpr auto kThreadsPerBlockY = 1;
 constexpr auto kThreadsPerBlockZ = 1;
 
-template <typename T> constexpr void hip_assert(const T value) {
+template <typename T>
+constexpr void hip_assert(const T value) {
   assert((value == hipSuccess));
 }
 
