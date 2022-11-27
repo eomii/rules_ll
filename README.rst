@@ -78,7 +78,7 @@ workspace:
 
    touch WORKSPACE.bazel .bazelrc
    echo 7.0.0-pre.20221102.3 > .bazelversion
-   echo 'bazel_dep(name="rules_ll", version="20221119.0")' > MODULE.bazel
+   echo 'bazel_dep(name="rules_ll", version="20221127.0")' > MODULE.bazel
 
 Copy the following lines into the just created ``.bazelrc`` file:
 

@@ -1,6 +1,6 @@
 module(
     name = "rules_ll",
-    version = "20221119.0",
+    version = "20221127.0",
     compatibility_level = 0,
 )
 
