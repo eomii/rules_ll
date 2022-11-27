@@ -9,7 +9,7 @@ common --experimental_platform_in_output_dir
 common --experimental_enable_bzlmod
 
 # We use a custom registry.
-common --registry=https://raw.githubusercontent.com/eomii/bazel-eoii-registry/llvm-project-overlay/
+common --registry=https://raw.githubusercontent.com/eomii/bazel-eomii-registry/rules_ll/
 
 # We need temporarily unresolved symlinks for CUDA.
 common --experimental_allow_unresolved_symlinks

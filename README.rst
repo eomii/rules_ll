@@ -60,6 +60,11 @@ Minimum system requirements:
 - As a rough guideline, at least 1GB of Memory per CPU core. You can check the
   number of CPU cores via ``nproc``.
 
+Known breakages:
+
+- The specific Bazel release `6.0.0-pre.20221212.2` will not work due to yanked
+  dependencies. Prereleases newer than that and the stable `5.3.2` should work.
+
 Quickstart
 ----------
 
@@ -72,7 +77,7 @@ workspace:
 .. code:: bash
 
    touch WORKSPACE.bazel .bazelrc
-   echo 5.3.2 > .bazelversion
+   echo 7.0.0-pre.20221102.3 > .bazelversion
    echo 'bazel_dep(name="rules_ll", version="20221119.0")' > MODULE.bazel
 
 Copy the following lines into the just created ``.bazelrc`` file:
