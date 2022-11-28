@@ -94,8 +94,11 @@ Copy the following lines into the just created ``.bazelrc`` file:
    # We require bzlmod.
    common --experimental_enable_bzlmod
 
-   # We use a custom registry.
-   common --registry=https://raw.githubusercontent.com/eomii/bazel-eomii-registry/rules_ll/
+   # Default to the BCR.
+   common --registry=https://raw.githubusercontent.com/bazelbuild/bazel-central-registry/main/
+
+   # Additional registry required by rules_ll.
+   common --registry=https://raw.githubusercontent.com/eomii/bazel-eomii-registry/main/
 
    # We need temporarily unresolved symlinks for CUDA.
    common --experimental_allow_unresolved_symlinks
