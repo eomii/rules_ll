@@ -87,6 +87,7 @@ string_flag(
     values = [
         "bootstrap",
         "cpp",
+        "omp_cpu",
         "cuda_nvidia",
         "hip_nvidia",
         "sycl_cpu",
@@ -106,6 +107,13 @@ config_setting(
     name = "cpp",
     flag_values = {
         ":current_ll_toolchain_configuration": "cpp",
+    },
+)
+
+config_setting(
+    name = "omp_cpu",
+    flag_values = {
+        ":current_ll_toolchain_configuration": "omp_cpu",
     },
 )
 
@@ -168,6 +176,42 @@ ll_toolchain(
     leak_sanitizer = [
         "@llvm-project//compiler-rt/lib/lsan:clang_rt.lsan",
     ],
+    memory_sanitizer = [
+        "@llvm-project//compiler-rt/lib/msan:clang_rt.msan",
+        "@llvm-project//compiler-rt/lib/msan:clang_rt.msan_cxx",
+    ],
+    thread_sanitizer = [
+        "@llvm-project//compiler-rt/lib/tsan:clang_rt.tsan",
+        "@llvm-project//compiler-rt/lib/tsan:clang_rt.tsan_cxx",
+    ],
+    undefined_behavior_sanitizer = [
+        "@llvm-project//compiler-rt/lib/ubsan:clang_rt.ubsan_standalone",
+        "@llvm-project//compiler-rt/lib/ubsan:clang_rt.ubsan_standalone_cxx",
+    ],
+    unwind_library = "@llvm-project//libunwind:libll_unwind",
+    visibility = ["//visibility:public"],
+)
+
+ll_toolchain(
+    name = "ll_omp_cpu_toolchain_x86_64-unknown-linux-gnu",
+    address_sanitizer = [
+        "@llvm-project//compiler-rt/lib/asan:clang_rt.asan",
+        "@llvm-project//compiler-rt/lib/asan:clang_rt.asan_static",
+        "@llvm-project//compiler-rt/lib/asan:clang_rt.asan_cxx",
+    ],
+    compiler_runtime = [
+        "@llvm-project//compiler-rt:libll_compiler-rt",
+        "@llvm-project//compiler-rt/lib/crt:crt",
+    ],
+    cpp_abihdrs = "@llvm-project//libcxxabi:libcxxabi_headers",
+    cpp_abilib = "@llvm-project//libcxxabi:libll_cxxabi",
+    cpp_stdhdrs = "@llvm-project//libcxx:libcxx_headers",
+    cpp_stdlib = "@llvm-project//libcxx:libll_cxx",
+    exec_compatible_with = [":ll_exec_linux"],
+    leak_sanitizer = [
+        "@llvm-project//compiler-rt/lib/lsan:clang_rt.lsan",
+    ],
+    libomp = "@llvm-project//openmp:libomp",
     memory_sanitizer = [
         "@llvm-project//compiler-rt/lib/msan:clang_rt.msan",
         "@llvm-project//compiler-rt/lib/msan:clang_rt.msan_cxx",
@@ -371,6 +415,7 @@ toolchain(
     toolchain = select({
         ":bootstrap": ":ll_bootstrap_toolchain_x86_64-unknown-linux-gnu",
         ":cpp": ":ll_cpp_toolchain_x86_64-unknown-linux-gnu",
+        ":omp_cpu": ":ll_omp_cpu_toolchain_x86_64-unknown-linux-gnu",
         ":cuda_nvidia": ":ll_cuda_nvidia_toolchain_x86_64-unknown-linux-gnu",
         ":hip_nvidia": ":ll_hip_nvidia_toolchain_x86_64-unknown-linux-gnu",
         ":sycl_cpu": ":ll_sycl_cpu_toolchain_x86_64-unknown-linux-gnu",

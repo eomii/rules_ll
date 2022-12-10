@@ -39,6 +39,10 @@ DEFAULT_ATTRS = {
 
         `"hip_nvidia"` will treat compilable sources as HIP kernels.
 
+        `"omp_cpu"` will enable OpenMP CPU support. Equivalent to adding
+        `-fopenmp` to `compile_flags` and `@llvm-project//openmp:libomp` to
+        `deps`.
+
         `"sycl_cpu"` will enable SYCL CPU support using hipSYCL with the OpenMP
         backend. Do not use this. It is not fully implemented yet.
 
@@ -52,6 +56,7 @@ DEFAULT_ATTRS = {
         # TODO: hip_amd, sycl_amd
         values = [
             "cpp",
+            "omp_cpu",
             "cuda_nvidia",
             "hip_nvidia",
             "sycl_cpu",
@@ -423,6 +428,12 @@ LL_TOOLCHAIN_ATTRS = {
         doc = "The C++ standard library archive.",
         cfg = transition_to_bootstrap,
         providers = [LlInfo],
+    ),
+    "libomp": attr.label(
+        doc = "The OpenMP library.",
+        cfg = transition_to_cpp,
+        providers = [LlInfo],
+        # default = "@llvm-project//openmp:libomp",
     ),
     "cuda_toolkit": attr.label_list(
         doc = """CUDA toolkit files. `rules_ll` will still use `clang` as

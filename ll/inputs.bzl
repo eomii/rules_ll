@@ -61,6 +61,10 @@ def compile_object_inputs(
 
     if config == "cpp":
         pass
+    elif config == "omp_cpu":
+        direct += (
+            ctx.toolchains[toolchain_type].libomp
+        )
     elif config == "cuda_nvidia":
         direct += (
             ctx.toolchains[toolchain_type].cuda_toolkit
@@ -116,6 +120,10 @@ def link_executable_inputs(ctx, in_files, toolchain_type):
 
     if config == "cpp":
         pass
+    elif config == "omp_cpu":
+        direct += (
+            ctx.toolchains[toolchain_type].libomp
+        )
     elif config == "cuda_nvidia":
         direct += (
             ctx.toolchains[toolchain_type].cuda_toolkit +

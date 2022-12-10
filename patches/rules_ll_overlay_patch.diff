@@ -3357,3 +3357,3130 @@ index f8448fb0e726..88c1aa2ddced 100644
 +    visibility = ["//visibility:public"],
 +    deps = ["//compiler-rt:libll_compiler-rt"],
 +)
+diff --git a/utils/bazel/llvm-project-overlay/openmp/BUILD.bazel b/utils/bazel/llvm-project-overlay/openmp/BUILD.bazel
+new file mode 100644
+index 000000000000..3604de51034c
+--- /dev/null
++++ b/utils/bazel/llvm-project-overlay/openmp/BUILD.bazel
+@@ -0,0 +1,80 @@
++load("@rules_ll//ll:defs.bzl", "ll_library")
++
++LIBOMP_SOURCES = [
++    "runtime/src/kmp_alloc.cpp",
++    "runtime/src/kmp_atomic.cpp",
++    "runtime/src/kmp_csupport.cpp",
++    "runtime/src/kmp_debug.cpp",
++    "runtime/src/kmp_itt.cpp",
++    "runtime/src/kmp_environment.cpp",
++    "runtime/src/kmp_error.cpp",
++    "runtime/src/kmp_global.cpp",
++    "runtime/src/kmp_i18n.cpp",
++    "runtime/src/kmp_io.cpp",
++    "runtime/src/kmp_runtime.cpp",
++    "runtime/src/kmp_settings.cpp",
++    "runtime/src/kmp_str.cpp",
++    "runtime/src/kmp_tasking.cpp",
++    "runtime/src/kmp_threadprivate.cpp",
++    "runtime/src/kmp_utility.cpp",
++    "runtime/src/kmp_barrier.cpp",
++    "runtime/src/kmp_wait_release.cpp",
++    "runtime/src/kmp_affinity.cpp",
++    "runtime/src/kmp_dispatch.cpp",
++    "runtime/src/kmp_lock.cpp",
++    "runtime/src/kmp_sched.cpp",
++
++    # Linux specific.
++    "runtime/src/z_Linux_util.cpp",
++    "runtime/src/kmp_gsupport.cpp",
++
++    # Additional files.
++    "runtime/src/thirdparty/ittnotify/ittnotify_static.cpp",  # itt notify.
++    "runtime/src/kmp_debugger.cpp", # debugger
++    # "runtime/src/kmp_stats.cpp", # stats
++    # "runtime/src/kmp_stats_timing.cpp", # stats
++    "runtime/src/kmp_taskdeps.cpp",
++    "runtime/src/kmp_cancel.cpp",
++
++    # Other.
++    "runtime/src/kmp_ftn_cdecl.cpp",
++    "runtime/src/kmp_ftn_extra.cpp",
++    "runtime/src/kmp_version.cpp",
++    "runtime/src/ompt-general.cpp", # ompt
++    "runtime/src/ompt-specific.cpp", # ompt, missing in CMake.
++    "runtime/src/ompd-specific.cpp", # ompd
++
++    # GNU Asm.
++    "runtime/src/z_Linux_asm.S",
++]
++
++ll_library(
++    name = "libomp",
++    srcs = LIBOMP_SOURCES,
++    # Includes the following manually generated patched-in headers.
++    # We ultimately need these to be generated as part of the build.
++    # "runtime/src/kmp_config.h",
++    # "runtime/src/omp.h",
++    # "runtime/src/omp-tools.h",
++    # "runtime/src/kmp_i18n_default.inc",
++    # "runtime/src/kmp_i18n_id.inc",
++    hdrs = glob([
++        "runtime/src/*.inc",
++        "runtime/src/*.h",
++        "runtime/src/*.inl",
++        "runtime/src/thirdparty/ittnotify/*.h",
++        "runtime/src/thirdparty/ittnotify/legacy/*.h",
++    ]),
++    exposed_hdrs = [
++        "runtime/src/include/omp.h",
++    ],
++    relative_includes = [
++        "openmp/runtime/src",
++        "openmp/runtime/src/thirdparty/ittnotify",
++    ],
++    exposed_relative_includes = [
++        "openmp/runtime/src/include",
++    ],
++    compile_flags = ["-std=c++17", "-Wno-switch"],
++    visibility = ["//visibility:public"],
++)
+diff --git a/utils/bazel/llvm-project-overlay/openmp/runtime/src/include/omp.h b/utils/bazel/llvm-project-overlay/openmp/runtime/src/include/omp.h
+new file mode 100644
+index 000000000000..618e09de86de
+--- /dev/null
++++ b/utils/bazel/llvm-project-overlay/openmp/runtime/src/include/omp.h
+@@ -0,0 +1,515 @@
++/*
++ * include/omp.h.var
++ */
++
++
++//===----------------------------------------------------------------------===//
++//
++// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
++// See https://llvm.org/LICENSE.txt for license information.
++// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
++//
++//===----------------------------------------------------------------------===//
++
++
++#ifndef __OMP_H
++#   define __OMP_H
++
++#   include <stdlib.h>
++#   include <stdint.h>
++
++#   define KMP_VERSION_MAJOR    5
++#   define KMP_VERSION_MINOR    0
++#   define KMP_VERSION_BUILD    20140926
++#   define KMP_BUILD_DATE       "No_Timestamp"
++
++#   ifdef __cplusplus
++    extern "C" {
++#   endif
++
++#   define omp_set_affinity_format   ompc_set_affinity_format
++#   define omp_get_affinity_format   ompc_get_affinity_format
++#   define omp_display_affinity      ompc_display_affinity
++#   define omp_capture_affinity      ompc_capture_affinity
++
++#   if defined(_WIN32)
++#       define __KAI_KMPC_CONVENTION __cdecl
++#       ifndef __KMP_IMP
++#           define __KMP_IMP __declspec(dllimport)
++#       endif
++#   else
++#       define __KAI_KMPC_CONVENTION
++#       ifndef __KMP_IMP
++#           define __KMP_IMP
++#       endif
++#   endif
++
++    /* schedule kind constants */
++    typedef enum omp_sched_t {
++        omp_sched_static  = 1,
++        omp_sched_dynamic = 2,
++        omp_sched_guided  = 3,
++        omp_sched_auto    = 4,
++        omp_sched_monotonic = 0x80000000
++    } omp_sched_t;
++
++    /* set API functions */
++    extern void   __KAI_KMPC_CONVENTION  omp_set_num_threads (int);
++    extern void   __KAI_KMPC_CONVENTION  omp_set_dynamic     (int);
++    extern void   __KAI_KMPC_CONVENTION  omp_set_nested      (int);
++    extern void   __KAI_KMPC_CONVENTION  omp_set_max_active_levels (int);
++    extern void   __KAI_KMPC_CONVENTION  omp_set_schedule          (omp_sched_t, int);
++
++    /* query API functions */
++    extern int    __KAI_KMPC_CONVENTION  omp_get_num_threads  (void);
++    extern int    __KAI_KMPC_CONVENTION  omp_get_dynamic      (void);
++    extern int    __KAI_KMPC_CONVENTION  omp_get_nested       (void);
++    extern int    __KAI_KMPC_CONVENTION  omp_get_max_threads  (void);
++    extern int    __KAI_KMPC_CONVENTION  omp_get_thread_num   (void);
++    extern int    __KAI_KMPC_CONVENTION  omp_get_num_procs    (void);
++    extern int    __KAI_KMPC_CONVENTION  omp_in_parallel      (void);
++    extern int    __KAI_KMPC_CONVENTION  omp_in_final         (void);
++    extern int    __KAI_KMPC_CONVENTION  omp_get_active_level        (void);
++    extern int    __KAI_KMPC_CONVENTION  omp_get_level               (void);
++    extern int    __KAI_KMPC_CONVENTION  omp_get_ancestor_thread_num (int);
++    extern int    __KAI_KMPC_CONVENTION  omp_get_team_size           (int);
++    extern int    __KAI_KMPC_CONVENTION  omp_get_thread_limit        (void);
++    extern int    __KAI_KMPC_CONVENTION  omp_get_max_active_levels   (void);
++    extern void   __KAI_KMPC_CONVENTION  omp_get_schedule            (omp_sched_t *, int *);
++    extern int    __KAI_KMPC_CONVENTION  omp_get_max_task_priority   (void);
++
++    /* lock API functions */
++    typedef struct omp_lock_t {
++        void * _lk;
++    } omp_lock_t;
++
++    extern void   __KAI_KMPC_CONVENTION  omp_init_lock    (omp_lock_t *);
++    extern void   __KAI_KMPC_CONVENTION  omp_set_lock     (omp_lock_t *);
++    extern void   __KAI_KMPC_CONVENTION  omp_unset_lock   (omp_lock_t *);
++    extern void   __KAI_KMPC_CONVENTION  omp_destroy_lock (omp_lock_t *);
++    extern int    __KAI_KMPC_CONVENTION  omp_test_lock    (omp_lock_t *);
++
++    /* nested lock API functions */
++    typedef struct omp_nest_lock_t {
++        void * _lk;
++    } omp_nest_lock_t;
++
++    extern void   __KAI_KMPC_CONVENTION  omp_init_nest_lock    (omp_nest_lock_t *);
++    extern void   __KAI_KMPC_CONVENTION  omp_set_nest_lock     (omp_nest_lock_t *);
++    extern void   __KAI_KMPC_CONVENTION  omp_unset_nest_lock   (omp_nest_lock_t *);
++    extern void   __KAI_KMPC_CONVENTION  omp_destroy_nest_lock (omp_nest_lock_t *);
++    extern int    __KAI_KMPC_CONVENTION  omp_test_nest_lock    (omp_nest_lock_t *);
++
++    /* OpenMP 5.0  Synchronization hints*/
++    typedef enum omp_sync_hint_t {
++        omp_sync_hint_none           = 0,
++        omp_lock_hint_none           = omp_sync_hint_none,
++        omp_sync_hint_uncontended    = 1,
++        omp_lock_hint_uncontended    = omp_sync_hint_uncontended,
++        omp_sync_hint_contended      = (1<<1),
++        omp_lock_hint_contended      = omp_sync_hint_contended,
++        omp_sync_hint_nonspeculative = (1<<2),
++        omp_lock_hint_nonspeculative = omp_sync_hint_nonspeculative,
++        omp_sync_hint_speculative    = (1<<3),
++        omp_lock_hint_speculative    = omp_sync_hint_speculative,
++        kmp_lock_hint_hle            = (1<<16),
++        kmp_lock_hint_rtm            = (1<<17),
++        kmp_lock_hint_adaptive       = (1<<18)
++    } omp_sync_hint_t;
++
++    /* lock hint type for dynamic user lock */
++    typedef omp_sync_hint_t omp_lock_hint_t;
++
++    /* hinted lock initializers */
++    extern void __KAI_KMPC_CONVENTION omp_init_lock_with_hint(omp_lock_t *, omp_lock_hint_t);
++    extern void __KAI_KMPC_CONVENTION omp_init_nest_lock_with_hint(omp_nest_lock_t *, omp_lock_hint_t);
++
++    /* time API functions */
++    extern double __KAI_KMPC_CONVENTION  omp_get_wtime (void);
++    extern double __KAI_KMPC_CONVENTION  omp_get_wtick (void);
++
++    /* OpenMP 4.0 */
++    extern int  __KAI_KMPC_CONVENTION  omp_get_default_device (void);
++    extern void __KAI_KMPC_CONVENTION  omp_set_default_device (int);
++    extern int  __KAI_KMPC_CONVENTION  omp_is_initial_device (void);
++    extern int  __KAI_KMPC_CONVENTION  omp_get_num_devices (void);
++    extern int  __KAI_KMPC_CONVENTION  omp_get_num_teams (void);
++    extern int  __KAI_KMPC_CONVENTION  omp_get_team_num (void);
++    extern int  __KAI_KMPC_CONVENTION  omp_get_cancellation (void);
++
++    /* OpenMP 4.5 */
++    extern int   __KAI_KMPC_CONVENTION  omp_get_initial_device (void);
++    extern void* __KAI_KMPC_CONVENTION  omp_target_alloc(size_t, int);
++    extern void  __KAI_KMPC_CONVENTION  omp_target_free(void *, int);
++    extern int   __KAI_KMPC_CONVENTION  omp_target_is_present(const void *, int);
++    extern int   __KAI_KMPC_CONVENTION  omp_target_memcpy(void *, const void *, size_t, size_t, size_t, int, int);
++    extern int   __KAI_KMPC_CONVENTION  omp_target_memcpy_rect(void *, const void *, size_t, int, const size_t *,
++                                            const size_t *, const size_t *, const size_t *, const size_t *, int, int);
++    extern int   __KAI_KMPC_CONVENTION  omp_target_associate_ptr(const void *, const void *, size_t, size_t, int);
++    extern int   __KAI_KMPC_CONVENTION  omp_target_disassociate_ptr(const void *, int);
++
++    /* OpenMP 5.0 */
++    extern int   __KAI_KMPC_CONVENTION  omp_get_device_num (void);
++    typedef void * omp_depend_t;
++
++    /* OpenMP 5.1 interop */
++    typedef intptr_t omp_intptr_t;
++
++    /* 0..omp_get_num_interop_properties()-1 are reserved for implementation-defined properties */
++    typedef enum omp_interop_property {
++        omp_ipr_fr_id = -1,
++        omp_ipr_fr_name = -2,
++        omp_ipr_vendor = -3,
++        omp_ipr_vendor_name = -4,
++        omp_ipr_device_num = -5,
++        omp_ipr_platform = -6,
++        omp_ipr_device = -7,
++        omp_ipr_device_context = -8,
++        omp_ipr_targetsync = -9,
++        omp_ipr_first = -9
++    } omp_interop_property_t;
++
++    #define omp_interop_none 0
++
++    typedef enum omp_interop_rc {
++        omp_irc_no_value = 1,
++        omp_irc_success = 0,
++        omp_irc_empty = -1,
++        omp_irc_out_of_range = -2,
++        omp_irc_type_int = -3,
++        omp_irc_type_ptr = -4,
++        omp_irc_type_str = -5,
++        omp_irc_other = -6
++    } omp_interop_rc_t;
++
++    typedef enum omp_interop_fr {
++        omp_ifr_cuda = 1,
++        omp_ifr_cuda_driver = 2,
++        omp_ifr_opencl = 3,
++        omp_ifr_sycl = 4,
++        omp_ifr_hip = 5,
++        omp_ifr_level_zero = 6,
++        omp_ifr_last = 7
++    } omp_interop_fr_t;
++
++    typedef void * omp_interop_t;
++
++    /*!
++     * The `omp_get_num_interop_properties` routine retrieves the number of implementation-defined properties available for an `omp_interop_t` object.
++     */
++    extern int          __KAI_KMPC_CONVENTION  omp_get_num_interop_properties(const omp_interop_t);
++    /*!
++     * The `omp_get_interop_int` routine retrieves an integer property from an `omp_interop_t` object.
++     */
++    extern omp_intptr_t __KAI_KMPC_CONVENTION  omp_get_interop_int(const omp_interop_t, omp_interop_property_t, int *);
++    /*!
++     * The `omp_get_interop_ptr` routine retrieves a pointer property from an `omp_interop_t` object.
++     */
++    extern void *       __KAI_KMPC_CONVENTION  omp_get_interop_ptr(const omp_interop_t, omp_interop_property_t, int *);
++    /*!
++     * The `omp_get_interop_str` routine retrieves a string property from an `omp_interop_t` object.
++     */
++    extern const char * __KAI_KMPC_CONVENTION  omp_get_interop_str(const omp_interop_t, omp_interop_property_t, int *);
++    /*!
++     * The `omp_get_interop_name` routine retrieves a property name from an `omp_interop_t` object.
++     */
++    extern const char * __KAI_KMPC_CONVENTION  omp_get_interop_name(const omp_interop_t, omp_interop_property_t);
++    /*!
++     * The `omp_get_interop_type_desc` routine retrieves a description of the type of a property associated with an `omp_interop_t` object.
++     */
++    extern const char * __KAI_KMPC_CONVENTION  omp_get_interop_type_desc(const omp_interop_t, omp_interop_property_t);
++    /*!
++     * The `omp_get_interop_rc_desc` routine retrieves a description of the return code associated with an `omp_interop_t` object.
++     */
++    extern const char * __KAI_KMPC_CONVENTION  omp_get_interop_rc_desc(const omp_interop_t, omp_interop_rc_t);
++
++    /* OpenMP 5.1 device memory routines */
++
++    /*!
++     * The `omp_target_memcpy_async` routine asynchronously performs a copy between any combination of host and device pointers.
++     */
++    extern int    __KAI_KMPC_CONVENTION  omp_target_memcpy_async(void *, const void *, size_t, size_t, size_t, int,
++                                             int, int, omp_depend_t *);
++    /*!
++     * The `omp_target_memcpy_rect_async` routine asynchronously performs a copy between any combination of host and device pointers.
++     */
++    extern int    __KAI_KMPC_CONVENTION  omp_target_memcpy_rect_async(void *, const void *, size_t, int, const size_t *,
++                                             const size_t *, const size_t *, const size_t *, const size_t *, int, int,
++                                             int, omp_depend_t *);
++    /*!
++     * The `omp_get_mapped_ptr` routine returns the device pointer that is associated with a host pointer for a given device.
++     */
++    extern void * __KAI_KMPC_CONVENTION  omp_get_mapped_ptr(const void *, int);
++    extern int    __KAI_KMPC_CONVENTION  omp_target_is_accessible(const void *, size_t, int);
++
++    /* kmp API functions */
++    extern int    __KAI_KMPC_CONVENTION  kmp_get_stacksize          (void);
++    extern void   __KAI_KMPC_CONVENTION  kmp_set_stacksize          (int);
++    extern size_t __KAI_KMPC_CONVENTION  kmp_get_stacksize_s        (void);
++    extern void   __KAI_KMPC_CONVENTION  kmp_set_stacksize_s        (size_t);
++    extern int    __KAI_KMPC_CONVENTION  kmp_get_blocktime          (void);
++    extern int    __KAI_KMPC_CONVENTION  kmp_get_library            (void);
++    extern void   __KAI_KMPC_CONVENTION  kmp_set_blocktime          (int);
++    extern void   __KAI_KMPC_CONVENTION  kmp_set_library            (int);
++    extern void   __KAI_KMPC_CONVENTION  kmp_set_library_serial     (void);
++    extern void   __KAI_KMPC_CONVENTION  kmp_set_library_turnaround (void);
++    extern void   __KAI_KMPC_CONVENTION  kmp_set_library_throughput (void);
++    extern void   __KAI_KMPC_CONVENTION  kmp_set_defaults           (char const *);
++    extern void   __KAI_KMPC_CONVENTION  kmp_set_disp_num_buffers   (int);
++
++    /* Intel affinity API */
++    typedef void * kmp_affinity_mask_t;
++
++    extern int    __KAI_KMPC_CONVENTION  kmp_set_affinity             (kmp_affinity_mask_t *);
++    extern int    __KAI_KMPC_CONVENTION  kmp_get_affinity             (kmp_affinity_mask_t *);
++    extern int    __KAI_KMPC_CONVENTION  kmp_get_affinity_max_proc    (void);
++    extern void   __KAI_KMPC_CONVENTION  kmp_create_affinity_mask     (kmp_affinity_mask_t *);
++    extern void   __KAI_KMPC_CONVENTION  kmp_destroy_affinity_mask    (kmp_affinity_mask_t *);
++    extern int    __KAI_KMPC_CONVENTION  kmp_set_affinity_mask_proc   (int, kmp_affinity_mask_t *);
++    extern int    __KAI_KMPC_CONVENTION  kmp_unset_affinity_mask_proc (int, kmp_affinity_mask_t *);
++    extern int    __KAI_KMPC_CONVENTION  kmp_get_affinity_mask_proc   (int, kmp_affinity_mask_t *);
++
++    /* OpenMP 4.0 affinity API */
++    typedef enum omp_proc_bind_t {
++        omp_proc_bind_false = 0,
++        omp_proc_bind_true = 1,
++        omp_proc_bind_master = 2,
++        omp_proc_bind_close = 3,
++        omp_proc_bind_spread = 4
++    } omp_proc_bind_t;
++
++    extern omp_proc_bind_t __KAI_KMPC_CONVENTION omp_get_proc_bind (void);
++
++    /* OpenMP 4.5 affinity API */
++    extern int  __KAI_KMPC_CONVENTION omp_get_num_places (void);
++    extern int  __KAI_KMPC_CONVENTION omp_get_place_num_procs (int);
++    extern void __KAI_KMPC_CONVENTION omp_get_place_proc_ids (int, int *);
++    extern int  __KAI_KMPC_CONVENTION omp_get_place_num (void);
++    extern int  __KAI_KMPC_CONVENTION omp_get_partition_num_places (void);
++    extern void __KAI_KMPC_CONVENTION omp_get_partition_place_nums (int *);
++
++    extern void * __KAI_KMPC_CONVENTION  kmp_malloc  (size_t);
++    extern void * __KAI_KMPC_CONVENTION  kmp_aligned_malloc  (size_t, size_t);
++    extern void * __KAI_KMPC_CONVENTION  kmp_calloc  (size_t, size_t);
++    extern void * __KAI_KMPC_CONVENTION  kmp_realloc (void *, size_t);
++    extern void   __KAI_KMPC_CONVENTION  kmp_free    (void *);
++
++    extern void   __KAI_KMPC_CONVENTION  kmp_set_warnings_on(void);
++    extern void   __KAI_KMPC_CONVENTION  kmp_set_warnings_off(void);
++
++    /* OpenMP 5.0 Tool Control */
++    typedef enum omp_control_tool_result_t {
++        omp_control_tool_notool = -2,
++        omp_control_tool_nocallback = -1,
++        omp_control_tool_success = 0,
++        omp_control_tool_ignored = 1
++    } omp_control_tool_result_t;
++
++    typedef enum omp_control_tool_t {
++        omp_control_tool_start = 1,
++        omp_control_tool_pause = 2,
++        omp_control_tool_flush = 3,
++        omp_control_tool_end = 4
++    } omp_control_tool_t;
++
++    extern int __KAI_KMPC_CONVENTION omp_control_tool(int, int, void*);
++
++    /* OpenMP 5.0 Memory Management */
++    typedef uintptr_t omp_uintptr_t;
++
++    typedef enum {
++        omp_atk_sync_hint = 1,
++        omp_atk_alignment = 2,
++        omp_atk_access = 3,
++        omp_atk_pool_size = 4,
++        omp_atk_fallback = 5,
++        omp_atk_fb_data = 6,
++        omp_atk_pinned = 7,
++        omp_atk_partition = 8
++    } omp_alloctrait_key_t;
++
++    typedef enum {
++        omp_atv_false = 0,
++        omp_atv_true = 1,
++        omp_atv_contended = 3,
++        omp_atv_uncontended = 4,
++        omp_atv_serialized = 5,
++        omp_atv_sequential = omp_atv_serialized, // (deprecated)
++        omp_atv_private = 6,
++        omp_atv_all = 7,
++        omp_atv_thread = 8,
++        omp_atv_pteam = 9,
++        omp_atv_cgroup = 10,
++        omp_atv_default_mem_fb = 11,
++        omp_atv_null_fb = 12,
++        omp_atv_abort_fb = 13,
++        omp_atv_allocator_fb = 14,
++        omp_atv_environment = 15,
++        omp_atv_nearest = 16,
++        omp_atv_blocked = 17,
++        omp_atv_interleaved = 18
++    } omp_alloctrait_value_t;
++    #define omp_atv_default ((omp_uintptr_t)-1)
++
++    typedef struct {
++        omp_alloctrait_key_t key;
++        omp_uintptr_t value;
++    } omp_alloctrait_t;
++
++#   if defined(_WIN32)
++    // On Windows cl and icl do not support 64-bit enum, let's use integer then.
++    typedef omp_uintptr_t omp_allocator_handle_t;
++    extern __KMP_IMP omp_allocator_handle_t const omp_null_allocator;
++    extern __KMP_IMP omp_allocator_handle_t const omp_default_mem_alloc;
++    extern __KMP_IMP omp_allocator_handle_t const omp_large_cap_mem_alloc;
++    extern __KMP_IMP omp_allocator_handle_t const omp_const_mem_alloc;
++    extern __KMP_IMP omp_allocator_handle_t const omp_high_bw_mem_alloc;
++    extern __KMP_IMP omp_allocator_handle_t const omp_low_lat_mem_alloc;
++    extern __KMP_IMP omp_allocator_handle_t const omp_cgroup_mem_alloc;
++    extern __KMP_IMP omp_allocator_handle_t const omp_pteam_mem_alloc;
++    extern __KMP_IMP omp_allocator_handle_t const omp_thread_mem_alloc;
++    extern __KMP_IMP omp_allocator_handle_t const llvm_omp_target_host_mem_alloc;
++    extern __KMP_IMP omp_allocator_handle_t const llvm_omp_target_shared_mem_alloc;
++    extern __KMP_IMP omp_allocator_handle_t const llvm_omp_target_device_mem_alloc;
++
++    typedef omp_uintptr_t omp_memspace_handle_t;
++    extern __KMP_IMP omp_memspace_handle_t const omp_default_mem_space;
++    extern __KMP_IMP omp_memspace_handle_t const omp_large_cap_mem_space;
++    extern __KMP_IMP omp_memspace_handle_t const omp_const_mem_space;
++    extern __KMP_IMP omp_memspace_handle_t const omp_high_bw_mem_space;
++    extern __KMP_IMP omp_memspace_handle_t const omp_low_lat_mem_space;
++    extern __KMP_IMP omp_memspace_handle_t const llvm_omp_target_host_mem_space;
++    extern __KMP_IMP omp_memspace_handle_t const llvm_omp_target_shared_mem_space;
++    extern __KMP_IMP omp_memspace_handle_t const llvm_omp_target_device_mem_space;
++#   else
++#       if __cplusplus >= 201103
++    typedef enum omp_allocator_handle_t : omp_uintptr_t
++#       else
++    typedef enum omp_allocator_handle_t
++#       endif
++    {
++      omp_null_allocator = 0,
++      omp_default_mem_alloc = 1,
++      omp_large_cap_mem_alloc = 2,
++      omp_const_mem_alloc = 3,
++      omp_high_bw_mem_alloc = 4,
++      omp_low_lat_mem_alloc = 5,
++      omp_cgroup_mem_alloc = 6,
++      omp_pteam_mem_alloc = 7,
++      omp_thread_mem_alloc = 8,
++      llvm_omp_target_host_mem_alloc = 100,
++      llvm_omp_target_shared_mem_alloc = 101,
++      llvm_omp_target_device_mem_alloc = 102,
++      KMP_ALLOCATOR_MAX_HANDLE = UINTPTR_MAX
++    } omp_allocator_handle_t;
++#       if __cplusplus >= 201103
++    typedef enum omp_memspace_handle_t : omp_uintptr_t
++#       else
++    typedef enum omp_memspace_handle_t
++#       endif
++    {
++      omp_default_mem_space = 0,
++      omp_large_cap_mem_space = 1,
++      omp_const_mem_space = 2,
++      omp_high_bw_mem_space = 3,
++      omp_low_lat_mem_space = 4,
++      llvm_omp_target_host_mem_space = 100,
++      llvm_omp_target_shared_mem_space = 101,
++      llvm_omp_target_device_mem_space = 102,
++      KMP_MEMSPACE_MAX_HANDLE = UINTPTR_MAX
++    } omp_memspace_handle_t;
++#   endif
++    extern omp_allocator_handle_t __KAI_KMPC_CONVENTION omp_init_allocator(omp_memspace_handle_t m,
++                                                       int ntraits, omp_alloctrait_t traits[]);
++    extern void __KAI_KMPC_CONVENTION omp_destroy_allocator(omp_allocator_handle_t allocator);
++
++    extern void __KAI_KMPC_CONVENTION omp_set_default_allocator(omp_allocator_handle_t a);
++    extern omp_allocator_handle_t __KAI_KMPC_CONVENTION omp_get_default_allocator(void);
++#   ifdef __cplusplus
++    extern void *__KAI_KMPC_CONVENTION omp_alloc(size_t size, omp_allocator_handle_t a = omp_null_allocator);
++    extern void *__KAI_KMPC_CONVENTION omp_aligned_alloc(size_t align, size_t size,
++                                                         omp_allocator_handle_t a = omp_null_allocator);
++    extern void *__KAI_KMPC_CONVENTION omp_calloc(size_t nmemb, size_t size,
++                                                  omp_allocator_handle_t a = omp_null_allocator);
++    extern void *__KAI_KMPC_CONVENTION omp_aligned_calloc(size_t align, size_t nmemb, size_t size,
++                                                          omp_allocator_handle_t a = omp_null_allocator);
++    extern void *__KAI_KMPC_CONVENTION omp_realloc(void *ptr, size_t size,
++                                                   omp_allocator_handle_t allocator = omp_null_allocator,
++                                                   omp_allocator_handle_t free_allocator = omp_null_allocator);
++    extern void __KAI_KMPC_CONVENTION omp_free(void * ptr, omp_allocator_handle_t a = omp_null_allocator);
++#   else
++    extern void *__KAI_KMPC_CONVENTION omp_alloc(size_t size, omp_allocator_handle_t a);
++    extern void *__KAI_KMPC_CONVENTION omp_aligned_alloc(size_t align, size_t size,
++                                                         omp_allocator_handle_t a);
++    extern void *__KAI_KMPC_CONVENTION omp_calloc(size_t nmemb, size_t size, omp_allocator_handle_t a);
++    extern void *__KAI_KMPC_CONVENTION omp_aligned_calloc(size_t align, size_t nmemb, size_t size,
++                                                          omp_allocator_handle_t a);
++    extern void *__KAI_KMPC_CONVENTION omp_realloc(void *ptr, size_t size, omp_allocator_handle_t allocator,
++                                                   omp_allocator_handle_t free_allocator);
++    extern void __KAI_KMPC_CONVENTION omp_free(void *ptr, omp_allocator_handle_t a);
++#   endif
++
++    /* OpenMP 5.0 Affinity Format */
++    extern void __KAI_KMPC_CONVENTION omp_set_affinity_format(char const *);
++    extern size_t __KAI_KMPC_CONVENTION omp_get_affinity_format(char *, size_t);
++    extern void __KAI_KMPC_CONVENTION omp_display_affinity(char const *);
++    extern size_t __KAI_KMPC_CONVENTION omp_capture_affinity(char *, size_t, char const *);
++
++    /* OpenMP 5.0 events */
++#   if defined(_WIN32)
++    // On Windows cl and icl do not support 64-bit enum, let's use integer then.
++    typedef omp_uintptr_t omp_event_handle_t;
++#   else
++    typedef enum omp_event_handle_t { KMP_EVENT_MAX_HANDLE = UINTPTR_MAX } omp_event_handle_t;
++#   endif
++    extern void __KAI_KMPC_CONVENTION omp_fulfill_event ( omp_event_handle_t event );
++
++    /* OpenMP 5.0 Pause Resources */
++    typedef enum omp_pause_resource_t {
++      omp_pause_resume = 0,
++      omp_pause_soft = 1,
++      omp_pause_hard = 2
++    } omp_pause_resource_t;
++    extern int __KAI_KMPC_CONVENTION omp_pause_resource(omp_pause_resource_t, int);
++    extern int __KAI_KMPC_CONVENTION omp_pause_resource_all(omp_pause_resource_t);
++
++    extern int __KAI_KMPC_CONVENTION omp_get_supported_active_levels(void);
++
++    /* OpenMP 5.1 */
++    extern void __KAI_KMPC_CONVENTION omp_set_num_teams(int num_teams);
++    extern int __KAI_KMPC_CONVENTION omp_get_max_teams(void);
++    extern void __KAI_KMPC_CONVENTION omp_set_teams_thread_limit(int limit);
++    extern int __KAI_KMPC_CONVENTION omp_get_teams_thread_limit(void);
++
++    /* OpenMP 5.1 Display Environment */
++    extern void omp_display_env(int verbose);
++
++#   if defined(_OPENMP) && _OPENMP >= 201811
++    #pragma omp begin declare variant match(device={kind(host)})
++    static inline int omp_is_initial_device(void) { return 1; }
++    #pragma omp end declare variant
++    #pragma omp begin declare variant match(device={kind(nohost)})
++    static inline int omp_is_initial_device(void) { return 0; }
++    #pragma omp end declare variant
++#   endif
++
++    /* OpenMP 5.2 */
++    extern int __KAI_KMPC_CONVENTION omp_in_explicit_task(void);
++
++    /* LLVM Extensions */
++    extern void *llvm_omp_target_dynamic_shared_alloc();
++
++#   undef __KAI_KMPC_CONVENTION
++#   undef __KMP_IMP
++
++    /* Warning:
++       The following typedefs are not standard, deprecated and will be removed in a future release.
++    */
++    typedef int     omp_int_t;
++    typedef double  omp_wtime_t;
++
++#   ifdef __cplusplus
++    }
++#   endif
++
++#endif /* __OMP_H */
+diff --git a/utils/bazel/llvm-project-overlay/openmp/runtime/src/kmp_config.h b/utils/bazel/llvm-project-overlay/openmp/runtime/src/kmp_config.h
+new file mode 100644
+index 000000000000..2fe9316a4bc7
+--- /dev/null
++++ b/utils/bazel/llvm-project-overlay/openmp/runtime/src/kmp_config.h
+@@ -0,0 +1,142 @@
++/*
++ * kmp_config.h -- Feature macros
++ */
++//===----------------------------------------------------------------------===//
++//
++// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
++// See https://llvm.org/LICENSE.txt for license information.
++// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
++//
++//===----------------------------------------------------------------------===//
++#ifndef KMP_CONFIG_H
++#define KMP_CONFIG_H
++
++#include "kmp_platform.h"
++
++// cmakedefine01 MACRO will define MACRO as either 0 or 1
++// cmakedefine MACRO 1 will define MACRO as 1 or leave undefined
++#define DEBUG_BUILD 0
++#define RELWITHDEBINFO_BUILD 0
++#define LIBOMP_USE_ITT_NOTIFY 1
++#define USE_ITT_NOTIFY LIBOMP_USE_ITT_NOTIFY
++#if ! LIBOMP_USE_ITT_NOTIFY
++# define INTEL_NO_ITTNOTIFY_API
++#endif
++#define LIBOMP_USE_VERSION_SYMBOLS 1
++#if LIBOMP_USE_VERSION_SYMBOLS
++# define KMP_USE_VERSION_SYMBOLS
++#endif
++#define LIBOMP_HAVE_WEAK_ATTRIBUTE 1
++#define KMP_HAVE_WEAK_ATTRIBUTE LIBOMP_HAVE_WEAK_ATTRIBUTE
++#define LIBOMP_HAVE_PSAPI 0
++#define KMP_HAVE_PSAPI LIBOMP_HAVE_PSAPI
++#define LIBOMP_STATS 0
++#define KMP_STATS_ENABLED LIBOMP_STATS
++#define LIBOMP_HAVE_X86INTRIN_H 0
++#define KMP_HAVE_X86INTRIN_H LIBOMP_HAVE_X86INTRIN_H
++#define LIBOMP_HAVE___BUILTIN_READCYCLECOUNTER 0
++#define KMP_HAVE___BUILTIN_READCYCLECOUNTER LIBOMP_HAVE___BUILTIN_READCYCLECOUNTER
++#define LIBOMP_HAVE___RDTSC 0
++#define KMP_HAVE___RDTSC LIBOMP_HAVE___RDTSC
++#define LIBOMP_USE_DEBUGGER 0
++#define USE_DEBUGGER LIBOMP_USE_DEBUGGER
++#define LIBOMP_OMPT_DEBUG 0
++#define OMPT_DEBUG LIBOMP_OMPT_DEBUG
++#define LIBOMP_OMPT_SUPPORT 1
++#define OMPT_SUPPORT LIBOMP_OMPT_SUPPORT
++#define LIBOMP_OMPD_SUPPORT 1
++#define OMPD_SUPPORT LIBOMP_OMPD_SUPPORT
++#define LIBOMP_PROFILING_SUPPORT 0
++#define OMP_PROFILING_SUPPORT LIBOMP_PROFILING_SUPPORT
++#define LIBOMP_OMPT_OPTIONAL 1
++#define OMPT_OPTIONAL LIBOMP_OMPT_OPTIONAL
++#define LIBOMP_USE_ADAPTIVE_LOCKS 1
++#define KMP_USE_ADAPTIVE_LOCKS LIBOMP_USE_ADAPTIVE_LOCKS
++#define KMP_DEBUG_ADAPTIVE_LOCKS 0
++#define LIBOMP_USE_INTERNODE_ALIGNMENT 0
++#define KMP_USE_INTERNODE_ALIGNMENT LIBOMP_USE_INTERNODE_ALIGNMENT
++#define LIBOMP_ENABLE_ASSERTIONS 0
++#define KMP_USE_ASSERT LIBOMP_ENABLE_ASSERTIONS
++#define LIBOMP_USE_HIER_SCHED 0
++#define KMP_USE_HIER_SCHED LIBOMP_USE_HIER_SCHED
++#define STUBS_LIBRARY 0
++#define LIBOMP_USE_HWLOC 0
++#define KMP_USE_HWLOC LIBOMP_USE_HWLOC
++#define LIBOMP_ENABLE_SHARED 1
++#define KMP_DYNAMIC_LIB LIBOMP_ENABLE_SHARED
++#define KMP_ARCH_STR "Intel(R) 64"
++#define KMP_LIBRARY_FILE "libomp.so"
++#define KMP_VERSION_MAJOR 5
++#define KMP_VERSION_MINOR 0
++#define MSVC 0
++#define KMP_MSVC_COMPAT MSVC
++#define LIBOMP_HAVE_WAITPKG_INTRINSICS 1
++#define KMP_HAVE_WAITPKG_INTRINSICS LIBOMP_HAVE_WAITPKG_INTRINSICS
++#define LIBOMP_HAVE_RTM_INTRINSICS 1
++#define KMP_HAVE_RTM_INTRINSICS LIBOMP_HAVE_RTM_INTRINSICS
++#define LIBOMP_HAVE_IMMINTRIN_H 1
++#define KMP_HAVE_IMMINTRIN_H LIBOMP_HAVE_IMMINTRIN_H
++#define LIBOMP_HAVE_INTRIN_H 0
++#define KMP_HAVE_INTRIN_H LIBOMP_HAVE_INTRIN_H
++#define LIBOMP_HAVE_ATTRIBUTE_WAITPKG 1
++#define KMP_HAVE_ATTRIBUTE_WAITPKG LIBOMP_HAVE_ATTRIBUTE_WAITPKG
++#define LIBOMP_HAVE_ATTRIBUTE_RTM 1
++#define KMP_HAVE_ATTRIBUTE_RTM LIBOMP_HAVE_ATTRIBUTE_RTM
++#define LIBOMP_ARCH_AARCH64_A64FX 0
++#define KMP_ARCH_AARCH64_A64FX LIBOMP_ARCH_AARCH64_A64FX
++#define LIBOMP_HAVE_XMMINTRIN_H 1
++#define KMP_HAVE_XMMINTRIN_H LIBOMP_HAVE_XMMINTRIN_H
++#define LIBOMP_HAVE__MM_MALLOC 1
++#define KMP_HAVE__MM_MALLOC LIBOMP_HAVE__MM_MALLOC
++#define LIBOMP_HAVE_ALIGNED_ALLOC 1
++#define KMP_HAVE_ALIGNED_ALLOC LIBOMP_HAVE_ALIGNED_ALLOC
++#define LIBOMP_HAVE_POSIX_MEMALIGN 1
++#define KMP_HAVE_POSIX_MEMALIGN LIBOMP_HAVE_POSIX_MEMALIGN
++#define LIBOMP_HAVE__ALIGNED_MALLOC 0
++#define KMP_HAVE__ALIGNED_MALLOC LIBOMP_HAVE__ALIGNED_MALLOC
++
++// Configured cache line based on architecture
++#if KMP_ARCH_PPC64
++# define CACHE_LINE 128
++#elif KMP_ARCH_AARCH64_A64FX
++# define CACHE_LINE 256
++#else
++# define CACHE_LINE 64
++#endif
++
++#if ! KMP_32_BIT_ARCH
++# define BUILD_I8 1
++#endif
++
++#define KMP_NESTED_HOT_TEAMS 1
++#define KMP_ADJUST_BLOCKTIME 1
++#define BUILD_PARALLEL_ORDERED 1
++#define KMP_ASM_INTRINS 1
++#define USE_ITT_BUILD LIBOMP_USE_ITT_NOTIFY
++#define INTEL_ITTNOTIFY_PREFIX __kmp_itt_
++#if ! KMP_MIC
++# define USE_LOAD_BALANCE 1
++#endif
++#if ! (KMP_OS_WINDOWS || KMP_OS_DARWIN)
++# define KMP_TDATA_GTID 1
++#endif
++#if STUBS_LIBRARY
++# define KMP_STUB 1
++#endif
++#if DEBUG_BUILD || RELWITHDEBINFO_BUILD
++# define KMP_DEBUG 1
++#endif
++
++#if KMP_OS_WINDOWS
++# define KMP_WIN_CDECL
++#else
++# define BUILD_TV
++# define KMP_GOMP_COMPAT
++#endif
++
++// use shared memory with dynamic library (except Android, where shm_*
++// functions don't exist).
++#if KMP_OS_UNIX && KMP_DYNAMIC_LIB && !__ANDROID__
++#define KMP_USE_SHM
++#endif
++#endif // KMP_CONFIG_H
+diff --git a/utils/bazel/llvm-project-overlay/openmp/runtime/src/kmp_i18n_default.inc b/utils/bazel/llvm-project-overlay/openmp/runtime/src/kmp_i18n_default.inc
+new file mode 100644
+index 000000000000..2bb8141ff49e
+--- /dev/null
++++ b/utils/bazel/llvm-project-overlay/openmp/runtime/src/kmp_i18n_default.inc
+@@ -0,0 +1,486 @@
++// Do not edit this file! //
++// The file was generated from en_US.txt by message-converter.pl on Sat Dec 10 01:22:50 2022. //
++
++static char const *
++__kmp_i18n_default_meta[] =
++    {
++        NULL,
++        "English",
++        "USA",
++        "1033",
++        "2",
++        "20170523",
++        NULL
++    };
++
++static char const *
++__kmp_i18n_default_strings[] =
++    {
++        NULL,
++        "Error",
++        "(unknown file)",
++        "not a number",
++        "bad unit",
++        "illegal characters",
++        "value too large",
++        "value too small",
++        "value is not a multiple of 4k",
++        "Unknown processor topology",
++        "Cannot open /proc/cpuinfo",
++        "/proc/cpuinfo",
++        "cpuinfo file invalid (No processor records)",
++        "cpuinfo file invalid (Too many processor records)",
++        "Cannot rewind cpuinfo file",
++        "cpuinfo file invalid (long line)",
++        "cpuinfo file contains too many entries",
++        "cpuinfo file missing processor field",
++        "cpuinfo file missing physical id field",
++        "cpuinfo file invalid (missing val)",
++        "cpuinfo file invalid (duplicate field)",
++        "Physical node/pkg/core/thread ids not unique",
++        "APIC not present",
++        "Invalid cpuid info",
++        "APIC ids not unique",
++        "Inconsistent cpuid info",
++        "Out of heap memory",
++        "Memory allocation failed",
++        "core",
++        "thread",
++        "package",
++        "node",
++        "<undef>",
++        "decoding legacy APIC ids",
++        "parsing /proc/cpuinfo",
++        "value is not defined",
++        "Effective settings:",
++        "User settings:",
++        "warning: pointers or size don't make sense",
++        "CPU",
++        "TPU",
++        "TPUs per package",
++        "HT enabled",
++        "HT disabled",
++        "decoding x2APIC ids",
++        "cpuid leaf 11 not supported",
++        "cpuid leaf 4 not supported",
++        "thread ids not unique",
++        "using pthread info",
++        "legacy APIC ids not unique",
++        "x2APIC ids not unique",
++        "OPENMP DISPLAY ENVIRONMENT BEGIN",
++        "OPENMP DISPLAY ENVIRONMENT END",
++        "[device]",
++        "[host]",
++        "tile",
++        "tiles",
++        "threads",
++        "cores",
++        "socket",
++        "sockets",
++        "die",
++        "dice",
++        "module",
++        "modules",
++        "L1 cache",
++        "L1 caches",
++        "L2 cache",
++        "L2 caches",
++        "L3 cache",
++        "L3 caches",
++        "NUMA domain",
++        "NUMA domains",
++        "processor group",
++        "processor groups",
++        "unknown",
++        "cpuid leaf 31 not supported",
++        "Hwloc api failure",
++        "LL cache",
++        "LL caches",
++        NULL
++    };
++
++static char const *
++__kmp_i18n_default_formats[] =
++    {
++        NULL,
++        "OMP: Info #%1$d: %2$s\n",
++        "OMP: Warning #%1$d: %2$s\n",
++        "OMP: Error #%1$d: %2$s\n",
++        "OMP: System error #%1$d: %2$s\n",
++        "OMP: Hint %1$s\n",
++        "%1$s pragma (at %2$s:%3$s():%4$s)",
++        NULL
++    };
++
++static char const *
++__kmp_i18n_default_messages[] =
++    {
++        NULL,
++        "Library is \"serial\".",
++        "Cannot open message catalog \"%1$s\":",
++        "Default messages will be used.",
++        "%1$s: Lock is uninitialized",
++        "%1$s: Lock was initialized as simple, but used as nestable",
++        "%1$s: Lock was initialized as nestable, but used as simple",
++        "%1$s: Lock is already owned by requesting thread",
++        "%1$s: Lock is still owned by a thread",
++        "%1$s: Attempt to release a lock not owned by any thread",
++        "%1$s: Attempt to release a lock owned by another thread",
++        "Stack overflow detected for OpenMP thread #%1$d",
++        "Stack overlap detected. ",
++        "Assertion failure at %1$s(%2$d).",
++        "Unable to register a new user thread.",
++        "Initializing %1$s, but found %2$s already initialized.",
++        "Cannot open file \"%1$s\" for reading:",
++        "Getting environment variable \"%1$s\" failed:",
++        "Setting environment variable \"%1$s\" failed:",
++        "Getting environment failed:",
++        "%1$s=\"%2$s\": Wrong value, boolean expected.",
++        "No Helper Thread support built in this OMP library.",
++        "Helper thread failed to soft terminate.",
++        "Buffer overflow detected.",
++        "Real-time scheduling policy is not supported.",
++        "OMP application is running at maximum priority with real-time scheduling policy. ",
++        "Changing priority of the monitor thread failed:",
++        "Deadlocks are highly possible due to monitor thread starvation.",
++        "Unable to set monitor thread stack size to %1$lu bytes:",
++        "Unable to set OMP thread stack size to %1$lu bytes:",
++        "Thread attribute initialization failed:",
++        "Thread attribute destroying failed:",
++        "OMP thread joinable state setting failed:",
++        "Monitor thread joinable state setting failed:",
++        "System unable to allocate necessary resources for OMP thread:",
++        "System unable to allocate necessary resources for the monitor thread:",
++        "Unable to terminate OMP thread:",
++        "Wrong schedule type %1$d, see <omp.h> or <omp_lib.h> file for the list of values supported.",
++        "Unknown scheduling type \"%1$d\".",
++        "%1$s value \"%2$s\" is invalid.",
++        "%1$s value \"%2$s\" is too small.",
++        "%1$s value \"%2$s\" is too large.",
++        "%1$s: \"%2$s\" is an invalid value; ignored.",
++        "%1$s release value \"%2$s\" is invalid.",
++        "%1$s gather value \"%2$s\" is invalid.",
++        "%1$s supported only on debug builds; ignored.",
++        "Syntax error: Usage: %1$s=[ routine=<func> | filename=<file> | range=<lb>:<ub> | excl_range=<lb>:<ub> ],...",
++        "Unbalanced quotes in %1$s.",
++        "Empty string specified for %1$s; ignored.",
++        "%1$s value is too long; ignored.",
++        "%1$s: Invalid clause in \"%2$s\".",
++        "Empty clause in %1$s.",
++        "%1$s value \"%2$s\" is invalid chunk size.",
++        "%1$s value \"%2$s\" is to large chunk size.",
++        "%1$s value \"%2$s\" is ignored.",
++        "Cannot get processor frequency, using zero KMP_ITT_PREPARE_DELAY.",
++        "%1$s must be set prior to first parallel region; ignored.",
++        "%1$s: parameter has been specified already, ignoring \"%2$s\".",
++        "%1$s: parameter invalid, ignoring \"%2$s\".",
++        "%1$s: too many integer parameters specified, ignoring \"%2$s\".",
++        "%1$s: too many integer parameters specified for logical or physical type, ignoring \"%2$d\".",
++        "%1$s: '%2$s' type does not take any integer parameters, ignoring them.",
++        "%1$s: proclist not specified with explicit affinity type, using \"none\".",
++        "%1$s: proclist specified, setting affinity type to \"explicit\".",
++        "%1$s: proclist specified without \"explicit\" affinity type, proclist ignored.",
++        "%1$s: syntax error, not using affinity.",
++        "%1$s: range error (zero stride), not using affinity.",
++        "%1$s: range error (%2$d > %3$d), not using affinity.",
++        "%1$s: range error (%2$d < %3$d & stride < 0), not using affinity.",
++        "%1$s: range error ((%2$d-%3$d)/%4$d too big), not using affinity.",
++        "%1$s: %2$s is defined. %3$s will be ignored.",
++        "%1$s: affinity not supported, using \"disabled\".",
++        "%1$s: affinity only supported for Intel(R) Architecture Processors.",
++        "%1$s: getaffinity system call not supported.",
++        "%1$s: setaffinity system call not supported.",
++        "%1$s: pthread_aff_set_np call not found.",
++        "%1$s: pthread_get_num_resources_np call not found.",
++        "%1$s: the OS kernel does not support affinity.",
++        "%1$s: pthread_get_num_resources_np returned %2$d.",
++        "%1$s: cannot determine proper affinity mask size.",
++        "%1$s=\"%2$s\": %3$s.",
++        "%1$s: extra trailing characters ignored: \"%2$s\".",
++        "%1$s: unknown method \"%2$s\".",
++        "KMP_STATS_TIMER: clock_gettime is undefined, using gettimeofday.",
++        "KMP_STATS_TIMER: \"%1$s\" needs additional parameter, e.g. 'clock_gettime,2'. Using gettimeofday.",
++        "KMP_STATS_TIMER: clock_gettime parameter \"%1$s\" is invalid, using gettimeofday.",
++        "KMP_STATS_TIMER: clock_gettime failed, using gettimeofday.",
++        "KMP_STATS_TIMER: clock function unknown (ignoring value \"%1$s\").",
++        "Unknown scheduling type detected.",
++        "Too many threads to use analytical guided scheduling - switching to iterative guided scheduling.",
++        "ittnotify: Lookup of \"%1$s\" function in \"%2$s\" library failed.",
++        "ittnotify: Loading \"%1$s\" library failed.",
++        "ittnotify: All itt notifications disabled.",
++        "ittnotify: Object state itt notifications disabled.",
++        "ittnotify: Mark itt notifications disabled.",
++        "ittnotify: Unloading \"%1$s\" library failed.",
++        "Cannot form a team with %1$d threads, using %2$d instead.",
++        "Requested number of active parallel levels \"%1$d\" is negative; ignored.",
++        "Requested number of active parallel levels \"%1$d\" exceeds supported limit; the following limit value will be used: \"%1$d\".",
++        "kmp_set_library must only be called from the top level serial thread; ignored.",
++        "Fatal system error detected.",
++        "Out of heap memory.",
++        "Clearing __KMP_REGISTERED_LIB env var failed.",
++        "Registering library with env var failed.",
++        "%1$s value \"%2$d\" will be used.",
++        "%1$s value \"%2$u\" will be used.",
++        "%1$s value \"%2$s\" will be used.",
++        "%1$s value \"%2$s\" will be used.",
++        "Mixing other barrier patterns with dist is prohibited. Using dist for all barrier patterns.",
++        "%1$s maximum value \"%2$d\" will be used.",
++        "%1$s minimum value \"%2$d\" will be used.",
++        "Memory allocation failed.",
++        "File name too long.",
++        "Lock table overflow.",
++        "Too many threads to use threadprivate directive.",
++        "%1$s: invalid mask.",
++        "Wrong definition.",
++        "Windows* OS: TLS Set Value failed.",
++        "Windows* OS: TLS out of indexes.",
++        "PDONE directive must be nested within a DO directive.",
++        "Cannot get number of available CPUs.",
++        "Assumed number of CPUs is 2.",
++        "Error initializing affinity - not using affinity.",
++        "Threads may migrate across all available OS procs (granularity setting too coarse).",
++        "Ignoring invalid OS proc ID %1$d.",
++        "No valid OS proc IDs specified - not using affinity.",
++        "%1$s - using \"flat\" OS <-> physical proc mapping.",
++        "%1$s: %2$s - using \"flat\" OS <-> physical proc mapping.",
++        "%1$s, line %2$d: %3$s - using \"flat\" OS <-> physical proc mapping.",
++        "%1$s: %2$s - exiting.",
++        "%1$s, line %2$d: %3$s - exiting.",
++        "Construct identifier invalid.",
++        "Thread identifier invalid.",
++        "runtime library not initialized.",
++        "Inconsistent THREADPRIVATE common block declarations are non-conforming and are unsupported. Either all threadprivate common blocks must be declared identically, or the largest instance of each threadprivate common block must be referenced first during the run.",
++        "Cannot set thread affinity mask.",
++        "Cannot set thread priority.",
++        "Cannot create thread.",
++        "Cannot create event.",
++        "Cannot set event.",
++        "Cannot close handle.",
++        "Unknown library type: %1$d.",
++        "Monitor did not reap properly.",
++        "Worker thread failed to join.",
++        "Cannot change thread affinity mask.",
++        "%1$s: Threads may migrate across %2$d innermost levels of machine",
++        "%1$s: decrease to %2$d threads",
++        "%1$s: increase to %2$d threads",
++        "%1$s: Internal thread %2$d bound to OS proc set %3$s",
++        "%1$s: Affinity capable, using cpuinfo file",
++        "%1$s: Affinity capable, using global cpuid info",
++        "%1$s: Affinity capable, using default \"flat\" topology",
++        "%1$s: Affinity not capable, using local cpuid info",
++        "%1$s: Affinity not capable, using cpuinfo file",
++        "%1$s: Affinity not capable, assuming \"flat\" topology",
++        "%1$s: Initial OS proc set respected: %2$s",
++        "%1$s: Initial OS proc set not respected: %2$s",
++        "%1$s: %2$d available OS procs",
++        "%1$s: Uniform topology",
++        "%1$s: Nonuniform topology",
++        "%1$s: %2$d packages x %3$d cores/pkg x %4$d threads/core (%5$d total cores)",
++        "%1$s: OS proc to physical thread map ([] => level not in map):",
++        "%1$s: OS proc <n> maps to <n>th package core 0",
++        "%1$s: OS proc %2$d maps to package %3$d [core %4$d] [thread %5$d]",
++        "%1$s: OS proc %2$d maps to [package %3$d] [core %4$d] [thread %5$d]",
++        "%1$s: OS proc %2$d maps to [package %3$d] [core %4$d] thread %5$d",
++        "%1$s: OS proc %2$d maps to [package %3$d] core %4$d [thread %5$d]",
++        "%1$s: OS proc %2$d maps to package %3$d [core %4$d] [thread %5$d]",
++        "%1$s: OS proc %2$d maps to [package %3$d] core %4$d thread %5$d",
++        "%1$s: OS proc %2$d maps to package %3$d core %4$d [thread %5$d]",
++        "%1$s: OS proc %2$d maps to package %3$d [core %4$d] thread %5$d",
++        "%1$s: OS proc %2$d maps to package %3$d core %4$d thread %5$d",
++        "%1$s: OS proc %2$d maps to %3$s",
++        "%1$s: Internal thread %2$d changed affinity mask from %3$s to %4$s",
++        "%1$s: OS proc %2$d maps to package %3$d, CPU %4$d, TPU %5$d",
++        "%1$s: OS proc %2$d maps to package %3$d, CPU %4$d",
++        "%1$s: HT enabled; %2$d packages; %3$d TPU; %4$d TPUs per package",
++        "%1$s: HT disabled; %2$d packages",
++        "Threads encountered barriers in different order. ",
++        "Function %1$s failed:",
++        "%1$s: %2$s packages x %3$d cores/pkg x %4$d threads/core (%5$d total cores)",
++        "Incompatible message catalog \"%1$s\": Version \"%2$s\" found, version \"%3$s\" expected.",
++        "%1$s: ignored because %2$s has been defined",
++        "%1$s: overrides %3$s specified before",
++        "%1$s: Tiles are only supported if KMP_TOPOLOGY_METHOD=hwloc, using granularity=package instead",
++        "%1$s: Tiles requested but were not detected on this HW, using granularity=package instead",
++        "%1$s: %2$d packages x %3$d tiles/pkg x %4$d cores/tile x %5$d threads/core (%6$d total cores)",
++        "%1$s: %2$d packages x %3$d nodes/pkg x %4$d cores/node x %5$d threads/core (%6$d total cores)",
++        "%1$s: %2$d packages x %3$d nodes/pkg x %4$d tiles/node x %5$d cores/tile x %6$d threads/core (%7$d total cores)",
++        "OMPT: Cannot determine workshare type; using the default (loop) instead. This issue is fixed in an up-to-date compiler.",
++        "Allocator %1$s is not available, will use default allocator.",
++        "%1$s: %2$s (%3$d total cores)",
++        "%1$s: granularity setting: %2$s does not exist in topology.  Using granularity=%3$s instead.",
++        "%1$s: hybrid core type detected: %2$d %3$s cores.",
++        "%1$s:   %2$d with core efficiency %3$d.",
++        "%1$s must be bound to a work-sharing or work-queuing construct with an \"ordered\" clause",
++        "Detected end of %1$s without first executing a corresponding beginning.",
++        "Iteration range too large in %1$s.",
++        "%1$s must not have a loop increment that evaluates to zero.",
++        "Expected end of %1$s; %2$s, however, has most recently begun execution.",
++        "%1$s is incorrectly nested within %2$s",
++        "%1$s cannot be executed multiple times during execution of one parallel iteration/section of %2$s",
++        "%1$s is incorrectly nested within %2$s of the same name",
++        "%1$s is incorrectly nested within %2$s that does not have an \"ordered\" clause",
++        "%1$s is incorrectly nested within %2$s but not within any of its \"task\" constructs",
++        "One thread at %1$s while another thread is at %2$s.",
++        "Cannot connect to %1$s",
++        "Cannot connect to %1$s - Using %2$s",
++        "%1$s does not support %2$s. Continuing without using %2$s.",
++        "%1$s does not support %2$s for %3$s. Continuing without using %2$s.",
++        "Static %1$s does not support %2$s. Continuing without using %2$s.",
++        "KMP_DYNAMIC_MODE=irml cannot be used with KMP_USE_IRML=0",
++        "ittnotify: Unknown group \"%2$s\" specified in environment variable \"%1$s\".",
++        "ittnotify: Environment variable \"%1$s\" too long: Actual lengths is %2$lu, max allowed length is %3$lu.",
++        "%1$s: Affinity capable, using global cpuid leaf 11 info",
++        "%1$s: Affinity not capable, using local cpuid leaf 11 info",
++        "%1$s: %2$s.",
++        "%1$s: %2$s - %3$s.",
++        "%1$s: OS proc to physical thread map:",
++        "%1$s: using \"flat\" OS <-> physical proc mapping.",
++        "%1$s: parsing %2$s.",
++        "%1$s - exiting.",
++        "Incompatible %1$s library with version %2$s found.",
++        "ittnotify: Function %1$s failed:",
++        "ittnotify: Error #%1$d.",
++        "%1$s must be set prior to first parallel region or certain API calls; ignored.",
++        "Lock initialized at %1$s(%2$d) was not destroyed",
++        "Cannot determine machine load balance - Using %1$s",
++        "%1$s: Affinity not capable, using pthread info",
++        "%1$s: Affinity capable, using pthread info",
++        "Loading \"%1$s\" library failed:",
++        "Lookup of \"%1$s\" function failed:",
++        "Buffer too small.",
++        "Error #%1$d.",
++        "%1$s: Invalid symbols found. Check the value \"%2$s\".",
++        "%1$s: Spaces between digits are not allowed \"%2$s\".",
++        "%1$s: %2$s - parsing %3$s.",
++        "%1$s cannot be specified via kmp_set_defaults() on this machine because it has more than one processor group.",
++        "Cannot use affinity type \"%1$s\" with multiple Windows* OS processor groups, using \"%2$s\".",
++        "Cannot use affinity granularity \"%1$s\" with multiple Windows* OS processor groups, using \"%2$s\".",
++        "%1$s: Mapping Windows* OS processor group <i> proc <j> to OS proc 64*<i>+<j>.",
++        "%1$s: OS proc %2$d maps to Windows* OS processor group %3$d proc %4$d",
++        "%1$s: Affinity balanced is not available.",
++        "%1$s: granularity=core will be used.",
++        "%1$s must be set prior to first OMP lock call or critical section; ignored.",
++        "futex system call not supported; %1$s=%2$s ignored.",
++        "%1$s: granularity=%2$s will be used.",
++        "%1$s: invalid value \"%2$s\", valid format is \"N<item>[@N][,...][,Nt] (<item> can be S, N, L2, C, T  for Socket, NUMA Node, L2 Cache, Core, Thread)\".",
++        "KMP_HW_SUBSET ignored: unsupported architecture.",
++        "KMP_HW_SUBSET ignored: too many cores requested.",
++        "%1$s: syntax error, using %2$s.",
++        "%1$s: Adaptive locks are not supported; using queuing.",
++        "%1$s: Invalid symbols found. Check the value \"%2$s\".",
++        "%1$s: Spaces between digits are not allowed \"%2$s\".",
++        "%1$s: pid %2$d tid %3$d thread %4$d bound to OS proc set %5$s",
++        "%1$s error: parallel loop increment and condition are inconsistent.",
++        "libgomp cancellation is not currently supported.",
++        "KMP_HW_SUBSET ignored: non-uniform topology.",
++        "KMP_HW_SUBSET ignored: only three-level topology is supported.",
++        "%1$s: granularity=%2$s is not supported with KMP_TOPOLOGY_METHOD=group. Using \"granularity=fine\".",
++        "%1$s: granularity=group is not supported with KMP_AFFINITY=%2$s. Using \"granularity=core\".",
++        "KMP_HW_SUBSET ignored: too many sockets requested.",
++        "KMP_HW_SUBSET \"o\" offset designator deprecated, please use @ prefix for offset value.",
++        "%1$s: Affinity capable, using hwloc.",
++        "%1$s: Ignoring hwloc mechanism.",
++        "%1$s: Hwloc failed in %2$s. Relying on internal affinity mechanisms.",
++        "%1$s must be set prior to OpenMP runtime library initialization; ignored.",
++        "You have enabled the use of umonitor/umwait. If the CPU doesn't have that enabled you'll get an illegal instruction exception.",
++        "%1$s variable deprecated, please use %2$s instead.",
++        "KMP_FORCE_REDUCTION: %1$s method is not supported; using critical.",
++        "KMP_HW_SUBSET ignored: unsupported item requested for non-HWLOC topology method (KMP_TOPOLOGY_METHOD)",
++        "KMP_HW_SUBSET ignored: too many NUMA Nodes requested.",
++        "KMP_HW_SUBSET ignored: too many L2 Caches requested.",
++        "KMP_HW_SUBSET ignored: too many Procs requested.",
++        "Hierarchy ignored: unsupported level: %1$s.",
++        "OMP: pid %1$s tid %2$s thread %3$s bound to OS proc set {%4$s}",
++        "%1$s routine deprecated, please use %2$s instead.",
++        "libgomp compatibility layer does not support OpenMP feature: %1$s",
++        "KMP_HW_SUBSET ignored: too many Dies requested.",
++        "%1$s: Affinity capable, using global cpuid leaf %2$d info",
++        "%1$s: Affinity not capable, using local cpuid leaf %2$d info",
++        "%1$s: Affinity not capable, using hwloc.",
++        "%1$s: Encountered user-directed error: %2$s.",
++        "%1$s: Encountered user-directed warning: %2$s.",
++        "Failed to create teams between lower bound (%1$d) and upper bound (%2$d).",
++        "KMP_HW_SUBSET ignored: %1$s: too many requested.",
++        "KMP_HW_SUBSET ignored: %1$s: level not detected in machine topology.",
++        "KMP_HW_SUBSET ignored: %1$s, %2$s: layers are equivalent, please only specify one.",
++        "KMP_HW_SUBSET ignored: %1$s layer should come after %2$s.",
++        "%1$s: topology layer \"%2$s\" is equivalent to \"%3$s\".",
++        "%1$s: granularity=%2$s is too coarse, setting granularity=group.",
++        "%1$s: \"%2$s\" value is deprecated. Please use \"%3$s\" instead.",
++        "num_teams value must be positive, it is %1$d, using %2$d instead.",
++        "KMP_HW_SUBSET ignored: %1$s, %2$s: attributes are ambiguous, please only specify one.",
++        "KMP_HW_SUBSET ignored: %1$s: attribute specified more than once.",
++        "KMP_HW_SUBSET ignored: %1$s: attribute value %2$s is invalid.",
++        "KMP_HW_SUBSET ignored: all hardware resources would be filtered, please reduce the filter.",
++        "KMP_HW_SUBSET ignored: Too many attributes specified. This machine is not a hybrid architecutre.",
++        "KMP_HW_SUBSET: ignoring %1$s attribute. This machine is not a hybrid architecutre.",
++        NULL
++    };
++
++static char const *
++__kmp_i18n_default_hints[] =
++    {
++        NULL,
++        "Please submit a bug report with this message, compile and run commands used, and machine configuration info including native compiler and operating system versions. Faster response will be obtained by including all program sources. For information on submitting this issue, please see https://bugs.llvm.org/.",
++        "Check NLSPATH environment variable, its value is \"%1$s\".",
++        "Please try changing the shell stack limit or adjusting the OMP_STACKSIZE environment variable.",
++        "Consider unsetting KMP_DEVICE_THREAD_LIMIT (KMP_ALL_THREADS), KMP_TEAMS_THREAD_LIMIT, and OMP_THREAD_LIMIT (if any are set).",
++        "Consider setting KMP_ALL_THREADPRIVATE to a value larger than %1$d.",
++        "This could also be due to a system-related limit on the number of threads.",
++        "This means that multiple copies of the OpenMP runtime have been linked into the program. That is dangerous, since it can degrade performance or cause incorrect results. The best thing to do is to ensure that only a single OpenMP runtime is linked into the process, e.g. by avoiding static linking of the OpenMP runtime in any library. As an unsafe, unsupported, undocumented workaround you can set the environment variable KMP_DUPLICATE_LIB_OK=TRUE to allow the program to continue to execute, but that may cause crashes or silently produce incorrect results. For more information, please see http://openmp.llvm.org/",
++        "This name is specified in environment variable KMP_CPUINFO_FILE.",
++        "Seems application required too much memory.",
++        "Use \"0\", \"FALSE\". \".F.\", \"off\", \"no\" as false values, \"1\", \"TRUE\", \".T.\", \"on\", \"yes\" as true values.",
++        "Perhaps too many threads.",
++        "Decrease priority of application. This will allow the monitor thread run at higher priority than other threads.",
++        "Try changing KMP_MONITOR_STACKSIZE or the shell stack limit.",
++        "Try changing OMP_STACKSIZE and/or the shell stack limit.",
++        "Try increasing OMP_STACKSIZE or the shell stack limit.",
++        "Try decreasing OMP_STACKSIZE.",
++        "Try decreasing the value of OMP_NUM_THREADS.",
++        "Try increasing KMP_MONITOR_STACKSIZE.",
++        "Try decreasing KMP_MONITOR_STACKSIZE.",
++        "Try decreasing the number of threads in use simultaneously.",
++        "Will use default schedule type (%1$s).",
++        "It could be a result of using an older OMP library with a newer compiler or memory corruption. You may check the proper OMP library is linked to the application.",
++        "Check %1$s environment variable, its value is \"%2$s\".",
++        "You may want to use an %1$s library that supports %2$s interface with version %3$s.",
++        "You may want to use an %1$s library with version %2$s.",
++        "System error #193 is \"Bad format of EXE or DLL file\". Usually it means the file is found, but it is corrupted or a file for another architecture. Check whether \"%1$s\" is a file for %2$s architecture.",
++        "System-related limit on the number of threads.",
++        "Try setting new bounds (preferably less than or equal to %1$d) for num_teams clause.",
++        "Valid values are from %1$d to %2$d.",
++        NULL
++    };
++
++struct kmp_i18n_section {
++    int           size;
++    char const ** str;
++}; // struct kmp_i18n_section
++typedef struct kmp_i18n_section  kmp_i18n_section_t;
++
++static kmp_i18n_section_t
++__kmp_i18n_sections[] =
++    {
++        { 0, NULL },
++        { 5, __kmp_i18n_default_meta },
++        { 79, __kmp_i18n_default_strings },
++        { 6, __kmp_i18n_default_formats },
++        { 298, __kmp_i18n_default_messages },
++        { 29, __kmp_i18n_default_hints },
++        { 0, NULL }
++    };
++
++struct kmp_i18n_table {
++    int                   size;
++    kmp_i18n_section_t *  sect;
++}; // struct kmp_i18n_table
++typedef struct kmp_i18n_table  kmp_i18n_table_t;
++
++static kmp_i18n_table_t __kmp_i18n_default_table =
++    {
++        5,
++        __kmp_i18n_sections
++    };
++
++// end of file //
+diff --git a/utils/bazel/llvm-project-overlay/openmp/runtime/src/kmp_i18n_id.inc b/utils/bazel/llvm-project-overlay/openmp/runtime/src/kmp_i18n_id.inc
+new file mode 100644
+index 000000000000..c6f8ded667dc
+--- /dev/null
++++ b/utils/bazel/llvm-project-overlay/openmp/runtime/src/kmp_i18n_id.inc
+@@ -0,0 +1,453 @@
++// Do not edit this file! //
++// The file was generated from en_US.txt by message-converter.pl on Sat Dec 10 01:22:50 2022. //
++
++enum kmp_i18n_id {
++
++    // A special id for absence of message.
++    kmp_i18n_null = 0,
++
++    // Set #1, meta.
++    kmp_i18n_prp_first = 65536,
++    kmp_i18n_prp_Language,
++    kmp_i18n_prp_Country,
++    kmp_i18n_prp_LangId,
++    kmp_i18n_prp_Version,
++    kmp_i18n_prp_Revision,
++    kmp_i18n_prp_last,
++
++    // Set #2, strings.
++    kmp_i18n_str_first = 131072,
++    kmp_i18n_str_Error,
++    kmp_i18n_str_UnknownFile,
++    kmp_i18n_str_NotANumber,
++    kmp_i18n_str_BadUnit,
++    kmp_i18n_str_IllegalCharacters,
++    kmp_i18n_str_ValueTooLarge,
++    kmp_i18n_str_ValueTooSmall,
++    kmp_i18n_str_NotMultiple4K,
++    kmp_i18n_str_UnknownTopology,
++    kmp_i18n_str_CantOpenCpuinfo,
++    kmp_i18n_str_ProcCpuinfo,
++    kmp_i18n_str_NoProcRecords,
++    kmp_i18n_str_TooManyProcRecords,
++    kmp_i18n_str_CantRewindCpuinfo,
++    kmp_i18n_str_LongLineCpuinfo,
++    kmp_i18n_str_TooManyEntries,
++    kmp_i18n_str_MissingProcField,
++    kmp_i18n_str_MissingPhysicalIDField,
++    kmp_i18n_str_MissingValCpuinfo,
++    kmp_i18n_str_DuplicateFieldCpuinfo,
++    kmp_i18n_str_PhysicalIDsNotUnique,
++    kmp_i18n_str_ApicNotPresent,
++    kmp_i18n_str_InvalidCpuidInfo,
++    kmp_i18n_str_OBSOLETE1,
++    kmp_i18n_str_InconsistentCpuidInfo,
++    kmp_i18n_str_OutOfHeapMemory,
++    kmp_i18n_str_MemoryAllocFailed,
++    kmp_i18n_str_Core,
++    kmp_i18n_str_Thread,
++    kmp_i18n_str_Package,
++    kmp_i18n_str_Node,
++    kmp_i18n_str_OBSOLETE2,
++    kmp_i18n_str_DecodingLegacyAPIC,
++    kmp_i18n_str_OBSOLETE3,
++    kmp_i18n_str_NotDefined,
++    kmp_i18n_str_EffectiveSettings,
++    kmp_i18n_str_UserSettings,
++    kmp_i18n_str_StorageMapWarning,
++    kmp_i18n_str_OBSOLETE4,
++    kmp_i18n_str_OBSOLETE5,
++    kmp_i18n_str_OBSOLETE6,
++    kmp_i18n_str_OBSOLETE7,
++    kmp_i18n_str_OBSOLETE8,
++    kmp_i18n_str_Decodingx2APIC,
++    kmp_i18n_str_NoLeaf11Support,
++    kmp_i18n_str_NoLeaf4Support,
++    kmp_i18n_str_ThreadIDsNotUnique,
++    kmp_i18n_str_UsingPthread,
++    kmp_i18n_str_LegacyApicIDsNotUnique,
++    kmp_i18n_str_x2ApicIDsNotUnique,
++    kmp_i18n_str_DisplayEnvBegin,
++    kmp_i18n_str_DisplayEnvEnd,
++    kmp_i18n_str_Device,
++    kmp_i18n_str_Host,
++    kmp_i18n_str_Tile,
++    kmp_i18n_str_Tiles,
++    kmp_i18n_str_Threads,
++    kmp_i18n_str_Cores,
++    kmp_i18n_str_Socket,
++    kmp_i18n_str_Sockets,
++    kmp_i18n_str_Die,
++    kmp_i18n_str_Dice,
++    kmp_i18n_str_Module,
++    kmp_i18n_str_Modules,
++    kmp_i18n_str_L1Cache,
++    kmp_i18n_str_L1Caches,
++    kmp_i18n_str_L2Cache,
++    kmp_i18n_str_L2Caches,
++    kmp_i18n_str_L3Cache,
++    kmp_i18n_str_L3Caches,
++    kmp_i18n_str_NumaDomain,
++    kmp_i18n_str_NumaDomains,
++    kmp_i18n_str_ProcGroup,
++    kmp_i18n_str_ProcGroups,
++    kmp_i18n_str_Unknown,
++    kmp_i18n_str_NoLeaf31Support,
++    kmp_i18n_str_HwlocFailed,
++    kmp_i18n_str_LLCache,
++    kmp_i18n_str_LLCaches,
++    kmp_i18n_str_last,
++
++    // Set #3, formats.
++    kmp_i18n_fmt_first = 196608,
++    kmp_i18n_fmt_Info,
++    kmp_i18n_fmt_Warning,
++    kmp_i18n_fmt_Fatal,
++    kmp_i18n_fmt_SysErr,
++    kmp_i18n_fmt_Hint,
++    kmp_i18n_fmt_Pragma,
++    kmp_i18n_fmt_last,
++
++    // Set #4, messages.
++    kmp_i18n_msg_first = 262144,
++    kmp_i18n_msg_LibraryIsSerial,
++    kmp_i18n_msg_CantOpenMessageCatalog,
++    kmp_i18n_msg_WillUseDefaultMessages,
++    kmp_i18n_msg_LockIsUninitialized,
++    kmp_i18n_msg_LockSimpleUsedAsNestable,
++    kmp_i18n_msg_LockNestableUsedAsSimple,
++    kmp_i18n_msg_LockIsAlreadyOwned,
++    kmp_i18n_msg_LockStillOwned,
++    kmp_i18n_msg_LockUnsettingFree,
++    kmp_i18n_msg_LockUnsettingSetByAnother,
++    kmp_i18n_msg_StackOverflow,
++    kmp_i18n_msg_StackOverlap,
++    kmp_i18n_msg_AssertionFailure,
++    kmp_i18n_msg_CantRegisterNewThread,
++    kmp_i18n_msg_DuplicateLibrary,
++    kmp_i18n_msg_CantOpenFileForReading,
++    kmp_i18n_msg_CantGetEnvVar,
++    kmp_i18n_msg_CantSetEnvVar,
++    kmp_i18n_msg_CantGetEnvironment,
++    kmp_i18n_msg_BadBoolValue,
++    kmp_i18n_msg_SSPNotBuiltIn,
++    kmp_i18n_msg_SPPSotfTerminateFailed,
++    kmp_i18n_msg_BufferOverflow,
++    kmp_i18n_msg_RealTimeSchedNotSupported,
++    kmp_i18n_msg_RunningAtMaxPriority,
++    kmp_i18n_msg_CantChangeMonitorPriority,
++    kmp_i18n_msg_MonitorWillStarve,
++    kmp_i18n_msg_CantSetMonitorStackSize,
++    kmp_i18n_msg_CantSetWorkerStackSize,
++    kmp_i18n_msg_CantInitThreadAttrs,
++    kmp_i18n_msg_CantDestroyThreadAttrs,
++    kmp_i18n_msg_CantSetWorkerState,
++    kmp_i18n_msg_CantSetMonitorState,
++    kmp_i18n_msg_NoResourcesForWorkerThread,
++    kmp_i18n_msg_NoResourcesForMonitorThread,
++    kmp_i18n_msg_CantTerminateWorkerThread,
++    kmp_i18n_msg_ScheduleKindOutOfRange,
++    kmp_i18n_msg_UnknownSchedulingType,
++    kmp_i18n_msg_InvalidValue,
++    kmp_i18n_msg_SmallValue,
++    kmp_i18n_msg_LargeValue,
++    kmp_i18n_msg_StgInvalidValue,
++    kmp_i18n_msg_BarrReleaseValueInvalid,
++    kmp_i18n_msg_BarrGatherValueInvalid,
++    kmp_i18n_msg_OBSOLETE9,
++    kmp_i18n_msg_ParRangeSyntax,
++    kmp_i18n_msg_UnbalancedQuotes,
++    kmp_i18n_msg_EmptyString,
++    kmp_i18n_msg_LongValue,
++    kmp_i18n_msg_InvalidClause,
++    kmp_i18n_msg_EmptyClause,
++    kmp_i18n_msg_InvalidChunk,
++    kmp_i18n_msg_LargeChunk,
++    kmp_i18n_msg_IgnoreChunk,
++    kmp_i18n_msg_CantGetProcFreq,
++    kmp_i18n_msg_EnvParallelWarn,
++    kmp_i18n_msg_AffParamDefined,
++    kmp_i18n_msg_AffInvalidParam,
++    kmp_i18n_msg_AffManyParams,
++    kmp_i18n_msg_AffManyParamsForLogic,
++    kmp_i18n_msg_AffNoParam,
++    kmp_i18n_msg_AffNoProcList,
++    kmp_i18n_msg_AffProcListNoType,
++    kmp_i18n_msg_AffProcListNotExplicit,
++    kmp_i18n_msg_AffSyntaxError,
++    kmp_i18n_msg_AffZeroStride,
++    kmp_i18n_msg_AffStartGreaterEnd,
++    kmp_i18n_msg_AffStrideLessZero,
++    kmp_i18n_msg_AffRangeTooBig,
++    kmp_i18n_msg_OBSOLETE10,
++    kmp_i18n_msg_AffNotSupported,
++    kmp_i18n_msg_OBSOLETE11,
++    kmp_i18n_msg_GetAffSysCallNotSupported,
++    kmp_i18n_msg_SetAffSysCallNotSupported,
++    kmp_i18n_msg_OBSOLETE12,
++    kmp_i18n_msg_OBSOLETE13,
++    kmp_i18n_msg_OBSOLETE14,
++    kmp_i18n_msg_OBSOLETE15,
++    kmp_i18n_msg_AffCantGetMaskSize,
++    kmp_i18n_msg_ParseSizeIntWarn,
++    kmp_i18n_msg_ParseExtraCharsWarn,
++    kmp_i18n_msg_UnknownForceReduction,
++    kmp_i18n_msg_TimerUseGettimeofday,
++    kmp_i18n_msg_TimerNeedMoreParam,
++    kmp_i18n_msg_TimerInvalidParam,
++    kmp_i18n_msg_TimerGettimeFailed,
++    kmp_i18n_msg_TimerUnknownFunction,
++    kmp_i18n_msg_UnknownSchedTypeDetected,
++    kmp_i18n_msg_DispatchManyThreads,
++    kmp_i18n_msg_IttLookupFailed,
++    kmp_i18n_msg_IttLoadLibFailed,
++    kmp_i18n_msg_IttAllNotifDisabled,
++    kmp_i18n_msg_IttObjNotifDisabled,
++    kmp_i18n_msg_IttMarkNotifDisabled,
++    kmp_i18n_msg_IttUnloadLibFailed,
++    kmp_i18n_msg_CantFormThrTeam,
++    kmp_i18n_msg_ActiveLevelsNegative,
++    kmp_i18n_msg_ActiveLevelsExceedLimit,
++    kmp_i18n_msg_SetLibraryIncorrectCall,
++    kmp_i18n_msg_FatalSysError,
++    kmp_i18n_msg_OutOfHeapMemory,
++    kmp_i18n_msg_OBSOLETE16,
++    kmp_i18n_msg_OBSOLETE17,
++    kmp_i18n_msg_Using_int_Value,
++    kmp_i18n_msg_Using_uint_Value,
++    kmp_i18n_msg_Using_uint64_Value,
++    kmp_i18n_msg_Using_str_Value,
++    kmp_i18n_msg_BarrierPatternOverride,
++    kmp_i18n_msg_MaxValueUsing,
++    kmp_i18n_msg_MinValueUsing,
++    kmp_i18n_msg_MemoryAllocFailed,
++    kmp_i18n_msg_FileNameTooLong,
++    kmp_i18n_msg_OBSOLETE18,
++    kmp_i18n_msg_ManyThreadsForTPDirective,
++    kmp_i18n_msg_AffinityInvalidMask,
++    kmp_i18n_msg_WrongDefinition,
++    kmp_i18n_msg_TLSSetValueFailed,
++    kmp_i18n_msg_TLSOutOfIndexes,
++    kmp_i18n_msg_OBSOLETE19,
++    kmp_i18n_msg_CantGetNumAvailCPU,
++    kmp_i18n_msg_AssumedNumCPU,
++    kmp_i18n_msg_ErrorInitializeAffinity,
++    kmp_i18n_msg_AffThreadsMayMigrate,
++    kmp_i18n_msg_AffIgnoreInvalidProcID,
++    kmp_i18n_msg_AffNoValidProcID,
++    kmp_i18n_msg_UsingFlatOS,
++    kmp_i18n_msg_UsingFlatOSFile,
++    kmp_i18n_msg_UsingFlatOSFileLine,
++    kmp_i18n_msg_FileMsgExiting,
++    kmp_i18n_msg_FileLineMsgExiting,
++    kmp_i18n_msg_ConstructIdentInvalid,
++    kmp_i18n_msg_ThreadIdentInvalid,
++    kmp_i18n_msg_RTLNotInitialized,
++    kmp_i18n_msg_TPCommonBlocksInconsist,
++    kmp_i18n_msg_CantSetThreadAffMask,
++    kmp_i18n_msg_CantSetThreadPriority,
++    kmp_i18n_msg_CantCreateThread,
++    kmp_i18n_msg_CantCreateEvent,
++    kmp_i18n_msg_CantSetEvent,
++    kmp_i18n_msg_CantCloseHandle,
++    kmp_i18n_msg_UnknownLibraryType,
++    kmp_i18n_msg_ReapMonitorError,
++    kmp_i18n_msg_ReapWorkerError,
++    kmp_i18n_msg_ChangeThreadAffMaskError,
++    kmp_i18n_msg_ThreadsMigrate,
++    kmp_i18n_msg_DecreaseToThreads,
++    kmp_i18n_msg_IncreaseToThreads,
++    kmp_i18n_msg_OBSOLETE20,
++    kmp_i18n_msg_AffCapableUseCpuinfo,
++    kmp_i18n_msg_AffUseGlobCpuid,
++    kmp_i18n_msg_AffCapableUseFlat,
++    kmp_i18n_msg_AffNotCapableUseLocCpuid,
++    kmp_i18n_msg_AffNotCapableUseCpuinfo,
++    kmp_i18n_msg_AffFlatTopology,
++    kmp_i18n_msg_InitOSProcSetRespect,
++    kmp_i18n_msg_InitOSProcSetNotRespect,
++    kmp_i18n_msg_AvailableOSProc,
++    kmp_i18n_msg_Uniform,
++    kmp_i18n_msg_NonUniform,
++    kmp_i18n_msg_Topology,
++    kmp_i18n_msg_OBSOLETE21,
++    kmp_i18n_msg_OSProcToPackage,
++    kmp_i18n_msg_OBSOLETE22,
++    kmp_i18n_msg_OBSOLETE23,
++    kmp_i18n_msg_OBSOLETE24,
++    kmp_i18n_msg_OBSOLETE25,
++    kmp_i18n_msg_OBSOLETE26,
++    kmp_i18n_msg_OBSOLETE27,
++    kmp_i18n_msg_OBSOLETE28,
++    kmp_i18n_msg_OBSOLETE29,
++    kmp_i18n_msg_OBSOLETE30,
++    kmp_i18n_msg_OSProcMapToPack,
++    kmp_i18n_msg_OBSOLETE31,
++    kmp_i18n_msg_OBSOLETE32,
++    kmp_i18n_msg_OBSOLETE33,
++    kmp_i18n_msg_OBSOLETE34,
++    kmp_i18n_msg_OBSOLETE35,
++    kmp_i18n_msg_BarriersInDifferentOrder,
++    kmp_i18n_msg_FunctionError,
++    kmp_i18n_msg_TopologyExtra,
++    kmp_i18n_msg_WrongMessageCatalog,
++    kmp_i18n_msg_StgIgnored,
++    kmp_i18n_msg_OBSOLETE36,
++    kmp_i18n_msg_AffTilesNoHWLOC,
++    kmp_i18n_msg_AffTilesNoTiles,
++    kmp_i18n_msg_TopologyExtraTile,
++    kmp_i18n_msg_TopologyExtraNode,
++    kmp_i18n_msg_TopologyExtraNoTi,
++    kmp_i18n_msg_OmptOutdatedWorkshare,
++    kmp_i18n_msg_OmpNoAllocator,
++    kmp_i18n_msg_TopologyGeneric,
++    kmp_i18n_msg_AffGranularityBad,
++    kmp_i18n_msg_TopologyHybrid,
++    kmp_i18n_msg_TopologyHybridCoreEff,
++    kmp_i18n_msg_CnsBoundToWorksharing,
++    kmp_i18n_msg_CnsDetectedEnd,
++    kmp_i18n_msg_CnsIterationRangeTooLarge,
++    kmp_i18n_msg_CnsLoopIncrZeroProhibited,
++    kmp_i18n_msg_CnsExpectedEnd,
++    kmp_i18n_msg_CnsInvalidNesting,
++    kmp_i18n_msg_CnsMultipleNesting,
++    kmp_i18n_msg_CnsNestingSameName,
++    kmp_i18n_msg_CnsNoOrderedClause,
++    kmp_i18n_msg_CnsNotInTaskConstruct,
++    kmp_i18n_msg_CnsThreadsAtBarrier,
++    kmp_i18n_msg_CantConnect,
++    kmp_i18n_msg_CantConnectUsing,
++    kmp_i18n_msg_LibNotSupport,
++    kmp_i18n_msg_LibNotSupportFor,
++    kmp_i18n_msg_StaticLibNotSupport,
++    kmp_i18n_msg_OBSOLETE37,
++    kmp_i18n_msg_IttUnknownGroup,
++    kmp_i18n_msg_IttEnvVarTooLong,
++    kmp_i18n_msg_OBSOLETE38,
++    kmp_i18n_msg_OBSOLETE39,
++    kmp_i18n_msg_AffInfoStr,
++    kmp_i18n_msg_AffInfoStrStr,
++    kmp_i18n_msg_OSProcToPhysicalThreadMap,
++    kmp_i18n_msg_AffUsingFlatOS,
++    kmp_i18n_msg_AffParseFilename,
++    kmp_i18n_msg_MsgExiting,
++    kmp_i18n_msg_IncompatibleLibrary,
++    kmp_i18n_msg_IttFunctionError,
++    kmp_i18n_msg_IttUnknownError,
++    kmp_i18n_msg_EnvMiddleWarn,
++    kmp_i18n_msg_CnsLockNotDestroyed,
++    kmp_i18n_msg_CantLoadBalUsing,
++    kmp_i18n_msg_AffNotCapableUsePthread,
++    kmp_i18n_msg_AffUsePthread,
++    kmp_i18n_msg_OBSOLETE40,
++    kmp_i18n_msg_OBSOLETE41,
++    kmp_i18n_msg_OBSOLETE42,
++    kmp_i18n_msg_OBSOLETE43,
++    kmp_i18n_msg_NthSyntaxError,
++    kmp_i18n_msg_NthSpacesNotAllowed,
++    kmp_i18n_msg_AffStrParseFilename,
++    kmp_i18n_msg_OBSOLETE44,
++    kmp_i18n_msg_AffTypeCantUseMultGroups,
++    kmp_i18n_msg_AffGranCantUseMultGroups,
++    kmp_i18n_msg_AffWindowsProcGroupMap,
++    kmp_i18n_msg_AffOSProcToGroup,
++    kmp_i18n_msg_AffBalancedNotAvail,
++    kmp_i18n_msg_OBSOLETE45,
++    kmp_i18n_msg_EnvLockWarn,
++    kmp_i18n_msg_FutexNotSupported,
++    kmp_i18n_msg_AffGranUsing,
++    kmp_i18n_msg_AffHWSubsetInvalid,
++    kmp_i18n_msg_AffHWSubsetUnsupported,
++    kmp_i18n_msg_AffHWSubsetManyCores,
++    kmp_i18n_msg_SyntaxErrorUsing,
++    kmp_i18n_msg_AdaptiveNotSupported,
++    kmp_i18n_msg_EnvSyntaxError,
++    kmp_i18n_msg_EnvSpacesNotAllowed,
++    kmp_i18n_msg_BoundToOSProcSet,
++    kmp_i18n_msg_CnsLoopIncrIllegal,
++    kmp_i18n_msg_NoGompCancellation,
++    kmp_i18n_msg_AffHWSubsetNonUniform,
++    kmp_i18n_msg_AffHWSubsetNonThreeLevel,
++    kmp_i18n_msg_AffGranTopGroup,
++    kmp_i18n_msg_AffGranGroupType,
++    kmp_i18n_msg_AffHWSubsetManySockets,
++    kmp_i18n_msg_AffHWSubsetDeprecated,
++    kmp_i18n_msg_AffUsingHwloc,
++    kmp_i18n_msg_AffIgnoringHwloc,
++    kmp_i18n_msg_AffHwlocErrorOccurred,
++    kmp_i18n_msg_EnvSerialWarn,
++    kmp_i18n_msg_EnvMwaitWarn,
++    kmp_i18n_msg_EnvVarDeprecated,
++    kmp_i18n_msg_RedMethodNotSupported,
++    kmp_i18n_msg_AffHWSubsetNoHWLOC,
++    kmp_i18n_msg_AffHWSubsetManyNodes,
++    kmp_i18n_msg_AffHWSubsetManyTiles,
++    kmp_i18n_msg_AffHWSubsetManyProcs,
++    kmp_i18n_msg_HierSchedInvalid,
++    kmp_i18n_msg_AffFormatDefault,
++    kmp_i18n_msg_APIDeprecated,
++    kmp_i18n_msg_GompFeatureNotSupported,
++    kmp_i18n_msg_AffHWSubsetManyDies,
++    kmp_i18n_msg_AffUseGlobCpuidL,
++    kmp_i18n_msg_AffNotCapableUseLocCpuidL,
++    kmp_i18n_msg_AffNotUsingHwloc,
++    kmp_i18n_msg_UserDirectedError,
++    kmp_i18n_msg_UserDirectedWarning,
++    kmp_i18n_msg_FailedToCreateTeam,
++    kmp_i18n_msg_AffHWSubsetManyGeneric,
++    kmp_i18n_msg_AffHWSubsetNotExistGeneric,
++    kmp_i18n_msg_AffHWSubsetEqvLayers,
++    kmp_i18n_msg_AffHWSubsetOutOfOrder,
++    kmp_i18n_msg_AffEqualTopologyTypes,
++    kmp_i18n_msg_AffGranTooCoarseProcGroup,
++    kmp_i18n_msg_StgDeprecatedValue,
++    kmp_i18n_msg_NumTeamsNotPositive,
++    kmp_i18n_msg_AffHWSubsetIncompat,
++    kmp_i18n_msg_AffHWSubsetAttrRepeat,
++    kmp_i18n_msg_AffHWSubsetAttrInvalid,
++    kmp_i18n_msg_AffHWSubsetAllFiltered,
++    kmp_i18n_msg_AffHWSubsetAttrsNonHybrid,
++    kmp_i18n_msg_AffHWSubsetIgnoringAttr,
++    kmp_i18n_msg_last,
++
++    // Set #5, hints.
++    kmp_i18n_hnt_first = 327680,
++    kmp_i18n_hnt_SubmitBugReport,
++    kmp_i18n_hnt_OBSOLETE46,
++    kmp_i18n_hnt_ChangeStackLimit,
++    kmp_i18n_hnt_Unset_ALL_THREADS,
++    kmp_i18n_hnt_Set_ALL_THREADPRIVATE,
++    kmp_i18n_hnt_PossibleSystemLimitOnThreads,
++    kmp_i18n_hnt_DuplicateLibrary,
++    kmp_i18n_hnt_NameComesFrom_CPUINFO_FILE,
++    kmp_i18n_hnt_NotEnoughMemory,
++    kmp_i18n_hnt_ValidBoolValues,
++    kmp_i18n_hnt_BufferOverflow,
++    kmp_i18n_hnt_RunningAtMaxPriority,
++    kmp_i18n_hnt_ChangeMonitorStackSize,
++    kmp_i18n_hnt_ChangeWorkerStackSize,
++    kmp_i18n_hnt_IncreaseWorkerStackSize,
++    kmp_i18n_hnt_DecreaseWorkerStackSize,
++    kmp_i18n_hnt_Decrease_NUM_THREADS,
++    kmp_i18n_hnt_IncreaseMonitorStackSize,
++    kmp_i18n_hnt_DecreaseMonitorStackSize,
++    kmp_i18n_hnt_DecreaseNumberOfThreadsInUse,
++    kmp_i18n_hnt_DefaultScheduleKindUsed,
++    kmp_i18n_hnt_GetNewerLibrary,
++    kmp_i18n_hnt_CheckEnvVar,
++    kmp_i18n_hnt_OBSOLETE47,
++    kmp_i18n_hnt_OBSOLETE48,
++    kmp_i18n_hnt_BadExeFormat,
++    kmp_i18n_hnt_SystemLimitOnThreads,
++    kmp_i18n_hnt_SetNewBound,
++    kmp_i18n_hnt_ValidValuesRange,
++    kmp_i18n_hnt_last,
++
++    kmp_i18n_xxx_lastest
++
++}; // enum kmp_i18n_id
++
++typedef enum kmp_i18n_id  kmp_i18n_id_t;
++
++
++// end of file //
+diff --git a/utils/bazel/llvm-project-overlay/openmp/runtime/src/omp-tools.h b/utils/bazel/llvm-project-overlay/openmp/runtime/src/omp-tools.h
+new file mode 100644
+index 000000000000..53defaa5d09e
+--- /dev/null
++++ b/utils/bazel/llvm-project-overlay/openmp/runtime/src/omp-tools.h
+@@ -0,0 +1,1415 @@
++/*
++ * include/omp-tools.h.var
++ */
++
++//===----------------------------------------------------------------------===//
++//
++// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
++// See https://llvm.org/LICENSE.txt for license information.
++// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
++//
++//===----------------------------------------------------------------------===//
++
++#ifndef __OMPT__
++#define __OMPT__
++
++/*****************************************************************************
++ * system include files
++ *****************************************************************************/
++
++#include <stdint.h>
++#include <stddef.h>
++
++#ifdef DEPRECATION_WARNINGS 
++# ifdef __cplusplus
++# define DEPRECATED_51 [[deprecated("as of 5.1")]]
++# else
++# define DEPRECATED_51 __attribute__((deprecated("as of 5.1")))
++#endif
++#else
++#define DEPRECATED_51
++#endif
++
++/*****************************************************************************
++ * iteration macros
++ *****************************************************************************/
++
++#define FOREACH_OMPT_INQUIRY_FN(macro)      \
++    macro (ompt_enumerate_states)           \
++    macro (ompt_enumerate_mutex_impls)      \
++                                            \
++    macro (ompt_set_callback)               \
++    macro (ompt_get_callback)               \
++                                            \
++    macro (ompt_get_state)                  \
++                                            \
++    macro (ompt_get_parallel_info)          \
++    macro (ompt_get_task_info)              \
++    macro (ompt_get_task_memory)            \
++    macro (ompt_get_thread_data)            \
++    macro (ompt_get_unique_id)              \
++    macro (ompt_finalize_tool)              \
++                                            \
++    macro(ompt_get_num_procs)               \
++    macro(ompt_get_num_places)              \
++    macro(ompt_get_place_proc_ids)          \
++    macro(ompt_get_place_num)               \
++    macro(ompt_get_partition_place_nums)    \
++    macro(ompt_get_proc_id)                 \
++                                            \
++    macro(ompt_get_target_info)             \
++    macro(ompt_get_num_devices)
++
++#define FOREACH_OMPT_STATE(macro)                                                                \
++                                                                                                \
++    /* first available state */                                                                 \
++    macro (ompt_state_undefined, 0x102)      /* undefined thread state */                        \
++                                                                                                \
++    /* work states (0..15) */                                                                   \
++    macro (ompt_state_work_serial, 0x000)    /* working outside parallel */                      \
++    macro (ompt_state_work_parallel, 0x001)  /* working within parallel */                       \
++    macro (ompt_state_work_reduction, 0x002) /* performing a reduction */                        \
++                                                                                                \
++    /* barrier wait states (16..31) */                                                          \
++    macro (ompt_state_wait_barrier, 0x010)   /* waiting at a barrier */                          \
++    macro (ompt_state_wait_barrier_implicit_parallel, 0x011)                                     \
++                                            /* implicit barrier at the end of parallel region */\
++    macro (ompt_state_wait_barrier_implicit_workshare, 0x012)                                    \
++                                            /* implicit barrier at the end of worksharing */    \
++    macro (ompt_state_wait_barrier_implicit, 0x013)  /* implicit barrier */                      \
++    macro (ompt_state_wait_barrier_explicit, 0x014)  /* explicit barrier */                      \
++                                                                                                \
++    /* task wait states (32..63) */                                                             \
++    macro (ompt_state_wait_taskwait, 0x020)  /* waiting at a taskwait */                         \
++    macro (ompt_state_wait_taskgroup, 0x021) /* waiting at a taskgroup */                        \
++                                                                                                \
++    /* mutex wait states (64..127) */                                                           \
++    macro (ompt_state_wait_mutex, 0x040)                                                         \
++    macro (ompt_state_wait_lock, 0x041)      /* waiting for lock */                              \
++    macro (ompt_state_wait_critical, 0x042)  /* waiting for critical */                          \
++    macro (ompt_state_wait_atomic, 0x043)    /* waiting for atomic */                            \
++    macro (ompt_state_wait_ordered, 0x044)   /* waiting for ordered */                           \
++                                                                                                \
++    /* target wait states (128..255) */                                                         \
++    macro (ompt_state_wait_target, 0x080)        /* waiting for target region */                 \
++    macro (ompt_state_wait_target_map, 0x081)    /* waiting for target data mapping operation */ \
++    macro (ompt_state_wait_target_update, 0x082) /* waiting for target update operation */       \
++                                                                                                \
++    /* misc (256..511) */                                                                       \
++    macro (ompt_state_idle, 0x100)           /* waiting for work */                              \
++    macro (ompt_state_overhead, 0x101)       /* overhead excluding wait states */                \
++                                                                                                \
++    /* implementation-specific states (512..) */
++
++
++#define FOREACH_KMP_MUTEX_IMPL(macro)                                                \
++    macro (kmp_mutex_impl_none, 0)         /* unknown implementation */              \
++    macro (kmp_mutex_impl_spin, 1)         /* based on spin */                       \
++    macro (kmp_mutex_impl_queuing, 2)      /* based on some fair policy */           \
++    macro (kmp_mutex_impl_speculative, 3)  /* based on HW-supported speculation */
++
++#define FOREACH_OMPT_HOST_EVENT(macro)                                                                                   \
++                                                                                                                         \
++    /*--- Mandatory Events ---*/                                                                                         \
++    macro (ompt_callback_thread_begin,      ompt_callback_thread_begin_t,       1) /* thread begin                    */ \
++    macro (ompt_callback_thread_end,        ompt_callback_thread_end_t,         2) /* thread end                      */ \
++                                                                                                                         \
++    macro (ompt_callback_parallel_begin,    ompt_callback_parallel_begin_t,     3) /* parallel begin                  */ \
++    macro (ompt_callback_parallel_end,      ompt_callback_parallel_end_t,       4) /* parallel end                    */ \
++                                                                                                                         \
++    macro (ompt_callback_task_create,       ompt_callback_task_create_t,        5) /* task begin                      */ \
++    macro (ompt_callback_task_schedule,     ompt_callback_task_schedule_t,      6) /* task schedule                   */ \
++    macro (ompt_callback_implicit_task,     ompt_callback_implicit_task_t,      7) /* implicit task                   */ \
++                                                                                                                         \
++    macro (ompt_callback_control_tool,      ompt_callback_control_tool_t,      11) /* control tool                    */ \
++                                                                                                                         \
++    /* Optional Events */                                                                                                \
++    macro (ompt_callback_sync_region_wait,  ompt_callback_sync_region_t,       16) /* sync region wait begin or end   */ \
++                                                                                                                         \
++    macro (ompt_callback_mutex_released,    ompt_callback_mutex_t,             17) /* mutex released                  */ \
++                                                                                                                         \
++    macro (ompt_callback_dependences,       ompt_callback_dependences_t,       18) /* report task dependences         */ \
++    macro (ompt_callback_task_dependence,   ompt_callback_task_dependence_t,   19) /* report task dependence          */ \
++                                                                                                                         \
++    macro (ompt_callback_work,              ompt_callback_work_t,              20) /* task at work begin or end       */ \
++                                                                                                                         \
++    macro (ompt_callback_masked,            ompt_callback_masked_t,            21) /* task at masked begin or end     */ \
++                                                                                                                         \
++    macro (ompt_callback_sync_region,       ompt_callback_sync_region_t,       23) /* sync region begin or end        */ \
++                                                                                                                         \
++    macro (ompt_callback_lock_init,         ompt_callback_mutex_acquire_t,     24) /* lock init                       */ \
++    macro (ompt_callback_lock_destroy,      ompt_callback_mutex_t,             25) /* lock destroy                    */ \
++                                                                                                                         \
++    macro (ompt_callback_mutex_acquire,     ompt_callback_mutex_acquire_t,     26) /* mutex acquire                   */ \
++    macro (ompt_callback_mutex_acquired,    ompt_callback_mutex_t,             27) /* mutex acquired                  */ \
++                                                                                                                         \
++    macro (ompt_callback_nest_lock,         ompt_callback_nest_lock_t,         28) /* nest lock                       */ \
++                                                                                                                         \
++    macro (ompt_callback_flush,             ompt_callback_flush_t,             29) /* after executing flush           */ \
++                                                                                                                         \
++    macro (ompt_callback_cancel,            ompt_callback_cancel_t,            30) /* cancel innermost binding region */ \
++                                                                                                                         \
++    macro (ompt_callback_reduction,         ompt_callback_sync_region_t,       31) /* reduction                       */ \
++                                                                                                                         \
++    macro (ompt_callback_dispatch,          ompt_callback_dispatch_t,          32) /* dispatch of work                */ \
++    macro (ompt_callback_error,             ompt_callback_error_t,             37) /* error                           */
++
++#define FOREACH_OMPT_DEVICE_EVENT(macro)                                                                                 \
++    /*--- Mandatory Events ---*/                                                                                         \
++    macro (ompt_callback_device_initialize, ompt_callback_device_initialize_t, 12) /* device initialize               */ \
++    macro (ompt_callback_device_finalize,   ompt_callback_device_finalize_t,   13) /* device finalize                 */ \
++                                                                                                                         \
++    macro (ompt_callback_device_load,       ompt_callback_device_load_t,       14) /* device load                     */ \
++    macro (ompt_callback_device_unload,     ompt_callback_device_unload_t,     15) /* device unload                   */
++
++#define FOREACH_OMPT_NOEMI_EVENT(macro)                                                                                  \
++    /*--- Mandatory Events ---*/                                                                                         \
++    macro (ompt_callback_target,            ompt_callback_target_t,             8) /* target                          */ \
++    macro (ompt_callback_target_data_op,    ompt_callback_target_data_op_t,     9) /* target data op                  */ \
++    macro (ompt_callback_target_submit,     ompt_callback_target_submit_t,     10) /* target  submit                  */ \
++    /* Optional Events */                                                                                                \
++    macro (ompt_callback_target_map,        ompt_callback_target_map_t,        22) /* target map                      */
++
++#define FOREACH_OMPT_EMI_EVENT(macro)                                                                                    \
++    /*--- Mandatory Events ---*/                                                                                         \
++    macro (ompt_callback_target_emi,        ompt_callback_target_emi_t,        33) /* target                          */ \
++    macro (ompt_callback_target_data_op_emi,ompt_callback_target_data_op_emi_t,34) /* target data op                  */ \
++    macro (ompt_callback_target_submit_emi, ompt_callback_target_submit_emi_t, 35) /* target submit                   */ \
++    /* Optional Events */                                                                                                \
++    macro (ompt_callback_target_map_emi,    ompt_callback_target_map_emi_t,    36) /* target map                      */
++
++#define FOREACH_OMPT_50_TARGET_EVENT(macro)                                                                              \
++    FOREACH_OMPT_DEVICE_EVENT(macro)                                                                                     \
++    FOREACH_OMPT_NOEMI_EVENT(macro) 
++
++#define FOREACH_OMPT_51_TARGET_EVENT(macro)                                                                              \
++    FOREACH_OMPT_DEVICE_EVENT(macro)                                                                                     \
++    FOREACH_OMPT_EMI_EVENT(macro) 
++
++#define FOREACH_OMPT_EVENT(macro)                                                                                        \
++    FOREACH_OMPT_HOST_EVENT(macro)                                                                                       \
++    FOREACH_OMPT_DEVICE_EVENT(macro)                                                                                     \
++    FOREACH_OMPT_NOEMI_EVENT(macro)                                                                                      \
++    FOREACH_OMPT_EMI_EVENT(macro)
++
++#define FOREACH_OMPT_51_EVENT(macro)                                                                                     \
++    FOREACH_OMPT_HOST_EVENT(macro)                                                                                       \
++    FOREACH_OMPT_DEVICE_EVENT(macro)                                                                                     \
++    FOREACH_OMPT_EMI_EVENT(macro)
++
++/*****************************************************************************
++ * implementation specific types
++ *****************************************************************************/
++
++typedef enum kmp_mutex_impl_t {
++#define kmp_mutex_impl_macro(impl, code) impl = code,
++    FOREACH_KMP_MUTEX_IMPL(kmp_mutex_impl_macro)
++#undef kmp_mutex_impl_macro
++} kmp_mutex_impl_t;
++
++/*****************************************************************************
++ * definitions generated from spec
++ *****************************************************************************/
++
++typedef enum ompt_callbacks_t {
++  ompt_callback_thread_begin             = 1,
++  ompt_callback_thread_end               = 2,
++  ompt_callback_parallel_begin           = 3,
++  ompt_callback_parallel_end             = 4,
++  ompt_callback_task_create              = 5,
++  ompt_callback_task_schedule            = 6,
++  ompt_callback_implicit_task            = 7,
++  ompt_callback_target                   = 8,
++  ompt_callback_target_data_op           = 9,
++  ompt_callback_target_submit            = 10,
++  ompt_callback_control_tool             = 11,
++  ompt_callback_device_initialize        = 12,
++  ompt_callback_device_finalize          = 13,
++  ompt_callback_device_load              = 14,
++  ompt_callback_device_unload            = 15,
++  ompt_callback_sync_region_wait         = 16,
++  ompt_callback_mutex_released           = 17,
++  ompt_callback_dependences              = 18,
++  ompt_callback_task_dependence          = 19,
++  ompt_callback_work                     = 20,
++  ompt_callback_master     DEPRECATED_51 = 21,
++  ompt_callback_masked                   = 21,
++  ompt_callback_target_map               = 22,
++  ompt_callback_sync_region              = 23,
++  ompt_callback_lock_init                = 24,
++  ompt_callback_lock_destroy             = 25,
++  ompt_callback_mutex_acquire            = 26,
++  ompt_callback_mutex_acquired           = 27,
++  ompt_callback_nest_lock                = 28,
++  ompt_callback_flush                    = 29,
++  ompt_callback_cancel                   = 30,
++  ompt_callback_reduction                = 31,
++  ompt_callback_dispatch                 = 32,
++  ompt_callback_target_emi               = 33,
++  ompt_callback_target_data_op_emi       = 34,
++  ompt_callback_target_submit_emi        = 35,
++  ompt_callback_target_map_emi           = 36,
++  ompt_callback_error                    = 37
++} ompt_callbacks_t;
++
++typedef enum ompt_record_t {
++  ompt_record_ompt               = 1,
++  ompt_record_native             = 2,
++  ompt_record_invalid            = 3
++} ompt_record_t;
++
++typedef enum ompt_record_native_t {
++  ompt_record_native_info  = 1,
++  ompt_record_native_event = 2
++} ompt_record_native_t;
++
++typedef enum ompt_set_result_t {
++  ompt_set_error            = 0,
++  ompt_set_never            = 1,
++  ompt_set_impossible       = 2,
++  ompt_set_sometimes        = 3,
++  ompt_set_sometimes_paired = 4,
++  ompt_set_always           = 5
++} ompt_set_result_t;
++
++typedef uint64_t ompt_id_t;
++
++typedef uint64_t ompt_device_time_t;
++
++typedef uint64_t ompt_buffer_cursor_t;
++
++typedef enum ompt_thread_t {
++  ompt_thread_initial                 = 1,
++  ompt_thread_worker                  = 2,
++  ompt_thread_other                   = 3,
++  ompt_thread_unknown                 = 4
++} ompt_thread_t;
++
++typedef enum ompt_scope_endpoint_t {
++  ompt_scope_begin                    = 1,
++  ompt_scope_end                      = 2,
++  ompt_scope_beginend                 = 3
++} ompt_scope_endpoint_t;
++
++typedef enum ompt_dispatch_t {
++  ompt_dispatch_iteration             = 1,
++  ompt_dispatch_section               = 2,
++  ompt_dispatch_ws_loop_chunk         = 3,
++  ompt_dispatch_taskloop_chunk        = 4,
++  ompt_dispatch_distribute_chunk      = 5
++} ompt_dispatch_t;
++
++typedef enum ompt_sync_region_t {
++  ompt_sync_region_barrier                DEPRECATED_51 = 1,
++  ompt_sync_region_barrier_implicit       DEPRECATED_51 = 2,
++  ompt_sync_region_barrier_explicit       = 3,
++  ompt_sync_region_barrier_implementation = 4,
++  ompt_sync_region_taskwait               = 5,
++  ompt_sync_region_taskgroup              = 6,
++  ompt_sync_region_reduction              = 7,
++  ompt_sync_region_barrier_implicit_workshare = 8,
++  ompt_sync_region_barrier_implicit_parallel = 9,
++  ompt_sync_region_barrier_teams = 10
++} ompt_sync_region_t;
++
++typedef enum ompt_target_data_op_t {
++  ompt_target_data_alloc                      = 1,
++  ompt_target_data_transfer_to_device         = 2,
++  ompt_target_data_transfer_from_device       = 3,
++  ompt_target_data_delete                     = 4,
++  ompt_target_data_associate                  = 5,
++  ompt_target_data_disassociate               = 6,
++  ompt_target_data_alloc_async                = 17,
++  ompt_target_data_transfer_to_device_async   = 18,
++  ompt_target_data_transfer_from_device_async = 19,
++  ompt_target_data_delete_async               = 20
++} ompt_target_data_op_t;
++
++typedef enum ompt_work_t {
++  ompt_work_loop               = 1,
++  ompt_work_sections           = 2,
++  ompt_work_single_executor    = 3,
++  ompt_work_single_other       = 4,
++  ompt_work_workshare          = 5,
++  ompt_work_distribute         = 6,
++  ompt_work_taskloop           = 7,
++  ompt_work_scope              = 8,
++  ompt_work_loop_static        = 10,
++  ompt_work_loop_dynamic       = 11,
++  ompt_work_loop_guided        = 12,
++  ompt_work_loop_other         = 13
++} ompt_work_t;
++
++typedef enum ompt_mutex_t {
++  ompt_mutex_lock                     = 1,
++  ompt_mutex_test_lock                = 2,
++  ompt_mutex_nest_lock                = 3,
++  ompt_mutex_test_nest_lock           = 4,
++  ompt_mutex_critical                 = 5,
++  ompt_mutex_atomic                   = 6,
++  ompt_mutex_ordered                  = 7
++} ompt_mutex_t;
++
++typedef enum ompt_native_mon_flag_t {
++  ompt_native_data_motion_explicit    = 0x01,
++  ompt_native_data_motion_implicit    = 0x02,
++  ompt_native_kernel_invocation       = 0x04,
++  ompt_native_kernel_execution        = 0x08,
++  ompt_native_driver                  = 0x10,
++  ompt_native_runtime                 = 0x20,
++  ompt_native_overhead                = 0x40,
++  ompt_native_idleness                = 0x80
++} ompt_native_mon_flag_t;
++
++typedef enum ompt_task_flag_t {
++  ompt_task_initial                   = 0x00000001,
++  ompt_task_implicit                  = 0x00000002,
++  ompt_task_explicit                  = 0x00000004,
++  ompt_task_target                    = 0x00000008,
++  ompt_task_taskwait                  = 0x00000010,
++  ompt_task_undeferred                = 0x08000000,
++  ompt_task_untied                    = 0x10000000,
++  ompt_task_final                     = 0x20000000,
++  ompt_task_mergeable                 = 0x40000000,
++  ompt_task_merged                    = 0x80000000
++} ompt_task_flag_t;
++
++typedef enum ompt_task_status_t {
++  ompt_task_complete      = 1,
++  ompt_task_yield         = 2,
++  ompt_task_cancel        = 3,
++  ompt_task_detach        = 4,
++  ompt_task_early_fulfill = 5,
++  ompt_task_late_fulfill  = 6,
++  ompt_task_switch        = 7,
++  ompt_taskwait_complete  = 8
++} ompt_task_status_t;
++
++typedef enum ompt_target_t {
++  ompt_target                         = 1,
++  ompt_target_enter_data              = 2,
++  ompt_target_exit_data               = 3,
++  ompt_target_update                  = 4,
++  ompt_target_nowait                  = 9,
++  ompt_target_enter_data_nowait       = 10,
++  ompt_target_exit_data_nowait        = 11,
++  ompt_target_update_nowait           = 12
++} ompt_target_t;
++
++typedef enum ompt_parallel_flag_t {
++  ompt_parallel_invoker_program = 0x00000001,
++  ompt_parallel_invoker_runtime = 0x00000002,
++  ompt_parallel_league          = 0x40000000,
++  ompt_parallel_team            = 0x80000000
++} ompt_parallel_flag_t;
++
++typedef enum ompt_target_map_flag_t {
++  ompt_target_map_flag_to             = 0x01,
++  ompt_target_map_flag_from           = 0x02,
++  ompt_target_map_flag_alloc          = 0x04,
++  ompt_target_map_flag_release        = 0x08,
++  ompt_target_map_flag_delete         = 0x10,
++  ompt_target_map_flag_implicit       = 0x20
++} ompt_target_map_flag_t;
++
++typedef enum ompt_dependence_type_t {
++  ompt_dependence_type_in              = 1,
++  ompt_dependence_type_out             = 2,
++  ompt_dependence_type_inout           = 3,
++  ompt_dependence_type_mutexinoutset   = 4,
++  ompt_dependence_type_source          = 5,
++  ompt_dependence_type_sink            = 6,
++  ompt_dependence_type_inoutset        = 7
++} ompt_dependence_type_t;
++
++typedef enum ompt_severity_t {
++  ompt_warning                         = 1,
++  ompt_fatal                           = 2
++} ompt_severity_t;
++
++typedef enum ompt_cancel_flag_t {
++  ompt_cancel_parallel       = 0x01,
++  ompt_cancel_sections       = 0x02,
++  ompt_cancel_loop           = 0x04,
++  ompt_cancel_taskgroup      = 0x08,
++  ompt_cancel_activated      = 0x10,
++  ompt_cancel_detected       = 0x20,
++  ompt_cancel_discarded_task = 0x40
++} ompt_cancel_flag_t;
++
++typedef uint64_t ompt_hwid_t;
++
++typedef uint64_t ompt_wait_id_t;
++
++typedef enum ompt_frame_flag_t {
++  ompt_frame_runtime        = 0x00,
++  ompt_frame_application    = 0x01,
++  ompt_frame_cfa            = 0x10,
++  ompt_frame_framepointer   = 0x20,
++  ompt_frame_stackaddress   = 0x30
++} ompt_frame_flag_t;
++
++typedef enum ompt_state_t {
++  ompt_state_work_serial                      = 0x000,
++  ompt_state_work_parallel                    = 0x001,
++  ompt_state_work_reduction                   = 0x002,
++
++  ompt_state_wait_barrier                     DEPRECATED_51 = 0x010,
++  ompt_state_wait_barrier_implicit_parallel   = 0x011,
++  ompt_state_wait_barrier_implicit_workshare  = 0x012,
++  ompt_state_wait_barrier_implicit            DEPRECATED_51 = 0x013,
++  ompt_state_wait_barrier_explicit            = 0x014,
++  ompt_state_wait_barrier_implementation      = 0x015,
++  ompt_state_wait_barrier_teams               = 0x016,
++
++  ompt_state_wait_taskwait                    = 0x020,
++  ompt_state_wait_taskgroup                   = 0x021,
++
++  ompt_state_wait_mutex                       = 0x040,
++  ompt_state_wait_lock                        = 0x041,
++  ompt_state_wait_critical                    = 0x042,
++  ompt_state_wait_atomic                      = 0x043,
++  ompt_state_wait_ordered                     = 0x044,
++
++  ompt_state_wait_target                      = 0x080,
++  ompt_state_wait_target_map                  = 0x081,
++  ompt_state_wait_target_update               = 0x082,
++
++  ompt_state_idle                             = 0x100,
++  ompt_state_overhead                         = 0x101,
++  ompt_state_undefined                        = 0x102
++} ompt_state_t;
++
++typedef uint64_t (*ompt_get_unique_id_t) (void);
++
++typedef uint64_t ompd_size_t;
++
++typedef uint64_t ompd_wait_id_t;
++
++typedef uint64_t ompd_addr_t;
++typedef int64_t  ompd_word_t;
++typedef uint64_t ompd_seg_t;
++
++typedef uint64_t ompd_device_t;
++
++typedef uint64_t ompd_thread_id_t;
++
++typedef enum ompd_scope_t {
++  ompd_scope_global = 1,
++  ompd_scope_address_space = 2,
++  ompd_scope_thread = 3,
++  ompd_scope_parallel = 4,
++  ompd_scope_implicit_task = 5,
++  ompd_scope_task = 6
++} ompd_scope_t;
++
++typedef uint64_t ompd_icv_id_t;
++
++typedef enum ompd_rc_t {
++  ompd_rc_ok = 0,
++  ompd_rc_unavailable = 1,
++  ompd_rc_stale_handle = 2,
++  ompd_rc_bad_input = 3,
++  ompd_rc_error = 4,
++  ompd_rc_unsupported = 5,
++  ompd_rc_needs_state_tracking = 6,
++  ompd_rc_incompatible = 7,
++  ompd_rc_device_read_error = 8,
++  ompd_rc_device_write_error = 9,
++  ompd_rc_nomem = 10,
++  ompd_rc_incomplete = 11,
++  ompd_rc_callback_error = 12
++} ompd_rc_t;
++
++typedef void (*ompt_interface_fn_t) (void);
++
++typedef ompt_interface_fn_t (*ompt_function_lookup_t) (
++  const char *interface_function_name
++);
++
++typedef union ompt_data_t {
++  uint64_t value;
++  void *ptr;
++} ompt_data_t;
++
++typedef struct ompt_frame_t {
++  ompt_data_t exit_frame;
++  ompt_data_t enter_frame;
++  int exit_frame_flags;
++  int enter_frame_flags;
++} ompt_frame_t;
++
++typedef void (*ompt_callback_t) (void);
++
++typedef void ompt_device_t;
++
++typedef void ompt_buffer_t;
++
++typedef void (*ompt_callback_buffer_request_t) (
++  int device_num,
++  ompt_buffer_t **buffer,
++  size_t *bytes
++);
++
++typedef void (*ompt_callback_buffer_complete_t) (
++  int device_num,
++  ompt_buffer_t *buffer,
++  size_t bytes,
++  ompt_buffer_cursor_t begin,
++  int buffer_owned
++);
++
++typedef void (*ompt_finalize_t) (
++  ompt_data_t *tool_data
++);
++
++typedef int (*ompt_initialize_t) (
++  ompt_function_lookup_t lookup,
++  int initial_device_num,
++  ompt_data_t *tool_data
++);
++
++typedef struct ompt_start_tool_result_t {
++  ompt_initialize_t initialize;
++  ompt_finalize_t finalize;
++  ompt_data_t tool_data;
++} ompt_start_tool_result_t;
++
++typedef struct ompt_record_abstract_t {
++  ompt_record_native_t rclass;
++  const char *type;
++  ompt_device_time_t start_time;
++  ompt_device_time_t end_time;
++  ompt_hwid_t hwid;
++} ompt_record_abstract_t;
++
++typedef struct ompt_dependence_t {
++  ompt_data_t variable;
++  ompt_dependence_type_t dependence_type;
++} ompt_dependence_t;
++
++typedef struct ompt_dispatch_chunk_t {
++  uint64_t start;
++  uint64_t iterations;
++} ompt_dispatch_chunk_t;
++
++typedef int (*ompt_enumerate_states_t) (
++  int current_state,
++  int *next_state,
++  const char **next_state_name
++);
++
++typedef int (*ompt_enumerate_mutex_impls_t) (
++  int current_impl,
++  int *next_impl,
++  const char **next_impl_name
++);
++
++typedef ompt_set_result_t (*ompt_set_callback_t) (
++  ompt_callbacks_t event,
++  ompt_callback_t callback
++);
++
++typedef int (*ompt_get_callback_t) (
++  ompt_callbacks_t event,
++  ompt_callback_t *callback
++);
++
++typedef ompt_data_t *(*ompt_get_thread_data_t) (void);
++
++typedef int (*ompt_get_num_procs_t) (void);
++
++typedef int (*ompt_get_num_places_t) (void);
++
++typedef int (*ompt_get_place_proc_ids_t) (
++  int place_num,
++  int ids_size,
++  int *ids
++);
++
++typedef int (*ompt_get_place_num_t) (void);
++
++typedef int (*ompt_get_partition_place_nums_t) (
++  int place_nums_size,
++  int *place_nums
++);
++
++typedef int (*ompt_get_proc_id_t) (void);
++
++typedef int (*ompt_get_state_t) (
++  ompt_wait_id_t *wait_id
++);
++
++typedef int (*ompt_get_parallel_info_t) (
++  int ancestor_level,
++  ompt_data_t **parallel_data,
++  int *team_size
++);
++
++typedef int (*ompt_get_task_info_t) (
++  int ancestor_level,
++  int *flags,
++  ompt_data_t **task_data,
++  ompt_frame_t **task_frame,
++  ompt_data_t **parallel_data,
++  int *thread_num
++);
++
++typedef int (*ompt_get_task_memory_t)(
++  void **addr,
++  size_t *size,
++  int block
++);
++
++typedef int (*ompt_get_target_info_t) (
++  uint64_t *device_num,
++  ompt_id_t *target_id,
++  ompt_id_t *host_op_id
++);
++
++typedef int (*ompt_get_num_devices_t) (void);
++
++typedef void (*ompt_finalize_tool_t) (void);
++
++typedef int (*ompt_get_device_num_procs_t) (
++  ompt_device_t *device
++);
++
++typedef ompt_device_time_t (*ompt_get_device_time_t) (
++  ompt_device_t *device
++);
++
++typedef double (*ompt_translate_time_t) (
++  ompt_device_t *device,
++  ompt_device_time_t time
++);
++
++typedef ompt_set_result_t (*ompt_set_trace_ompt_t) (
++  ompt_device_t *device,
++  unsigned int enable,
++  unsigned int etype
++);
++
++typedef ompt_set_result_t (*ompt_set_trace_native_t) (
++  ompt_device_t *device,
++  int enable,
++  int flags
++);
++
++typedef int (*ompt_start_trace_t) (
++  ompt_device_t *device,
++  ompt_callback_buffer_request_t request,
++  ompt_callback_buffer_complete_t complete
++);
++
++typedef int (*ompt_pause_trace_t) (
++  ompt_device_t *device,
++  int begin_pause
++);
++
++typedef int (*ompt_flush_trace_t) (
++  ompt_device_t *device
++);
++
++typedef int (*ompt_stop_trace_t) (
++  ompt_device_t *device
++);
++
++typedef int (*ompt_advance_buffer_cursor_t) (
++  ompt_device_t *device,
++  ompt_buffer_t *buffer,
++  size_t size,
++  ompt_buffer_cursor_t current,
++  ompt_buffer_cursor_t *next
++);
++
++typedef ompt_record_t (*ompt_get_record_type_t) (
++  ompt_buffer_t *buffer,
++  ompt_buffer_cursor_t current
++);
++
++typedef void *(*ompt_get_record_native_t) (
++  ompt_buffer_t *buffer,
++  ompt_buffer_cursor_t current,
++  ompt_id_t *host_op_id
++);
++
++typedef ompt_record_abstract_t *
++(*ompt_get_record_abstract_t) (
++  void *native_record
++);
++
++typedef void (*ompt_callback_thread_begin_t) (
++  ompt_thread_t thread_type,
++  ompt_data_t *thread_data
++);
++
++typedef struct ompt_record_thread_begin_t {
++  ompt_thread_t thread_type;
++} ompt_record_thread_begin_t;
++
++typedef void (*ompt_callback_thread_end_t) (
++  ompt_data_t *thread_data
++);
++
++typedef void (*ompt_callback_parallel_begin_t) (
++  ompt_data_t *encountering_task_data,
++  const ompt_frame_t *encountering_task_frame,
++  ompt_data_t *parallel_data,
++  unsigned int requested_parallelism,
++  int flags,
++  const void *codeptr_ra
++);
++
++typedef struct ompt_record_parallel_begin_t {
++  ompt_id_t encountering_task_id;
++  ompt_id_t parallel_id;
++  unsigned int requested_parallelism;
++  int flags;
++  const void *codeptr_ra;
++} ompt_record_parallel_begin_t;
++
++typedef void (*ompt_callback_parallel_end_t) (
++  ompt_data_t *parallel_data,
++  ompt_data_t *encountering_task_data,
++  int flags,
++  const void *codeptr_ra
++);
++
++typedef struct ompt_record_parallel_end_t {
++  ompt_id_t parallel_id;
++  ompt_id_t encountering_task_id;
++  int flags;
++  const void *codeptr_ra;
++} ompt_record_parallel_end_t;
++
++typedef void (*ompt_callback_work_t) (
++  ompt_work_t work_type,
++  ompt_scope_endpoint_t endpoint,
++  ompt_data_t *parallel_data,
++  ompt_data_t *task_data,
++  uint64_t count,
++  const void *codeptr_ra
++);
++
++typedef struct ompt_record_work_t {
++  ompt_work_t work_type;
++  ompt_scope_endpoint_t endpoint;
++  ompt_id_t parallel_id;
++  ompt_id_t task_id;
++  uint64_t count;
++  const void *codeptr_ra;
++} ompt_record_work_t;
++
++typedef void (*ompt_callback_dispatch_t) (
++  ompt_data_t *parallel_data,
++  ompt_data_t *task_data,
++  ompt_dispatch_t kind,
++  ompt_data_t instance
++);
++
++typedef struct ompt_record_dispatch_t {
++  ompt_id_t parallel_id;
++  ompt_id_t task_id;
++  ompt_dispatch_t kind;
++  ompt_data_t instance;
++} ompt_record_dispatch_t;
++
++typedef void (*ompt_callback_task_create_t) (
++  ompt_data_t *encountering_task_data,
++  const ompt_frame_t *encountering_task_frame,
++  ompt_data_t *new_task_data,
++  int flags,
++  int has_dependences,
++  const void *codeptr_ra
++);
++
++typedef struct ompt_record_task_create_t {
++  ompt_id_t encountering_task_id;
++  ompt_id_t new_task_id;
++  int flags;
++  int has_dependences;
++  const void *codeptr_ra;
++} ompt_record_task_create_t;
++
++typedef void (*ompt_callback_dependences_t) (
++  ompt_data_t *task_data,
++  const ompt_dependence_t *deps,
++  int ndeps
++);
++
++typedef struct ompt_record_dependences_t {
++  ompt_id_t task_id;
++  ompt_dependence_t dep;
++  int ndeps;
++} ompt_record_dependences_t;
++
++typedef void (*ompt_callback_task_dependence_t) (
++  ompt_data_t *src_task_data,
++  ompt_data_t *sink_task_data
++);
++
++typedef struct ompt_record_task_dependence_t {
++  ompt_id_t src_task_id;
++  ompt_id_t sink_task_id;
++} ompt_record_task_dependence_t;
++
++typedef void (*ompt_callback_task_schedule_t) (
++  ompt_data_t *prior_task_data,
++  ompt_task_status_t prior_task_status,
++  ompt_data_t *next_task_data
++);
++
++typedef struct ompt_record_task_schedule_t {
++  ompt_id_t prior_task_id;
++  ompt_task_status_t prior_task_status;
++  ompt_id_t next_task_id;
++} ompt_record_task_schedule_t;
++
++typedef void (*ompt_callback_implicit_task_t) (
++  ompt_scope_endpoint_t endpoint,
++  ompt_data_t *parallel_data,
++  ompt_data_t *task_data,
++  unsigned int actual_parallelism,
++  unsigned int index,
++  int flags
++);
++
++typedef struct ompt_record_implicit_task_t {
++  ompt_scope_endpoint_t endpoint;
++  ompt_id_t parallel_id;
++  ompt_id_t task_id;
++  unsigned int actual_parallelism;
++  unsigned int index;
++  int flags;
++} ompt_record_implicit_task_t;
++
++typedef void (*ompt_callback_masked_t) (
++  ompt_scope_endpoint_t endpoint,
++  ompt_data_t *parallel_data,
++  ompt_data_t *task_data,
++  const void *codeptr_ra
++);
++
++typedef ompt_callback_masked_t ompt_callback_master_t DEPRECATED_51;
++
++typedef struct ompt_record_masked_t {
++  ompt_scope_endpoint_t endpoint;
++  ompt_id_t parallel_id;
++  ompt_id_t task_id;
++  const void *codeptr_ra;
++} ompt_record_masked_t;
++
++typedef void (*ompt_callback_sync_region_t) (
++  ompt_sync_region_t kind,
++  ompt_scope_endpoint_t endpoint,
++  ompt_data_t *parallel_data,
++  ompt_data_t *task_data,
++  const void *codeptr_ra
++);
++
++typedef struct ompt_record_sync_region_t {
++  ompt_sync_region_t kind;
++  ompt_scope_endpoint_t endpoint;
++  ompt_id_t parallel_id;
++  ompt_id_t task_id;
++  const void *codeptr_ra;
++} ompt_record_sync_region_t;
++
++typedef void (*ompt_callback_mutex_acquire_t) (
++  ompt_mutex_t kind,
++  unsigned int hint,
++  unsigned int impl,
++  ompt_wait_id_t wait_id,
++  const void *codeptr_ra
++);
++
++typedef struct ompt_record_mutex_acquire_t {
++  ompt_mutex_t kind;
++  unsigned int hint;
++  unsigned int impl;
++  ompt_wait_id_t wait_id;
++  const void *codeptr_ra;
++} ompt_record_mutex_acquire_t;
++
++typedef void (*ompt_callback_mutex_t) (
++  ompt_mutex_t kind,
++  ompt_wait_id_t wait_id,
++  const void *codeptr_ra
++);
++
++typedef struct ompt_record_mutex_t {
++  ompt_mutex_t kind;
++  ompt_wait_id_t wait_id;
++  const void *codeptr_ra;
++} ompt_record_mutex_t;
++
++typedef void (*ompt_callback_nest_lock_t) (
++  ompt_scope_endpoint_t endpoint,
++  ompt_wait_id_t wait_id,
++  const void *codeptr_ra
++);
++
++typedef struct ompt_record_nest_lock_t {
++  ompt_scope_endpoint_t endpoint;
++  ompt_wait_id_t wait_id;
++  const void *codeptr_ra;
++} ompt_record_nest_lock_t;
++
++typedef void (*ompt_callback_flush_t) (
++  ompt_data_t *thread_data,
++  const void *codeptr_ra
++);
++
++typedef struct ompt_record_flush_t {
++  const void *codeptr_ra;
++} ompt_record_flush_t;
++
++typedef void (*ompt_callback_cancel_t) (
++  ompt_data_t *task_data,
++  int flags,
++  const void *codeptr_ra
++);
++
++typedef struct ompt_record_cancel_t {
++  ompt_id_t task_id;
++  int flags;
++  const void *codeptr_ra;
++} ompt_record_cancel_t;
++
++typedef void (*ompt_callback_device_initialize_t) (
++  int device_num,
++  const char *type,
++  ompt_device_t *device,
++  ompt_function_lookup_t lookup,
++  const char *documentation
++);
++
++typedef void (*ompt_callback_device_finalize_t) (
++  int device_num
++);
++
++typedef void (*ompt_callback_device_load_t) (
++  int device_num,
++  const char *filename,
++  int64_t offset_in_file,
++  void *vma_in_file,
++  size_t bytes,
++  void *host_addr,
++  void *device_addr,
++  uint64_t module_id
++);
++
++typedef void (*ompt_callback_device_unload_t) (
++  int device_num,
++  uint64_t module_id
++);
++
++typedef void (*ompt_callback_target_data_op_emi_t) (
++  ompt_scope_endpoint_t endpoint,
++  ompt_data_t *target_task_data,
++  ompt_data_t *target_data,
++  ompt_id_t *host_op_id,
++  ompt_target_data_op_t optype,
++  void *src_addr,
++  int src_device_num,
++  void *dest_addr,
++  int dest_device_num,
++  size_t bytes,
++  const void *codeptr_ra
++);
++
++typedef void (*ompt_callback_target_data_op_t) (
++  ompt_id_t target_id,
++  ompt_id_t host_op_id,
++  ompt_target_data_op_t optype,
++  void *src_addr,
++  int src_device_num,
++  void *dest_addr,
++  int dest_device_num,
++  size_t bytes,
++  const void *codeptr_ra
++);
++
++typedef struct ompt_record_target_data_op_t {
++  ompt_id_t host_op_id;
++  ompt_target_data_op_t optype;
++  void *src_addr;
++  int src_device_num;
++  void *dest_addr;
++  int dest_device_num;
++  size_t bytes;
++  ompt_device_time_t end_time;
++  const void *codeptr_ra;
++} ompt_record_target_data_op_t;
++
++typedef void (*ompt_callback_target_emi_t) (
++  ompt_target_t kind,
++  ompt_scope_endpoint_t endpoint,
++  int device_num,
++  ompt_data_t *task_data,
++  ompt_data_t *target_task_data,
++  ompt_data_t *target_data,
++  const void *codeptr_ra
++);
++
++typedef void (*ompt_callback_target_t) (
++  ompt_target_t kind,
++  ompt_scope_endpoint_t endpoint,
++  int device_num,
++  ompt_data_t *task_data,
++  ompt_id_t target_id,
++  const void *codeptr_ra
++);
++
++typedef struct ompt_record_target_t {
++  ompt_target_t kind;
++  ompt_scope_endpoint_t endpoint;
++  int device_num;
++  ompt_id_t task_id;
++  ompt_id_t target_id;
++  const void *codeptr_ra;
++} ompt_record_target_t;
++
++typedef void (*ompt_callback_target_map_emi_t) (
++  ompt_data_t *target_data,
++  unsigned int nitems,
++  void **host_addr,
++  void **device_addr,
++  size_t *bytes,
++  unsigned int *mapping_flags,
++  const void *codeptr_ra
++);
++
++typedef void (*ompt_callback_target_map_t) (
++  ompt_id_t target_id,
++  unsigned int nitems,
++  void **host_addr,
++  void **device_addr,
++  size_t *bytes,
++  unsigned int *mapping_flags,
++  const void *codeptr_ra
++);
++
++typedef struct ompt_record_target_map_t {
++  ompt_id_t target_id;
++  unsigned int nitems;
++  void **host_addr;
++  void **device_addr;
++  size_t *bytes;
++  unsigned int *mapping_flags;
++  const void *codeptr_ra;
++} ompt_record_target_map_t;
++
++typedef void (*ompt_callback_target_submit_emi_t) (
++  ompt_scope_endpoint_t endpoint,
++  ompt_data_t *target_data,
++  ompt_id_t *host_op_id,
++  unsigned int requested_num_teams
++);
++
++typedef void (*ompt_callback_target_submit_t) (
++  ompt_id_t target_id,
++  ompt_id_t host_op_id,
++  unsigned int requested_num_teams
++);
++
++typedef struct ompt_record_target_kernel_t {
++  ompt_id_t host_op_id;
++  unsigned int requested_num_teams;
++  unsigned int granted_num_teams;
++  ompt_device_time_t end_time;
++} ompt_record_target_kernel_t;
++
++typedef int (*ompt_callback_control_tool_t) (
++  uint64_t command,
++  uint64_t modifier,
++  void *arg,
++  const void *codeptr_ra
++);
++
++typedef struct ompt_record_control_tool_t {
++  uint64_t command;
++  uint64_t modifier;
++  const void *codeptr_ra;
++} ompt_record_control_tool_t;
++
++typedef void (*ompt_callback_error_t) (
++  ompt_severity_t severity,
++  const char *message, size_t length,
++  const void *codeptr_ra
++);
++
++typedef struct ompt_record_error_t {
++  ompt_severity_t severity;
++  const char *message;
++  size_t length;
++  const void *codeptr_ra;
++} ompt_record_error_t;
++
++typedef struct ompd_address_t {
++  ompd_seg_t segment;
++  ompd_addr_t address;
++} ompd_address_t;
++
++typedef struct ompd_frame_info_t {
++  ompd_address_t frame_address;
++  ompd_word_t frame_flag;
++} ompd_frame_info_t;
++
++typedef struct _ompd_aspace_handle ompd_address_space_handle_t;
++typedef struct _ompd_thread_handle ompd_thread_handle_t;
++typedef struct _ompd_parallel_handle ompd_parallel_handle_t;
++typedef struct _ompd_task_handle ompd_task_handle_t;
++
++typedef struct _ompd_aspace_cont ompd_address_space_context_t;
++typedef struct _ompd_thread_cont ompd_thread_context_t;
++
++typedef struct ompd_device_type_sizes_t {
++  uint8_t sizeof_char;
++  uint8_t sizeof_short;
++  uint8_t sizeof_int;
++  uint8_t sizeof_long;
++  uint8_t sizeof_long_long;
++  uint8_t sizeof_pointer;
++} ompd_device_type_sizes_t;
++
++void ompd_dll_locations_valid(void);
++
++typedef ompd_rc_t (*ompd_callback_memory_alloc_fn_t)(ompd_size_t nbytes,
++                                                     void **ptr);
++
++typedef ompd_rc_t (*ompd_callback_memory_free_fn_t)(void *ptr);
++
++typedef ompd_rc_t (*ompd_callback_get_thread_context_for_thread_id_fn_t)(
++    ompd_address_space_context_t *address_space_context, ompd_thread_id_t kind,
++    ompd_size_t sizeof_thread_id, const void *thread_id,
++    ompd_thread_context_t **thread_context);
++
++typedef ompd_rc_t (*ompd_callback_sizeof_fn_t)(
++    ompd_address_space_context_t *address_space_context,
++    ompd_device_type_sizes_t *sizes);
++
++typedef ompd_rc_t (*ompd_callback_symbol_addr_fn_t)(
++    ompd_address_space_context_t *address_space_context,
++    ompd_thread_context_t *thread_context, const char *symbol_name,
++    ompd_address_t *symbol_addr, const char *file_name);
++
++typedef ompd_rc_t (*ompd_callback_memory_read_fn_t)(
++    ompd_address_space_context_t *address_space_context,
++    ompd_thread_context_t *thread_context, const ompd_address_t *addr,
++    ompd_size_t nbytes, void *buffer);
++
++typedef ompd_rc_t (*ompd_callback_memory_write_fn_t)(
++    ompd_address_space_context_t *address_space_context,
++    ompd_thread_context_t *thread_context, const ompd_address_t *addr,
++    ompd_size_t nbytes, const void *buffer);
++
++typedef ompd_rc_t (*ompd_callback_device_host_fn_t)(
++    ompd_address_space_context_t *address_space_context, const void *input,
++    ompd_size_t unit_size, ompd_size_t count, void *output);
++
++typedef ompd_rc_t (*ompd_callback_print_string_fn_t)(const char *string,
++                                                     int category);
++
++typedef struct ompd_callbacks_t {
++  ompd_callback_memory_alloc_fn_t alloc_memory;
++  ompd_callback_memory_free_fn_t free_memory;
++  ompd_callback_print_string_fn_t print_string;
++  ompd_callback_sizeof_fn_t sizeof_type;
++  ompd_callback_symbol_addr_fn_t symbol_addr_lookup;
++  ompd_callback_memory_read_fn_t read_memory;
++  ompd_callback_memory_write_fn_t write_memory;
++  ompd_callback_memory_read_fn_t read_string;
++  ompd_callback_device_host_fn_t device_to_host;
++  ompd_callback_device_host_fn_t host_to_device;
++  ompd_callback_get_thread_context_for_thread_id_fn_t
++      get_thread_context_for_thread_id;
++} ompd_callbacks_t;
++
++void ompd_bp_parallel_begin(void);
++
++void ompd_bp_parallel_end(void);
++
++void ompd_bp_task_begin(void);
++
++void ompd_bp_task_end(void);
++
++void ompd_bp_thread_begin(void);
++
++void ompd_bp_thread_end(void);
++
++void ompd_bp_device_begin(void);
++
++void ompd_bp_device_end(void);
++
++ompd_rc_t ompd_initialize(ompd_word_t api_version,
++                          const ompd_callbacks_t *callbacks);
++
++ompd_rc_t ompd_get_api_version(ompd_word_t *version);
++
++ompd_rc_t ompd_get_version_string(const char **string);
++
++ompd_rc_t ompd_finalize(void);
++
++ompd_rc_t ompd_process_initialize(ompd_address_space_context_t *context,
++                                  ompd_address_space_handle_t **handle);
++
++ompd_rc_t ompd_device_initialize(ompd_address_space_handle_t *process_handle,
++                                 ompd_address_space_context_t *device_context,
++                                 ompd_device_t kind, ompd_size_t sizeof_id,
++                                 void *id,
++                                 ompd_address_space_handle_t **device_handle);
++
++ompd_rc_t ompd_rel_address_space_handle(ompd_address_space_handle_t *handle);
++
++ompd_rc_t ompd_get_omp_version(ompd_address_space_handle_t *address_space,
++                               ompd_word_t *omp_version);
++
++ompd_rc_t
++ompd_get_omp_version_string(ompd_address_space_handle_t *address_space,
++                            const char **string);
++
++ompd_rc_t ompd_get_thread_in_parallel(ompd_parallel_handle_t *parallel_handle,
++                                      int thread_num,
++                                      ompd_thread_handle_t **thread_handle);
++
++ompd_rc_t ompd_get_thread_handle(ompd_address_space_handle_t *handle,
++                                 ompd_thread_id_t kind,
++                                 ompd_size_t sizeof_thread_id,
++                                 const void *thread_id,
++                                 ompd_thread_handle_t **thread_handle);
++
++ompd_rc_t ompd_rel_thread_handle(ompd_thread_handle_t *thread_handle);
++
++ompd_rc_t ompd_thread_handle_compare(ompd_thread_handle_t *thread_handle_1,
++                                     ompd_thread_handle_t *thread_handle_2,
++                                     int *cmp_value);
++
++ompd_rc_t ompd_get_thread_id(ompd_thread_handle_t *thread_handle,
++                             ompd_thread_id_t kind,
++                             ompd_size_t sizeof_thread_id, void *thread_id);
++
++ompd_rc_t
++ompd_get_curr_parallel_handle(ompd_thread_handle_t *thread_handle,
++                              ompd_parallel_handle_t **parallel_handle);
++
++ompd_rc_t ompd_get_enclosing_parallel_handle(
++    ompd_parallel_handle_t *parallel_handle,
++    ompd_parallel_handle_t **enclosing_parallel_handle);
++
++ompd_rc_t
++ompd_get_task_parallel_handle(ompd_task_handle_t *task_handle,
++                              ompd_parallel_handle_t **task_parallel_handle);
++
++ompd_rc_t ompd_rel_parallel_handle(ompd_parallel_handle_t *parallel_handle);
++
++ompd_rc_t
++ompd_parallel_handle_compare(ompd_parallel_handle_t *parallel_handle_1,
++                             ompd_parallel_handle_t *parallel_handle_2,
++                             int *cmp_value);
++
++ompd_rc_t ompd_get_curr_task_handle(ompd_thread_handle_t *thread_handle,
++                                    ompd_task_handle_t **task_handle);
++
++ompd_rc_t
++ompd_get_generating_task_handle(ompd_task_handle_t *task_handle,
++                                ompd_task_handle_t **generating_task_handle);
++
++ompd_rc_t
++ompd_get_scheduling_task_handle(ompd_task_handle_t *task_handle,
++                                ompd_task_handle_t **scheduling_task_handle);
++
++ompd_rc_t ompd_get_task_in_parallel(ompd_parallel_handle_t *parallel_handle,
++                                    int thread_num,
++                                    ompd_task_handle_t **task_handle);
++
++ompd_rc_t ompd_rel_task_handle(ompd_task_handle_t *task_handle);
++
++ompd_rc_t ompd_task_handle_compare(ompd_task_handle_t *task_handle_1,
++                                   ompd_task_handle_t *task_handle_2,
++                                   int *cmp_value);
++
++ompd_rc_t ompd_get_task_function(ompd_task_handle_t *task_handle,
++                                 ompd_address_t *entry_point);
++
++ompd_rc_t ompd_get_task_frame(ompd_task_handle_t *task_handle,
++                              ompd_frame_info_t *exit_frame,
++                              ompd_frame_info_t *enter_frame);
++
++ompd_rc_t
++ompd_enumerate_states(ompd_address_space_handle_t *address_space_handle,
++                      ompd_word_t current_state, ompd_word_t *next_state,
++                      const char **next_state_name, ompd_word_t *more_enums);
++
++ompd_rc_t ompd_get_state(ompd_thread_handle_t *thread_handle,
++                         ompd_word_t *state, ompd_wait_id_t *wait_id);
++
++ompd_rc_t
++ompd_get_display_control_vars(ompd_address_space_handle_t *address_space_handle,
++                              const char *const **control_vars);
++
++ompd_rc_t ompd_rel_display_control_vars(const char *const **control_vars);
++
++ompd_rc_t ompd_enumerate_icvs(ompd_address_space_handle_t *handle,
++                              ompd_icv_id_t current, ompd_icv_id_t *next_id,
++                              const char **next_icv_name,
++                              ompd_scope_t *next_scope, int *more);
++
++ompd_rc_t ompd_get_icv_from_scope(void *handle, ompd_scope_t scope,
++                                  ompd_icv_id_t icv_id, ompd_word_t *icv_value);
++
++ompd_rc_t ompd_get_icv_string_from_scope(void *handle, ompd_scope_t scope,
++                                         ompd_icv_id_t icv_id,
++                                         const char **icv_string);
++
++ompd_rc_t ompd_get_tool_data(void *handle, ompd_scope_t scope,
++                             ompd_word_t *value, ompd_address_t *ptr);
++
++typedef struct ompt_record_ompt_t {
++  ompt_callbacks_t type;
++  ompt_device_time_t time;
++  ompt_id_t thread_id;
++  ompt_id_t target_id;
++  union {
++    ompt_record_thread_begin_t thread_begin;
++    ompt_record_parallel_begin_t parallel_begin;
++    ompt_record_parallel_end_t parallel_end;
++    ompt_record_work_t work;
++    ompt_record_dispatch_t dispatch;
++    ompt_record_task_create_t task_create;
++    ompt_record_dependences_t dependences;
++    ompt_record_task_dependence_t task_dependence;
++    ompt_record_task_schedule_t task_schedule;
++    ompt_record_implicit_task_t implicit_task;
++    ompt_record_masked_t masked;
++    ompt_record_sync_region_t sync_region;
++    ompt_record_mutex_acquire_t mutex_acquire;
++    ompt_record_mutex_t mutex;
++    ompt_record_nest_lock_t nest_lock;
++    ompt_record_flush_t flush;
++    ompt_record_cancel_t cancel;
++    ompt_record_target_t target;
++    ompt_record_target_data_op_t target_data_op;
++    ompt_record_target_map_t target_map;
++    ompt_record_target_kernel_t target_kernel;
++    ompt_record_control_tool_t control_tool;
++  } record;
++} ompt_record_ompt_t;
++
++typedef ompt_record_ompt_t *(*ompt_get_record_ompt_t) (
++  ompt_buffer_t *buffer,
++  ompt_buffer_cursor_t current
++);
++
++#define ompt_id_none 0
++#define ompt_data_none {0}
++#define ompt_time_none 0
++#define ompt_hwid_none 0
++#define ompt_addr_none ~0
++#define ompt_mutex_impl_none 0
++#define ompt_wait_id_none 0
++
++#define ompd_segment_none 0
++
++#endif /* __OMPT__ */

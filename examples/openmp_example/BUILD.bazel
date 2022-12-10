@@ -1,0 +1,14 @@
+load("@rules_ll//ll:defs.bzl", "ll_binary", "ll_compilation_database")
+
+ll_binary(
+    name = "openmp_example",
+    srcs = ["main.cpp"],
+    compilation_mode = "omp_cpu",
+    compile_flags = ["-std=c++20"],
+)
+
+ll_compilation_database(
+    name = "compile_commands",
+    config = "//:clang_tidy_config",
+    target = ":openmp_example",
+)

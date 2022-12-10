@@ -10,6 +10,9 @@ def _ll_transition_impl(settings, attr):
     if attr.compilation_mode == "cpp":
         return {"//ll:current_ll_toolchain_configuration": "cpp"}
 
+    if attr.compilation_mode == "omp_cpu":
+        return {"//ll:current_ll_toolchain_configuration": "omp_cpu"}
+
     if attr.compilation_mode == "cuda_nvidia":
         return {"//ll:current_ll_toolchain_configuration": "cuda_nvidia"}
 
@@ -36,6 +39,9 @@ def _ll_toolchain_transition_impl(settings, attr):
 
     if attr.toolchain_configuration == "cpp":
         return {"//ll:current_ll_toolchain_configuration": "cpp"}
+
+    if attr.compilation_mode == "omp_cpu":
+        return {"//ll:current_ll_toolchain_configuration": "omp_cpu"}
 
     if attr.toolchain_configuration == "cuda_nvidia":
         return {"//ll:current_ll_toolchain_configuration": "cuda_nvidia"}

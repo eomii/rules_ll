@@ -8,7 +8,7 @@ load("@bazel_skylib//rules:common_settings.bzl", "BuildSettingInfo")
 def compile_object_environment(ctx, toolchain_type):
     config = ctx.attr.toolchain_configuration[BuildSettingInfo].value
 
-    if config in ["cpp", "sycl_cpu"]:
+    if config in ["cpp", "sycl_cpu", "omp_cpu"]:
         return {
             "LINK": ctx.toolchains[toolchain_type].bitcode_linker.path,
             "LLD": ctx.toolchains[toolchain_type].linker.path,
