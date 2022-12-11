@@ -9,10 +9,11 @@ ll_binary(
         "--offload-arch=sm_70",
         "-Wno-deprecated",
     ],
+    visibility = ["@//:__pkg__"],
 )
 
 ll_compilation_database(
     name = "compile_commands",
     config = "//:clang_tidy_config",
-    target = ":cuda_example",
+    targets = [":cuda_example"],
 )

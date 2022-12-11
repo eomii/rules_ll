@@ -5,10 +5,11 @@ ll_binary(
     srcs = ["main.cpp"],
     compilation_mode = "omp_cpu",
     compile_flags = ["-std=c++20"],
+    visibility = ["@//:__pkg__"],
 )
 
 ll_compilation_database(
     name = "compile_commands",
     config = "//:clang_tidy_config",
-    target = ":openmp_example",
+    targets = [":openmp_example"],
 )

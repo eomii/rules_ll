@@ -7,19 +7,23 @@ load(
     "//ll:providers.bzl",
     "LlCompilationDatabaseFragmentsInfo",
 )
+load("//ll:outputs.bzl", "ll_artifact")
 
 def _ll_compilation_database(ctx):
-    inputs = [
-        cdf
-        for cdf in ctx.attr.target[LlCompilationDatabaseFragmentsInfo].cdfs.to_list()
-    ]
+    inputs = []
+
+    for target in ctx.attr.targets:
+        inputs += [
+            cdf
+            for cdf in target[LlCompilationDatabaseFragmentsInfo].cdfs.to_list()
+        ]
 
     # Filter excluded files.
     for exclude in ctx.attr.exclude:
         inputs = [cdf for cdf in inputs if exclude not in cdf.path]
 
     unmodified_cdb = ctx.actions.declare_file(
-        "unmodified_compile_commands.json",
+        ll_artifact(ctx, "unmodified_compile_commands.json"),
     )
 
     args = ctx.actions.args()
@@ -58,7 +62,7 @@ def _ll_compilation_database(ctx):
     # The "directory" fields reference sandbox locations which do not exist
     # after executing compile actions. Hence we change them to reference the
     # workspace location.
-    cdb = ctx.actions.declare_file("compile_commands.json")
+    cdb = ctx.actions.declare_file(ll_artifact(ctx, "compile_commands.json"))
     args = ctx.actions.args()
 
     args.add(unmodified_cdb)
@@ -83,19 +87,26 @@ with open(sys.argv[1], 'r') as in_file, open(sys.argv[2], 'w') as out_file:
     for fragment in revised_compilation_database:
         fragment['directory'] = '$(pwd)'
 
+        # Workaround for https://github.com/llvm/llvm-project/issues/59291.
+        for arg in fragment['arguments']:
+            if arg == '-xcuda':
+                fragment['arguments'] += ['--offload-host-only']
+            if arg.startswith('--offload-arch'):
+                fragment['arguments'].remove(arg)
+
     json.dump(revised_compilation_database, out_file)
 """ $1 $2
 ''',
         execution_requirements = {
-            "local": "1",
-            "no-cache": "1",
             "no-remote": "1",
             "no-sandbox": "1",
         },
         arguments = [args],
     )
 
-    clang_tidy_runner = ctx.actions.declare_file("run_clang_tidy.sh")
+    clang_tidy_runner = ctx.actions.declare_file(
+        ll_artifact(ctx, "run_clang_tidy.sh"),
+    )
 
     runfile_content = """#!/bin/bash
 echo "Running clang-tidy. This may take a while.";
@@ -143,7 +154,7 @@ ll_compilation_database = rule(
             """,
             default = [],
         ),
-        "target": attr.label(
+        "targets": attr.label_list(
             mandatory = True,
             doc = """
             The label for which the compilation database should be built.

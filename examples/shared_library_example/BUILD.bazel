@@ -10,6 +10,7 @@ ll_library(
 ll_binary(
     name = "shared_library_example",
     srcs = ["main.cpp"],
+    visibility = ["@//:__pkg__"],
     deps = [
         ":libshared",
         # For demonstration purposes we have a subdirectory `subdir` containing

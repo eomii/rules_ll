@@ -1,7 +1,26 @@
-load("@rules_ll//ll:defs.bzl", "ll_binary", "ll_compilation_database", "ll_library")
+load("@rules_ll//ll:defs.bzl", "ll_compilation_database")
 
 filegroup(
     name = "clang_tidy_config",
     srcs = [".clang-tidy"],
     visibility = ["//:__subpackages__"],
+)
+
+ll_compilation_database(
+    name = "compile_commands",
+    config = ":clang_tidy_config",
+    targets = [
+        # "//clang_tidy_example",  # This one runs separately.
+        "//cuda_example",
+        "//format_example",
+        "//frontend_action_example",
+        "//hip_example",
+        "//hip_rdc_example",
+        "//module_partition_example",
+        "//modules_example",
+        # "//modules_draft_example",  # Not clang-tidy conform.
+        "//openmp_example",
+        # "//sanitizers",  # Not clang-tidy conform.
+        "//shared_library_example",
+    ],
 )

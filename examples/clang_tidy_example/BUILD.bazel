@@ -38,18 +38,18 @@ ll_binary(
 ll_compilation_database(
     name = "lib_1_compile_commands",
     config = "//:clang_tidy_config",
-    target = ":lib_1",
+    targets = [":lib_1"],
 )
 
 ll_compilation_database(
     name = "clang_tidy_example",
     config = "//:clang_tidy_config",
-    target = ":executable",
+    targets = [":executable"],
 )
 
 ll_compilation_database(
     name = "compilation_database_with_excludes",
     config = "//:clang_tidy_config",
     exclude = ["lib_1"],
-    target = ":executable",
+    targets = [":executable"],
 )

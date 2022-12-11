@@ -21,11 +21,12 @@ ll_binary(
     name = "module_partition_example",
     srcs = ["main.cpp"],
     compile_flags = ["-std=c++20"],
+    visibility = ["@//:__pkg__"],
     deps = [":hello_world"],
 )
 
 ll_compilation_database(
     name = "compile_commands",
     config = "//:clang_tidy_config",
-    target = ":module_partition_example",
+    targets = [":module_partition_example"],
 )

@@ -4,10 +4,11 @@ ll_binary(
     name = "format_example",
     srcs = ["format_example.cpp"],
     compile_flags = ["-std=c++20"],
+    visibility = ["@//:__pkg__"],
 )
 
 ll_compilation_database(
     name = "compile_commands",
     config = "//:clang_tidy_config",
-    target = ":format_example",
+    targets = [":format_example"],
 )

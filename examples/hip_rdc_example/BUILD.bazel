@@ -40,6 +40,7 @@ ll_binary(
     ],
     compilation_mode = "hip_nvidia",
     compile_flags = COMPILE_FLAGS,
+    visibility = ["@//:__pkg__"],
     deps = [
         ":add",
         ":multiply",

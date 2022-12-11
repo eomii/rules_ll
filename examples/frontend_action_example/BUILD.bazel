@@ -10,10 +10,11 @@ ll_binary(
     compile_flags = ["-std=c++20"],
     defines = ["LLVM_ON_UNIX"],
     depends_on_llvm = 1,
+    visibility = ["@//:__pkg__"],
 )
 
 ll_compilation_database(
     name = "compile_commands",
     config = "//:clang_tidy_config",
-    target = ":llvm_pass_example",
+    targets = [":llvm_pass_example"],
 )

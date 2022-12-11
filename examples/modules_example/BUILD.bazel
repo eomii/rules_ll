@@ -37,6 +37,7 @@ ll_binary(
     name = "modules_example",
     srcs = ["main.cpp"],
     compile_flags = ["-std=c++20"],
+    visibility = ["@//:__pkg__"],
     deps = [
         ":a",
         ":c",
@@ -47,5 +48,5 @@ ll_binary(
 ll_compilation_database(
     name = "compile_commands",
     config = "//:clang_tidy_config",
-    target = ":modules_example",
+    targets = [":modules_example"],
 )

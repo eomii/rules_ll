@@ -1,7 +1,7 @@
 load("@rules_ll//ll:defs.bzl", "ll_binary", "ll_compilation_database")
 
 ll_binary(
-    name = "nvidia",
+    name = "hip_example",
     srcs = ["example.cpp"],
     compilation_mode = "hip_nvidia",
     compile_flags = [
@@ -9,10 +9,11 @@ ll_binary(
         "--offload-arch=sm_70",
         "-Wno-deprecated",
     ],
+    visibility = ["@//:__pkg__"],
 )
 
 ll_compilation_database(
     name = "compile_commands",
     config = "//:clang_tidy_config",
-    target = ":nvidia",
+    targets = [":hip_example"],
 )
