@@ -59,7 +59,7 @@ def _get_basename(file):
 
 def _get_owner_package(file):
     """Returns file.owner.workspace_root + file.owner.package."""
-    return file.owner.workspace_root + "/" + file.owner.package
+    return file.owner.workspace_root + "/" + file.owner.package + "/" + file.owner.name
 
 def compile_object_args(
         ctx,
@@ -429,20 +429,24 @@ def link_executable_args(ctx, in_files, out_file, mode):
     ]:
         args.add("-lrt")
         args.add(Label("@cuda_cudart").workspace_root, format = "-L%s/lib")
-
         args.add(Label("@cuda_cupti").workspace_root, format = "-L%s/lib")
         args.add(Label("@cuda_nvcc").workspace_root, format = "-L%s/nvvm/lib64")
-        args.add(
-            ctx.toolchains["//ll:toolchain_type"].cuda_libdir.short_path[3:],
-            format = "-rpath=$ORIGIN/../external/%s",
-        )
-        args.add(
-            ctx.toolchains["//ll:toolchain_type"].cuda_nvvm.short_path[3:],
-            format = "-rpath=$ORIGIN/../external/%s",
-        )
+
+        # # TODO(aaronmondal): This is broken, but we should make this work.
+        # args.add(
+        #     ctx.toolchains["//ll:toolchain_type"].cuda_libdir.short_path[3:],
+        #     format = "-rpath=$ORIGIN/../../external/%s",
+        # )
+        # args.add(
+        #     ctx.toolchains["//ll:toolchain_type"].cuda_nvvm.short_path[3:],
+        #     format = "-rpath=$ORIGIN/../../external/%s",
+        # )
+
         if ctx.label.name != "rt-backend-cuda":
+            # This will wrongly be remapped to a local cuda installation.
             args.add("-l:stubs/libcuda.so")
-            args.add("-lcudart")
+
+            args.add("-lcudart_static")
             args.add("-lcupti_static")
 
     # Additional system libraries.
@@ -478,7 +482,7 @@ def link_executable_args(ctx, in_files, out_file, mode):
         args.add_all(
             sycl_shared_libraries,
             map_each = _get_owner_package,
-            format_each = "-rpath=$ORIGIN/../%s",
+            format_each = "-rpath=$ORIGIN/../..%s",
             uniquify = True,
             omit_if_empty = True,
         )
@@ -545,7 +549,7 @@ def link_executable_args(ctx, in_files, out_file, mode):
     args.add_all(
         shared_link_files,
         map_each = _get_owner_package,
-        format_each = "-rpath=$ORIGIN/../%s",
+        format_each = "-rpath=$ORIGIN/../..%s",
         uniquify = True,
         omit_if_empty = True,
     )

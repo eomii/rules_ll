@@ -5,17 +5,34 @@ Action outputs.
 
 load("@bazel_skylib//lib:paths.bzl", "paths")
 
+def ll_artifact(ctx, filename = None):
+    """Returns a string like "<ctx.label.name>/filename"
+
+    We use this method to encapsulate intermediary build artifacts so that we
+    don't get name clashes for files of the same name built by targets in the
+    same build invocation.
+
+    Args:
+        ctx: The build context.
+        filename: An optional string representing a filename. If omitted, only
+            creates a path like "<ctx.label.name>".
+    """
+    if filename == None:
+        return "{}".format(ctx.label.name)
+
+    return "{}/{}".format(ctx.label.name, filename)
+
 def link_executable_outputs(ctx):
-    return ctx.actions.declare_file(ctx.label.name)
+    return ctx.actions.declare_file(ll_artifact(ctx, ctx.label.name))
 
 def link_bitcode_library_outputs(ctx):
-    return ctx.actions.declare_file(ctx.label.name + ".bc")
+    return ctx.actions.declare_file(ll_artifact(ctx, ctx.label.name + ".bc"))
 
 def link_shared_object_outputs(ctx):
-    return ctx.actions.declare_file(ctx.label.name + ".so")
+    return ctx.actions.declare_file(ll_artifact(ctx, ctx.label.name + ".so"))
 
 def create_archive_library_outputs(ctx):
-    return ctx.actions.declare_file(ctx.label.name + ".a")
+    return ctx.actions.declare_file(ll_artifact(ctx, ctx.label.name + ".a"))
 
 def precompile_interface_outputs(ctx, in_file):
     build_file_path = paths.join(
@@ -29,14 +46,14 @@ def precompile_interface_outputs(ctx, in_file):
     out_file = ctx.actions.declare_file(
         paths.join(
             relative_src_dir,
-            paths.replace_extension(in_file.basename, ".pcm"),
+            paths.replace_extension(ll_artifact(ctx, in_file.basename), ".pcm"),
         ),
     )
 
     cdf = ctx.actions.declare_file(
         paths.join(
             relative_src_dir,
-            paths.replace_extension(in_file.basename, ".pcm.cdf"),
+            paths.replace_extension(ll_artifact(ctx, in_file.basename), ".pcm.cdf"),
         ),
     )
 
@@ -65,14 +82,14 @@ def compile_object_outputs(ctx, in_file):
     out_file = ctx.actions.declare_file(
         paths.join(
             relative_src_dir,
-            paths.replace_extension(in_file.basename, extension),
+            paths.replace_extension(ll_artifact(ctx, in_file.basename), extension),
         ),
     )
 
     cdf = ctx.actions.declare_file(
         paths.join(
             relative_src_dir,
-            paths.replace_extension(in_file.basename, cdf_extension),
+            paths.replace_extension(ll_artifact(ctx, in_file.basename), cdf_extension),
         ),
     )
     return out_file, cdf
