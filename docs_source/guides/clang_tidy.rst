@@ -29,15 +29,15 @@ For a target ``my_library`` defined in a ``BUILD.bazel`` file, we can add an
 
    ll_compilation_database(
        name = "my_library_compile_commands",
-       target = ":my_library",
+       targets = [":my_library"],
        config = ":clang_tidy_config",
    )
 
-The ``target`` attribute in ``ll_compilation_database`` is used to specify the
-target for which it should generate the ``compile_commands.json`` file.
+The ``targets`` attribute in ``ll_compilation_database`` is used to specify the
+targets for which it should generate the ``compile_commands.json`` file.
 
 The ``.clang-tidy`` file contains the configuration for ``clang-tidy``. See
-`rules/ll/examples/.clang-tidy <https://github.con/eomii/rules_ll/tree/main/examples/.clang-tidy>`_
+`rules/ll/examples/.clang-tidy <https://github.com/eomii/rules_ll/tree/main/examples/.clang-tidy>`_
 for an example configuration.
 
 To run ``clang-tidy`` on the sources of ``my_library_compile_commands``, run
@@ -63,8 +63,9 @@ Using Multiple Compilation Databases
 ====================================
 
 The ``ll_compilation_database`` rule will construct the
-``compile_commands.json`` file from the ``target`` attribute's compile commands
-and its dependencies' compile commands. Consider the following targets:
+``compile_commands.json`` file from the ``targets`` attribute's compile
+commands and their dependencies' compile commands. Consider the following
+targets:
 
 .. code:: python
 
@@ -91,14 +92,23 @@ and its dependencies' compile commands. Consider the following targets:
 
    ll_compilation_database(
        name = "cdb_1",
-       target = ":mylib_1",
+       targets = [":mylib_1"],
        config = ":clang_tidy_config",
    )
 
    ll_compilation_database(
        name = "cdb_2",
-       target = ":mylib_2",
+       targets = [":mylib_2"],
        config = ":clang_tidy_config",
+   )
+
+   ll_compilation_database(
+      name = "compile_commands",
+      targets = [
+         ":mylib_1",
+         ":mylib_2",
+      ],
+      config = ":clang_tidy_config",
    )
 
 Running ``cdb_1`` will run ``clang-tidy`` only on ``mylib_1.cpp``:
@@ -117,13 +127,11 @@ Running ``cdb_2`` will run ``clang-tidy`` on ``mylib_1.cpp`` and
    # Prints warnings for mylib_1.cpp, mylib_2.cpp and
    # mylib_1_additional_source.cpp.
 
+Running ``compile_commands`` will also run ``clang-tidy`` on both targets.
+
 Limitations
 ===========
 
-``ll_compilation_database`` currently does not support the ``-fix`` option for
+``ll_compilation_database`` does not support the ``-fix`` option for
 ``clang-tidy``. The auto-fixer tends to break code and would have to work
 outside of the Bazel build direcories.
-
-For complex projects one may lose track of multiple ``ll_compilation_database``
-targets. Support for multiple targets in ``ll_compilation_database`` for easier
-global compile command generation is planned.

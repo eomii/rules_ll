@@ -96,6 +96,30 @@ link_shared_object_outputs(<a href="#link_shared_object_outputs-ctx">ctx</a>)
 | <a id="link_shared_object_outputs-ctx"></a>ctx |  <p align="center"> - </p>   |  none |
 
 
+<a id="#ll_artifact"></a>
+
+## ll_artifact
+
+<pre>
+ll_artifact(<a href="#ll_artifact-ctx">ctx</a>, <a href="#ll_artifact-filename">filename</a>)
+</pre>
+
+Returns a string like "<ctx.label.name>/filename"
+
+We use this method to encapsulate intermediary build artifacts so that we
+don't get name clashes for files of the same name built by targets in the
+same build invocation.
+
+
+**PARAMETERS**
+
+
+| Name  | Description | Default Value |
+| :------------- | :------------- | :------------- |
+| <a id="ll_artifact-ctx"></a>ctx |  The build context.   |  none |
+| <a id="ll_artifact-filename"></a>filename |  An optional string representing a filename. If omitted, only creates a path like "&lt;ctx.label.name&gt;".   |  <code>None</code> |
+
+
 <a id="#precompile_interface_outputs"></a>
 
 ## precompile_interface_outputs

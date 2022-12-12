@@ -391,6 +391,11 @@ title="Source repository"
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#ll-artifact">
+   ll_artifact
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#precompile-interface-outputs">
    precompile_interface_outputs
   </a>
@@ -437,6 +442,11 @@ title="Source repository"
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#link-shared-object-outputs">
    link_shared_object_outputs
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#ll-artifact">
+   ll_artifact
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
@@ -568,6 +578,36 @@ link_shared_object_outputs(<a href="#link_shared_object_outputs-ctx">ctx</a>)
 <tr class="row-even"><td class="text-left"><p><a id="link_shared_object_outputs-ctx"></a>ctx</p></td>
 <td class="text-left"><p><p align="center"> - </p></p></td>
 <td class="text-left"><p>none</p></td>
+</tr>
+</tbody>
+</table>
+<p><a id="#ll_artifact"></a></p>
+</div>
+<div class="section" id="ll-artifact">
+<h2>ll_artifact<a class="headerlink" href="#ll-artifact" title="Permalink to this headline">#</a></h2>
+<pre>
+ll_artifact(<a href="#ll_artifact-ctx">ctx</a>, <a href="#ll_artifact-filename">filename</a>)
+</pre>
+<p>Returns a string like “&lt;ctx.label.name&gt;/filename”</p>
+<p>We use this method to encapsulate intermediary build artifacts so that we
+don’t get name clashes for files of the same name built by targets in the
+same build invocation.</p>
+<p><strong>PARAMETERS</strong></p>
+<table class="colwidths-auto table">
+<thead>
+<tr class="row-odd"><th class="text-left head"><p>Name</p></th>
+<th class="text-left head"><p>Description</p></th>
+<th class="text-left head"><p>Default Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-left"><p><a id="ll_artifact-ctx"></a>ctx</p></td>
+<td class="text-left"><p>The build context.</p></td>
+<td class="text-left"><p>none</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><a id="ll_artifact-filename"></a>filename</p></td>
+<td class="text-left"><p>An optional string representing a filename. If omitted, only creates a path like “&lt;ctx.label.name&gt;”.</p></td>
+<td class="text-left"><p><code>None</code></p></td>
 </tr>
 </tbody>
 </table>
