@@ -8,12 +8,13 @@ C++ with a Clang/LLVM based toolchain built from upstream.
 
 - Upstream Clang/LLVM via the
   `llvm-bazel-overlay <https://github.com/llvm/llvm-project/tree/main/utils/bazel>`_.
-- Custom overlays for ``libcxx``, ``libcxxabi``, ``libunwind``, ``compiler-rt``
-  and ``clang-tidy``.
+- Custom overlays for ``libcxx``, ``libcxxabi``, ``libunwind``,
+  ``compiler-rt``, ``openmp`` and ``clang-tidy``.
 - Builtin ``clang-tidy`` invocations via an ``ll_compilation_database`` target.
 - Support for sanitizers via target attributes.
 - Toolchains for heterogeneous code targeting Nvidia GPUs with HIP or CUDA.
 - C++ modules.
+- Experimental OpenMP CPU support.
 
 **Links**
 
@@ -23,6 +24,7 @@ C++ with a Clang/LLVM based toolchain built from upstream.
 
 **Planned features**
 
+- OpenMP offloading for GPUs.
 - HIP/AMD.
 - SYCL.
 - WebAssembly.
@@ -78,7 +80,7 @@ workspace:
 
    touch WORKSPACE.bazel .bazelrc
    echo 7.0.0-pre.20221102.3 > .bazelversion
-   echo 'bazel_dep(name="rules_ll", version="20221127.0")' > MODULE.bazel
+   echo 'bazel_dep(name="rules_ll", version="20221212.0")' > MODULE.bazel
 
 Copy the following lines into the just created ``.bazelrc`` file:
 
