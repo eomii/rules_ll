@@ -152,7 +152,7 @@ convenience script ``generate_docs.sh`` to generate the documentation::
 Licensing considerations
 ------------------------
 
-``rules_ll`` is distributed under the Apache 2.0 License.
+``rules_ll`` is distributed under the Apache 2.0 License with LLVM exceptions.
 
 This repository contains overlays and automated setups for the CUDA toolkit and
 HIP. Using ``heterogeneous_mode`` implies acceptance of their licenses.
