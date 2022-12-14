@@ -1,0 +1,83 @@
+load("@rules_ll//ll:defs.bzl", "ll_library")
+
+LIBOMP_SOURCES = [
+    "runtime/src/kmp_alloc.cpp",
+    "runtime/src/kmp_atomic.cpp",
+    "runtime/src/kmp_csupport.cpp",
+    "runtime/src/kmp_debug.cpp",
+    "runtime/src/kmp_itt.cpp",
+    "runtime/src/kmp_environment.cpp",
+    "runtime/src/kmp_error.cpp",
+    "runtime/src/kmp_global.cpp",
+    "runtime/src/kmp_i18n.cpp",
+    "runtime/src/kmp_io.cpp",
+    "runtime/src/kmp_runtime.cpp",
+    "runtime/src/kmp_settings.cpp",
+    "runtime/src/kmp_str.cpp",
+    "runtime/src/kmp_tasking.cpp",
+    "runtime/src/kmp_threadprivate.cpp",
+    "runtime/src/kmp_utility.cpp",
+    "runtime/src/kmp_barrier.cpp",
+    "runtime/src/kmp_wait_release.cpp",
+    "runtime/src/kmp_affinity.cpp",
+    "runtime/src/kmp_dispatch.cpp",
+    "runtime/src/kmp_lock.cpp",
+    "runtime/src/kmp_sched.cpp",
+
+    # Linux specific.
+    "runtime/src/z_Linux_util.cpp",
+    "runtime/src/kmp_gsupport.cpp",
+
+    # Additional files.
+    "runtime/src/thirdparty/ittnotify/ittnotify_static.cpp",  # itt notify.
+    "runtime/src/kmp_debugger.cpp",  # debugger
+    # "runtime/src/kmp_stats.cpp", # stats
+    # "runtime/src/kmp_stats_timing.cpp", # stats
+    "runtime/src/kmp_taskdeps.cpp",
+    "runtime/src/kmp_cancel.cpp",
+
+    # Other.
+    "runtime/src/kmp_ftn_cdecl.cpp",
+    "runtime/src/kmp_ftn_extra.cpp",
+    "runtime/src/kmp_version.cpp",
+    "runtime/src/ompt-general.cpp",  # ompt
+    "runtime/src/ompt-specific.cpp",  # ompt, missing in CMake.
+    "runtime/src/ompd-specific.cpp",  # ompd
+
+    # GNU Asm.
+    "runtime/src/z_Linux_asm.S",
+]
+
+ll_library(
+    name = "libomp",
+    srcs = LIBOMP_SOURCES,
+    # Includes the following manually generated patched-in headers.
+    # We ultimately need these to be generated as part of the build.
+    # "runtime/src/kmp_config.h",
+    # "runtime/src/omp.h",
+    # "runtime/src/omp-tools.h",
+    # "runtime/src/kmp_i18n_default.inc",
+    # "runtime/src/kmp_i18n_id.inc",
+    hdrs = glob([
+        "runtime/src/*.inc",
+        "runtime/src/*.h",
+        "runtime/src/*.inl",
+        "runtime/src/thirdparty/ittnotify/*.h",
+        "runtime/src/thirdparty/ittnotify/legacy/*.h",
+    ]),
+    compile_flags = [
+        "-std=c++17",
+        "-Wno-switch",
+    ],
+    exposed_hdrs = [
+        "runtime/src/include/omp.h",
+    ],
+    exposed_relative_includes = [
+        "openmp/runtime/src/include",
+    ],
+    relative_includes = [
+        "openmp/runtime/src",
+        "openmp/runtime/src/thirdparty/ittnotify",
+    ],
+    visibility = ["//visibility:public"],
+)

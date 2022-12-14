@@ -3359,10 +3359,10 @@ index f8448fb0e726..88c1aa2ddced 100644
 +)
 diff --git a/utils/bazel/llvm-project-overlay/openmp/BUILD.bazel b/utils/bazel/llvm-project-overlay/openmp/BUILD.bazel
 new file mode 100644
-index 000000000000..3604de51034c
+index 000000000000..deba9e001ad8
 --- /dev/null
 +++ b/utils/bazel/llvm-project-overlay/openmp/BUILD.bazel
-@@ -0,0 +1,80 @@
+@@ -0,0 +1,83 @@
 +load("@rules_ll//ll:defs.bzl", "ll_library")
 +
 +LIBOMP_SOURCES = [
@@ -3395,7 +3395,7 @@ index 000000000000..3604de51034c
 +
 +    # Additional files.
 +    "runtime/src/thirdparty/ittnotify/ittnotify_static.cpp",  # itt notify.
-+    "runtime/src/kmp_debugger.cpp", # debugger
++    "runtime/src/kmp_debugger.cpp",  # debugger
 +    # "runtime/src/kmp_stats.cpp", # stats
 +    # "runtime/src/kmp_stats_timing.cpp", # stats
 +    "runtime/src/kmp_taskdeps.cpp",
@@ -3405,9 +3405,9 @@ index 000000000000..3604de51034c
 +    "runtime/src/kmp_ftn_cdecl.cpp",
 +    "runtime/src/kmp_ftn_extra.cpp",
 +    "runtime/src/kmp_version.cpp",
-+    "runtime/src/ompt-general.cpp", # ompt
-+    "runtime/src/ompt-specific.cpp", # ompt, missing in CMake.
-+    "runtime/src/ompd-specific.cpp", # ompd
++    "runtime/src/ompt-general.cpp",  # ompt
++    "runtime/src/ompt-specific.cpp",  # ompt, missing in CMake.
++    "runtime/src/ompd-specific.cpp",  # ompd
 +
 +    # GNU Asm.
 +    "runtime/src/z_Linux_asm.S",
@@ -3430,17 +3430,20 @@ index 000000000000..3604de51034c
 +        "runtime/src/thirdparty/ittnotify/*.h",
 +        "runtime/src/thirdparty/ittnotify/legacy/*.h",
 +    ]),
++    compile_flags = [
++        "-std=c++17",
++        "-Wno-switch",
++    ],
 +    exposed_hdrs = [
 +        "runtime/src/include/omp.h",
++    ],
++    exposed_relative_includes = [
++        "openmp/runtime/src/include",
 +    ],
 +    relative_includes = [
 +        "openmp/runtime/src",
 +        "openmp/runtime/src/thirdparty/ittnotify",
 +    ],
-+    exposed_relative_includes = [
-+        "openmp/runtime/src/include",
-+    ],
-+    compile_flags = ["-std=c++17", "-Wno-switch"],
 +    visibility = ["//visibility:public"],
 +)
 diff --git a/utils/bazel/llvm-project-overlay/openmp/runtime/src/include/omp.h b/utils/bazel/llvm-project-overlay/openmp/runtime/src/include/omp.h
@@ -5065,7 +5068,7 @@ index 000000000000..c6f8ded667dc
 +// end of file //
 diff --git a/utils/bazel/llvm-project-overlay/openmp/runtime/src/omp-tools.h b/utils/bazel/llvm-project-overlay/openmp/runtime/src/omp-tools.h
 new file mode 100644
-index 000000000000..53defaa5d09e
+index 000000000000..ff2d32291f9e
 --- /dev/null
 +++ b/utils/bazel/llvm-project-overlay/openmp/runtime/src/omp-tools.h
 @@ -0,0 +1,1415 @@
@@ -5091,7 +5094,7 @@ index 000000000000..53defaa5d09e
 +#include <stdint.h>
 +#include <stddef.h>
 +
-+#ifdef DEPRECATION_WARNINGS 
++#ifdef DEPRECATION_WARNINGS
 +# ifdef __cplusplus
 +# define DEPRECATED_51 [[deprecated("as of 5.1")]]
 +# else
@@ -5251,11 +5254,11 @@ index 000000000000..53defaa5d09e
 +
 +#define FOREACH_OMPT_50_TARGET_EVENT(macro)                                                                              \
 +    FOREACH_OMPT_DEVICE_EVENT(macro)                                                                                     \
-+    FOREACH_OMPT_NOEMI_EVENT(macro) 
++    FOREACH_OMPT_NOEMI_EVENT(macro)
 +
 +#define FOREACH_OMPT_51_TARGET_EVENT(macro)                                                                              \
 +    FOREACH_OMPT_DEVICE_EVENT(macro)                                                                                     \
-+    FOREACH_OMPT_EMI_EVENT(macro) 
++    FOREACH_OMPT_EMI_EVENT(macro)
 +
 +#define FOREACH_OMPT_EVENT(macro)                                                                                        \
 +    FOREACH_OMPT_HOST_EVENT(macro)                                                                                       \
