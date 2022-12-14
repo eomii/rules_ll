@@ -404,11 +404,10 @@ title="Source repository"
 
               <div>
 
-  <!-- Generated with Stardoc: http://skydoc.bazel.build -->
-<div class="section" id="ll-compilation-database-bzl">
+  <div class="section" id="ll-compilation-database-bzl">
 <h1><code class="docutils literal notranslate"><span class="pre">//ll:compilation_database.bzl</span></code><a class="headerlink" href="#ll-compilation-database-bzl" title="Permalink to this headline">#</a></h1>
 <p>Implements the <code class="docutils literal notranslate"><span class="pre">ll_compilation_database</span></code> rule.</p>
-<p><a id="#ll_compilation_database"></a></p>
+<p><a id="ll_compilation_database"></a></p>
 <div class="section" id="ll-compilation-database">
 <h2>ll_compilation_database<a class="headerlink" href="#ll-compilation-database" title="Permalink to this headline">#</a></h2>
 <pre>
@@ -426,35 +425,20 @@ and running <a class="reference external" href="https://clang.llvm.org/extra/cla
 <thead>
 <tr class="row-odd"><th class="text-left head"><p>Name</p></th>
 <th class="text-left head"><p>Description</p></th>
-<th class="text-left head"><p>Type</p></th>
-<th class="text-left head"><p>Mandatory</p></th>
-<th class="text-left head"><p>Default</p></th>
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td class="text-left"><p><a id="ll_compilation_database-name"></a>name</p></td>
-<td class="text-left"><p>A unique name for this target.</p></td>
-<td class="text-left"><p><a href="https://bazel.build/docs/build-ref.html#name">Name</a></p></td>
-<td class="text-left"><p>required</p></td>
-<td class="text-left"><p></p></td>
+<tr class="row-even"><td class="text-left"><p><a id="ll_compilation_database-name"></a><code class="docutils literal notranslate"><span class="pre">name</span></code></p></td>
+<td class="text-left"><p><code><a href="https://bazel.build/docs/build-ref.html#name">Name</a></code>, required.<br><br> A unique name for this target.</p></td>
 </tr>
-<tr class="row-odd"><td class="text-left"><p><a id="ll_compilation_database-config"></a>config</p></td>
-<td class="text-left"><p>The label of a <code>.clang-tidy</code> configuration file.<br><br>            This file should be at the root of your project directory.</p></td>
-<td class="text-left"><p><a href="https://bazel.build/docs/build-ref.html#labels">Label</a></p></td>
-<td class="text-left"><p>required</p></td>
-<td class="text-left"><p></p></td>
+<tr class="row-odd"><td class="text-left"><p><a id="ll_compilation_database-config"></a><code class="docutils literal notranslate"><span class="pre">config</span></code></p></td>
+<td class="text-left"><p><code><a href="https://bazel.build/docs/build-ref.html#labels">Label</a></code>, required.<br><br> The label of a <code>.clang-tidy</code> configuration file.<br><br>            This file should be at the root of your project directory.</p></td>
 </tr>
-<tr class="row-even"><td class="text-left"><p><a id="ll_compilation_database-exclude"></a>exclude</p></td>
-<td class="text-left"><p>Exclude all targets whose path includes one at least one of the             provided strings.</p></td>
-<td class="text-left"><p>List of strings</p></td>
-<td class="text-left"><p>optional</p></td>
-<td class="text-left"><p>[]</p></td>
+<tr class="row-even"><td class="text-left"><p><a id="ll_compilation_database-exclude"></a><code class="docutils literal notranslate"><span class="pre">exclude</span></code></p></td>
+<td class="text-left"><p><code>List of strings</code>, optional, defaults to <code>[]</code>.<br><br> Exclude all targets whose path includes one at least one of the             provided strings.</p></td>
 </tr>
-<tr class="row-odd"><td class="text-left"><p><a id="ll_compilation_database-targets"></a>targets</p></td>
-<td class="text-left"><p>The label for which the compilation database should be built.</p></td>
-<td class="text-left"><p><a href="https://bazel.build/docs/build-ref.html#labels">List of labels</a></p></td>
-<td class="text-left"><p>required</p></td>
-<td class="text-left"><p></p></td>
+<tr class="row-odd"><td class="text-left"><p><a id="ll_compilation_database-targets"></a><code class="docutils literal notranslate"><span class="pre">targets</span></code></p></td>
+<td class="text-left"><p><code><a href="https://bazel.build/docs/build-ref.html#labels">List of labels</a></code>, required.<br><br> The label for which the compilation database should be built.</p></td>
 </tr>
 </tbody>
 </table>

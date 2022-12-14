@@ -1,18 +1,14 @@
-<!-- Generated with Stardoc: http://skydoc.bazel.build -->
-
 # `//ll:compilation_database.bzl`
 
 Implements the `ll_compilation_database` rule.
 
 
-<a id="#ll_compilation_database"></a>
+<a id="ll_compilation_database"></a>
 
 ## ll_compilation_database
-
 <pre>
 ll_compilation_database(<a href="#ll_compilation_database-name">name</a>, <a href="#ll_compilation_database-config">config</a>, <a href="#ll_compilation_database-exclude">exclude</a>, <a href="#ll_compilation_database-targets">targets</a>)
 </pre>
-
 
 Executable target for building a
 [compilation database](https://clang.llvm.org/docs/JSONCompilationDatabase.html)
@@ -24,13 +20,12 @@ For a full guide see
 Examples using this rule are available at
 [rules_ll/examples](https://github.com/eomii/rules_ll/tree/main/examples).
 
-
 **ATTRIBUTES**
 
 
-| Name  | Description | Type | Mandatory | Default |
-| :------------- | :------------- | :------------- | :------------- | :------------- |
-| <a id="ll_compilation_database-name"></a>name |  A unique name for this target.   | <a href="https://bazel.build/docs/build-ref.html#name">Name</a> | required |  |
-| <a id="ll_compilation_database-config"></a>config |  The label of a <code>.clang-tidy</code> configuration file.<br><br>            This file should be at the root of your project directory.   | <a href="https://bazel.build/docs/build-ref.html#labels">Label</a> | required |  |
-| <a id="ll_compilation_database-exclude"></a>exclude |  Exclude all targets whose path includes one at least one of the             provided strings.   | List of strings | optional | [] |
-| <a id="ll_compilation_database-targets"></a>targets |  The label for which the compilation database should be built.   | <a href="https://bazel.build/docs/build-ref.html#labels">List of labels</a> | required |  |
+| Name  | Description |
+| :---- | :---------- |
+| <a id="ll_compilation_database-name"></a>`name` | <code><a href="https://bazel.build/docs/build-ref.html#name">Name</a></code>, required.<br><br> A unique name for this target.   |
+| <a id="ll_compilation_database-config"></a>`config` | <code><a href="https://bazel.build/docs/build-ref.html#labels">Label</a></code>, required.<br><br> The label of a <code>.clang-tidy</code> configuration file.<br><br>            This file should be at the root of your project directory.   |
+| <a id="ll_compilation_database-exclude"></a>`exclude` | <code>List of strings</code>, optional, defaults to <code>[]</code>.<br><br> Exclude all targets whose path includes one at least one of the             provided strings.   |
+| <a id="ll_compilation_database-targets"></a>`targets` | <code><a href="https://bazel.build/docs/build-ref.html#labels">List of labels</a></code>, required.<br><br> The label for which the compilation database should be built.   |

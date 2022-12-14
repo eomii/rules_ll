@@ -1,0 +1,30 @@
+<a id="${funcInfo.functionName}"></a>
+
+#[[##]]# ${funcInfo.functionName}
+
+<pre>
+${util.funcSummary($funcInfo)}
+</pre>
+${util.htmlEscape($funcInfo.docString)}
+#if (!$funcInfo.getParameterList().isEmpty())
+
+**PARAMETERS**
+
+| Name  | Description |
+| :---- | :---------- |
+#foreach ($param in $funcInfo.getParameterList())
+| <a id="${funcInfo.functionName}-${param.name}"></a>`$param.name` | #if(!$param.getDefaultValue().isEmpty()) defaults to `${util.htmlEscape($param.getDefaultValue())}`.<br><br>#else#end#if(!$param.docString.isEmpty())${util.markdownCellFormat($param.docString)} #else#end |
+#end
+#end
+#if (!$funcInfo.getReturn().docString.isEmpty())
+
+**RETURNS**
+
+${util.htmlEscape($funcInfo.getReturn().docString)}
+#end
+#if (!$funcInfo.getDeprecated().docString.isEmpty())
+
+**DEPRECATED**
+
+${util.htmlEscape($funcInfo.getDeprecated().docString)}
+#end

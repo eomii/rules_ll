@@ -1,11 +1,9 @@
-<!-- Generated with Stardoc: http://skydoc.bazel.build -->
-
 # `//ll:args.bzl`
 
 Convenience function for setting compile arguments.
 
 
-<a id="#compile_object_args"></a>
+<a id="compile_object_args"></a>
 
 ## compile_object_args
 
@@ -15,25 +13,23 @@ compile_object_args(<a href="#compile_object_args-ctx">ctx</a>, <a href="#compil
 </pre>
 
 
-
 **PARAMETERS**
 
+| Name  | Description |
+| :---- | :---------- |
+| <a id="compile_object_args-ctx"></a>`ctx` |  |
+| <a id="compile_object_args-in_file"></a>`in_file` |  |
+| <a id="compile_object_args-out_file"></a>`out_file` |  |
+| <a id="compile_object_args-cdf"></a>`cdf` |  |
+| <a id="compile_object_args-headers"></a>`headers` |  |
+| <a id="compile_object_args-defines"></a>`defines` |  |
+| <a id="compile_object_args-includes"></a>`includes` |  |
+| <a id="compile_object_args-angled_includes"></a>`angled_includes` |  |
+| <a id="compile_object_args-bmis"></a>`bmis` |  |
+| <a id="compile_object_args-internal_bmis"></a>`internal_bmis` |  |
 
-| Name  | Description | Default Value |
-| :------------- | :------------- | :------------- |
-| <a id="compile_object_args-ctx"></a>ctx |  <p align="center"> - </p>   |  none |
-| <a id="compile_object_args-in_file"></a>in_file |  <p align="center"> - </p>   |  none |
-| <a id="compile_object_args-out_file"></a>out_file |  <p align="center"> - </p>   |  none |
-| <a id="compile_object_args-cdf"></a>cdf |  <p align="center"> - </p>   |  none |
-| <a id="compile_object_args-headers"></a>headers |  <p align="center"> - </p>   |  none |
-| <a id="compile_object_args-defines"></a>defines |  <p align="center"> - </p>   |  none |
-| <a id="compile_object_args-includes"></a>includes |  <p align="center"> - </p>   |  none |
-| <a id="compile_object_args-angled_includes"></a>angled_includes |  <p align="center"> - </p>   |  none |
-| <a id="compile_object_args-bmis"></a>bmis |  <p align="center"> - </p>   |  none |
-| <a id="compile_object_args-internal_bmis"></a>internal_bmis |  <p align="center"> - </p>   |  none |
 
-
-<a id="#create_archive_library_args"></a>
+<a id="create_archive_library_args"></a>
 
 ## create_archive_library_args
 
@@ -42,18 +38,16 @@ create_archive_library_args(<a href="#create_archive_library_args-ctx">ctx</a>, 
 </pre>
 
 
-
 **PARAMETERS**
 
+| Name  | Description |
+| :---- | :---------- |
+| <a id="create_archive_library_args-ctx"></a>`ctx` |  |
+| <a id="create_archive_library_args-in_files"></a>`in_files` |  |
+| <a id="create_archive_library_args-out_file"></a>`out_file` |  |
 
-| Name  | Description | Default Value |
-| :------------- | :------------- | :------------- |
-| <a id="create_archive_library_args-ctx"></a>ctx |  <p align="center"> - </p>   |  none |
-| <a id="create_archive_library_args-in_files"></a>in_files |  <p align="center"> - </p>   |  none |
-| <a id="create_archive_library_args-out_file"></a>out_file |  <p align="center"> - </p>   |  none |
 
-
-<a id="#link_bitcode_library_args"></a>
+<a id="link_bitcode_library_args"></a>
 
 ## link_bitcode_library_args
 
@@ -62,18 +56,16 @@ link_bitcode_library_args(<a href="#link_bitcode_library_args-ctx">ctx</a>, <a h
 </pre>
 
 
-
 **PARAMETERS**
 
+| Name  | Description |
+| :---- | :---------- |
+| <a id="link_bitcode_library_args-ctx"></a>`ctx` |  |
+| <a id="link_bitcode_library_args-in_files"></a>`in_files` |  |
+| <a id="link_bitcode_library_args-out_file"></a>`out_file` |  |
 
-| Name  | Description | Default Value |
-| :------------- | :------------- | :------------- |
-| <a id="link_bitcode_library_args-ctx"></a>ctx |  <p align="center"> - </p>   |  none |
-| <a id="link_bitcode_library_args-in_files"></a>in_files |  <p align="center"> - </p>   |  none |
-| <a id="link_bitcode_library_args-out_file"></a>out_file |  <p align="center"> - </p>   |  none |
 
-
-<a id="#link_executable_args"></a>
+<a id="link_executable_args"></a>
 
 ## link_executable_args
 
@@ -82,19 +74,17 @@ link_executable_args(<a href="#link_executable_args-ctx">ctx</a>, <a href="#link
 </pre>
 
 
-
 **PARAMETERS**
 
+| Name  | Description |
+| :---- | :---------- |
+| <a id="link_executable_args-ctx"></a>`ctx` |  |
+| <a id="link_executable_args-in_files"></a>`in_files` |  |
+| <a id="link_executable_args-out_file"></a>`out_file` |  |
+| <a id="link_executable_args-mode"></a>`mode` |  |
 
-| Name  | Description | Default Value |
-| :------------- | :------------- | :------------- |
-| <a id="link_executable_args-ctx"></a>ctx |  <p align="center"> - </p>   |  none |
-| <a id="link_executable_args-in_files"></a>in_files |  <p align="center"> - </p>   |  none |
-| <a id="link_executable_args-out_file"></a>out_file |  <p align="center"> - </p>   |  none |
-| <a id="link_executable_args-mode"></a>mode |  <p align="center"> - </p>   |  none |
 
-
-<a id="#llvm_bindir_path"></a>
+<a id="llvm_bindir_path"></a>
 
 ## llvm_bindir_path
 
@@ -103,10 +93,8 @@ llvm_bindir_path(<a href="#llvm_bindir_path-ctx">ctx</a>)
 </pre>
 
 
-
 **PARAMETERS**
 
-
-| Name  | Description | Default Value |
-| :------------- | :------------- | :------------- |
-| <a id="llvm_bindir_path-ctx"></a>ctx |  <p align="center"> - </p>   |  none |
+| Name  | Description |
+| :---- | :---------- |
+| <a id="llvm_bindir_path-ctx"></a>`ctx` |  |

@@ -1,5 +1,3 @@
-<!-- Generated with Stardoc: http://skydoc.bazel.build -->
-
 # `//ll:actions.bzl`
 
 Actions wiring up inputs, outputs and tools to emit output files.
@@ -8,7 +6,7 @@ Every function in this file effectively wraps `ctx.actions.run` or
 `ctx.actions.run_shell`.
 
 
-<a id="#compile_object"></a>
+<a id="compile_object"></a>
 
 ## compile_object
 
@@ -18,24 +16,22 @@ compile_object(<a href="#compile_object-ctx">ctx</a>, <a href="#compile_object-i
 </pre>
 
 
-
 **PARAMETERS**
 
+| Name  | Description |
+| :---- | :---------- |
+| <a id="compile_object-ctx"></a>`ctx` |  |
+| <a id="compile_object-in_file"></a>`in_file` |  |
+| <a id="compile_object-headers"></a>`headers` |  |
+| <a id="compile_object-defines"></a>`defines` |  |
+| <a id="compile_object-includes"></a>`includes` |  |
+| <a id="compile_object-angled_includes"></a>`angled_includes` |  |
+| <a id="compile_object-bmis"></a>`bmis` |  |
+| <a id="compile_object-internal_bmis"></a>`internal_bmis` |  |
+| <a id="compile_object-toolchain_type"></a>`toolchain_type` |  |
 
-| Name  | Description | Default Value |
-| :------------- | :------------- | :------------- |
-| <a id="compile_object-ctx"></a>ctx |  <p align="center"> - </p>   |  none |
-| <a id="compile_object-in_file"></a>in_file |  <p align="center"> - </p>   |  none |
-| <a id="compile_object-headers"></a>headers |  <p align="center"> - </p>   |  none |
-| <a id="compile_object-defines"></a>defines |  <p align="center"> - </p>   |  none |
-| <a id="compile_object-includes"></a>includes |  <p align="center"> - </p>   |  none |
-| <a id="compile_object-angled_includes"></a>angled_includes |  <p align="center"> - </p>   |  none |
-| <a id="compile_object-bmis"></a>bmis |  <p align="center"> - </p>   |  none |
-| <a id="compile_object-internal_bmis"></a>internal_bmis |  <p align="center"> - </p>   |  none |
-| <a id="compile_object-toolchain_type"></a>toolchain_type |  <p align="center"> - </p>   |  none |
 
-
-<a id="#compile_objects"></a>
+<a id="compile_objects"></a>
 
 ## compile_objects
 
@@ -45,23 +41,21 @@ compile_objects(<a href="#compile_objects-ctx">ctx</a>, <a href="#compile_object
 </pre>
 
 
-
 **PARAMETERS**
 
+| Name  | Description |
+| :---- | :---------- |
+| <a id="compile_objects-ctx"></a>`ctx` |  |
+| <a id="compile_objects-headers"></a>`headers` |  |
+| <a id="compile_objects-defines"></a>`defines` |  |
+| <a id="compile_objects-includes"></a>`includes` |  |
+| <a id="compile_objects-angled_includes"></a>`angled_includes` |  |
+| <a id="compile_objects-bmis"></a>`bmis` |  |
+| <a id="compile_objects-internal_bmis"></a>`internal_bmis` |  |
+| <a id="compile_objects-toolchain_type"></a>`toolchain_type` |  |
 
-| Name  | Description | Default Value |
-| :------------- | :------------- | :------------- |
-| <a id="compile_objects-ctx"></a>ctx |  <p align="center"> - </p>   |  none |
-| <a id="compile_objects-headers"></a>headers |  <p align="center"> - </p>   |  none |
-| <a id="compile_objects-defines"></a>defines |  <p align="center"> - </p>   |  none |
-| <a id="compile_objects-includes"></a>includes |  <p align="center"> - </p>   |  none |
-| <a id="compile_objects-angled_includes"></a>angled_includes |  <p align="center"> - </p>   |  none |
-| <a id="compile_objects-bmis"></a>bmis |  <p align="center"> - </p>   |  none |
-| <a id="compile_objects-internal_bmis"></a>internal_bmis |  <p align="center"> - </p>   |  none |
-| <a id="compile_objects-toolchain_type"></a>toolchain_type |  <p align="center"> - </p>   |  none |
 
-
-<a id="#create_archive_library"></a>
+<a id="create_archive_library"></a>
 
 ## create_archive_library
 
@@ -70,18 +64,16 @@ create_archive_library(<a href="#create_archive_library-ctx">ctx</a>, <a href="#
 </pre>
 
 
-
 **PARAMETERS**
 
+| Name  | Description |
+| :---- | :---------- |
+| <a id="create_archive_library-ctx"></a>`ctx` |  |
+| <a id="create_archive_library-in_files"></a>`in_files` |  |
+| <a id="create_archive_library-toolchain_type"></a>`toolchain_type` |  |
 
-| Name  | Description | Default Value |
-| :------------- | :------------- | :------------- |
-| <a id="create_archive_library-ctx"></a>ctx |  <p align="center"> - </p>   |  none |
-| <a id="create_archive_library-in_files"></a>in_files |  <p align="center"> - </p>   |  none |
-| <a id="create_archive_library-toolchain_type"></a>toolchain_type |  <p align="center"> - </p>   |  none |
 
-
-<a id="#link_bitcode_library"></a>
+<a id="link_bitcode_library"></a>
 
 ## link_bitcode_library
 
@@ -90,18 +82,16 @@ link_bitcode_library(<a href="#link_bitcode_library-ctx">ctx</a>, <a href="#link
 </pre>
 
 
-
 **PARAMETERS**
 
+| Name  | Description |
+| :---- | :---------- |
+| <a id="link_bitcode_library-ctx"></a>`ctx` |  |
+| <a id="link_bitcode_library-in_files"></a>`in_files` |  |
+| <a id="link_bitcode_library-toolchain_type"></a>`toolchain_type` |  |
 
-| Name  | Description | Default Value |
-| :------------- | :------------- | :------------- |
-| <a id="link_bitcode_library-ctx"></a>ctx |  <p align="center"> - </p>   |  none |
-| <a id="link_bitcode_library-in_files"></a>in_files |  <p align="center"> - </p>   |  none |
-| <a id="link_bitcode_library-toolchain_type"></a>toolchain_type |  <p align="center"> - </p>   |  none |
 
-
-<a id="#link_executable"></a>
+<a id="link_executable"></a>
 
 ## link_executable
 
@@ -110,18 +100,16 @@ link_executable(<a href="#link_executable-ctx">ctx</a>, <a href="#link_executabl
 </pre>
 
 
-
 **PARAMETERS**
 
+| Name  | Description |
+| :---- | :---------- |
+| <a id="link_executable-ctx"></a>`ctx` |  |
+| <a id="link_executable-in_files"></a>`in_files` |  |
+| <a id="link_executable-toolchain_type"></a>`toolchain_type` |  |
 
-| Name  | Description | Default Value |
-| :------------- | :------------- | :------------- |
-| <a id="link_executable-ctx"></a>ctx |  <p align="center"> - </p>   |  none |
-| <a id="link_executable-in_files"></a>in_files |  <p align="center"> - </p>   |  none |
-| <a id="link_executable-toolchain_type"></a>toolchain_type |  <p align="center"> - </p>   |  none |
 
-
-<a id="#link_shared_object"></a>
+<a id="link_shared_object"></a>
 
 ## link_shared_object
 
@@ -130,18 +118,16 @@ link_shared_object(<a href="#link_shared_object-ctx">ctx</a>, <a href="#link_sha
 </pre>
 
 
-
 **PARAMETERS**
 
+| Name  | Description |
+| :---- | :---------- |
+| <a id="link_shared_object-ctx"></a>`ctx` |  |
+| <a id="link_shared_object-in_files"></a>`in_files` |  |
+| <a id="link_shared_object-toolchain_type"></a>`toolchain_type` |  |
 
-| Name  | Description | Default Value |
-| :------------- | :------------- | :------------- |
-| <a id="link_shared_object-ctx"></a>ctx |  <p align="center"> - </p>   |  none |
-| <a id="link_shared_object-in_files"></a>in_files |  <p align="center"> - </p>   |  none |
-| <a id="link_shared_object-toolchain_type"></a>toolchain_type |  <p align="center"> - </p>   |  none |
 
-
-<a id="#precompile_interface"></a>
+<a id="precompile_interface"></a>
 
 ## precompile_interface
 
@@ -151,23 +137,21 @@ precompile_interface(<a href="#precompile_interface-ctx">ctx</a>, <a href="#prec
 </pre>
 
 
-
 **PARAMETERS**
 
+| Name  | Description |
+| :---- | :---------- |
+| <a id="precompile_interface-ctx"></a>`ctx` |  |
+| <a id="precompile_interface-in_file"></a>`in_file` |  |
+| <a id="precompile_interface-headers"></a>`headers` |  |
+| <a id="precompile_interface-defines"></a>`defines` |  |
+| <a id="precompile_interface-includes"></a>`includes` |  |
+| <a id="precompile_interface-angled_includes"></a>`angled_includes` |  |
+| <a id="precompile_interface-bmis"></a>`bmis` |  |
+| <a id="precompile_interface-toolchain_type"></a>`toolchain_type` |  |
 
-| Name  | Description | Default Value |
-| :------------- | :------------- | :------------- |
-| <a id="precompile_interface-ctx"></a>ctx |  <p align="center"> - </p>   |  none |
-| <a id="precompile_interface-in_file"></a>in_file |  <p align="center"> - </p>   |  none |
-| <a id="precompile_interface-headers"></a>headers |  <p align="center"> - </p>   |  none |
-| <a id="precompile_interface-defines"></a>defines |  <p align="center"> - </p>   |  none |
-| <a id="precompile_interface-includes"></a>includes |  <p align="center"> - </p>   |  none |
-| <a id="precompile_interface-angled_includes"></a>angled_includes |  <p align="center"> - </p>   |  none |
-| <a id="precompile_interface-bmis"></a>bmis |  <p align="center"> - </p>   |  none |
-| <a id="precompile_interface-toolchain_type"></a>toolchain_type |  <p align="center"> - </p>   |  none |
 
-
-<a id="#precompile_interfaces"></a>
+<a id="precompile_interfaces"></a>
 
 ## precompile_interfaces
 
@@ -177,17 +161,15 @@ precompile_interfaces(<a href="#precompile_interfaces-ctx">ctx</a>, <a href="#pr
 </pre>
 
 
-
 **PARAMETERS**
 
-
-| Name  | Description | Default Value |
-| :------------- | :------------- | :------------- |
-| <a id="precompile_interfaces-ctx"></a>ctx |  <p align="center"> - </p>   |  none |
-| <a id="precompile_interfaces-headers"></a>headers |  <p align="center"> - </p>   |  none |
-| <a id="precompile_interfaces-defines"></a>defines |  <p align="center"> - </p>   |  none |
-| <a id="precompile_interfaces-includes"></a>includes |  <p align="center"> - </p>   |  none |
-| <a id="precompile_interfaces-angled_includes"></a>angled_includes |  <p align="center"> - </p>   |  none |
-| <a id="precompile_interfaces-bmis"></a>bmis |  <p align="center"> - </p>   |  none |
-| <a id="precompile_interfaces-toolchain_type"></a>toolchain_type |  <p align="center"> - </p>   |  none |
-| <a id="precompile_interfaces-binary"></a>binary |  <p align="center"> - </p>   |  none |
+| Name  | Description |
+| :---- | :---------- |
+| <a id="precompile_interfaces-ctx"></a>`ctx` |  |
+| <a id="precompile_interfaces-headers"></a>`headers` |  |
+| <a id="precompile_interfaces-defines"></a>`defines` |  |
+| <a id="precompile_interfaces-includes"></a>`includes` |  |
+| <a id="precompile_interfaces-angled_includes"></a>`angled_includes` |  |
+| <a id="precompile_interfaces-bmis"></a>`bmis` |  |
+| <a id="precompile_interfaces-toolchain_type"></a>`toolchain_type` |  |
+| <a id="precompile_interfaces-binary"></a>`binary` |  |

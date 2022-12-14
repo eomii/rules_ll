@@ -43,7 +43,11 @@ bzl_library(
     stardoc(
         name = "{}_docs".format(name),
         out = "{}.md".format(name),
+        func_template = "templates/function_template.vm",
+        header_template = "templates/header_template.vm",
         input = "{}.bzl".format(name),
+        provider_template = "templates/provider_template.vm",
+        rule_template = "templates/rule_template.vm",
         deps = [
             ":ll_bzl",
         ],

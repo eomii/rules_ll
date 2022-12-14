@@ -1,11 +1,9 @@
-<!-- Generated with Stardoc: http://skydoc.bazel.build -->
-
 # `//ll:tools.bzl`
 
 Tools used by actions.
 
 
-<a id="#compile_object_tools"></a>
+<a id="compile_object_tools"></a>
 
 ## compile_object_tools
 
@@ -14,17 +12,15 @@ compile_object_tools(<a href="#compile_object_tools-ctx">ctx</a>, <a href="#comp
 </pre>
 
 
-
 **PARAMETERS**
 
+| Name  | Description |
+| :---- | :---------- |
+| <a id="compile_object_tools-ctx"></a>`ctx` |  |
+| <a id="compile_object_tools-toolchain_type"></a>`toolchain_type` |  |
 
-| Name  | Description | Default Value |
-| :------------- | :------------- | :------------- |
-| <a id="compile_object_tools-ctx"></a>ctx |  <p align="center"> - </p>   |  none |
-| <a id="compile_object_tools-toolchain_type"></a>toolchain_type |  <p align="center"> - </p>   |  none |
 
-
-<a id="#linking_tools"></a>
+<a id="linking_tools"></a>
 
 ## linking_tools
 
@@ -33,11 +29,9 @@ linking_tools(<a href="#linking_tools-ctx">ctx</a>, <a href="#linking_tools-tool
 </pre>
 
 
-
 **PARAMETERS**
 
-
-| Name  | Description | Default Value |
-| :------------- | :------------- | :------------- |
-| <a id="linking_tools-ctx"></a>ctx |  <p align="center"> - </p>   |  none |
-| <a id="linking_tools-toolchain_type"></a>toolchain_type |  <p align="center"> - </p>   |  none |
+| Name  | Description |
+| :---- | :---------- |
+| <a id="linking_tools-ctx"></a>`ctx` |  |
+| <a id="linking_tools-toolchain_type"></a>`toolchain_type` |  |

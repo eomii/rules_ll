@@ -1,11 +1,9 @@
-<!-- Generated with Stardoc: http://skydoc.bazel.build -->
-
 # `//ll:environment.bzl`
 
 Action environments.
 
 
-<a id="#compile_object_environment"></a>
+<a id="compile_object_environment"></a>
 
 ## compile_object_environment
 
@@ -14,11 +12,9 @@ compile_object_environment(<a href="#compile_object_environment-ctx">ctx</a>, <a
 </pre>
 
 
-
 **PARAMETERS**
 
-
-| Name  | Description | Default Value |
-| :------------- | :------------- | :------------- |
-| <a id="compile_object_environment-ctx"></a>ctx |  <p align="center"> - </p>   |  none |
-| <a id="compile_object_environment-toolchain_type"></a>toolchain_type |  <p align="center"> - </p>   |  none |
+| Name  | Description |
+| :---- | :---------- |
+| <a id="compile_object_environment-ctx"></a>`ctx` |  |
+| <a id="compile_object_environment-toolchain_type"></a>`toolchain_type` |  |

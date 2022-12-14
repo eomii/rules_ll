@@ -1,0 +1,17 @@
+<a id="${ruleName}"></a>
+
+#[[##]]# ${ruleName}
+<pre>
+${util.ruleSummary($ruleName, $ruleInfo)}
+</pre>
+${util.htmlEscape($ruleInfo.docString)}
+**ATTRIBUTES**
+
+#if (!$ruleInfo.getAttributeList().isEmpty())
+
+| Name  | Description |
+| :---- | :---------- |
+#foreach ($attribute in $ruleInfo.getAttributeList())
+| <a id="${ruleName}-${attribute.name}"></a>`$attribute.name` | <code>${util.attributeTypeString($attribute)}</code>, ${util.mandatoryString($attribute)}#if(!$attribute.defaultValue.isEmpty()), defaults to <code>${util.htmlEscape($attribute.defaultValue)}</code>.#else.#end<br><br>#if(!$attribute.docString.isEmpty()) ${util.markdownCellFormat($attribute.docString)} #else - #end  |
+#end
+#end
