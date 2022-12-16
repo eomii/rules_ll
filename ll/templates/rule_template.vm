@@ -1,13 +1,13 @@
 <a id="${ruleName}"></a>
 
 #[[##]]# ${ruleName}
+
 <pre>
 ${util.ruleSummary($ruleName, $ruleInfo)}
 </pre>
 ${util.htmlEscape($ruleInfo.docString)}
-**ATTRIBUTES**
-
 #if (!$ruleInfo.getAttributeList().isEmpty())
+`attributes`
 
 | Name  | Description |
 | :---- | :---------- |

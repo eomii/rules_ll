@@ -15,8 +15,7 @@ compile_object(<a href="#compile_object-ctx">ctx</a>, <a href="#compile_object-i
                <a href="#compile_object-toolchain_type">toolchain_type</a>)
 </pre>
 
-
-**PARAMETERS**
+`parameters`
 
 | Name  | Description |
 | :---- | :---------- |
@@ -40,8 +39,7 @@ compile_objects(<a href="#compile_objects-ctx">ctx</a>, <a href="#compile_object
                 <a href="#compile_objects-toolchain_type">toolchain_type</a>)
 </pre>
 
-
-**PARAMETERS**
+`parameters`
 
 | Name  | Description |
 | :---- | :---------- |
@@ -63,8 +61,7 @@ compile_objects(<a href="#compile_objects-ctx">ctx</a>, <a href="#compile_object
 create_archive_library(<a href="#create_archive_library-ctx">ctx</a>, <a href="#create_archive_library-in_files">in_files</a>, <a href="#create_archive_library-toolchain_type">toolchain_type</a>)
 </pre>
 
-
-**PARAMETERS**
+`parameters`
 
 | Name  | Description |
 | :---- | :---------- |
@@ -81,8 +78,7 @@ create_archive_library(<a href="#create_archive_library-ctx">ctx</a>, <a href="#
 link_bitcode_library(<a href="#link_bitcode_library-ctx">ctx</a>, <a href="#link_bitcode_library-in_files">in_files</a>, <a href="#link_bitcode_library-toolchain_type">toolchain_type</a>)
 </pre>
 
-
-**PARAMETERS**
+`parameters`
 
 | Name  | Description |
 | :---- | :---------- |
@@ -99,8 +95,7 @@ link_bitcode_library(<a href="#link_bitcode_library-ctx">ctx</a>, <a href="#link
 link_executable(<a href="#link_executable-ctx">ctx</a>, <a href="#link_executable-in_files">in_files</a>, <a href="#link_executable-toolchain_type">toolchain_type</a>)
 </pre>
 
-
-**PARAMETERS**
+`parameters`
 
 | Name  | Description |
 | :---- | :---------- |
@@ -117,8 +112,7 @@ link_executable(<a href="#link_executable-ctx">ctx</a>, <a href="#link_executabl
 link_shared_object(<a href="#link_shared_object-ctx">ctx</a>, <a href="#link_shared_object-in_files">in_files</a>, <a href="#link_shared_object-toolchain_type">toolchain_type</a>)
 </pre>
 
-
-**PARAMETERS**
+`parameters`
 
 | Name  | Description |
 | :---- | :---------- |
@@ -136,8 +130,7 @@ precompile_interface(<a href="#precompile_interface-ctx">ctx</a>, <a href="#prec
                      <a href="#precompile_interface-toolchain_type">toolchain_type</a>)
 </pre>
 
-
-**PARAMETERS**
+`parameters`
 
 | Name  | Description |
 | :---- | :---------- |
@@ -160,8 +153,7 @@ precompile_interfaces(<a href="#precompile_interfaces-ctx">ctx</a>, <a href="#pr
                       <a href="#precompile_interfaces-binary">binary</a>)
 </pre>
 
-
-**PARAMETERS**
+`parameters`
 
 | Name  | Description |
 | :---- | :---------- |

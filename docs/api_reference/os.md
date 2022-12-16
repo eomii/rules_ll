@@ -11,8 +11,7 @@ Automatic detection of library paths, depending on operating system.
 library_path(<a href="#library_path-repository_ctx">repository_ctx</a>)
 </pre>
 
-
-**PARAMETERS**
+`parameters`
 
 | Name  | Description |
 | :---- | :---------- |

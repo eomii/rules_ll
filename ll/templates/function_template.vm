@@ -7,8 +7,7 @@ ${util.funcSummary($funcInfo)}
 </pre>
 ${util.htmlEscape($funcInfo.docString)}
 #if (!$funcInfo.getParameterList().isEmpty())
-
-**PARAMETERS**
+`parameters`
 
 | Name  | Description |
 | :---- | :---------- |
@@ -18,13 +17,13 @@ ${util.htmlEscape($funcInfo.docString)}
 #end
 #if (!$funcInfo.getReturn().docString.isEmpty())
 
-**RETURNS**
+`returns`
 
 ${util.htmlEscape($funcInfo.getReturn().docString)}
 #end
 #if (!$funcInfo.getDeprecated().docString.isEmpty())
 
-**DEPRECATED**
+`deprecated`
 
 ${util.htmlEscape($funcInfo.getDeprecated().docString)}
 #end

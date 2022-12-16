@@ -11,8 +11,7 @@ Action inputs.
 compilable_sources(<a href="#compilable_sources-ctx">ctx</a>)
 </pre>
 
-
-**PARAMETERS**
+`parameters`
 
 | Name  | Description |
 | :---- | :---------- |
@@ -27,8 +26,7 @@ compilable_sources(<a href="#compilable_sources-ctx">ctx</a>)
 compile_object_inputs(<a href="#compile_object_inputs-ctx">ctx</a>, <a href="#compile_object_inputs-in_file">in_file</a>, <a href="#compile_object_inputs-headers">headers</a>, <a href="#compile_object_inputs-interfaces">interfaces</a>, <a href="#compile_object_inputs-local_interfaces">local_interfaces</a>, <a href="#compile_object_inputs-toolchain_type">toolchain_type</a>)
 </pre>
 
-
-**PARAMETERS**
+`parameters`
 
 | Name  | Description |
 | :---- | :---------- |
@@ -48,8 +46,7 @@ compile_object_inputs(<a href="#compile_object_inputs-ctx">ctx</a>, <a href="#co
 create_archive_library_inputs(<a href="#create_archive_library_inputs-ctx">ctx</a>, <a href="#create_archive_library_inputs-in_files">in_files</a>)
 </pre>
 
-
-**PARAMETERS**
+`parameters`
 
 | Name  | Description |
 | :---- | :---------- |
@@ -65,8 +62,7 @@ create_archive_library_inputs(<a href="#create_archive_library_inputs-ctx">ctx</
 link_bitcode_library_inputs(<a href="#link_bitcode_library_inputs-ctx">ctx</a>, <a href="#link_bitcode_library_inputs-in_files">in_files</a>)
 </pre>
 
-
-**PARAMETERS**
+`parameters`
 
 | Name  | Description |
 | :---- | :---------- |
@@ -82,8 +78,7 @@ link_bitcode_library_inputs(<a href="#link_bitcode_library_inputs-ctx">ctx</a>, 
 link_executable_inputs(<a href="#link_executable_inputs-ctx">ctx</a>, <a href="#link_executable_inputs-in_files">in_files</a>, <a href="#link_executable_inputs-toolchain_type">toolchain_type</a>)
 </pre>
 
-
-**PARAMETERS**
+`parameters`
 
 | Name  | Description |
 | :---- | :---------- |
@@ -100,8 +95,7 @@ link_executable_inputs(<a href="#link_executable_inputs-ctx">ctx</a>, <a href="#
 link_shared_object_inputs(<a href="#link_shared_object_inputs-ctx">ctx</a>, <a href="#link_shared_object_inputs-in_files">in_files</a>, <a href="#link_shared_object_inputs-toolchain_type">toolchain_type</a>)
 </pre>
 
-
-**PARAMETERS**
+`parameters`
 
 | Name  | Description |
 | :---- | :---------- |

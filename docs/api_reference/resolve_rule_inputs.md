@@ -11,8 +11,7 @@ Input resolution for `ll_library` and `ll_binary`.
 resolve_rule_inputs(<a href="#resolve_rule_inputs-ctx">ctx</a>, <a href="#resolve_rule_inputs-mode">mode</a>)
 </pre>
 
-
-**PARAMETERS**
+`parameters`
 
 | Name  | Description |
 | :---- | :---------- |

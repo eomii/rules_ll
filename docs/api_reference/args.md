@@ -12,8 +12,7 @@ compile_object_args(<a href="#compile_object_args-ctx">ctx</a>, <a href="#compil
                     <a href="#compile_object_args-internal_bmis">internal_bmis</a>)
 </pre>
 
-
-**PARAMETERS**
+`parameters`
 
 | Name  | Description |
 | :---- | :---------- |
@@ -37,8 +36,7 @@ compile_object_args(<a href="#compile_object_args-ctx">ctx</a>, <a href="#compil
 create_archive_library_args(<a href="#create_archive_library_args-ctx">ctx</a>, <a href="#create_archive_library_args-in_files">in_files</a>, <a href="#create_archive_library_args-out_file">out_file</a>)
 </pre>
 
-
-**PARAMETERS**
+`parameters`
 
 | Name  | Description |
 | :---- | :---------- |
@@ -55,8 +53,7 @@ create_archive_library_args(<a href="#create_archive_library_args-ctx">ctx</a>, 
 link_bitcode_library_args(<a href="#link_bitcode_library_args-ctx">ctx</a>, <a href="#link_bitcode_library_args-in_files">in_files</a>, <a href="#link_bitcode_library_args-out_file">out_file</a>)
 </pre>
 
-
-**PARAMETERS**
+`parameters`
 
 | Name  | Description |
 | :---- | :---------- |
@@ -73,8 +70,7 @@ link_bitcode_library_args(<a href="#link_bitcode_library_args-ctx">ctx</a>, <a h
 link_executable_args(<a href="#link_executable_args-ctx">ctx</a>, <a href="#link_executable_args-in_files">in_files</a>, <a href="#link_executable_args-out_file">out_file</a>, <a href="#link_executable_args-mode">mode</a>)
 </pre>
 
-
-**PARAMETERS**
+`parameters`
 
 | Name  | Description |
 | :---- | :---------- |
@@ -92,8 +88,7 @@ link_executable_args(<a href="#link_executable_args-ctx">ctx</a>, <a href="#link
 llvm_bindir_path(<a href="#llvm_bindir_path-ctx">ctx</a>)
 </pre>
 
-
-**PARAMETERS**
+`parameters`
 
 | Name  | Description |
 | :---- | :---------- |

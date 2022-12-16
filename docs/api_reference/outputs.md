@@ -11,8 +11,7 @@ Action outputs.
 compile_object_outputs(<a href="#compile_object_outputs-ctx">ctx</a>, <a href="#compile_object_outputs-in_file">in_file</a>)
 </pre>
 
-
-**PARAMETERS**
+`parameters`
 
 | Name  | Description |
 | :---- | :---------- |
@@ -28,8 +27,7 @@ compile_object_outputs(<a href="#compile_object_outputs-ctx">ctx</a>, <a href="#
 create_archive_library_outputs(<a href="#create_archive_library_outputs-ctx">ctx</a>)
 </pre>
 
-
-**PARAMETERS**
+`parameters`
 
 | Name  | Description |
 | :---- | :---------- |
@@ -44,8 +42,7 @@ create_archive_library_outputs(<a href="#create_archive_library_outputs-ctx">ctx
 link_bitcode_library_outputs(<a href="#link_bitcode_library_outputs-ctx">ctx</a>)
 </pre>
 
-
-**PARAMETERS**
+`parameters`
 
 | Name  | Description |
 | :---- | :---------- |
@@ -60,8 +57,7 @@ link_bitcode_library_outputs(<a href="#link_bitcode_library_outputs-ctx">ctx</a>
 link_executable_outputs(<a href="#link_executable_outputs-ctx">ctx</a>)
 </pre>
 
-
-**PARAMETERS**
+`parameters`
 
 | Name  | Description |
 | :---- | :---------- |
@@ -76,8 +72,7 @@ link_executable_outputs(<a href="#link_executable_outputs-ctx">ctx</a>)
 link_shared_object_outputs(<a href="#link_shared_object_outputs-ctx">ctx</a>)
 </pre>
 
-
-**PARAMETERS**
+`parameters`
 
 | Name  | Description |
 | :---- | :---------- |
@@ -97,8 +92,7 @@ We use this method to encapsulate intermediary build artifacts so that we
 don't get name clashes for files of the same name built by targets in the
 same build invocation.
 
-
-**PARAMETERS**
+`parameters`
 
 | Name  | Description |
 | :---- | :---------- |
@@ -114,8 +108,7 @@ same build invocation.
 precompile_interface_outputs(<a href="#precompile_interface_outputs-ctx">ctx</a>, <a href="#precompile_interface_outputs-in_file">in_file</a>)
 </pre>
 
-
-**PARAMETERS**
+`parameters`
 
 | Name  | Description |
 | :---- | :---------- |

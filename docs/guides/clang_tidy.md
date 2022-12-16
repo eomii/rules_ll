@@ -1,7 +1,7 @@
 # Using Clang-Tidy
 
-`rules_ll` comes with a Bazel overlay for [`clang-tidy`](https://clang.llvm.org/extra/clang-tidy/). The
-`ll_compilation_database` rule can be used to build a [compilation database](https://clang.llvm.org/docs/JSONCompilationDatabase.html)
+`rules_ll` comes with a Bazel overlay for [`clang-tidy`](https://clang.llvm.org/extra/clang-tidy/).
+The `ll_compilation_database` rule can be used to build a [compilation database](https://clang.llvm.org/docs/JSONCompilationDatabase.html)
 for a target (and its dependencies) and run `clang-tidy` on it.
 
 An example similar to the one described below can be found at [`rules_ll/examples/clang_tidy_example`](https://github.com/eomii/rules_ll/tree/main/examples/clang_tidy_example).
@@ -10,7 +10,6 @@ An example similar to the one described below can be found at [`rules_ll/example
 
 For a target `my_library` defined in a `BUILD.bazel` file, we can add an
 `ll_compilation_database` like this:
-
 
 ```python
 load("@rules_ll//ll:defs.bzl", "ll_library", "ll_compilation_database")
@@ -125,7 +124,7 @@ bazel run cdb_2
 
 Running `compile_commands` will also run `clang-tidy` on both targets.
 
-# Limitations
+## Limitations
 
 The `ll_compilation_database` rule does not support the `-fix` option for
 `clang-tidy`. The auto-fixer tends to break code and would have to work outside

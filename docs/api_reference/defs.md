@@ -8,10 +8,10 @@ To load e.g. the `ll_binary` rule:
 load("@rules_ll//ll:defs.bzl", "ll_binary")
 ```
 
-
 <a id="ll_binary"></a>
 
 ## ll_binary
+
 <pre>
 ll_binary(<a href="#ll_binary-name">name</a>, <a href="#ll_binary-angled_includes">angled_includes</a>, <a href="#ll_binary-compilation_mode">compilation_mode</a>, <a href="#ll_binary-compile_flags">compile_flags</a>, <a href="#ll_binary-data">data</a>, <a href="#ll_binary-defines">defines</a>, <a href="#ll_binary-depends_on_llvm">depends_on_llvm</a>,
           <a href="#ll_binary-deps">deps</a>, <a href="#ll_binary-exposed_angled_includes">exposed_angled_includes</a>, <a href="#ll_binary-exposed_defines">exposed_defines</a>, <a href="#ll_binary-exposed_hdrs">exposed_hdrs</a>, <a href="#ll_binary-exposed_includes">exposed_includes</a>,
@@ -30,8 +30,7 @@ Example:
   )
   ```
 
-**ATTRIBUTES**
-
+`attributes`
 
 | Name  | Description |
 | :---- | :---------- |
@@ -65,6 +64,7 @@ Example:
 <a id="ll_compilation_database"></a>
 
 ## ll_compilation_database
+
 <pre>
 ll_compilation_database(<a href="#ll_compilation_database-name">name</a>, <a href="#ll_compilation_database-config">config</a>, <a href="#ll_compilation_database-exclude">exclude</a>, <a href="#ll_compilation_database-targets">targets</a>)
 </pre>
@@ -79,8 +79,7 @@ For a full guide see
 Examples using this rule are available at
 [rules_ll/examples](https://github.com/eomii/rules_ll/tree/main/examples).
 
-**ATTRIBUTES**
-
+`attributes`
 
 | Name  | Description |
 | :---- | :---------- |
@@ -93,6 +92,7 @@ Examples using this rule are available at
 <a id="ll_library"></a>
 
 ## ll_library
+
 <pre>
 ll_library(<a href="#ll_library-name">name</a>, <a href="#ll_library-angled_includes">angled_includes</a>, <a href="#ll_library-bitcode_libraries">bitcode_libraries</a>, <a href="#ll_library-bitcode_link_flags">bitcode_link_flags</a>, <a href="#ll_library-compilation_mode">compilation_mode</a>,
            <a href="#ll_library-compile_flags">compile_flags</a>, <a href="#ll_library-data">data</a>, <a href="#ll_library-defines">defines</a>, <a href="#ll_library-depends_on_llvm">depends_on_llvm</a>, <a href="#ll_library-deps">deps</a>, <a href="#ll_library-emit">emit</a>, <a href="#ll_library-exposed_angled_includes">exposed_angled_includes</a>,
@@ -112,8 +112,7 @@ Example:
   )
   ```
 
-**ATTRIBUTES**
-
+`attributes`
 
 | Name  | Description |
 | :---- | :---------- |

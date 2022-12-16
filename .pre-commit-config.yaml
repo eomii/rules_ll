@@ -32,3 +32,12 @@ repos:
     hooks:
     -   id: clang-format
         exclude: ^(docs/|^llvm-project-overlay/)
+
+-   repo: https://github.com/jackdewinter/pymarkdown
+    rev: v0.9.8
+    hooks:
+    -   id: pymarkdown
+        exclude: ^(docs/api_reference/|docs/rules/)
+        args:
+          - --config=.pymarkdown.json
+          - scan

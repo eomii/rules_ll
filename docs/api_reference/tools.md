@@ -11,8 +11,7 @@ Tools used by actions.
 compile_object_tools(<a href="#compile_object_tools-ctx">ctx</a>, <a href="#compile_object_tools-toolchain_type">toolchain_type</a>)
 </pre>
 
-
-**PARAMETERS**
+`parameters`
 
 | Name  | Description |
 | :---- | :---------- |
@@ -28,8 +27,7 @@ compile_object_tools(<a href="#compile_object_tools-ctx">ctx</a>, <a href="#comp
 linking_tools(<a href="#linking_tools-ctx">ctx</a>, <a href="#linking_tools-toolchain_type">toolchain_type</a>)
 </pre>
 
-
-**PARAMETERS**
+`parameters`
 
 | Name  | Description |
 | :---- | :---------- |

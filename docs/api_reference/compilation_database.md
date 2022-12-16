@@ -6,6 +6,7 @@ Implements the `ll_compilation_database` rule.
 <a id="ll_compilation_database"></a>
 
 ## ll_compilation_database
+
 <pre>
 ll_compilation_database(<a href="#ll_compilation_database-name">name</a>, <a href="#ll_compilation_database-config">config</a>, <a href="#ll_compilation_database-exclude">exclude</a>, <a href="#ll_compilation_database-targets">targets</a>)
 </pre>
@@ -20,8 +21,7 @@ For a full guide see
 Examples using this rule are available at
 [rules_ll/examples](https://github.com/eomii/rules_ll/tree/main/examples).
 
-**ATTRIBUTES**
-
+`attributes`
 
 | Name  | Description |
 | :---- | :---------- |

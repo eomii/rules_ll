@@ -12,8 +12,7 @@ The `ll_compilation_database` target works for modules. Due to a bug in
 `clang-tidy` you will have to disable `readability-redundant-declaration`
 when using modules.
 
-Additional examples to the ones in this guide can be found at [rules_ll/examples](
-https://github.com/eomii/rules_ll/tree/main/examples).
+Additional examples to the ones in this guide can be found at [rules_ll/examples](https://github.com/eomii/rules_ll/tree/main/examples).
 
 !!! note
 
@@ -28,7 +27,7 @@ https://github.com/eomii/rules_ll/tree/main/examples).
     `import std.iostream;` as you would when using Clang modules. Instead, use
     `#include <iostream>` in global module fragments.
 
-# Basic usage
+## Basic usage
 
 A simple, interface-only module can be written as follows:
 
@@ -75,7 +74,7 @@ The `interfaces` attribute is a `dict`, mapping module interface units to
 module names. This lets us declare sevaral interfaces in a single target and use
 different names for the target name, the interface files and the module name.
 
-# Interface-implementation split
+## Interface-implementation split
 
 Similar to headers, we may have separate module interface units and module
 implementation units for a module. When using `rules_ll`, interfaces should
@@ -149,7 +148,7 @@ ll_binary(
 In this case, we had to make the interface for the `hello` module available to
 the `main` target, so we used `exposed_interfaces` instead of `interfaces`.
 
-# Under the hood
+## Under the hood
 
 For the example above, `rules_ll` will build `main` as follows:
 
@@ -186,13 +185,15 @@ For the `ll_binary` target:
   precompiled interface units transitively.
 - `hello.a` and `main.o` are linked to the final executable `main`.
 
-# General guidelines
+## General guidelines
 
 Consider reading the [C++ standard](https://eel.is/c++draft/module) on modules.
 
-Consider reading about [Standard C++ Modules](https://clang.llvm.org/docs/StandardCPlusPlusModules.html) in Clang.
+Consider reading about [Standard C++ Modules](https://clang.llvm.org/docs/StandardCPlusPlusModules.html)
+in Clang.
 
-Consider naming your modules according to [this proposal](https://isocpp.org/files/papers/P1634R0.html), namely, using lower-case ASCII characters and using
+Consider naming your modules according to [this proposal](https://isocpp.org/files/papers/P1634R0.html),
+namely, using lower-case ASCII characters and using
 `<organization>.<project>.<module_name>` as naming scheme.
 
 Consider using namespaces in your module implementation units and module
@@ -204,7 +205,7 @@ keep namespace hierarchies flat.
 
 Consider mimicking module hierarchies with file layouts.
 
-# Current state of usability
+## Current state of usability
 
 In theory, the functionality implemented in `rules_ll` is standards-conform.
 As such, code written using C++ modules that builds with `rules_ll` should

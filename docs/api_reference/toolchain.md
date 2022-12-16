@@ -6,6 +6,7 @@ Implements `ll_toolchain` and the internally used `ll_bootstrap_toolchain`.
 <a id="ll_toolchain"></a>
 
 ## ll_toolchain
+
 <pre>
 ll_toolchain(<a href="#ll_toolchain-name">name</a>, <a href="#ll_toolchain-address_sanitizer">address_sanitizer</a>, <a href="#ll_toolchain-archiver">archiver</a>, <a href="#ll_toolchain-bitcode_linker">bitcode_linker</a>, <a href="#ll_toolchain-builtin_includes">builtin_includes</a>, <a href="#ll_toolchain-c_driver">c_driver</a>,
              <a href="#ll_toolchain-clang_tidy">clang_tidy</a>, <a href="#ll_toolchain-clang_tidy_runner">clang_tidy_runner</a>, <a href="#ll_toolchain-compiler_runtime">compiler_runtime</a>, <a href="#ll_toolchain-cpp_abihdrs">cpp_abihdrs</a>, <a href="#ll_toolchain-cpp_abilib">cpp_abilib</a>, <a href="#ll_toolchain-cpp_driver">cpp_driver</a>,
@@ -16,8 +17,7 @@ ll_toolchain(<a href="#ll_toolchain-name">name</a>, <a href="#ll_toolchain-addre
              <a href="#ll_toolchain-thread_sanitizer">thread_sanitizer</a>, <a href="#ll_toolchain-undefined_behavior_sanitizer">undefined_behavior_sanitizer</a>, <a href="#ll_toolchain-unwind_library">unwind_library</a>)
 </pre>
 
-**ATTRIBUTES**
-
+`attributes`
 
 | Name  | Description |
 | :---- | :---------- |

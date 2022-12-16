@@ -12,7 +12,7 @@ LlCompilationDatabaseFragmentsInfo(<a href="#LlCompilationDatabaseFragmentsInfo-
 </pre>
 Provider containing compilation database fragments.
 
-**FIELDS**
+`fields`
 
 
 | Name  | Description |
@@ -29,7 +29,7 @@ LlCompilationDatabaseInfo(<a href="#LlCompilationDatabaseInfo-compilation_databa
 </pre>
 
 
-**FIELDS**
+`fields`
 
 
 | Name  | Description |
@@ -46,7 +46,7 @@ LlInfo(<a href="#LlInfo-exposed_angled_includes">exposed_angled_includes</a>, <a
 </pre>
 Provider returned by ll targets.
 
-**FIELDS**
+`fields`
 
 
 | Name  | Description |
