@@ -3,6 +3,7 @@ site_url: https://ll.eomii.org/
 repo_name: eomii/rules_ll
 repo_url: https://github.com/eomii/rules_ll/
 copyright: Copyright 2022 eomii
+edit_uri: ""
 extra:
   generator: false
 theme:
