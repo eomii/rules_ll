@@ -1,7 +1,7 @@
 #include <iostream>
 
-#include "lib_1/lib_1_public.h"
-#include "lib_2/lib_2_public.h"
+#include "lib_1/lib_1_public.hpp"
+#include "lib_2/lib_2_public.hpp"
 
 auto main() -> int {
   int an_unitinialized_variable;  // Triggers clang-tidy.
