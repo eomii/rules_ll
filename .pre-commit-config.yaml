@@ -22,16 +22,6 @@ repos:
         language: python
         files: \.rst$
 
--   repo: local
-    hooks:
-    -   id: flake8
-        name: flake8
-        description: wemake-python-styleguide
-        entry: flake8
-        args: ["--config=setup.cfg"]
-        language: python
-        types: [python]
-
 -   repo: https://github.com/jlebar/pre-commit-hooks.git
     rev: fb5e481f35f5a9b32a06ccfc28b8d6dda4525f75
     hooks:

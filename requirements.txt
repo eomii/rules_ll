@@ -4,21 +4,6 @@
 #
 #    pip-compile --generate-hashes
 #
-astor==0.8.1 \
-    --hash=sha256:070a54e890cefb5b3739d19f30f5a5ec840ffc9c50ffa7d23cc9fc1a38ebbfc5 \
-    --hash=sha256:6a6effda93f4e1ce9f618779b2dd1d9d84f1e32812c23a29b3fff6fd7f63fa5e
-    # via wemake-python-styleguide
-attrs==21.4.0 \
-    --hash=sha256:2d27e3784d7a565d36ab851fe94887c5eccd6a463168875832a1be79c82828b4 \
-    --hash=sha256:626ba8234211db98e869df76230a137c4c40a12d72445c45d5f5b716f076e2fd
-    # via
-    #   flake8-bugbear
-    #   flake8-eradicate
-    #   wemake-python-styleguide
-bandit==1.7.2 \
-    --hash=sha256:6d11adea0214a43813887bfe71a377b5a9955e4c826c8ffd341b494e3ab25260 \
-    --hash=sha256:e20402cadfd126d85b68ed4c8862959663c8c372dbbb1fca8f8e2c9f55a067ec
-    # via flake8-bandit
 certifi==2022.12.7 \
     --hash=sha256:35824b4c3a97115964b408844d64aa14db1cc518f6562e8d7261699d1350a9e3 \
     --hash=sha256:4ad3232f5e926d6718ec31cfc1fcadfde020920e278684144551c91769c7bc18
@@ -35,10 +20,6 @@ click==8.1.3 \
     --hash=sha256:7682dc8afb30297001674575ea00d1814d808d6a36af415a82bd481d37ba7b8e \
     --hash=sha256:bb4d8133cb15a609f44e8213d9b391b0809795062913b383c62be0ee95b1db48
     # via mkdocs
-darglint==1.8.1 \
-    --hash=sha256:080d5106df149b199822e7ee7deb9c012b49891538f14a11be681044f0bb20da \
-    --hash=sha256:5ae11c259c17b0701618a20c3da343a3eb98b3bc4b5a83d31cdd94f5ebdced8d
-    # via wemake-python-styleguide
 distlib==0.3.4 \
     --hash=sha256:6564fe0a8f51e734df6333d08b8b94d4ea8ee6b99b5ed50613f731fd4089f34b \
     --hash=sha256:e4b58818180336dc9c529bfb9a0b58728ffc09ad92027a3f30b7cd91e3458579
@@ -53,96 +34,14 @@ docutils==0.16 \
     # via
     #   doc8
     #   restructuredtext-lint
-eradicate==2.0.0 \
-    --hash=sha256:27434596f2c5314cc9b31410c93d8f7e8885747399773cd088d3adea647a60c8
-    # via flake8-eradicate
 filelock==3.4.2 \
     --hash=sha256:38b4f4c989f9d06d44524df1b24bd19e167d851f19b50bf3e3559952dddc5b80 \
     --hash=sha256:cf0fc6a2f8d26bd900f19bf33915ca70ba4dd8c56903eeb14e1e7a2fd7590146
     # via virtualenv
-flake8==4.0.1 \
-    --hash=sha256:479b1304f72536a55948cb40a32dce8bb0ffe3501e26eaf292c7e60eb5e0428d \
-    --hash=sha256:806e034dda44114815e23c16ef92f95c91e4c71100ff52813adf7132a6ad870d
-    # via
-    #   flake8-bandit
-    #   flake8-broken-line
-    #   flake8-bugbear
-    #   flake8-commas
-    #   flake8-comprehensions
-    #   flake8-debugger
-    #   flake8-docstrings
-    #   flake8-eradicate
-    #   flake8-isort
-    #   flake8-polyfill
-    #   flake8-quotes
-    #   flake8-rst-docstrings
-    #   flake8-string-format
-    #   pep8-naming
-    #   wemake-python-styleguide
-flake8-bandit==2.1.2 \
-    --hash=sha256:687fc8da2e4a239b206af2e54a90093572a60d0954f3054e23690739b0b0de3b
-    # via wemake-python-styleguide
-flake8-broken-line==0.4.0 \
-    --hash=sha256:771aab5aa0997666796fed249d0e48e6c01cdfeca8c95521eea28a38b7ced4c7 \
-    --hash=sha256:e9c522856862239a2c7ef2c1de0276fa598572aa864bd4e9c7efc2a827538515
-    # via wemake-python-styleguide
-flake8-bugbear==21.11.29 \
-    --hash=sha256:179e41ddae5de5e3c20d1f61736feeb234e70958fbb56ab3c28a67739c8e9a82 \
-    --hash=sha256:8b04cb2fafc6a78e1a9d873bd3988e4282f7959bb6b0d7c1ae648ec09b937a7b
-    # via wemake-python-styleguide
-flake8-commas==2.1.0 \
-    --hash=sha256:940441ab8ee544df564ae3b3f49f20462d75d5c7cac2463e0b27436e2050f263 \
-    --hash=sha256:ebb96c31e01d0ef1d0685a21f3f0e2f8153a0381430e748bf0bbbb5d5b453d54
-    # via wemake-python-styleguide
-flake8-comprehensions==3.8.0 \
-    --hash=sha256:8e108707637b1d13734f38e03435984f6b7854fa6b5a4e34f93e69534be8e521 \
-    --hash=sha256:9406314803abe1193c064544ab14fdc43c58424c0882f6ff8a581eb73fc9bb58
-    # via wemake-python-styleguide
-flake8-debugger==4.0.0 \
-    --hash=sha256:82e64faa72e18d1bdd0000407502ebb8ecffa7bc027c62b9d4110ce27c091032 \
-    --hash=sha256:e43dc777f7db1481db473210101ec2df2bd39a45b149d7218a618e954177eda6
-    # via wemake-python-styleguide
-flake8-docstrings==1.6.0 \
-    --hash=sha256:99cac583d6c7e32dd28bbfbef120a7c0d1b6dde4adb5a9fd441c4227a6534bde \
-    --hash=sha256:9fe7c6a306064af8e62a055c2f61e9eb1da55f84bb39caef2b84ce53708ac34b
-    # via wemake-python-styleguide
-flake8-eradicate==1.2.0 \
-    --hash=sha256:51dc660d0c1c1ed93af0f813540bbbf72ab2d3466c14e3f3bac371c618b6042f \
-    --hash=sha256:acaa1b6839ff00d284b805c432fdfa6047262bd15a5504ec945797e87b4de1fa
-    # via wemake-python-styleguide
-flake8-isort==4.1.1 \
-    --hash=sha256:c4e8b6dcb7be9b71a02e6e5d4196cefcef0f3447be51e82730fb336fff164949 \
-    --hash=sha256:d814304ab70e6e58859bc5c3e221e2e6e71c958e7005239202fee19c24f82717
-    # via wemake-python-styleguide
-flake8-polyfill==1.0.2 \
-    --hash=sha256:12be6a34ee3ab795b19ca73505e7b55826d5f6ad7230d31b18e106400169b9e9 \
-    --hash=sha256:e44b087597f6da52ec6393a709e7108b2905317d0c0b744cdca6208e670d8eda
-    # via
-    #   flake8-bandit
-    #   pep8-naming
-flake8-quotes==3.3.1 \
-    --hash=sha256:633adca6fb8a08131536af0d750b44d6985b9aba46f498871e21588c3e6f525a
-    # via wemake-python-styleguide
-flake8-rst-docstrings==0.2.5 \
-    --hash=sha256:4fe93f997dea45d9d3c8bd220f12f0b6c359948fb943b5b48021a3f927edd816 \
-    --hash=sha256:b99d9041b769b857efe45a448dc8c71b1bb311f9cacbdac5de82f96498105082
-    # via wemake-python-styleguide
-flake8-string-format==0.3.0 \
-    --hash=sha256:65f3da786a1461ef77fca3780b314edb2853c377f2e35069723348c8917deaa2 \
-    --hash=sha256:812ff431f10576a74c89be4e85b8e075a705be39bc40c4b4278b5b13e2afa9af
-    # via wemake-python-styleguide
 ghp-import==2.1.0 \
     --hash=sha256:8337dd7b50877f163d4c0289bc1f1c7f127550241988d568c1db512c4324a619 \
     --hash=sha256:9c535c4c61193c2df8871222567d7fd7e5014d835f97dc7b7439069e2413d343
     # via mkdocs
-gitdb==4.0.9 \
-    --hash=sha256:8033ad4e853066ba6ca92050b9df2f89301b8fc8bf7e9324d412a63f8bf1a8fd \
-    --hash=sha256:bac2fd45c0a1c9cf619e63a90d62bdc63892ef92387424b855792a6cabe789aa
-    # via gitpython
-gitpython==3.1.26 \
-    --hash=sha256:26ac35c212d1f7b16036361ca5cff3ec66e11753a0d677fb6c48fa4e1a9dd8d6 \
-    --hash=sha256:fc8868f63a2e6d268fb25f481995ba185a85a66fcad126f039323ff6635669ee
-    # via bandit
 identify==2.4.8 \
     --hash=sha256:97e839c1779f07011b84c92af183e1883d9745d532d83412cca1ca76d3808c1c \
     --hash=sha256:a55bdd671b6063eb837af938c250ec00bba6e610454265133b0d2db7ae718d0f
@@ -151,10 +50,6 @@ idna==3.3 \
     --hash=sha256:84d9dd047ffa80596e0f246e2eab0b391788b0503584e8945f2368256d2735ff \
     --hash=sha256:9d643ff0a55b762d5cdb124b8eaa99c66322e2157b69160bc32796e824360e6d
     # via requests
-isort==5.10.1 \
-    --hash=sha256:6f62d78e2f89b4500b080fe3a81690850cd254227f27f75c3a0c491a1f351ba7 \
-    --hash=sha256:e8443a5e7a020e9d7f97f1d7d9cd17c88bcb3bc7e218bf9cf5095fe550be2951
-    # via flake8-isort
 jinja2==3.0.3 \
     --hash=sha256:077ce6014f7b40d03b47d1f1ca4b0fc8328a692bd284016f806ed0eaca390ad8 \
     --hash=sha256:611bb273cd68f3b993fabdc4064fc858c5b47a973cb5aa7999ec1ba405c87cd7
@@ -239,10 +134,6 @@ markupsafe==2.0.1 \
     --hash=sha256:f9081981fe268bd86831e5c75f7de206ef275defcb82bc70740ae6dc507aee51 \
     --hash=sha256:fa130dd50c57d53368c9d59395cb5526eda596d3ffe36666cd81a44d56e48872
     # via jinja2
-mccabe==0.6.1 \
-    --hash=sha256:ab8a6258860da4b6677da4bd2fe5dc2c659cff31b3ee4f7f5d64e79735b80d42 \
-    --hash=sha256:dd8d182285a0fe56bace7f45b5e7d1a6ebcbf524e8f3bd87eb0f125271b8831f
-    # via flake8
 mergedeep==1.3.4 \
     --hash=sha256:0096d52e9dad9939c3d975a774666af186eda617e6ca84df4c94dec30004f2a8 \
     --hash=sha256:70775750742b25c0d8f36c55aed03d24c3384d17c951b3175d898bd778ef0307
@@ -271,10 +162,6 @@ pbr==5.8.1 \
     --hash=sha256:27108648368782d07bbf1cb468ad2e2eeef29086affd14087a6d04b7de8af4ec \
     --hash=sha256:66bc5a34912f408bb3925bf21231cb6f59206267b7f63f3503ef865c1a292e25
     # via stevedore
-pep8-naming==0.12.1 \
-    --hash=sha256:4a8daeaeb33cfcde779309fc0c9c0a68a3bbe2ad8a8308b763c5068f86eb9f37 \
-    --hash=sha256:bb2455947757d162aa4cad55dba4ce029005cd1692f2899a21d51d8630ca7841
-    # via wemake-python-styleguide
 platformdirs==2.4.1 \
     --hash=sha256:1d7385c7db91728b83efd0ca99a5afb296cab9d0ed8313a45ed8ba17967ecfca \
     --hash=sha256:440633ddfebcc36264232365d7840a970e75e1018d15b4327d11f91909045fda
@@ -283,29 +170,12 @@ pre-commit==2.20.0 \
     --hash=sha256:51a5ba7c480ae8072ecdb6933df22d2f812dc897d5fe848778116129a681aac7 \
     --hash=sha256:a978dac7bc9ec0bcee55c18a277d553b0f419d259dadb4b9418ff2d00eb43959
     # via -r requirements.in
-pycodestyle==2.8.0 \
-    --hash=sha256:720f8b39dde8b293825e7ff02c475f3077124006db4f440dcbc9a20b76548a20 \
-    --hash=sha256:eddd5847ef438ea1c7870ca7eb78a9d47ce0cdb4851a5523949f2601d0cbbe7f
-    # via
-    #   flake8
-    #   flake8-bandit
-    #   flake8-debugger
-pydocstyle==6.1.1 \
-    --hash=sha256:1d41b7c459ba0ee6c345f2eb9ae827cab14a7533a88c5c6f7e94923f72df92dc \
-    --hash=sha256:6987826d6775056839940041beef5c08cc7e3d71d63149b48e36727f70144dc4
-    # via flake8-docstrings
-pyflakes==2.4.0 \
-    --hash=sha256:05a85c2872edf37a4ed30b0cce2f6093e1d0581f8c19d7393122da7e25b2b24c \
-    --hash=sha256:3bb3a3f256f4b7968c9c788781e4ff07dce46bdf12339dcda61053375426ee2e
-    # via flake8
 pygments==2.13.0 \
     --hash=sha256:56a8508ae95f98e2b9bdf93a6be5ae3f7d8af858b43e02c5a2ff083726be40c1 \
     --hash=sha256:f643f331ab57ba3c9d89212ee4a2dabc6e94f117cf4eefde99a0574720d14c42
     # via
     #   doc8
-    #   flake8-rst-docstrings
     #   mkdocs-material
-    #   wemake-python-styleguide
 pymdown-extensions==9.9 \
     --hash=sha256:0f8fb7b74a37a61cc34e90b2c91865458b713ec774894ffad64353a5fce85cfc \
     --hash=sha256:ac698c15265680db5eb13cd4342abfcde2079ac01e5486028f47a1b41547b859
@@ -353,7 +223,6 @@ pyyaml==6.0 \
     --hash=sha256:e61ceaab6f49fb8bdfaa0f92c4b57bcfbea54c09277b1b4f7ac376bfb7a7c174 \
     --hash=sha256:f84fbc98b019fef2ee9a1cb3ce93e3187a6df0b2538a651bfb890254ba9f90b5
     # via
-    #   bandit
     #   mkdocs
     #   pre-commit
     #   pyyaml-env-tag
@@ -457,42 +326,21 @@ requests==2.27.1 \
     # via mkdocs-material
 restructuredtext-lint==1.3.2 \
     --hash=sha256:d3b10a1fe2ecac537e51ae6d151b223b78de9fafdd50e5eb6b08c243df173c80
-    # via
-    #   doc8
-    #   flake8-rst-docstrings
+    # via doc8
 six==1.16.0 \
     --hash=sha256:1e61c37477a1626458e36f7b1d82aa5c9b094fa4802892072e49de9c60c4c926 \
     --hash=sha256:8abb2f1d86890a2dfb989f9a77cfcfd3e47c2a354b01111771326f8aa26e0254
     # via
-    #   flake8-debugger
     #   python-dateutil
     #   virtualenv
-smmap==5.0.0 \
-    --hash=sha256:2aba19d6a040e78d8b09de5c57e96207b09ed71d8e55ce0959eeee6c8e190d94 \
-    --hash=sha256:c840e62059cd3be204b0c9c9f74be2c09d5648eddd4580d9314c3ecde0b30936
-    # via gitdb
-snowballstemmer==2.2.0 \
-    --hash=sha256:09b16deb8547d3412ad7b590689584cd0fe25ec8db3be37788be3810cbf19cb1 \
-    --hash=sha256:c8e1716e83cc398ae16824e5572ae04e0d9fc2c6b985fb0f900f5f0c96ecba1a
-    # via pydocstyle
 stevedore==3.5.0 \
     --hash=sha256:a547de73308fd7e90075bb4d301405bebf705292fa90a90fc3bcf9133f58616c \
     --hash=sha256:f40253887d8712eaa2bb0ea3830374416736dc8ec0e22f5a65092c1174c44335
-    # via
-    #   bandit
-    #   doc8
-testfixtures==6.18.3 \
-    --hash=sha256:2600100ae96ffd082334b378e355550fef8b4a529a6fa4c34f47130905c7426d \
-    --hash=sha256:6ddb7f56a123e1a9339f130a200359092bd0a6455e31838d6c477e8729bb7763
-    # via flake8-isort
+    # via doc8
 toml==0.10.2 \
     --hash=sha256:806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b \
     --hash=sha256:b3bda1d108d5dd99f4a20d24d9c348e91c4db7ab1b749200bded2f839ccbe68f
     # via pre-commit
-typing-extensions==4.0.1 \
-    --hash=sha256:4ca091dea149f945ec56afb48dae714f21e8692ef22a395223bcd328961b6a0e \
-    --hash=sha256:7f001e5ac290a0c0401508864c7ec868be4e701886d5b573a9528ed3973d9d3b
-    # via wemake-python-styleguide
 urllib3==1.26.8 \
     --hash=sha256:000ca7f471a233c2251c6c7023ee85305721bfdf18621ebff4fd17a8653427ed \
     --hash=sha256:0e7c33d9a63e7ddfcb86780aac87befc2fbddf46c58dbb487e0855f7ceec283c
@@ -531,7 +379,3 @@ watchdog==2.2.0 \
     --hash=sha256:e722755d995035dd32177a9c633d158f2ec604f2a358b545bba5bed53ab25bca \
     --hash=sha256:ed91c3ccfc23398e7aa9715abf679d5c163394b8cad994f34f156d57a7c163dc
     # via mkdocs
-wemake-python-styleguide==0.16.1 \
-    --hash=sha256:202c22ecfee1f5caf0555048602cd52f2435cd57903e6b0cd46b5aaa3f652140 \
-    --hash=sha256:4fcd78dd55732679b5fc8bc37fd7e04bbaa5cdc1b1a829ad265e8f6b0d853cf6
-    # via -r requirements.in
