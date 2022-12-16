@@ -3,11 +3,12 @@
 # Build docs_source.
 bazel build --noexperimental_enable_bzlmod //ll:docs
 chmod 644 bazel-bin/ll/*.md
-cp bazel-bin/ll/*.md docs_source
+cp bazel-bin/ll/*.md docs/api_reference
+cp bazel-bin/ll/defs.md docs/rules
 
 # Rebuild the Sphinx documentation.
-rm -rd docs
-sphinx-build -b html docs_source docs
+# rm -rd docs
+# sphinx-build -b html docs_source docs
 
 # Rerun the pre-commit hooks so that we do not need to stage everything twice.
 git add docs

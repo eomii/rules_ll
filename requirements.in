@@ -1,5 +1,4 @@
 doc8==0.11.2
-sphinx-book-theme==0.3.3
 wemake-python-styleguide==0.16.1
 pre-commit==2.20.0
-myst-parser==0.18.0
+mkdocs-material==9.0.0b4

@@ -1,0 +1,60 @@
+site_name: rules_ll
+site_url: https://ll.eomii.org/
+repo_name: eomii/rules_ll
+repo_url: https://github.com/eomii/rules_ll/
+copyright: Copyright 2022 eomii
+extra:
+  generator: false
+theme:
+  name: material
+  palette:
+    scheme: eomii
+    primary: white
+  icon:
+    logo: material/heart
+    repo: fontawesome/brands/github
+  font:
+    text: Fira Sans
+    code: Fira Code
+  features:
+    - navigation.instant
+    - navigation.tabs
+    - navigation.sections
+    - navigation.indexes
+extra_css:
+-   stylesheets/extra.css
+markdown_extensions:
+-   attr_list
+-   md_in_html
+-   admonition
+-   pymdownx.highlight:
+      use_pygments: true
+-   pymdownx.superfences
+-   pymdownx.details
+nav:
+-   Home: index.md
+-   Quickstart: quickstart/quickstart.md
+-   Rules: rules/defs.md
+-   Guides:
+    -   guides/index.md
+    -   Clang-Tidy: guides/clang_tidy.md
+    -   C++ Modules: guides/modules.md
+-   API Reference:
+    -   api_reference/index.md
+    -   //ll:actions: api_reference/actions.md
+    -   //ll:args: api_reference/args.md
+    -   //ll:attributes: api_reference/attributes.md
+    -   //ll:compilation_database: api_reference/compilation_database.md
+    -   //ll:defs: api_reference/defs.md
+    -   //ll:driver: api_reference/driver.md
+    -   //ll:environment: api_reference/environment.md
+    -   //ll:inputs: api_reference/inputs.md
+    -   //ll:ll: api_reference/ll.md
+    -   //ll:llvm_project_deps: api_reference/llvm_project_deps.md
+    -   //ll:os: api_reference/os.md
+    -   //ll:outputs: api_reference/outputs.md
+    -   //ll:providers: api_reference/providers.md
+    -   //ll:resolve_rule_inputs: api_reference/resolve_rule_inputs.md
+    -   //ll:toolchain: api_reference/toolchain.md
+    -   //ll:tools: api_reference/tools.md
+    -   //ll:transitions: api_reference/transitions.md
