@@ -38,7 +38,7 @@ This guide will explain how to set up `rules_ll` in your project.
 
 Install [bazelisk](https://bazel.build/install/bazelisk).
 
-If you do not plan on modifying `rules_ll`, you do not need to clone its
+If you don't plan on modifying `rules_ll`, there is no need to clone its
 repository. Instead, create the following files to set up `rules_ll` in your
 project:
 

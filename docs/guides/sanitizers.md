@@ -83,7 +83,7 @@ nondeterministic and not reproducible at an address level. Run sanitized
 executables multiple times and build them with different optimization levels to
 maximize coverage.
 
-## Simple example
+## Example
 
 The following code will introduce a silent use-after-free bug:
 
@@ -119,7 +119,7 @@ ll_binary(
 )
 ```
 
-We are immediately informed about a `heap-use-after-free` bug, along with a
+The sanitizer immediately reports a `heap-use-after-free` bug, along with a
 detailed report on where we introduced it:
 
 ```bash

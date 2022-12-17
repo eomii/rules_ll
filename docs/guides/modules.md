@@ -4,7 +4,7 @@
 that use C++ modules.
 
 Apart from clean dependency management, modules can reduce compile times
-significantly. In a setting where we have many targets that use
+significantly. In settings where there are many targets that use
 expensive-to-compile headers (such as CUDA, HIP and SYCL), the compile-time
 improvements from using modules are invaluable.
 
@@ -29,7 +29,7 @@ Additional examples to the ones in this guide can be found at [rules_ll/examples
 
 ## Basic usage
 
-A simple, interface-only module can be written as follows:
+An interface-only module can be written as follows:
 
 ```cpp
 // hello.cppm
@@ -71,7 +71,7 @@ ll_binary(
 ```
 
 The `interfaces` attribute is a `dict`, mapping module interface units to
-module names. This lets us declare sevaral interfaces in a single target and use
+module names. This lets us declare several interfaces in a single target and use
 different names for the target name, the interface files and the module name.
 
 ## Interface-implementation split
@@ -158,11 +158,11 @@ For the `ll_library` target:
 
 - `hello.cppm` is precompiled to `hello.pcm`. This is a more-or-less AST
   dump of `hello.cppm`.
-- `hello.pcm` is compiled to `hello.interface.o`. Modules are not to be
-  confused with precompiled headers or header units. As such, we will need to
-  compile and link the module interface unit just like a regular translation
-  unit. The `.interface` part is appended so that we do not clash names with
-  outputs from files like `hello.cpp`.
+- `hello.pcm` is compiled to `hello.interface.o`. Don't confuse modules with
+  precompiled headers or header units. We need to compile and link the module
+  interface unit just like a regular translation unit. The `.interface` part is
+  appended so that we don't clash names with outputs from files like
+  `hello.cpp`.
 - `hello.cpp` is compiled to `hello.o`. This is more or less regular
   compilation, with the only difference being that `hello.pcm` is loaded by
   the compiler to make the interface of the `hello` module available to the
@@ -179,7 +179,7 @@ For the `ll_binary` target:
 
 - `main.cpp` is compiled to `main.o`. This, again, is more or less regular
   compilation but with an additional directive to the compiler to load
-  `hello.pcm`. Note that this step does not depend on the existence of
+  `hello.pcm`. Note that this step doesn't depend on the existence of
   `hello.o`. The precompiled module interface is loaded since we specified
   `":hello"` in our `deps`, and `rules_ll` knows how to handle
   precompiled interface units transitively.
@@ -212,13 +212,13 @@ As such, code written using C++ modules that builds with `rules_ll` should
 be buildable on any other build system with any other compiler that supports
 the C++ standard.
 
-In practice, most build systems do not yet implement the logic required to work
+In practice, most build systems don't yet implement the logic required to work
 with C++ modules. They work in `rules_ll` because we use upstream versions of
 Clang and apply custom patches to `libcxx`. We also create modified
 compilation databases so that `clang-tidy` doesn't get confused by binary
 inputs from intermediate precompilation steps.
 
-Most buildsystems won't set up a customized standard library for you, or
+Most build systems won't set up a customized standard library for you, or
 integrate tooling as deeply as `rules_ll`, so it will likely take some time
 until C++ modules become general practice.
 

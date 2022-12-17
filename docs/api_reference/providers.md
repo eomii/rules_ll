@@ -5,7 +5,7 @@ Providers used by `rules_ll`.
 
 <a id="LlCompilationDatabaseFragmentsInfo"></a>
 
-## LlCompilationDatabaseFragmentsInfo
+## `LlCompilationDatabaseFragmentsInfo`
 
 <pre>
 LlCompilationDatabaseFragmentsInfo(<a href="#LlCompilationDatabaseFragmentsInfo-cdfs">cdfs</a>)
@@ -17,12 +17,12 @@ Provider containing compilation database fragments.
 
 | Name  | Description |
 | :------------- | :------------- |
-| <a id="LlCompilationDatabaseFragmentsInfo-cdfs"></a>`cdfs` |  A depset containing compilation database fragments.         Assembling the compilation database fragments into a         compile_commands.json file produces a compilation database for tools         like clang-tidy.    |
+| <a id="LlCompilationDatabaseFragmentsInfo-cdfs"></a>`cdfs` |  A depset containing compilation database fragments.<br><br>        Assembling the compilation database fragments into a         <code>compile_commands.json</code> file produces a compilation database for tools         like clang-tidy.    |
 
 
 <a id="LlCompilationDatabaseInfo"></a>
 
-## LlCompilationDatabaseInfo
+## `LlCompilationDatabaseInfo`
 
 <pre>
 LlCompilationDatabaseInfo(<a href="#LlCompilationDatabaseInfo-compilation_database">compilation_database</a>)
@@ -39,7 +39,7 @@ LlCompilationDatabaseInfo(<a href="#LlCompilationDatabaseInfo-compilation_databa
 
 <a id="LlInfo"></a>
 
-## LlInfo
+## `LlInfo`
 
 <pre>
 LlInfo(<a href="#LlInfo-exposed_angled_includes">exposed_angled_includes</a>, <a href="#LlInfo-exposed_defines">exposed_defines</a>, <a href="#LlInfo-exposed_hdrs">exposed_hdrs</a>, <a href="#LlInfo-exposed_includes">exposed_includes</a>, <a href="#LlInfo-exposed_bmis">exposed_bmis</a>)
@@ -51,8 +51,8 @@ Provider returned by ll targets.
 
 | Name  | Description |
 | :------------- | :------------- |
-| <a id="LlInfo-exposed_angled_includes"></a>`exposed_angled_includes` |  A depset containing angled include paths.         These include paths are carried to direct dependents.    |
-| <a id="LlInfo-exposed_defines"></a>`exposed_defines` |  A depset containing defines. These defines are         carried to direct dependents.    |
-| <a id="LlInfo-exposed_hdrs"></a>`exposed_hdrs` |  A depset containing header files. These header files         are carried to direct dependents.    |
-| <a id="LlInfo-exposed_includes"></a>`exposed_includes` |  A depset containing include paths. These include         paths are carried to direct dependents.    |
-| <a id="LlInfo-exposed_bmis"></a>`exposed_bmis` |  A depset containing precompiled module interfaces.         These interfaces are carried to direct dependents.    |
+| <a id="LlInfo-exposed_angled_includes"></a>`exposed_angled_includes` |  A depset containing angled include paths.<br><br>        These include paths are carried to direct dependents.    |
+| <a id="LlInfo-exposed_defines"></a>`exposed_defines` |  A depset containing defines.<br><br>        These defines are carried to direct dependents.    |
+| <a id="LlInfo-exposed_hdrs"></a>`exposed_hdrs` |  A depset containing header files.<br><br>        These header files are carried to direct dependents.    |
+| <a id="LlInfo-exposed_includes"></a>`exposed_includes` |  A depset containing include paths.<br><br>        These include paths are carried to direct dependents.    |
+| <a id="LlInfo-exposed_bmis"></a>`exposed_bmis` |  A depset containing precompiled module interfaces.<br><br>        These interfaces are carried to direct dependents.    |

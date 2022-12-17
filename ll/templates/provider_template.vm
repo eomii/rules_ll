@@ -1,6 +1,6 @@
 <a id="${providerName}"></a>
 
-#[[##]]# ${providerName}
+#[[##]]# `${providerName}`
 
 <pre>
 ${util.providerSummary($providerName, $providerInfo)}

@@ -5,11 +5,9 @@ Implements the `ll_compilation_database` rule.
 
 <a id="ll_compilation_database"></a>
 
-## ll_compilation_database
+## `ll_compilation_database`
 
-<pre>
-ll_compilation_database(<a href="#ll_compilation_database-name">name</a>, <a href="#ll_compilation_database-config">config</a>, <a href="#ll_compilation_database-exclude">exclude</a>, <a href="#ll_compilation_database-targets">targets</a>)
-</pre>
+<pre><code>ll_compilation_database(<a href="#ll_compilation_database-name">name</a>, <a href="#ll_compilation_database-config">config</a>, <a href="#ll_compilation_database-exclude">exclude</a>, <a href="#ll_compilation_database-targets">targets</a>)</code></pre>
 
 Executable target for building a
 [compilation database](https://clang.llvm.org/docs/JSONCompilationDatabase.html)

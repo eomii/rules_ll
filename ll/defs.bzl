@@ -2,7 +2,7 @@
 
 These are the rules that should be imported in `BUILD.bazel` files.
 
-To load e.g. the `ll_binary` rule:
+To load for example the `ll_binary` rule:
 
 ```python
 load("@rules_ll//ll:defs.bzl", "ll_binary")

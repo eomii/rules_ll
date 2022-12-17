@@ -5,7 +5,7 @@ Action environments.
 
 <a id="compile_object_environment"></a>
 
-## compile_object_environment
+## `compile_object_environment`
 
 <pre>
 compile_object_environment(<a href="#compile_object_environment-ctx">ctx</a>, <a href="#compile_object_environment-toolchain_type">toolchain_type</a>)

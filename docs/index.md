@@ -1,4 +1,4 @@
-# rules_ll
+# `rules_ll`
 
 An upstream Clang/LLVM-based Bazel toolchain for modern C++ and heterogeneous
 programming.
@@ -6,7 +6,7 @@ programming.
 ## Features
 
 - Upstream Clang/LLVM via the
-  [llvm-bazel-overlay](https://github.com/llvm/llvm-project/tree/main/utils/bazel).
+  [`llvm-bazel-overlay`](https://github.com/llvm/llvm-project/tree/main/utils/bazel).
 - Custom overlays for `libcxx`, `libcxxabi`, `libunwind`, `compiler-rt`,
   `openmp` and `clang-tidy`.
 - Builtin `clang-tidy` invocations via an `ll_compilation_database` target.

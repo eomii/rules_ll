@@ -1,6 +1,6 @@
 <a id="${funcInfo.functionName}"></a>
 
-#[[##]]# ${funcInfo.functionName}
+#[[##]]# `${funcInfo.functionName}`
 
 <pre>
 ${util.funcSummary($funcInfo)}

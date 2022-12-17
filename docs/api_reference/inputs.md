@@ -5,7 +5,7 @@ Action inputs.
 
 <a id="compilable_sources"></a>
 
-## compilable_sources
+## `compilable_sources`
 
 <pre>
 compilable_sources(<a href="#compilable_sources-ctx">ctx</a>)
@@ -20,7 +20,7 @@ compilable_sources(<a href="#compilable_sources-ctx">ctx</a>)
 
 <a id="compile_object_inputs"></a>
 
-## compile_object_inputs
+## `compile_object_inputs`
 
 <pre>
 compile_object_inputs(<a href="#compile_object_inputs-ctx">ctx</a>, <a href="#compile_object_inputs-in_file">in_file</a>, <a href="#compile_object_inputs-headers">headers</a>, <a href="#compile_object_inputs-interfaces">interfaces</a>, <a href="#compile_object_inputs-local_interfaces">local_interfaces</a>, <a href="#compile_object_inputs-toolchain_type">toolchain_type</a>)
@@ -40,7 +40,7 @@ compile_object_inputs(<a href="#compile_object_inputs-ctx">ctx</a>, <a href="#co
 
 <a id="create_archive_library_inputs"></a>
 
-## create_archive_library_inputs
+## `create_archive_library_inputs`
 
 <pre>
 create_archive_library_inputs(<a href="#create_archive_library_inputs-ctx">ctx</a>, <a href="#create_archive_library_inputs-in_files">in_files</a>)
@@ -56,7 +56,7 @@ create_archive_library_inputs(<a href="#create_archive_library_inputs-ctx">ctx</
 
 <a id="link_bitcode_library_inputs"></a>
 
-## link_bitcode_library_inputs
+## `link_bitcode_library_inputs`
 
 <pre>
 link_bitcode_library_inputs(<a href="#link_bitcode_library_inputs-ctx">ctx</a>, <a href="#link_bitcode_library_inputs-in_files">in_files</a>)
@@ -72,7 +72,7 @@ link_bitcode_library_inputs(<a href="#link_bitcode_library_inputs-ctx">ctx</a>, 
 
 <a id="link_executable_inputs"></a>
 
-## link_executable_inputs
+## `link_executable_inputs`
 
 <pre>
 link_executable_inputs(<a href="#link_executable_inputs-ctx">ctx</a>, <a href="#link_executable_inputs-in_files">in_files</a>, <a href="#link_executable_inputs-toolchain_type">toolchain_type</a>)
@@ -89,7 +89,7 @@ link_executable_inputs(<a href="#link_executable_inputs-ctx">ctx</a>, <a href="#
 
 <a id="link_shared_object_inputs"></a>
 
-## link_shared_object_inputs
+## `link_shared_object_inputs`
 
 <pre>
 link_shared_object_inputs(<a href="#link_shared_object_inputs-ctx">ctx</a>, <a href="#link_shared_object_inputs-in_files">in_files</a>, <a href="#link_shared_object_inputs-toolchain_type">toolchain_type</a>)

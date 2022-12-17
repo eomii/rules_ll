@@ -41,7 +41,7 @@ the scheme `<framework>_<target_arch>`:
 | CUDA      | NVPTX               | `cuda_nvptx`       |
 | HIP       | NVPTX               | `hip_nvptx`        |
 
-`rules_ll` does not (yet) have custom attributes to handle offloading
+`rules_ll` doesn't (yet) have custom attributes to handle offloading
 architectures. They can be specified via an `--offload-arch` flag in the
 `compile_flags` attribute instead.
 
@@ -95,6 +95,6 @@ ll_binary(
 
 ## Caveats
 
-C++ modules do not work with heterogeneous code. This is unfortunate, since
+C++ modules don't work with heterogeneous code. This is unfortunate, since
 heterogeneous compilation is one of the applications that would benefit from
 modules the most.

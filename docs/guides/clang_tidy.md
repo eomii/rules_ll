@@ -45,9 +45,9 @@ bazel run my_library_compile_commands
 # Prints warnings for my_library.cpp.
 ```
 
-If you only require a `compile_commands.json` file, e.g. for using it with an
-IDE, you can build (instead of run) the `compile_commands` target and locate
-the `compile_commands.json` file in the `bazel-bin` directory.
+If you only require a `compile_commands.json` file for using it with an IDE, you
+can build (instead of run) the `compile_commands` target and locate the
+`compile_commands.json` file in the `bazel-bin` directory.
 
 ```bash
 bazel build my_library_compile_commands
@@ -126,6 +126,6 @@ Running `compile_commands` will also run `clang-tidy` on both targets.
 
 ## Limitations
 
-The `ll_compilation_database` rule does not support the `-fix` option for
-`clang-tidy`. The auto-fixer tends to break code and would have to work outside
-of the Bazel build direcories.
+The `ll_compilation_database` rule doesn't support the `-fix` option for
+`clang-tidy`. The auto fixer tends to break code and would have to work outside
+of the Bazel build directories.

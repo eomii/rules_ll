@@ -5,7 +5,7 @@ Action outputs.
 
 <a id="compile_object_outputs"></a>
 
-## compile_object_outputs
+## `compile_object_outputs`
 
 <pre>
 compile_object_outputs(<a href="#compile_object_outputs-ctx">ctx</a>, <a href="#compile_object_outputs-in_file">in_file</a>)
@@ -21,7 +21,7 @@ compile_object_outputs(<a href="#compile_object_outputs-ctx">ctx</a>, <a href="#
 
 <a id="create_archive_library_outputs"></a>
 
-## create_archive_library_outputs
+## `create_archive_library_outputs`
 
 <pre>
 create_archive_library_outputs(<a href="#create_archive_library_outputs-ctx">ctx</a>)
@@ -36,7 +36,7 @@ create_archive_library_outputs(<a href="#create_archive_library_outputs-ctx">ctx
 
 <a id="link_bitcode_library_outputs"></a>
 
-## link_bitcode_library_outputs
+## `link_bitcode_library_outputs`
 
 <pre>
 link_bitcode_library_outputs(<a href="#link_bitcode_library_outputs-ctx">ctx</a>)
@@ -51,7 +51,7 @@ link_bitcode_library_outputs(<a href="#link_bitcode_library_outputs-ctx">ctx</a>
 
 <a id="link_executable_outputs"></a>
 
-## link_executable_outputs
+## `link_executable_outputs`
 
 <pre>
 link_executable_outputs(<a href="#link_executable_outputs-ctx">ctx</a>)
@@ -66,7 +66,7 @@ link_executable_outputs(<a href="#link_executable_outputs-ctx">ctx</a>)
 
 <a id="link_shared_object_outputs"></a>
 
-## link_shared_object_outputs
+## `link_shared_object_outputs`
 
 <pre>
 link_shared_object_outputs(<a href="#link_shared_object_outputs-ctx">ctx</a>)
@@ -81,7 +81,7 @@ link_shared_object_outputs(<a href="#link_shared_object_outputs-ctx">ctx</a>)
 
 <a id="ll_artifact"></a>
 
-## ll_artifact
+## `ll_artifact`
 
 <pre>
 ll_artifact(<a href="#ll_artifact-ctx">ctx</a>, <a href="#ll_artifact-filename">filename</a>)
@@ -102,7 +102,7 @@ same build invocation.
 
 <a id="precompile_interface_outputs"></a>
 
-## precompile_interface_outputs
+## `precompile_interface_outputs`
 
 <pre>
 precompile_interface_outputs(<a href="#precompile_interface_outputs-ctx">ctx</a>, <a href="#precompile_interface_outputs-in_file">in_file</a>)
