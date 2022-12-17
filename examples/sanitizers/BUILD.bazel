@@ -3,7 +3,6 @@ load("@rules_ll//ll:defs.bzl", "ll_binary")
 ll_binary(
     name = "address",
     srcs = ["address.cpp"],
-    link_flags = ["--verbose"],
     sanitize = ["address"],
 )
 

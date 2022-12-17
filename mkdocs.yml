@@ -26,6 +26,7 @@ extra_css:
 -   stylesheets/extra.css
 markdown_extensions:
 -   attr_list
+-   def_list
 -   md_in_html
 -   admonition
 -   pymdownx.highlight:
@@ -42,6 +43,7 @@ nav:
     -   Clang-Tidy: guides/clang_tidy.md
     -   C++ Modules: guides/modules.md
     -   CUDA and HIP: guides/cuda_and_hip.md
+    -   Sanitizers: guides/sanitizers.md
 -   API Reference:
     -   api_reference/index.md
     -   //ll:actions: api_reference/actions.md

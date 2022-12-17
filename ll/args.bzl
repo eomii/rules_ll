@@ -96,7 +96,7 @@ def compile_object_args(
             args.add("--cuda-noopt-device-debug")
 
     # Sanitizers.
-    has_sanitizers = (ctx.attr.sanitize != [])
+    has_sanitizers = (ctx.attr.sanitize != [] and ctx.attr.sanitize != ["none"])
 
     if "address" in ctx.attr.sanitize and "leak" in ctx.attr.sanitize:
         fail("AddressSanitizer and LeakSanitizer are mutually exclusive.")
@@ -376,7 +376,7 @@ def link_executable_args(ctx, in_files, out_file, mode):
         )
 
     # Sanitizers.
-    has_sanitizers = (ctx.attr.sanitize != [])
+    has_sanitizers = (ctx.attr.sanitize != [] and ctx.attr.sanitize != ["none"])
     if has_sanitizers:
         args.add("--eh-frame-hdr")
         args.add("--whole-archive")

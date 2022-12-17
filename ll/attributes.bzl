@@ -195,7 +195,7 @@ DEFAULT_ATTRS = {
     "interfaces": attr.label_keyed_string_dict(
         doc = """Module interfaces for this target.
 
-        See [C++ modules](guides/modules) for usage instructions.
+        See [C++ modules](../guides/modules.md) for usage instructions.
 
         Internally, interfaces will be precompiled and then compiled to objects
         named `<filename>.interface.o`. This way object files for modules
@@ -242,6 +242,8 @@ DEFAULT_ATTRS = {
     "sanitize": attr.string_list(
         doc = """Enable sanitizers for this target.
 
+        See the [Sanitizers](../guides/sanitizers.md) guide for usage instructions.
+
         Some sanitizers come with heavy performance penalties. Many combinations
         of multiple enabled sanitizers are invalid. If possible, use only one at
         a time.
@@ -255,16 +257,20 @@ DEFAULT_ATTRS = {
             slowdown introduced is 2x. Executables that invoke CUDA-based
             kernels, including those created via HIP and SYCL, need to be run
             with `ASAN_OPTIONS=protect_shadow_gap=0`.
+
         `"leak"`: Enable LeakSanitizer to detect memory leaks. This is already
             integrated in AddressSanitizer. Enable LeakSanitizer if you want to
             use it in standalone mode. Almost no performance overhead until the
             end of the process where leaks are detected.
+
         `"memory"`: Enable MemorySanitizer to detect uninitialized reads.
             Typical slowdown introduced is 3x. Add
             `"-fsanitize-memory-track-origins=2"` to the `compile_flags`
             attribute to track the origins of uninitialized values.
+
         `"undefined_behavior"`: Enable UndefinedBehaviorSanitizer to detect
             undefined behavior. Small performance overhead.
+
         `"thread"`: Enable ThreadSanitizer to detect data races. Typical
             slowdown is 5x-15x. Typical memory overhead is 5x-10x.
         """,
