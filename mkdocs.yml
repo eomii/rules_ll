@@ -41,6 +41,7 @@ nav:
     -   guides/index.md
     -   Clang-Tidy: guides/clang_tidy.md
     -   C++ Modules: guides/modules.md
+    -   CUDA and HIP: guides/cuda_and_hip.md
 -   API Reference:
     -   api_reference/index.md
     -   //ll:actions: api_reference/actions.md
