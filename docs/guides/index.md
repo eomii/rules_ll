@@ -9,3 +9,5 @@ If you feel like anything is missing or unclear, don't hesitate to open an
 - [C++ Modules](modules.md) Explains how to write targets that use C++ modules.
 - [CUDA and HIP](cuda_and_hip.md) Explains how to build heterogeneous code
   targeting GPUs.
+- [Sanitizers](sanitizers.md) Explains how to integrate sanitizers in your
+  builds.
