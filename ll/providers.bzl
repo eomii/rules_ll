@@ -6,25 +6,11 @@ Providers used by `rules_ll`.
 LlInfo = provider(
     doc = "Provider returned by ll targets.",
     fields = {
-        "exposed_angled_includes": """ A depset containing angled include paths.
-
-        These include paths are carried to direct dependents.
-        """,
-        "exposed_defines": """A depset containing defines.
-
-        These defines are carried to direct dependents.
-        """,
-        "exposed_hdrs": """A depset containing header files.
-
-        These header files are carried to direct dependents.
-        """,
-        "exposed_includes": """A depset containing include paths.
-
-        These include paths are carried to direct dependents.
-        """,
-        "exposed_bmis": """A depset containing precompiled module interfaces.
-
-        These interfaces are carried to direct dependents.""",
+        "exposed_angled_includes": "A depset containing angled include paths.",
+        "exposed_defines": "A depset containing defines.",
+        "exposed_hdrs": "A depset containing header files.",
+        "exposed_includes": "A depset containing include paths.",
+        "exposed_bmis": "A depset containing precompiled module interfaces.",
     },
 )
 

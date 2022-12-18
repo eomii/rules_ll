@@ -3,7 +3,7 @@
 # Build docs_source.
 bazel build --noexperimental_enable_bzlmod //ll:docs
 chmod 644 bazel-bin/ll/*.md
-cp bazel-bin/ll/*.md docs/api_reference
+cp bazel-bin/ll/*.md docs/reference
 cp bazel-bin/ll/defs.md docs/rules
 
 # Rebuild the Sphinx documentation.

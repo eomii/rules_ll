@@ -1,6 +1,6 @@
 # Quickstart
 
-This guide will explain how to set up `rules_ll` in your project.
+This guide explains how to set up `rules_ll` in your project.
 
 ??? "System Requirements"
 
@@ -16,15 +16,15 @@ This guide will explain how to set up `rules_ll` in your project.
     - An `x86_64` processor. You can check this via `uname -a`.
     - A Linux kernel with 64-bit support. You can check this via
       `getconf LONG_BIT`.
-    - A `glibc` version that supports `mallinfo2`. This will be the case if
+    - A `glibc` version that supports `mallinfo2`. This is the case if
       `ldd --version` prints a value of at least ``2.33``.
     - A functional host toolchain for C++. Some distros have this by default,
       others require manual installation of a recent version of Clang or GCC.
-      This toolchain will be used to compile the upstream versions of Clang and
+      This toolchain is used to compile the upstream versions of Clang and
       clang-tidy that are used to build `ll_*` targets.
     - For Nvidia GPU toolchains, a GPU with compute capability of at least
-      `5.2`. This will be the case for 10xx series GPUs and up, as well as some
-      `9xx` series GPUs. A full list of compute capabilities can be found at
+      `5.2`. This is the case for 10xx series GPUs and up, as well as some `9xx`
+      series GPUs. A full list of compute capabilities can be found at
       <https://developer.nvidia.com/cuda-gpus>.
     - As a rough guideline, at least 10GB of disk space for fetched dependencies
       and build artifacts. Using all toolchains, debug and optimization modes

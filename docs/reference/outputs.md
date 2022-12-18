@@ -97,7 +97,7 @@ same build invocation.
 | Name  | Description |
 | :---- | :---------- |
 | <a id="ll_artifact-ctx"></a>`ctx` | The build context.  |
-| <a id="ll_artifact-filename"></a>`filename` |  defaults to `None`.<br><br>An optional string representing a filename. If omitted, only creates a path like "&lt;ctx.label.name&gt;".  |
+| <a id="ll_artifact-filename"></a>`filename` |  defaults to `None`.<br><br>An optional string representing a filename. If omitted, creates a path like "&lt;ctx.label.name&gt;".  |
 
 
 <a id="precompile_interface_outputs"></a>

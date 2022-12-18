@@ -8,7 +8,7 @@ GPUs
 AMD
 [Cc]ompilable
 BMIs
-bitcode
+[Bb]itcode
 archiver
 ROCm
 unwinder

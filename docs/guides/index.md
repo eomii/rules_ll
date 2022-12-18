@@ -1,6 +1,6 @@
 # Guides
 
-These guides explain some of the more advanced functionalities of `rules_ll`.
+These guides explain some more advanced functionalities of `rules_ll`.
 If you feel like anything is missing or unclear, don't hesitate to open an
 [issue on GitHub](https://github.com/eomii/rules_ll/issues).
 

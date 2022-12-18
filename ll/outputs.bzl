@@ -14,7 +14,7 @@ def ll_artifact(ctx, filename = None):
 
     Args:
         ctx: The build context.
-        filename: An optional string representing a filename. If omitted, only
+        filename: An optional string representing a filename. If omitted,
             creates a path like "<ctx.label.name>".
     """
     if filename == None:

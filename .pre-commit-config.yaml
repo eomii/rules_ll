@@ -37,7 +37,7 @@ repos:
     rev: v0.9.8
     hooks:
     -   id: pymarkdown
-        exclude: ^(docs/api_reference/|docs/rules/)
+        exclude: ^(docs/reference/|docs/rules/)
         args:
           - --config=.pymarkdown.json
           - scan

@@ -156,9 +156,7 @@ ll_compilation_database = rule(
         ),
         "targets": attr.label_list(
             mandatory = True,
-            doc = """
-            The label for which the compilation database should be built.
-            """,
+            doc = """ The label for which to build the compilation database.""",
         ),
     },
     toolchains = ["//ll:toolchain_type"],

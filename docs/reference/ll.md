@@ -1,12 +1,8 @@
-# `//ll:defs.bzl`
+# `//ll:ll.bzl`
 
-These are the rules to imported in your `BUILD.bazel` files.
+Rules for building C/C++ with an upstream LLVM/Clang toolchain.
 
-To load for example the `ll_binary` rule:
-
-```python
-load("@rules_ll//ll:defs.bzl", "ll_binary")
-```
+Build files should import these rules via `@rules_ll//ll:defs.bzl`.
 
 
 <a id="ll_binary"></a>
@@ -58,32 +54,6 @@ Example:
 | <a id="ll_binary-sanitize"></a>`sanitize` | <code>List of strings</code>, optional, defaults to <code>[]</code>.<br><br> Enable sanitizers for this target.<br><br>        See the [Sanitizers](../guides/sanitizers.md) guide for usage instructions.<br><br>        Some sanitizers come with heavy performance penalties. Enabling several         sanitizers at once often breaks builds. If possible, use one at a time.<br><br>        Since sanitizers find issues during runtime, error reports are         nondeterministic and not reproducible at an address level. Run sanitized         executables several times and build them with different optimization         levels to maximize coverage.<br><br>        <code>"address"</code>: Enable AddressSanitizer to detect memory errors.<br><br>        <code>"leak"</code>: Enable LeakSanitizer to detect memory leaks.<br><br>        <code>"memory"</code>: Enable MemorySanitizer to detect uninitialized reads.<br><br>        <code>"undefined_behavior"</code>: Enable UndefinedBehaviorSanitizer to detect             undefined behavior.<br><br>        <code>"thread"</code>: Enable ThreadSanitizer to detect data races.   |
 | <a id="ll_binary-srcs"></a>`srcs` | <code><a href="https://bazel.build/docs/build-ref.html#labels">List of labels</a></code>, optional, defaults to <code>[]</code>.<br><br> Compilable source files for this target.<br><br>        Allowed files are compilable files and object files         <code>[".ll", ".o", ".S", ".c", ".cl", ".cpp"]</code>.<br><br>        Place headers in the <code>hdrs</code> attribute.   |
 | <a id="ll_binary-toolchain_configuration"></a>`toolchain_configuration` | <code><a href="https://bazel.build/docs/build-ref.html#labels">Label</a></code>, optional, defaults to <code>//ll:current_ll_toolchain_configuration</code>.<br><br> TODO   |
-
-
-<a id="ll_compilation_database"></a>
-
-## `ll_compilation_database`
-
-<pre><code>ll_compilation_database(<a href="#ll_compilation_database-name">name</a>, <a href="#ll_compilation_database-config">config</a>, <a href="#ll_compilation_database-exclude">exclude</a>, <a href="#ll_compilation_database-targets">targets</a>)</code></pre>
-
-Executable target for building a
-[compilation database](https://clang.llvm.org/docs/JSONCompilationDatabase.html)
-and running [clang-tidy](https://clang.llvm.org/extra/clang-tidy/) on it.
-
-For a full guide see
-[Using `rules_ll` with `clang-tidy`](https://ll.eomii.org/guides/clang_tidy.html).
-
-Examples using this rule are available at
-[rules_ll/examples](https://github.com/eomii/rules_ll/tree/main/examples).
-
-`attributes`
-
-| Name  | Description |
-| :---- | :---------- |
-| <a id="ll_compilation_database-name"></a>`name` | <code><a href="https://bazel.build/docs/build-ref.html#name">Name</a></code>, required.<br><br> A unique name for this target.   |
-| <a id="ll_compilation_database-config"></a>`config` | <code><a href="https://bazel.build/docs/build-ref.html#labels">Label</a></code>, required.<br><br> The label of a <code>.clang-tidy</code> configuration file.<br><br>            This file should be at the root of your project directory.   |
-| <a id="ll_compilation_database-exclude"></a>`exclude` | <code>List of strings</code>, optional, defaults to <code>[]</code>.<br><br> Exclude all targets whose path includes one at least one of the             provided strings.   |
-| <a id="ll_compilation_database-targets"></a>`targets` | <code><a href="https://bazel.build/docs/build-ref.html#labels">List of labels</a></code>, required.<br><br> The label for which to build the compilation database.   |
 
 
 <a id="ll_library"></a>
@@ -138,3 +108,18 @@ Example:
 | <a id="ll_library-shared_object_link_flags"></a>`shared_object_link_flags` | <code>List of strings</code>, optional, defaults to <code>[]</code>.<br><br> Flags for the linker when emitting shared objects.<br><br>        Used if <code>emit</code> includes <code>"shared_object"</code>.   |
 | <a id="ll_library-srcs"></a>`srcs` | <code><a href="https://bazel.build/docs/build-ref.html#labels">List of labels</a></code>, optional, defaults to <code>[]</code>.<br><br> Compilable source files for this target.<br><br>        Allowed files are compilable files and object files         <code>[".ll", ".o", ".S", ".c", ".cl", ".cpp"]</code>.<br><br>        Place headers in the <code>hdrs</code> attribute.   |
 | <a id="ll_library-toolchain_configuration"></a>`toolchain_configuration` | <code><a href="https://bazel.build/docs/build-ref.html#labels">Label</a></code>, optional, defaults to <code>//ll:current_ll_toolchain_configuration</code>.<br><br> TODO   |
+
+
+<a id="select_toolchain_type"></a>
+
+## `select_toolchain_type`
+
+<pre>
+select_toolchain_type(<a href="#select_toolchain_type-ctx">ctx</a>)
+</pre>
+
+`parameters`
+
+| Name  | Description |
+| :---- | :---------- |
+| <a id="select_toolchain_type-ctx"></a>`ctx` |  |

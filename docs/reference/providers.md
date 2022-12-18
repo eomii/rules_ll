@@ -51,8 +51,8 @@ Provider returned by ll targets.
 
 | Name  | Description |
 | :------------- | :------------- |
-| <a id="LlInfo-exposed_angled_includes"></a>`exposed_angled_includes` |  A depset containing angled include paths.<br><br>        These include paths are carried to direct dependents.    |
-| <a id="LlInfo-exposed_defines"></a>`exposed_defines` |  A depset containing defines.<br><br>        These defines are carried to direct dependents.    |
-| <a id="LlInfo-exposed_hdrs"></a>`exposed_hdrs` |  A depset containing header files.<br><br>        These header files are carried to direct dependents.    |
-| <a id="LlInfo-exposed_includes"></a>`exposed_includes` |  A depset containing include paths.<br><br>        These include paths are carried to direct dependents.    |
-| <a id="LlInfo-exposed_bmis"></a>`exposed_bmis` |  A depset containing precompiled module interfaces.<br><br>        These interfaces are carried to direct dependents.    |
+| <a id="LlInfo-exposed_angled_includes"></a>`exposed_angled_includes` |  A depset containing angled include paths.    |
+| <a id="LlInfo-exposed_defines"></a>`exposed_defines` |  A depset containing defines.    |
+| <a id="LlInfo-exposed_hdrs"></a>`exposed_hdrs` |  A depset containing header files.    |
+| <a id="LlInfo-exposed_includes"></a>`exposed_includes` |  A depset containing include paths.    |
+| <a id="LlInfo-exposed_bmis"></a>`exposed_bmis` |  A depset containing precompiled module interfaces.    |

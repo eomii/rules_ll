@@ -44,22 +44,22 @@ nav:
     -   C++ Modules: guides/modules.md
     -   CUDA and HIP: guides/cuda_and_hip.md
     -   Sanitizers: guides/sanitizers.md
--   API Reference:
-    -   api_reference/index.md
-    -   //ll:actions: api_reference/actions.md
-    -   //ll:args: api_reference/args.md
-    -   //ll:attributes: api_reference/attributes.md
-    -   //ll:compilation_database: api_reference/compilation_database.md
-    -   //ll:defs: api_reference/defs.md
-    -   //ll:driver: api_reference/driver.md
-    -   //ll:environment: api_reference/environment.md
-    -   //ll:inputs: api_reference/inputs.md
-    -   //ll:ll: api_reference/ll.md
-    -   //ll:llvm_project_deps: api_reference/llvm_project_deps.md
-    -   //ll:os: api_reference/os.md
-    -   //ll:outputs: api_reference/outputs.md
-    -   //ll:providers: api_reference/providers.md
-    -   //ll:resolve_rule_inputs: api_reference/resolve_rule_inputs.md
-    -   //ll:toolchain: api_reference/toolchain.md
-    -   //ll:tools: api_reference/tools.md
-    -   //ll:transitions: api_reference/transitions.md
+-   Reference:
+    -   reference/index.md
+    -   //ll:actions: reference/actions.md
+    -   //ll:args: reference/args.md
+    -   //ll:attributes: reference/attributes.md
+    -   //ll:compilation_database: reference/compilation_database.md
+    -   //ll:defs: reference/defs.md
+    -   //ll:driver: reference/driver.md
+    -   //ll:environment: reference/environment.md
+    -   //ll:inputs: reference/inputs.md
+    -   //ll:ll: reference/ll.md
+    -   //ll:llvm_project_deps: reference/llvm_project_deps.md
+    -   //ll:os: reference/os.md
+    -   //ll:outputs: reference/outputs.md
+    -   //ll:providers: reference/providers.md
+    -   //ll:resolve_rule_inputs: reference/resolve_rule_inputs.md
+    -   //ll:toolchain: reference/toolchain.md
+    -   //ll:tools: reference/tools.md
+    -   //ll:transitions: reference/transitions.md

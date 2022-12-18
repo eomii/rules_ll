@@ -14,18 +14,16 @@ load(
 
 DEFAULT_ATTRS = {
     "angled_includes": attr.string_list(
-        doc = """Additional angled include paths for this target.
+        doc = """Angled include paths for this target.
 
-        Per default all inclusions are quoted includes (via ``-iquote``).
-        Paths added here are available as angled includes (via ``-I``).
+        Makes the added paths available as angled includes via `-I` instead of
+        the default `-iquote`.
 
-        Only used for this target.
+        Unavailable to downstream targets.
         """,
     ),
     "compilation_mode": attr.string(
         doc = """Enables compilation of heterogeneous single source files.
-
-        WARNING: VERY EXPERIMENTAL.
 
         Prefer using this attribute over adding SYCL/HIP/CUDA flags manually in
         the `compile_flags` and `link_flags`.
@@ -33,24 +31,22 @@ DEFAULT_ATTRS = {
         See <TODO: GUIDE> for a detailed explanation of how this flag changes
         the generated command line arguments/compile passes.
 
-        `"cpp"` will treat compilable sources as regular C++.
+        `"cpp"` treats compilable sources as regular C++.
 
-        `"cuda_nvidia"` will treat compilable sources as CUDA kernels.
+        `"cuda_nvidia"` treats compilable sources as CUDA kernels.
 
-        `"hip_nvidia"` will treat compilable sources as HIP kernels.
+        `"hip_nvidia"` treats compilable sources as HIP kernels.
 
-        `"omp_cpu"` will enable OpenMP CPU support. Equivalent to adding
-        `-fopenmp` to `compile_flags` and `@llvm-project//openmp:libomp` to
-        `deps`.
+        `"omp_cpu"` enables OpenMP CPU support.
 
-        `"sycl_cpu"` will enable SYCL CPU support using hipSYCL with the OpenMP
+        `"sycl_cpu"` enables SYCL CPU support using hipSYCL with the OpenMP
         backend. Don't use this. It's not fully implemented yet.
 
-        `"sycl_cuda"` will enable highly experimental SYCL CUDA support using
+        `"sycl_cuda"` enables highly experimental SYCL CUDA support using
         hipSYCL. Don't use this. It's not fully implemented yet.
 
-        `"bootstrap"` is used for the internal dependencies of the
-            `ll_toolchain` such as `libcxxabi` etc.
+        `"bootstrap"` enables the bootstrap toolchain that used by internal
+        dependencies of the `ll_toolchain` such as `libcxxabi` etc.
         """,
         default = "cpp",
         # TODO: hip_amd, sycl_amd
@@ -65,49 +61,45 @@ DEFAULT_ATTRS = {
         ],
     ),
     "compile_flags": attr.string_list(
-        doc = """Additional flags for the compiler.
+        doc = """Flags for the compiler.
 
-        A list of strings `["-O3", "-std=c++20"]` will be appended to the
-        compile command line arguments as `-O3 -std=c++20`.
+        Pass a list of strings here. For instance `["-O3", "-std=c++20"]`.
 
-        Flag pairs like `-Xclang -somearg` need to be split into separate flags
+        Split flag pairs like `-Xclang -somearg` into separate flags
         `["-Xclang", "-somearg"]`.
 
-        Only used for this target.
+        Unavailable to downstream targets.
         """,
     ),
     "depends_on_llvm": attr.bool(
         doc = """Whether this target directly depends on targets from the
         `llvm-project-overlay`.
 
-        Setting this to `True` will make the `cc_library` targets from the LLVM
-        project overlay available to this target. Compile actions add
-        `-idirafter` include paths to `clang/include` and `llvm/include` for
-        Clang/LLVM internal and generated headers so that they can be used
-        without setting any additional flags.
+        Setting this to `True` makes the `cc_library` targets from the LLVM
+        project overlay available to this target.
         """,
         default = False,
     ),
     "data": attr.label_list(
-        doc = """Additional files made available to the sandboxed actions
-        executed within this rule. These files aren't appended to the default
-        line arguments, but are part of the inputs to the actions and may be
-        added to command line arguments manually via the `includes`,
-        and `compile_flags` (for `ll_binary` also `link_flags`) attributes.
+        doc = """Extra files made available to compilation and linking steps.
 
-        This attribute may be used to make intermediary outputs from non-ll
-        targets (for example from `rules_cc` or `filegroup`) available to the
-        rule.
+        Not appended to the default line arguments, but available as action
+        inputs. Reference these files as arguments manually via for instance the
+        `includes`, and `compile_flags` (for `ll_binary` also `link_flags`)
+        attributes.
+
+        Use this attribute to make intermediary outputs from non-ll targets (for
+        example from `rules_cc` or `filegroup`) available to the rule.
         """,
         allow_files = True,
     ),
     "defines": attr.string_list(
-        doc = """Additional defines for this target.
+        doc = """Defines for this target.
 
-        A list of strings `["MYDEFINE_1", "MYDEFINE_2"]` will add
-        `-DMYDEFINE_1 -DMYDEFINE_2` to the compile command line.
+        Pass a list of strings here. For instance
+        `["MYDEFINE_1", "MYDEFINE_2"]`.
 
-        Only used for this target.
+        Unavailable to downstream targets.
         """,
     ),
     "deps": attr.label_list(
@@ -117,17 +109,15 @@ DEFAULT_ATTRS = {
         providers = [LlInfo],
     ),
     "exposed_angled_includes": attr.string_list(
-        doc = """Additional exposed angled include paths for this target.
+        doc = """Exposed angled include paths for this target.
 
-        Includes in this attribute will be added to the compile command line
-        arguments for direct dependents.
+        Added to the compile command line arguments of direct dependents.
         """,
     ),
     "exposed_defines": attr.string_list(
-        doc = """Additional exposed defines for this target.
+        doc = """Exposed defines for this target.
 
-        These defines will be defined in the compile actions of direct
-        dependents.
+        Added to the compile command line arguments of direct dependents.
         """,
     ),
     "exposed_hdrs": attr.label_list(
@@ -139,58 +129,52 @@ DEFAULT_ATTRS = {
         allow_files = True,
     ),
     "exposed_includes": attr.string_list(
-        doc = """Additional exposed include paths for this target.
+        doc = """Exposed include paths for this target.
 
-        Includes in this attribute will be added to the compile command line
-        arguments for direct dependents.
+        Added to the compile command line arguments of direct dependents.
         """,
     ),
     "exposed_interfaces": attr.label_keyed_string_dict(
         doc = """Transitive interfaces for this target.
 
         Like `interfaces`, but both the precompiled modules and the compiled
-        objects derived from files in this attribute are exposed. Files in
-        this attribute can see BMIs from modules in `interfaces`. Primary
-        module interfaces should go here.
+        objects derived from files in this attribute are available to direct
+        dependents. Files in this attribute can see BMIs from modules in
+        `interfaces`. Primary module interfaces should go here.
         """,
         allow_files = [".cppm", ".cpp", ".cc"],
     ),
     "exposed_relative_angled_includes": attr.string_list(
-        doc = """Additional exposed angled include paths, relative to the
+        doc = """Exposed angled include paths, relative to the
         original target workspace.
 
-        Includes in this attribute will be added to the compile command line
-        arguments for direct dependents.
+        Added to the compile command line arguments of direct dependents.
         """,
     ),
     "exposed_relative_includes": attr.string_list(
-        doc = """Additional exposed include paths, relative to the original
+        doc = """Exposed include paths, relative to the original
         target workspace.
 
-        Includes in this attribute will be added to the compile command line
-        arguments for direct dependents.
+        Added to the compile command line arguments of direct dependents.
         """,
     ),
     "hdrs": attr.label_list(
         doc = """Header files for this target.
 
-        Headers in this attribute won't be exported. Any generated include paths
-        are only used for this target and the header files aren't made available
-        to downstream targets.
+        When including header files as `#include "some/path/myheader.h"`,
+        specify their include paths need to in the `includes` attribute as well.
 
-        When including header files as `#include "some/path/myheader.h"` their
-        include paths need to be specified in the `includes` attribute as well.
+        Unavailable to downstream targets.
         """,
         allow_files = True,
     ),
     "includes": attr.string_list(
-        doc = """Additional quoted include paths for this target.
+        doc = """Quoted include paths for this target.
 
         When including a header not via `#include "header.h"`, but via
-        `#include "subdir/header.h"`, the include path needs to be added here in
-        addition to making the header available in the `hdrs` attribute.
+        `#include "subdir/header.h"`, add the include path here.
 
-        Only used for this target.
+        Unavailable to downstream targets.
         """,
     ),
     "interfaces": attr.label_keyed_string_dict(
@@ -198,46 +182,44 @@ DEFAULT_ATTRS = {
 
         See [C++ modules](../guides/modules.md) for usage instructions.
 
-        Internally, interfaces will be precompiled and then compiled to objects
+        Internally, interfaces are precompiled and then compiled to objects
         named `<filename>.interface.o`. This way object files for modules
         implemented via separate interfaces and implementations (such as `A.cpp`
         in `srcs` and `A.cppm` in `interfaces`) don't clash.
 
         Files in the same `interfaces` attribute can't see each other's BMIs,
-        which means that multiple `ll_library` targets may be required to build
-        a module. (For instance, if a module partition is used by other module
-        partitions.)
+        which means that you may require several `ll_library` targets to build
+        a module if your interfaces depend on each other.
 
         The BMIs in `interfaces` are visible to `exposed_interfaces`. This way
-        we can often get away with putting all module partitions in `interfaces`
-        and the primary module interface in `exposed_interfaces`.
+        you can put all module partitions in `interfaces` and the primary module
+        interface in `exposed_interfaces`.
         """,
         allow_files = [".cppm"],
     ),
     "relative_angled_includes": attr.string_list(
-        doc = """Additional angled include paths, relative to the target
-        workspace.
+        doc = """Angled include paths, relative to the target workspace.
 
-        This attribute is useful if we require custom include prefix stripping,
-        but have dynamic paths, such as ones generated by ``bzlmod``. So instead
-        of using ``angled_includes = ["external/mydep.someversion/include"]`` we
-        can use ``relative_angled_includes = ["include"]``, and the path to the
-        workspace will be added automatically.
+        This attribute is useful if you require include prefix stripping for
+        dynamic paths, such as those generated by `bzlmod`. Instead of using
+        `angled_includes = ["external/mydep.someversion/include"]`,
+        use `relative_angled_includes = ["include"]` to add the path to the
+        workspace automatically.
 
-        Only used for this target.
+        Unavailable to downstream targets.
         """,
     ),
     "relative_includes": attr.string_list(
-        doc = """Additional quoted include paths, relative to the target
+        doc = """Quoted include paths, relative to the target
         workspace.
 
-        This attribute is useful if we require custom include prefix stripping,
-        but have dynamic paths, such as ones generated by ``bzlmod``. So instead
-        of using ``includes = ["external/mydep.someversion/include"]`` we can
-        use ``relative_includes = ["include"]``, and the path to the workspace
-        will be added automatically.
+        This attribute is useful if you require custom include prefix stripping
+        for dynamic paths, such as those generated by `bzlmod`. Instead of using
+        `includes = ["external/mydep.someversion/include"]`, use
+        `relative_includes = ["include"]` to add the path to the workspace
+        automatically.
 
-        Only used for this target.
+        Unavailable to downstream targets.
         """,
     ),
     "sanitize": attr.string_list(
@@ -245,13 +227,12 @@ DEFAULT_ATTRS = {
 
         See the [Sanitizers](../guides/sanitizers.md) guide for usage instructions.
 
-        Some sanitizers come with heavy performance penalties. Many combinations
-        of multiple enabled sanitizers are invalid. If possible, use only one at
-        a time.
+        Some sanitizers come with heavy performance penalties. Enabling several
+        sanitizers at once often breaks builds. If possible, use one at a time.
 
         Since sanitizers find issues during runtime, error reports are
         nondeterministic and not reproducible at an address level. Run sanitized
-        executables multiple times and build them with different optimization
+        executables several times and build them with different optimization
         levels to maximize coverage.
 
         `"address"`: Enable AddressSanitizer to detect memory errors.
@@ -269,10 +250,10 @@ DEFAULT_ATTRS = {
     "srcs": attr.label_list(
         doc = """Compilable source files for this target.
 
-        Only compilable files and object files
-        `[".ll", ".o", ".S", ".c", ".cl", ".cpp"]` are allowed here.
+        Allowed files are compilable files and object files
+        `[".ll", ".o", ".S", ".c", ".cl", ".cpp"]`.
 
-        Headers should be placed in the `hdrs` attribute.
+        Place headers in the `hdrs` attribute.
         """,
         allow_files = [".ll", ".o", ".S", ".c", ".cc", ".cl", ".cpp", ".cppm", ".cu", ".cxx"],
     ),
@@ -287,50 +268,54 @@ DEFAULT_ATTRS = {
 
 LIBRARY_ATTRS = {
     "bitcode_libraries": attr.label_list(
-        doc = """Additional bitcode libraries that should be linked to the
-        output.
+        doc = """Bitcode libraries linked to the output.
 
-        Only used if `emit` includes `"bitcode"`.
+        Used if `emit` includes `"bitcode"`.
         """,
         allow_files = [".bc"],
     ),
     "bitcode_link_flags": attr.string_list(
-        doc = """Additional flags for the bitcode linker when emitting bitcode.
+        doc = """Flags for the bitcode linker.
 
-        Only Used if `emit` includes `"bitcode"`.
+        Used if `emit` includes `"bitcode"`.
         """,
     ),
     "emit": attr.string_list(
-        doc = """Sets the output mode. Multiple values may be specified.
+        doc = """Sets the output mode.
+
+        You can enable several output types at the same time.
 
         `"archive"` invokes the archiver and adds an archive with a `.a`
         extension to the outputs.
+
         `"shared_object"` invokes the linker and adds a shared object with a
         `.so` extension to the outputs.
+
         `"bitcode"` invokes the bitcode linker and adds an LLVM bitcode file
         with a `.bc` extension to the outputs.
+
         `"objects"` adds loose object files to the outputs.
         """,
         default = ["archive"],
     ),
     "shared_object_link_flags": attr.string_list(
-        doc = """Additional flags for the linker when emitting shared objects.
+        doc = """Flags for the linker when emitting shared objects.
 
-        Only used if `emit` includes `"shared_object"`.
+        Used if `emit` includes `"shared_object"`.
         """,
     ),
 }
 
 BINARY_ATTRS = {
     "libraries": attr.label_list(
-        doc = """Additional libraries linked to the final executable.
+        doc = """Libraries linked to the final executable.
 
         Adds these libraries to the command line arguments for the linker.
         """,
         allow_files = True,
     ),
     "link_flags": attr.string_list(
-        doc = """Additional flags for the linker.
+        doc = """Flags for the linker.
 
         For `ll_binary`:
         This is the place for adding library search paths and external link
@@ -433,9 +418,9 @@ LL_TOOLCHAIN_ATTRS = {
         # default = "@llvm-project//openmp:libomp",
     ),
     "cuda_toolkit": attr.label_list(
-        doc = """CUDA toolkit files. `rules_ll` will still use `clang` as
+        doc = """CUDA toolkit files. `rules_ll` still uses `clang` as
         the CUDA device compiler. Building targets that make use of the
-        CUDA libraries imply acceptance of their respective licenses.
+        CUDA libraries implies acceptance of their respective licenses.
         """,
         # default = [
         #     "@cuda_cudart//:contents",
@@ -446,7 +431,7 @@ LL_TOOLCHAIN_ATTRS = {
         cfg = transition_to_cpp,
     ),
     "hip_libraries": attr.label_list(
-        doc = """HIP library files. `rules_ll` will use `clang` as the
+        doc = """HIP library files. `rules_ll` uses `clang` as the
         device compiler. Building targets that make use of the HIP toolkit
         implies acceptance of its license.
 
@@ -533,7 +518,8 @@ LL_TOOLCHAIN_ATTRS = {
     ),
     "offload_bundler": attr.label(
         doc = """Offload bundler used to bundle code objects for languages
-        targeting multiple devices in a single source file, such as GPU code.
+        targeting more than one device in a single source file, for instance GPU
+        code.
         """,
         cfg = transition_to_bootstrap,
         default = "@llvm-project//clang:clang-offload-bundler",
