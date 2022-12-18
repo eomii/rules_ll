@@ -7,10 +7,8 @@ Convenience function for setting compile arguments.
 
 ## `compile_object_args`
 
-<pre>
-compile_object_args(<a href="#compile_object_args-ctx">ctx</a>, <a href="#compile_object_args-in_file">in_file</a>, <a href="#compile_object_args-out_file">out_file</a>, <a href="#compile_object_args-cdf">cdf</a>, <a href="#compile_object_args-headers">headers</a>, <a href="#compile_object_args-defines">defines</a>, <a href="#compile_object_args-includes">includes</a>, <a href="#compile_object_args-angled_includes">angled_includes</a>, <a href="#compile_object_args-bmis">bmis</a>,
-                    <a href="#compile_object_args-internal_bmis">internal_bmis</a>)
-</pre>
+<pre><code>compile_object_args(<a href="#compile_object_args-ctx">ctx</a>, <a href="#compile_object_args-in_file">in_file</a>, <a href="#compile_object_args-out_file">out_file</a>, <a href="#compile_object_args-cdf">cdf</a>, <a href="#compile_object_args-headers">headers</a>, <a href="#compile_object_args-defines">defines</a>, <a href="#compile_object_args-includes">includes</a>, <a href="#compile_object_args-angled_includes">angled_includes</a>, <a href="#compile_object_args-bmis">bmis</a>,
+                    <a href="#compile_object_args-internal_bmis">internal_bmis</a>)</code></pre>
 
 `parameters`
 
@@ -32,9 +30,7 @@ compile_object_args(<a href="#compile_object_args-ctx">ctx</a>, <a href="#compil
 
 ## `create_archive_library_args`
 
-<pre>
-create_archive_library_args(<a href="#create_archive_library_args-ctx">ctx</a>, <a href="#create_archive_library_args-in_files">in_files</a>, <a href="#create_archive_library_args-out_file">out_file</a>)
-</pre>
+<pre><code>create_archive_library_args(<a href="#create_archive_library_args-ctx">ctx</a>, <a href="#create_archive_library_args-in_files">in_files</a>, <a href="#create_archive_library_args-out_file">out_file</a>)</code></pre>
 
 `parameters`
 
@@ -49,9 +45,7 @@ create_archive_library_args(<a href="#create_archive_library_args-ctx">ctx</a>, 
 
 ## `link_bitcode_library_args`
 
-<pre>
-link_bitcode_library_args(<a href="#link_bitcode_library_args-ctx">ctx</a>, <a href="#link_bitcode_library_args-in_files">in_files</a>, <a href="#link_bitcode_library_args-out_file">out_file</a>)
-</pre>
+<pre><code>link_bitcode_library_args(<a href="#link_bitcode_library_args-ctx">ctx</a>, <a href="#link_bitcode_library_args-in_files">in_files</a>, <a href="#link_bitcode_library_args-out_file">out_file</a>)</code></pre>
 
 `parameters`
 
@@ -66,9 +60,7 @@ link_bitcode_library_args(<a href="#link_bitcode_library_args-ctx">ctx</a>, <a h
 
 ## `link_executable_args`
 
-<pre>
-link_executable_args(<a href="#link_executable_args-ctx">ctx</a>, <a href="#link_executable_args-in_files">in_files</a>, <a href="#link_executable_args-out_file">out_file</a>, <a href="#link_executable_args-mode">mode</a>)
-</pre>
+<pre><code>link_executable_args(<a href="#link_executable_args-ctx">ctx</a>, <a href="#link_executable_args-in_files">in_files</a>, <a href="#link_executable_args-out_file">out_file</a>, <a href="#link_executable_args-mode">mode</a>)</code></pre>
 
 `parameters`
 
@@ -84,9 +76,7 @@ link_executable_args(<a href="#link_executable_args-ctx">ctx</a>, <a href="#link
 
 ## `llvm_bindir_path`
 
-<pre>
-llvm_bindir_path(<a href="#llvm_bindir_path-ctx">ctx</a>)
-</pre>
+<pre><code>llvm_bindir_path(<a href="#llvm_bindir_path-ctx">ctx</a>)</code></pre>
 
 `parameters`
 

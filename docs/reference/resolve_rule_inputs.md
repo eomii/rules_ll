@@ -7,9 +7,7 @@ Input resolution for `ll_library` and `ll_binary`.
 
 ## `resolve_rule_inputs`
 
-<pre>
-resolve_rule_inputs(<a href="#resolve_rule_inputs-ctx">ctx</a>, <a href="#resolve_rule_inputs-mode">mode</a>)
-</pre>
+<pre><code>resolve_rule_inputs(<a href="#resolve_rule_inputs-ctx">ctx</a>, <a href="#resolve_rule_inputs-mode">mode</a>)</code></pre>
 
 `parameters`
 

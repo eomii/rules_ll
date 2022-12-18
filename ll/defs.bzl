@@ -1,6 +1,6 @@
 """# `//ll:defs.bzl`
 
-These are the rules to imported in your `BUILD.bazel` files.
+These are the rules to import in your `BUILD.bazel` files.
 
 To load for example the `ll_binary` rule:
 

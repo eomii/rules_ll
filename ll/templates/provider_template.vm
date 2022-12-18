@@ -2,9 +2,7 @@
 
 #[[##]]# `${providerName}`
 
-<pre>
-${util.providerSummary($providerName, $providerInfo)}
-</pre>
+<pre><code>${util.providerSummary($providerName, $providerInfo)}</code></pre>
 ${util.htmlEscape($providerInfo.docString)}
 
 `fields`

@@ -2,9 +2,7 @@
 
 #[[##]]# `${funcInfo.functionName}`
 
-<pre>
-${util.funcSummary($funcInfo)}
-</pre>
+<pre><code>${util.funcSummary($funcInfo)}</code></pre>
 ${util.htmlEscape($funcInfo.docString)}
 #if (!$funcInfo.getParameterList().isEmpty())
 `parameters`

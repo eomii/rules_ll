@@ -7,9 +7,7 @@ Action outputs.
 
 ## `compile_object_outputs`
 
-<pre>
-compile_object_outputs(<a href="#compile_object_outputs-ctx">ctx</a>, <a href="#compile_object_outputs-in_file">in_file</a>)
-</pre>
+<pre><code>compile_object_outputs(<a href="#compile_object_outputs-ctx">ctx</a>, <a href="#compile_object_outputs-in_file">in_file</a>)</code></pre>
 
 `parameters`
 
@@ -23,9 +21,7 @@ compile_object_outputs(<a href="#compile_object_outputs-ctx">ctx</a>, <a href="#
 
 ## `create_archive_library_outputs`
 
-<pre>
-create_archive_library_outputs(<a href="#create_archive_library_outputs-ctx">ctx</a>)
-</pre>
+<pre><code>create_archive_library_outputs(<a href="#create_archive_library_outputs-ctx">ctx</a>)</code></pre>
 
 `parameters`
 
@@ -38,9 +34,7 @@ create_archive_library_outputs(<a href="#create_archive_library_outputs-ctx">ctx
 
 ## `link_bitcode_library_outputs`
 
-<pre>
-link_bitcode_library_outputs(<a href="#link_bitcode_library_outputs-ctx">ctx</a>)
-</pre>
+<pre><code>link_bitcode_library_outputs(<a href="#link_bitcode_library_outputs-ctx">ctx</a>)</code></pre>
 
 `parameters`
 
@@ -53,9 +47,7 @@ link_bitcode_library_outputs(<a href="#link_bitcode_library_outputs-ctx">ctx</a>
 
 ## `link_executable_outputs`
 
-<pre>
-link_executable_outputs(<a href="#link_executable_outputs-ctx">ctx</a>)
-</pre>
+<pre><code>link_executable_outputs(<a href="#link_executable_outputs-ctx">ctx</a>)</code></pre>
 
 `parameters`
 
@@ -68,9 +60,7 @@ link_executable_outputs(<a href="#link_executable_outputs-ctx">ctx</a>)
 
 ## `link_shared_object_outputs`
 
-<pre>
-link_shared_object_outputs(<a href="#link_shared_object_outputs-ctx">ctx</a>)
-</pre>
+<pre><code>link_shared_object_outputs(<a href="#link_shared_object_outputs-ctx">ctx</a>)</code></pre>
 
 `parameters`
 
@@ -83,9 +73,7 @@ link_shared_object_outputs(<a href="#link_shared_object_outputs-ctx">ctx</a>)
 
 ## `ll_artifact`
 
-<pre>
-ll_artifact(<a href="#ll_artifact-ctx">ctx</a>, <a href="#ll_artifact-filename">filename</a>)
-</pre>
+<pre><code>ll_artifact(<a href="#ll_artifact-ctx">ctx</a>, <a href="#ll_artifact-filename">filename</a>)</code></pre>
 Returns a string like "&lt;ctx.label.name&gt;/filename"
 
 We use this method to encapsulate intermediary build artifacts so that we
@@ -104,9 +92,7 @@ same build invocation.
 
 ## `precompile_interface_outputs`
 
-<pre>
-precompile_interface_outputs(<a href="#precompile_interface_outputs-ctx">ctx</a>, <a href="#precompile_interface_outputs-in_file">in_file</a>)
-</pre>
+<pre><code>precompile_interface_outputs(<a href="#precompile_interface_outputs-ctx">ctx</a>, <a href="#precompile_interface_outputs-in_file">in_file</a>)</code></pre>
 
 `parameters`
 

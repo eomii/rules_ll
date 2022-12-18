@@ -7,9 +7,7 @@ Automatic detection of library paths, depending on operating system.
 
 ## `library_path`
 
-<pre>
-library_path(<a href="#library_path-repository_ctx">repository_ctx</a>)
-</pre>
+<pre><code>library_path(<a href="#library_path-repository_ctx">repository_ctx</a>)</code></pre>
 
 `parameters`
 

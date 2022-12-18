@@ -114,9 +114,7 @@ Example:
 
 ## `select_toolchain_type`
 
-<pre>
-select_toolchain_type(<a href="#select_toolchain_type-ctx">ctx</a>)
-</pre>
+<pre><code>select_toolchain_type(<a href="#select_toolchain_type-ctx">ctx</a>)</code></pre>
 
 `parameters`
 

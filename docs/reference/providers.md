@@ -7,9 +7,7 @@ Providers used by `rules_ll`.
 
 ## `LlCompilationDatabaseFragmentsInfo`
 
-<pre>
-LlCompilationDatabaseFragmentsInfo(<a href="#LlCompilationDatabaseFragmentsInfo-cdfs">cdfs</a>)
-</pre>
+<pre><code>LlCompilationDatabaseFragmentsInfo(<a href="#LlCompilationDatabaseFragmentsInfo-cdfs">cdfs</a>)</code></pre>
 Provider containing compilation database fragments.
 
 `fields`
@@ -24,9 +22,7 @@ Provider containing compilation database fragments.
 
 ## `LlCompilationDatabaseInfo`
 
-<pre>
-LlCompilationDatabaseInfo(<a href="#LlCompilationDatabaseInfo-compilation_database">compilation_database</a>)
-</pre>
+<pre><code>LlCompilationDatabaseInfo(<a href="#LlCompilationDatabaseInfo-compilation_database">compilation_database</a>)</code></pre>
 
 
 `fields`
@@ -41,9 +37,7 @@ LlCompilationDatabaseInfo(<a href="#LlCompilationDatabaseInfo-compilation_databa
 
 ## `LlInfo`
 
-<pre>
-LlInfo(<a href="#LlInfo-exposed_angled_includes">exposed_angled_includes</a>, <a href="#LlInfo-exposed_defines">exposed_defines</a>, <a href="#LlInfo-exposed_hdrs">exposed_hdrs</a>, <a href="#LlInfo-exposed_includes">exposed_includes</a>, <a href="#LlInfo-exposed_bmis">exposed_bmis</a>)
-</pre>
+<pre><code>LlInfo(<a href="#LlInfo-exposed_angled_includes">exposed_angled_includes</a>, <a href="#LlInfo-exposed_defines">exposed_defines</a>, <a href="#LlInfo-exposed_hdrs">exposed_hdrs</a>, <a href="#LlInfo-exposed_includes">exposed_includes</a>, <a href="#LlInfo-exposed_bmis">exposed_bmis</a>)</code></pre>
 Provider returned by ll targets.
 
 `fields`
