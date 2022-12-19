@@ -1,7 +1,7 @@
 # Guides
 
 These guides explain some more advanced functionalities of `rules_ll`.
-If you feel like anything is missing or unclear, don't hesitate to open an
+If these guides don't explain a topic well, don't hesitate to open an
 [issue on GitHub](https://github.com/eomii/rules_ll/issues).
 
 - [Clang-Tidy](clang_tidy.md) Explains how to use set up a compilation database

@@ -139,11 +139,7 @@ ll_compilation_database = rule(
     executable = True,
     attrs = {
         "config": attr.label(
-            doc = """
-            The label of a `.clang-tidy` configuration file.
-
-            This file should be at the root of your project directory.
-            """,
+            doc = "The label of a `.clang-tidy` configuration file.",
             allow_single_file = True,
             mandatory = True,
         ),
@@ -156,7 +152,7 @@ ll_compilation_database = rule(
         ),
         "targets": attr.label_list(
             mandatory = True,
-            doc = """ The label for which to build the compilation database.""",
+            doc = "The label for which to build the compilation database.",
         ),
     },
     toolchains = ["//ll:toolchain_type"],
@@ -168,7 +164,6 @@ and running [clang-tidy](https://clang.llvm.org/extra/clang-tidy/) on it.
 For a full guide see
 [Using `rules_ll` with `clang-tidy`](https://ll.eomii.org/guides/clang_tidy.html).
 
-Examples using this rule are available at
-[rules_ll/examples](https://github.com/eomii/rules_ll/tree/main/examples).
+For examples using this rule see [rules_ll/examples](https://github.com/eomii/rules_ll/tree/main/examples).
 """,
 )

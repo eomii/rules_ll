@@ -1,6 +1,6 @@
 """# `//ll:actions.bzl`
 
-Actions wiring up inputs, outputs and tools to emit output files.
+Actions wiring up inputs, outputs, and tools to emit output files.
 
 Every function in this file effectively wraps `ctx.actions.run` or
 `ctx.actions.run_shell`.

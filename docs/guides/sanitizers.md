@@ -1,36 +1,28 @@
 # Sanitizers
 
-Sanitizers are an essential tool to ensure the robustness of modern
-applications. To use sanitizers with `rules_ll`, only a few small changes to
-your build files are required.
+Sanitizers improve the robustness of modern applications.
 
-Examples for all sanitizers are available at
-[rules_ll/examples/sanitizers](https://github.com/eomii/rules_ll/tree/main/examples/sanitizers).
+You can find full examples for all sanitizers at [rules_ll/examples/sanitizers](https://github.com/eomii/rules_ll/tree/main/examples/sanitizers).
 
 ## Primer
 
-Many code-quality tools rely on *static* analysis. An example of this is
-Clang-Tidy which operates during *compile time*. Static analyzers catch many
-potential bugs early, but often operate on a per-translation-unit basis and may,
-for instance, be unable to catch bugs that arise from the interactions between
-different translation units.
+A lot of code-quality tools rely on *static* analysis. For example, Clang-Tidy
+which operates during *compile time*. Static analyzers help catch potential
+bugs, but sometimes bugs may slip through the cracks of static analysis.
 
-Sanitizers enable *dynamic* analysis of code. A sanitizer will report issues
-during *runtime*. Sanitized builds are *instrumented*, meaning that they
-instruct the compiler to add additional instrumentation code around regions of
-interest. This happens during compilation and modifies the runtime behavior of
-the target. For instance, a memory sanitizer may add additional checks and
-logging around memory management. This may produce very insightful information
-if memory is mismanaged.
+Sanitizers enable *dynamic* analysis of code. A sanitizer reports issues during
+*runtime*. Sanitizers *instrument* builds, meaning that they instruct the
+compiler to add instrumentation code around regions of interest. This happens
+during compilation and modifies the runtime behavior of the target. For
+instance, a memory sanitizer may add checks and logging around memory
+management.
 
-The added instrumentation code may incur heavy runtime performance penalties. As
-such, sanitizers are often not suited to be used in release builds. However,
-they can be an invaluable tool to uncover subtle bugs during development.
+The added instrumentation code may incur heavy runtime performance penalties.
 
 ## Available sanitizers
 
-Sanitizers may be enabled by setting their corresponding identifier in the
-`sanitize` attribute of an `ll_*` target.
+Enable sanitizers by setting the corresponding identifier in the `sanitize`
+attribute of an `ll_*` target.
 
 ```python title="BUILD.bazel" hl_lines="4"
 ll_binary(
@@ -41,51 +33,50 @@ ll_binary(
 
 ```
 
-Valid settings for `sanitize` values are:
+Valid settings for `sanitize`:
 
 `"address"`
 
-: Enable [AddressSanitizer](https://clang.llvm.org/docs/AddressSanitizer.html),
-  to detect memory errors. Typical slowdown introduced
-  is 2x. Executables that invoke CUDA-based kernels, including those created via
-  HIP and SYCL, need to be run with `ASAN_OPTIONS=protect_shadow_gap=0`.
+:   Enable [AddressSanitizer](https://clang.llvm.org/docs/AddressSanitizer.html),
+    to detect memory errors. Typical slowdown of 2x. Run executables that invoke
+    CUDA-based kernels, including those created via HIP and SYCL, with
+    `ASAN_OPTIONS=protect_shadow_gap=0`.
 
 `"leak"`
 
-: Enable [LeakSanitizer](https://clang.llvm.org/docs/LeakSanitizer.html) to
-  detect memory leaks. This is already integrated in AddressSanitizer. Enable
-  LeakSanitizer if you want to use it in standalone mode. Almost no performance
-  overhead until the end of the process where leaks are detected.
+:   Enable [LeakSanitizer](https://clang.llvm.org/docs/LeakSanitizer.html) to
+    detect memory leaks. Already integrated in AddressSanitizer. Enable
+    LeakSanitizer if you want to use it in standalone mode. Almost no
+    performance overhead until the end of the process where it detects leaks.
 
 `"memory"`
 
-: Enable [MemorySanitizer](https://clang.llvm.org/docs/MemorySanitizer.html) to
-  detect uninitialized reads. Typical slowdown introduced is 3x. Add
-  `"-fsanitize-memory-track-origins=2"` to the `compile_flags` attribute to
-  track the origins of uninitialized values.
+:   Enable [MemorySanitizer](https://clang.llvm.org/docs/MemorySanitizer.html)
+    to detect uninitialized reads. Typical slowdown of 3x. Add
+    `"-fsanitize-memory-track-origins=2"` to the `compile_flags` attribute to
+    track the origins of uninitialized values.
 
 `"undefined_behavior"`
 
-: Enable [UndefinedBehaviorSanitizer](https://clang.llvm.org/docs/UndefinedBehaviorSanitizer.html)
-  to detect undefined behavior. Small performance overhead.
+:   Enable [UndefinedBehaviorSanitizer](https://clang.llvm.org/docs/UndefinedBehaviorSanitizer.html)
+    to detect undefined behavior. Small performance overhead.
 
 `"thread"`
 
-: Enable [ThreadSanitizer](https://clang.llvm.org/docs/ThreadSanitizer.html) to
-  detect data races. Typical slowdown is 5x-15x. Typical memory overhead is
-  5x-10x.
+:   Enable [ThreadSanitizer](https://clang.llvm.org/docs/ThreadSanitizer.html)
+    to detect data races. Typical slowdown of 5x-15x. Typical memory overhead of
+    5x-10x.
 
-Some sanitizers may be combined, but many combinations will be invalid. If
-possible, use only one at a time.
+You can combine some but most combinations won't work. If possible, use one at a
+time.
 
-Since sanitizers detect issues during runtime, error reports are
-nondeterministic and not reproducible at an address level. Run sanitized
-executables multiple times and build them with different optimization levels to
-maximize coverage.
+Since sanitizers detect issues during runtime they don't produce deterministic
+error reports. Run sanitized executables several times and build them with
+different optimization levels to maximize coverage.
 
 ## Example
 
-The following code will introduce a silent use-after-free bug:
+The following code introduces a silent use-after-free bug:
 
 ```cpp title="main.cpp"
 int main(int argc, char **argv) {
@@ -108,7 +99,7 @@ bazel run bug
 # Appears to run fine.
 ```
 
-To make sure that our code behaves correctly, we decide to add AddressSanitizer
+To make sure that the code works as intended, add AddressSanitizer
 instrumentation to the target:
 
 ```python title="BUILD.bazel" hl_lines="4"
@@ -119,8 +110,8 @@ ll_binary(
 )
 ```
 
-The sanitizer immediately reports a `heap-use-after-free` bug, along with a
-detailed report on where we introduced it:
+The sanitizer reports a `heap-use-after-free` bug, along with a detailed report
+on its occurrence:
 
 ```bash
 bazel run bug
@@ -187,14 +178,12 @@ Shadow byte legend (one shadow byte represents 8 application bytes):
 
 ## Usage in build files
 
-We will generally want to switch back and forth between sanitized and
-non-sanitized builds. A straightforward way to make this possible with
-`rules_ll` is to add command line flags to the build to select a specific
-sanitizer.
+To switch back and forth between sanitized and non-sanitized builds, add
+command line flags to the build to select a specific sanitizer.
 
 The code below, declares a `string_flag` containing the possible sanitizer
-identifiers and a `config_setting` for each possible value. This way we can
-select the corresponding sanitizer during our build invocations:
+identifiers and a `config_setting` for each possible value. This way you can
+select the corresponding sanitizer during the build invocations:
 
 ```python title="myproject/BUILD.bazel"
 SANITIZERS = [
@@ -226,9 +215,8 @@ MYPROJECT_SANITIZE = select({
 })
 ```
 
-The `MYPROJECT_SANITIZE` selector can now be added to every `ll_*` target and we
-can enable each sanitizer by setting the selector to the corresponding sanitizer
-name:
+You can now add the `MYPROJECT_SANITIZE` selector to every `ll_*` target and
+enable each sanitizer on the command line:
 
 ```python
 ll_library(

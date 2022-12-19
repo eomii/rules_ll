@@ -1,6 +1,6 @@
 """# `//ll:ll.bzl`
 
-Rules for building C/C++ with an upstream LLVM/Clang toolchain.
+Rules for building C and C++.
 
 Build files should import these rules via `@rules_ll//ll:defs.bzl`.
 """

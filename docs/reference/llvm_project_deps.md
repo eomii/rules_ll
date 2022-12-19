@@ -1,3 +1,3 @@
 # `//ll:llvm_project_deps.bzl`
 
-Convenience variables to depend on LLVM and Clang.
+Targets from the `llvm-project-overlay` used in `depends_on_llvm`.

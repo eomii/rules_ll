@@ -76,9 +76,8 @@ Action outputs.
 <pre><code>ll_artifact(<a href="#ll_artifact-ctx">ctx</a>, <a href="#ll_artifact-filename">filename</a>)</code></pre>
 Returns a string like "&lt;ctx.label.name&gt;/filename"
 
-We use this method to encapsulate intermediary build artifacts so that we
-don't get name clashes for files of the same name built by targets in the
-same build invocation.
+Encapsulates intermediary build artifacts to avoid name clashes for files of
+the same name built by targets in the same build invocation.
 
 `parameters`
 

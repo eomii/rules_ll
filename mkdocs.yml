@@ -40,7 +40,7 @@ nav:
 -   Rules: rules/defs.md
 -   Guides:
     -   guides/index.md
-    -   Clang-Tidy: guides/clang_tidy.md
+    -   Clang-tidy: guides/clang_tidy.md
     -   C++ Modules: guides/modules.md
     -   CUDA and HIP: guides/cuda_and_hip.md
     -   Sanitizers: guides/sanitizers.md

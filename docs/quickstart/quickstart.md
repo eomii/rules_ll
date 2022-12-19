@@ -4,41 +4,38 @@ This guide explains how to set up `rules_ll` in your project.
 
 ??? "System Requirements"
 
-    `rules_ll` makes heavy use of upstream dependencies and experimental
-    features to the point of sometimes using non-release CI artifacts of Bazel
-    to get bugfixes faster. Staying upstream sometimes means that
-    backwards-incompatible changes make it into `rules_ll` faster than into
-    other toolchains. This means that the software-side system requirements for
-    `rules_ll` tend to be comparatively high.
+    `rules_ll` makes heavy use of upstream dependencies. Staying upstream
+    sometimes means that backwards-incompatible changes make it into `rules_ll`
+    faster than into other toolchains. Because of this `rules_ll` won't work on
+    some older systems.
 
-    Minimum system requirements:
+    Prerequisites:
 
-    - An `x86_64` processor. You can check this via `uname -a`.
-    - A Linux kernel with 64-bit support. You can check this via
+    - An `x86_64` processor. You can find out about this via `uname -a`.
+    - A Linux kernel with 64-bit support. You can find out about this via
       `getconf LONG_BIT`.
-    - A `glibc` version that supports `mallinfo2`. This is the case if
+    - A `glibc` version that supports `mallinfo2`. Make sure that
       `ldd --version` prints a value of at least ``2.33``.
-    - A functional host toolchain for C++. Some distros have this by default,
-      others require manual installation of a recent version of Clang or GCC.
-      This toolchain is used to compile the upstream versions of Clang and
-      clang-tidy that are used to build `ll_*` targets.
+    - A functional host toolchain for C++. Some distributions have this by
+      default, others require manual installation of a recent version of Clang
+      or GCC. This toolchain compiles the upstream versions of Clang and
+      clang-tidy used by `ll_*` targets.
     - For Nvidia GPU toolchains, a GPU with compute capability of at least
-      `5.2`. This is the case for 10xx series GPUs and up, as well as some `9xx`
-      series GPUs. A full list of compute capabilities can be found at
-      <https://developer.nvidia.com/cuda-gpus>.
-    - As a rough guideline, at least 10GB of disk space for fetched dependencies
-      and build artifacts. Using all toolchains, debug and optimization modes
-      may increase this requirement to 30GB of disk space. If the build cache
-      gets too large over time it can be reset using the `bazel clean` and
-      `bazel clean --expunge` commands.
-    - As a rough guideline, at least 1GB of Memory per CPU core. You can check
+      `5.2`. This applies to 10xx series GPUs and up, and some `9xx` series
+      GPUs. You can find a list of compute capabilities at <https://developer.nvidia.com/cuda-gpus>.
+    - As a rough guideline, at least 10 GB of disk space for fetched
+      dependencies and build artifacts. Using all toolchains, debug and
+      optimization modes may increase this to 30 GB of disk space. If the build
+      cache gets too large over time you can reset it using the `bazel clean`
+      and `bazel clean --expunge` commands.
+    - As a rough guideline, at least 1 GB of Memory per CPU core. You can find
       the number of CPU cores via `nproc`.
 
 ## Setup
 
 Install [bazelisk](https://bazel.build/install/bazelisk).
 
-If you don't plan on modifying `rules_ll`, there is no need to clone its
+If you don't plan on modifying `rules_ll`, you don't need to clone its
 repository. Instead, create the following files to set up `rules_ll` in your
 project:
 

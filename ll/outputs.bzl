@@ -8,9 +8,8 @@ load("@bazel_skylib//lib:paths.bzl", "paths")
 def ll_artifact(ctx, filename = None):
     """Returns a string like "<ctx.label.name>/filename"
 
-    We use this method to encapsulate intermediary build artifacts so that we
-    don't get name clashes for files of the same name built by targets in the
-    same build invocation.
+    Encapsulates intermediary build artifacts to avoid name clashes for files of
+    the same name built by targets in the same build invocation.
 
     Args:
         ctx: The build context.
