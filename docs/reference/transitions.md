@@ -1,3 +1,3 @@
 # `//ll:transitions.bzl`
 
-Toolchain transitions used by `ll_toolchain`.
+Transitions used by the `ll_toolchain` rule.

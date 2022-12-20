@@ -11,11 +11,11 @@ This guide explains how to set up `rules_ll` in your project.
 
     Prerequisites:
 
-    - An `x86_64` processor. You can find out about this via `uname -a`.
-    - A Linux kernel with 64-bit support. You can find out about this via
+    - An `x86_64` processor. You can verify this with `uname -a`.
+    - A Linux kernel with 64-bit support. You can verify this with
       `getconf LONG_BIT`.
-    - A `glibc` version that supports `mallinfo2`. Make sure that
-      `ldd --version` prints a value of at least ``2.33``.
+    - A `glibc` version that supports `mallinfo2`. Verify that `ldd --version`
+      prints a value of at least `2.33`.
     - A functional host toolchain for C++. Some distributions have this by
       default, others require manual installation of a recent version of Clang
       or GCC. This toolchain compiles the upstream versions of Clang and
@@ -25,19 +25,18 @@ This guide explains how to set up `rules_ll` in your project.
       GPUs. You can find a list of compute capabilities at <https://developer.nvidia.com/cuda-gpus>.
     - As a rough guideline, at least 10 GB of disk space for fetched
       dependencies and build artifacts. Using all toolchains, debug and
-      optimization modes may increase this to 30 GB of disk space. If the build
+      optimization modes might require more than 30 GB of disk space. If the build
       cache gets too large over time you can reset it using the `bazel clean`
       and `bazel clean --expunge` commands.
-    - As a rough guideline, at least 1 GB of Memory per CPU core. You can find
-      the number of CPU cores via `nproc`.
+    - As a rough guideline, at least 1 GB of Memory per CPU core. The `nproc`
+      command prints the number of CPU cores for your system.
 
 ## Setup
 
 Install [bazelisk](https://bazel.build/install/bazelisk).
 
-If you don't plan on modifying `rules_ll`, you don't need to clone its
-repository. Instead, create the following files to set up `rules_ll` in your
-project:
+If you don't plan on changing `rules_ll`, you don't need to clone its
+repository. Instead, create these files to set up `rules_ll` in your project:
 
 ```python title="WORKSPACE.bazel"
 # Empty, but must exist. We only use bzlmod.
@@ -56,13 +55,13 @@ project:
 ```
 
 You can now load the `ll_library` and `ll_binary` rule definitions in your
-`BUILD.bazel` files via
+`BUILD.bazel` files like this:
 
 ```python
 load("@rules_ll//ll:defs.bzl", "ll_library", "ll_binary")
 ```
 
-See [rules_ll/examples](https://github.com/eomii/rules_ll/tree/main/examples)
-for examples and consider checking out the [Guides](https://ll.eomii.org/guides)
-on features like Clang-Tidy invocations, C++ modules and heterogeneous
+See [`rules_ll/examples`](https://github.com/eomii/rules_ll/tree/main/examples)
+for examples. The [Guides](https://ll.eomii.org/guides) explain more advanced
+features of `rules_ll` such as Clang-Tidy, C++ modules, and heterogeneous
 programming.

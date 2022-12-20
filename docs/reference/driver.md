@@ -1,6 +1,6 @@
 # `//ll:driver.bzl`
 
-Convenience function to select the C or C++ driver for compilation.
+Select the C or C++ driver for compile actions.
 
 
 <a id="compiler_driver"></a>

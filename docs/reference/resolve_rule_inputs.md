@@ -1,6 +1,6 @@
 # `//ll:resolve_rule_inputs.bzl`
 
-Input resolution for `ll_library` and `ll_binary`.
+Resolve the inputs to `ll_library` and `ll_binary` rules.
 
 
 <a id="resolve_rule_inputs"></a>

@@ -152,7 +152,7 @@ ll_compilation_database = rule(
         ),
         "targets": attr.label_list(
             mandatory = True,
-            doc = "The label for which to build the compilation database.",
+            doc = "The labels added to the compilation database.",
         ),
     },
     toolchains = ["//ll:toolchain_type"],
@@ -161,9 +161,8 @@ Executable target for building a
 [compilation database](https://clang.llvm.org/docs/JSONCompilationDatabase.html)
 and running [clang-tidy](https://clang.llvm.org/extra/clang-tidy/) on it.
 
-For a full guide see
-[Using `rules_ll` with `clang-tidy`](https://ll.eomii.org/guides/clang_tidy.html).
+For a full guide see [Clang-Tidy](https://ll.eomii.org/guides/clang_tidy.html).
 
-For examples using this rule see [rules_ll/examples](https://github.com/eomii/rules_ll/tree/main/examples).
+See [`rules_ll/examples`](https://github.com/eomii/rules_ll/tree/main/examples) for examples.
 """,
 )

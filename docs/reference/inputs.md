@@ -1,6 +1,6 @@
 # `//ll:inputs.bzl`
 
-Action inputs.
+Action inputs for rules.
 
 
 <a id="compilable_sources"></a>

@@ -1,6 +1,6 @@
 # `//ll:os.bzl`
 
-Automatic detection of library paths, depending on operating system.
+Detect the library paths per OS.
 
 
 <a id="library_path"></a>

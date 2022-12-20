@@ -1,3 +1,3 @@
 # `//ll:attributes.bzl`
 
-Attribute dictionaries for `ll_*` rules.
+Attributes used by the `ll_toolchain`, `ll_library` and `ll_binary` rules.

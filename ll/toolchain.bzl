@@ -1,6 +1,6 @@
 """# `//ll:toolchain.bzl`
 
-Implements `ll_toolchain` and the internally used `ll_bootstrap_toolchain`.
+This file declares the `ll_toolchain` rule.
 """
 
 load("//ll:attributes.bzl", "LL_TOOLCHAIN_ATTRS")

@@ -1,11 +1,23 @@
 """# `//ll:environment.bzl`
 
-Action environments.
+Environment variables for use in compile and link actions.
 """
 
 load("@bazel_skylib//rules:common_settings.bzl", "BuildSettingInfo")
 
 def compile_object_environment(ctx, toolchain_type):
+    """Set environment variables for compile and link actions.
+
+    For end users this depends on `compilation_mode` in the `ll_library` and
+    `ll_binary` rules.
+
+    Args:
+        ctx: The rule context.
+        toolchain_type: The toolchain type. Set this to `"//ll:toolchain_type"`.
+
+    Returns:
+        A `dict` for use in the `environment` of an action.
+    """
     config = ctx.attr.toolchain_configuration[BuildSettingInfo].value
 
     if config in ["cpp", "sycl_cpu", "omp_cpu"]:

@@ -1,6 +1,6 @@
 """# `//ll:inputs.bzl`
 
-Action inputs.
+Action inputs for rules.
 """
 
 load("@bazel_skylib//rules:common_settings.bzl", "BuildSettingInfo")

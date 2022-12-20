@@ -1,6 +1,6 @@
 """# `//ll:attributes.bzl`
 
-Attribute dictionaries for `ll_*` rules.
+Attributes used by the `ll_toolchain`, `ll_library` and `ll_binary` rules.
 """
 
 load("@bazel_skylib//lib:dicts.bzl", "dicts")
@@ -16,8 +16,7 @@ DEFAULT_ATTRS = {
     "angled_includes": attr.string_list(
         doc = """Angled include paths for this target.
 
-        Makes the added paths available as angled includes via `-I` instead of
-        the default `-iquote`.
+        Includes with `-I` instead of the default `-iquote`.
 
         Unavailable to downstream targets.
         """,
@@ -25,27 +24,27 @@ DEFAULT_ATTRS = {
     "compilation_mode": attr.string(
         doc = """Enables compilation of heterogeneous single source files.
 
-        Prefer using this attribute over adding SYCL/HIP/CUDA flags manually in
-        the `compile_flags` and `link_flags`.
+        Prefer this attribute over adding SYCL/HIP/CUDA flags manually in the
+        `compile_flags` and `link_flags`.
 
         See [CUDA and HIP](../guides/cuda_and_hip.md).
 
-        `"cpp"` treats compilable sources as regular C++.
+        `"cpp"` The default C++ toolchain.
 
-        `"cuda_nvidia"` treats compilable sources as CUDA kernels.
+        `"cuda_nvidia"` The CUDA toolchain.
 
-        `"hip_nvidia"` treats compilable sources as HIP kernels.
+        `"hip_nvidia"` The HIP toolchain.
 
-        `"omp_cpu"` enables OpenMP CPU support.
+        `"omp_cpu"` The OpenMP CPU toolchain.
 
-        `"sycl_cpu"` enables SYCL CPU support using hipSYCL with the OpenMP
-        backend. Don't use this. Not fully implemented yet.
+        `"sycl_cpu"` The SYCL CPU toolchain. Uses hipSYCL with the OpenMP
+        backend. Don't use this. Not fully implemented.
 
-        `"sycl_cuda"` enables highly experimental SYCL CUDA support using
-        hipSYCL. Don't use this. Not fully implemented yet.
+        `"sycl_cuda"` The SYCL CUDA toolchain. Uses hipSYCL. Don't use this. Not
+        fully implemented.
 
-        `"bootstrap"` enables the bootstrap toolchain that used by internal
-        dependencies of the `ll_toolchain` such as `libcxxabi` etc.
+        `"bootstrap"` The bootstrap toolchain used by internal dependencies of
+        the `ll_toolchain`.
         """,
         default = "cpp",
         # TODO: hip_amd, sycl_amd
@@ -64,7 +63,7 @@ DEFAULT_ATTRS = {
 
         Pass a list of strings here. For instance `["-O3", "-std=c++20"]`.
 
-        Split flag pairs like `-Xclang -somearg` into separate flags
+        Split flag pairs `-Xclang -somearg` into separate flags
         `["-Xclang", "-somearg"]`.
 
         Unavailable to downstream targets.
@@ -82,9 +81,9 @@ DEFAULT_ATTRS = {
     "data": attr.label_list(
         doc = """Extra files made available to compilation and linking steps.
 
-        Not appended to the default line arguments, but available as action
-        inputs. Reference these files as arguments manually via for instance the
-        `includes`, and `compile_flags` attributes.
+        Not appended to the default command line arguments, but available to
+        actions. Reference these files manually for instance in the `includes`,
+        and `compile_flags` attributes.
 
         Use this attribute to make intermediary outputs from non-ll targets, for
         example from `rules_cc` or `filegroup`, available to the rule.
@@ -103,7 +102,7 @@ DEFAULT_ATTRS = {
     "deps": attr.label_list(
         doc = """The dependencies for this target.
 
-        Make sure to use `ll_library` targets here. Other targets won't work.
+        Use `ll_library` targets here. Other targets won't work.
         """,
         providers = [LlInfo],
     ),
@@ -136,9 +135,9 @@ DEFAULT_ATTRS = {
     "exposed_interfaces": attr.label_keyed_string_dict(
         doc = """Transitive interfaces for this target.
 
-        Like `interfaces`, but makes precompiled modules and compiled objects
-        visible to direct dependents. Files in this attribute can see BMIs from
-        modules in `interfaces`. Primary module interfaces should go here.
+        Makes precompiled modules and compiled objects visible to direct
+        dependents. Files in this attribute can see BMIs from modules in
+        `interfaces`. Primary module interfaces go here.
         """,
         allow_files = [".cppm", ".cpp", ".cc"],
     ),
@@ -159,18 +158,21 @@ DEFAULT_ATTRS = {
     "hdrs": attr.label_list(
         doc = """Header files for this target.
 
-        When including header files as `#include "some/path/myheader.h"`,
-        specify their include paths need to in the `includes` attribute as well.
+        When including a header file with a nested path, for instance
+        `#include "some/path/myheader.h"`, add `"some/path"` to `includes`
+        to make it visible to the rule.
 
         Unavailable to downstream targets.
         """,
         allow_files = True,
     ),
     "includes": attr.string_list(
-        doc = """Quoted include paths for this target.
+        doc = """Include paths for this target.
 
-        When including a header not via `#include "header.h"`, but via
-        `#include "subdir/header.h"`, add the include path here.
+        Uses `-iquote`.
+
+        When including a header not by `#include "header.h"`, but by
+        `#include "subdir/header.h"`, add the include path `"subdir"` here.
 
         Unavailable to downstream targets.
         """,
@@ -178,16 +180,16 @@ DEFAULT_ATTRS = {
     "interfaces": attr.label_keyed_string_dict(
         doc = """Module interfaces for this target.
 
-        See [C++ modules](../guides/modules.md) for usage instructions.
+        See [C++ modules](../guides/modules.md) for a guide.
 
-        Internally, precompiles interfaces and then compiles them to objects
-        named `<filename>.interface.o`. This way object files for modules
-        implemented via separate interfaces and implementations such as `A.cpp`
-        in `srcs` and `A.cppm` in `interfaces` don't clash.
+        Internally, precompiles interfaces and compiles them to objects named
+        `<filename>.interface.o`. This way object files for modules implemented
+        with separate interfaces and implementations, for instance `A.cpp` in
+        `srcs` and `A.cppm` in `interfaces` don't clash.
 
-        Files in the same `interfaces` attribute can't see each other's BMIs,
-        which means that you may require several `ll_library` targets to build
-        a module if your interfaces depend on each other.
+        Since files in the same `interfaces` attribute can't see each other's
+        BMIs, split interfaces into different targets if they depend on each
+        other.
 
         Makes the BMIs in `interfaces` visible to `exposed_interfaces`. This way
         you can put all module partitions in `interfaces` and the primary module
@@ -198,8 +200,8 @@ DEFAULT_ATTRS = {
     "relative_angled_includes": attr.string_list(
         doc = """Angled include paths, relative to the target workspace.
 
-        Useful if you require include prefix stripping for dynamic paths, such
-        as those generated by `bzlmod`. Instead of using
+        Useful if you require include prefix stripping for dynamic paths, for
+        instance the ones generated by `bzlmod`. Instead of
         `angled_includes = ["external/mydep.someversion/include"]`, use
         `relative_angled_includes = ["include"]` to add the path to the
         workspace automatically.
@@ -208,11 +210,12 @@ DEFAULT_ATTRS = {
         """,
     ),
     "relative_includes": attr.string_list(
-        doc = """Quoted include paths, relative to the target
-        workspace.
+        doc = """Include paths, relative to the target workspace.
 
-        Useful if you require custom include prefix stripping for dynamic paths,
-        such as those generated by `bzlmod`. Instead of using
+        Uses `-iquote`.
+
+        Useful if you need custom include prefix stripping for dynamic paths,
+        for instance the ones generated by `bzlmod`. Instead of
         `includes = ["external/mydep.someversion/include"]`, use
         `relative_includes = ["include"]` to add the path to the workspace
         automatically.
@@ -223,10 +226,11 @@ DEFAULT_ATTRS = {
     "sanitize": attr.string_list(
         doc = """Enable sanitizers for this target.
 
-        See the [Sanitizers](../guides/sanitizers.md) guide for usage instructions.
+        See the [Sanitizers](../guides/sanitizers.md) guide.
 
         Some sanitizers come with heavy performance penalties. Enabling several
-        sanitizers at once often breaks builds. If possible, use one at a time.
+        sanitizers at the same time often breaks builds. If possible, use just
+        one at a time.
 
         Sanitizers produce nondeterministic error reports. Run sanitized
         executables several times and build them with different optimization
@@ -319,7 +323,7 @@ BINARY_ATTRS = {
         you can make `mylib.a` available to the linker by passing
         `["-L/some/path", "-lmylib"]` to this attribute.
 
-        Prefer using the `libraries` attribute for library files already present
+        Prefer the `libraries` attribute for library files already present
         within the Bazel build graph.
         """,
     ),
@@ -327,7 +331,7 @@ BINARY_ATTRS = {
 
 LL_TOOLCHAIN_ATTRS = {
     "address_sanitizer": attr.label_list(
-        doc = """AddressSanitizer libraries.""",
+        doc = "AddressSanitizer libraries.",
         # default = [
         #     "@llvm-project//compiler-rt/lib/asan:clang_rt.asan",
         #     "@llvm-porject//compiler-rt/lib/asan:clang_rt.asan_cxx",
@@ -348,7 +352,7 @@ LL_TOOLCHAIN_ATTRS = {
         default = "@llvm-project//llvm:llvm-link",
     ),
     "builtin_includes": attr.label(
-        doc = "Builtin header files",
+        doc = "Clang's built-in header files.",
         cfg = "target",
         default = "@llvm-project//clang:builtin_headers_gen",
     ),
@@ -360,13 +364,13 @@ LL_TOOLCHAIN_ATTRS = {
         default = "@llvm-project//clang:clang",
     ),
     "clang_tidy": attr.label(
-        doc = "The clang-tidy executable.",
+        doc = "The clang-tidy binary.",
         cfg = transition_to_bootstrap,
         default = "@llvm-project//clang-tools-extra/clang-tidy:clang-tidy",
         executable = True,
     ),
     "clang_tidy_runner": attr.label(
-        doc = "The run-clang-tidy.py wrapper script for clang-tidy. Enables multithreading.",
+        doc = "The `run-clang-tidy.py` wrapper script for clang-tidy.",
         cfg = transition_to_bootstrap,
         default = "@llvm-project//clang-tools-extra/clang-tidy:run-clang-tidy",
         executable = True,
@@ -398,7 +402,7 @@ LL_TOOLCHAIN_ATTRS = {
         allow_files = True,
     ),
     "cpp_stdlib": attr.label(
-        doc = "The C++ standard library archive.",
+        doc = "The C++ standard library.",
         cfg = transition_to_bootstrap,
         providers = [LlInfo],
     ),
@@ -409,9 +413,11 @@ LL_TOOLCHAIN_ATTRS = {
         # default = "@llvm-project//openmp:libomp",
     ),
     "cuda_toolkit": attr.label_list(
-        doc = """CUDA toolkit files. `rules_ll` still uses `clang` as
-        the CUDA device compiler. Building targets that make use of the
-        CUDA libraries implies acceptance of their respective licenses.
+        doc = """The Nvidia CUDA toolkit files.
+
+        `rules_ll` still uses `clang` to compile CUDA device code.
+
+        Using this implies acceptance of Nvidia's license for CUDA.
         """,
         # default = [
         #     "@cuda_cudart//:contents",
@@ -422,15 +428,14 @@ LL_TOOLCHAIN_ATTRS = {
         cfg = transition_to_cpp,
     ),
     "hip_libraries": attr.label_list(
-        doc = """HIP library files. `rules_ll` uses `clang` as the
-        device compiler. Building targets that make use of the HIP toolkit
-        implies acceptance of its license.
+        doc = """The HIP libraries.
 
-        Using HIP for AMD devices implies the use of the ROCm stack and the
-        acceptance of its licenses.
+        `rules_ll` still uses `clang` to compile device code.
 
-        Using HIP for Nvidia devices implies use of the CUDA toolkit and the
-        acceptance of its licenses.
+        Using this implies acceptance of the AMD's license for HIP.
+
+        Using HIP to target Nvidia devices implies use of the Nvidia CUDA
+        toolkit.
         """,
         # default = [
         #     "@hip//:headers",
@@ -473,24 +478,29 @@ LL_TOOLCHAIN_ATTRS = {
         # ],
     ),
     "linker": attr.label(
-        doc = "The linker.",
+        doc = """The linker.
+
+        Called by the `clang-linker-wrapper`.
+        """,
         allow_single_file = True,
         executable = True,
         cfg = transition_to_bootstrap,
         default = "@llvm-project//lld:lld",
     ),
     "linker_wrapper": attr.label(
-        doc = """The clang-linker-wrapper. This invokes the host linker and
-        device linkers.""",
+        doc = """The `clang-linker-wrapper`.
+
+        This wraps the host linker and the device linkers.""",
         allow_single_file = True,
         executable = True,
         cfg = transition_to_bootstrap,
         default = "@llvm-project//clang:clang-linker-wrapper",
     ),
     "llvm_project_deps": attr.label_list(
-        doc = """Targets from the `llvm-project-overlay`. Useful for targets
-        that require the `llvm-project`, such as frontend actions, optimization
-        passes, Clang plugins etc.
+        doc = """Targets from the `llvm-project-overlay`.
+
+        Useful for targets that depend on the `llvm-project`. For instance
+        frontend actions and Clang plugins.
         """,
         cfg = transition_to_bootstrap,
         default = LLVM_PROJECT_DEPS,
@@ -498,29 +508,32 @@ LL_TOOLCHAIN_ATTRS = {
     "local_library_path": attr.label(
         doc = """A symlink to the local library path.
 
-        Example paths look like `/usr/lib64` and `/usr/local/x86_64-linux-gnu`.
+        Most of the time `/usr/lib64` or `/usr/local/x86_64-linux-gnu`.
         """,
         default = "@local_library_path//:local_library_path",
         allow_single_file = True,
     ),
     "machine_code_tool": attr.label(
-        doc = "The `llvm-mc` tool. Used for separate compilation (CUDA/HIP).",
+        doc = """The `llvm-mc` tool.
+
+        Used when building CUDA and HIP with `-fgpu-rdc`..
+        """,
         cfg = transition_to_bootstrap,
         default = "@llvm-project//llvm:llvm-mc",
         executable = True,
     ),
     "offload_bundler": attr.label(
-        doc = """Offload bundler used to bundle code objects for languages
-        targeting more than one device in a single source file, for instance GPU
-        code.
+        doc = """The `clang-offload-bundler`.
+
+        Bundles the device code objects for GPU code.
         """,
         cfg = transition_to_bootstrap,
         default = "@llvm-project//clang:clang-offload-bundler",
         executable = True,
     ),
     "offload_packager": attr.label(
-        doc = """Offload packager used to bundle device files with metadata into
-        a single image.""",
+        doc = """The `clang-offload-packager`.
+        """,
         cfg = transition_to_bootstrap,
         default = "@llvm-project//clang:clang-offload-packager",
         executable = True,

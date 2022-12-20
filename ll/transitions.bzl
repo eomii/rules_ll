@@ -1,6 +1,6 @@
 """# `//ll:transitions.bzl`
 
-Toolchain transitions used by `ll_toolchain`.
+Transitions used by the `ll_toolchain` rule.
 """
 
 def _ll_transition_impl(settings, attr):

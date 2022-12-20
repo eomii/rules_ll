@@ -5,15 +5,13 @@ programming.
 
 ## Features
 
-- Upstream Clang/LLVM via the
-  [`llvm-bazel-overlay`](https://github.com/llvm/llvm-project/tree/main/utils/bazel).
-- Custom overlays for `libcxx`, `libcxxabi`, `libunwind`, `compiler-rt`,
-  `openmp` and `clang-tidy`.
-- Builtin `clang-tidy` invocations via an `ll_compilation_database` target.
-- Support for sanitizers via target attributes.
-- Toolchains for heterogeneous code targeting Nvidia GPUs with HIP or CUDA.
-- C++ modules.
-- Experimental OpenMP CPU support.
+- A toolchain that uses Clang/LLVM from the [`llvm-bazel-overlay`](https://github.com/llvm/llvm-project/tree/main/utils/bazel)
+  and extends it with custom overlays.
+- Clang-tidy to help you write your programs.
+- Sanitizers to help you find subtle bugs.
+- Toolchains to target Nvidia GPUs with HIP or CUDA.
+- C++ module support to improve your compile times.
+- Basic OpenMP CPU support.
 
 ## Links
 
@@ -24,7 +22,7 @@ programming.
 
 ## Planned features
 
-- OpenMP offloading for GPUs.
+- OpenMP for GPUs.
 - HIP/AMD.
 - SYCL.
 - WebAssembly.

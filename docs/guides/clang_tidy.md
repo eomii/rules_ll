@@ -1,6 +1,6 @@
 # Clang-tidy
 
-`rules_ll` comes with a Bazel overlay for [`clang-tidy`](https://clang.llvm.org/extra/clang-tidy/).
+`rules_ll` includes a Bazel overlay for [`clang-tidy`](https://clang.llvm.org/extra/clang-tidy/).
 The `ll_compilation_database` rule creates a [compilation database](https://clang.llvm.org/docs/JSONCompilationDatabase.html)
 for a target and its dependencies. Running that rule invokes `clang-tidy` on it.
 
@@ -35,7 +35,7 @@ The `targets` attribute in `ll_compilation_database` declares the targets
 included in the `compile_commands.json` file.
 
 The `.clang-tidy` file configures `clang-tidy`. See
-[rules/ll/examples/.clang-tidy](https://github.com/eomii/rules_ll/tree/main/examples/.clang-tidy)
+[`rules_ll/examples/.clang-tidy`](https://github.com/eomii/rules_ll/tree/main/examples/.clang-tidy)
 for an example.
 
 To run `clang-tidy` on the sources of `my_library_compile_commands`, run
@@ -60,8 +60,8 @@ This builds a file named `compile_commands.json`, regardless of the
 ## Compilation databases
 
 The `ll_compilation_database` rule constructs the `compile_commands.json` file
-from the `targets` attribute's compile commands and their dependencies' compile
-commands. Consider the following targets:
+from all targets needed to build the targets in the `targets` attribute.
+Consider the following targets:
 
 ```python
 filegroup(

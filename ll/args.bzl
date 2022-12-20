@@ -1,6 +1,6 @@
 """# `//ll:args.bzl`
 
-Convenience function for setting compile arguments.
+The functions that create `arguments` for use in rule actions.
 """
 
 load("@bazel_skylib//lib:paths.bzl", "paths")

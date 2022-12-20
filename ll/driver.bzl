@@ -1,6 +1,6 @@
 """# `//ll:driver.bzl`
 
-Convenience function to select the C or C++ driver for compilation.
+Select the C or C++ driver for compile actions.
 """
 
 def compiler_driver(ctx, in_file, toolchain_type):

@@ -1,8 +1,8 @@
 """# `//ll:ll.bzl`
 
-Rules for building C and C++.
+Rules to build C and C++.
 
-Build files should import these rules via `@rules_ll//ll:defs.bzl`.
+Build files should import these rules from `@rules_ll//ll:defs.bzl`.
 """
 
 load(

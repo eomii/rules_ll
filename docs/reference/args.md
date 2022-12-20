@@ -1,6 +1,6 @@
 # `//ll:args.bzl`
 
-Convenience function for setting compile arguments.
+The functions that create `arguments` for use in rule actions.
 
 
 <a id="compile_object_args"></a>

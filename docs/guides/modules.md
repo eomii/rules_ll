@@ -3,7 +3,7 @@
 Apart from clean dependency management, modules can reduce compile times. Try to
 use them if you can.
 
-You can find full examples at [rules_ll/examples](https://github.com/eomii/rules_ll/tree/main/examples).
+You can find full examples at [`rules_ll/examples`](https://github.com/eomii/rules_ll/tree/main/examples).
 
 !!! note
 
@@ -45,7 +45,7 @@ auto main() -> int {
 }
 ```
 
-The `rules_ll` build file for this may look like this:
+The `rules_ll` build file for this could look like this:
 
 ```python title="BUILD.bazel"
 load("@rules_ll//ll:defs.bzl", "ll_binary")
