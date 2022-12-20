@@ -63,3 +63,4 @@ nav:
     -   //ll:toolchain: reference/toolchain.md
     -   //ll:tools: reference/tools.md
     -   //ll:transitions: reference/transitions.md
+-   Contributing: contributing/contributing.md

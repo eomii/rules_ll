@@ -58,7 +58,7 @@ ll_binary(
 )
 ```
 
-The `interfaces` attribute `dict` maps module interfaces units to module names.
+The `interfaces` attribute `dict` maps module interfaces to module names.
 
 ## Interface-implementation split
 
@@ -152,7 +152,7 @@ For the `ll_binary` target:
   doesn't depend on `hello.o`.
 - The linker links `hello.a` and `main.o` to the final executable `main`.
 
-## General guidelines
+## Suggestions
 
 Read the [C++ standard](https://eel.is/c++draft/module) on modules.
 

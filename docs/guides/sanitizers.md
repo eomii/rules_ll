@@ -213,7 +213,7 @@ You can now add the `MYPROJECT_SANITIZE` selector to `ll_*` targets. The
 `--//myproject:sanitize=<sanitizer_value>` flag then lets you enable each
 sanitizer:
 
-```python
+```python title="BUILD.bazel"
 ll_library(
    name = "mylib",
    srcs = ["mylib.cpp"],

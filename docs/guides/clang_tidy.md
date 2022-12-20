@@ -11,7 +11,7 @@ You can find similar examples to the ones in this guide at [`rules_ll/examples/c
 For a target `my_library` defined in a `BUILD.bazel` file, add an
 `ll_compilation_database` like this:
 
-```python
+```python title="BUILD.bazel"
 load("@rules_ll//ll:defs.bzl", "ll_library", "ll_compilation_database")
 
 filegroup(
@@ -63,7 +63,7 @@ The `ll_compilation_database` rule constructs the `compile_commands.json` file
 from all targets needed to build the targets in the `targets` attribute.
 Consider the following targets:
 
-```python
+```python title="BUILD.bazel"
 filegroup(
    name = "clang_tidy_config",
    srcs = [".clang-tidy"],
