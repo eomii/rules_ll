@@ -39,11 +39,14 @@ ll_binary(
 
 ## 🧹 Clang-Tidy
 
-Build compilation databases and run Clang-Tidy on them as part of your workflows
-and CI pipelines. [Cang-Tidy guide](https://ll.eomii.org/guides/clang_tidy).
+Build compilation databases to use Clang-Tidy as part of your workflows and CI
+pipelines. [Clang-Tidy guide](https://ll.eomii.org/guides/clang_tidy).
 
 ```python
-load("@rules_ll//ll:defs.bzl", "ll_compilation_database")
+load(
+   "@rules_ll//ll:defs.bzl",
+   "ll_compilation_database",
+)
 
 filegroup(
     name = "clang_tidy_config",
@@ -100,7 +103,7 @@ ll_binary(
 
 ## 📜 License
 
-`rules_ll` stands under the Apache 2.0 License with LLVM exceptions.
+Licensed under the Apache 2.0 License with LLVM exceptions.
 
 This repository uses overlays and automated setups for the CUDA toolkit and HIP.
 Using `compilation_mode` for heterogeneous toolchains implies acceptance of
