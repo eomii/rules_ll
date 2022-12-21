@@ -31,9 +31,9 @@ DEFAULT_ATTRS = {
 
         `"cpp"` The default C++ toolchain.
 
-        `"cuda_nvidia"` The CUDA toolchain.
+        `"cuda_nvptx"` The CUDA toolchain.
 
-        `"hip_nvidia"` The HIP toolchain.
+        `"hip_nvptx"` The HIP toolchain.
 
         `"omp_cpu"` The OpenMP CPU toolchain.
 
@@ -51,8 +51,8 @@ DEFAULT_ATTRS = {
         values = [
             "cpp",
             "omp_cpu",
-            "cuda_nvidia",
-            "hip_nvidia",
+            "cuda_nvptx",
+            "hip_nvptx",
             "sycl_cpu",
             "sycl_cuda",
             "bootstrap",

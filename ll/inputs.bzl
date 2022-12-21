@@ -65,11 +65,11 @@ def compile_object_inputs(
         direct += (
             ctx.toolchains[toolchain_type].libomp
         )
-    elif config == "cuda_nvidia":
+    elif config == "cuda_nvptx":
         direct += (
             ctx.toolchains[toolchain_type].cuda_toolkit
         )
-    elif config == "hip_nvidia":
+    elif config == "hip_nvptx":
         direct += (
             ctx.toolchains[toolchain_type].cuda_toolkit +
             ctx.toolchains[toolchain_type].hip_libraries
@@ -124,7 +124,7 @@ def link_executable_inputs(ctx, in_files, toolchain_type):
         direct += (
             ctx.toolchains[toolchain_type].libomp
         )
-    elif config == "cuda_nvidia":
+    elif config == "cuda_nvptx":
         direct += (
             ctx.toolchains[toolchain_type].cuda_toolkit +
             [ctx.toolchains[toolchain_type].cuda_libdir] +
@@ -132,7 +132,7 @@ def link_executable_inputs(ctx, in_files, toolchain_type):
             [ctx.toolchains[toolchain_type].cuda_nvvm]
         )
 
-    elif config == "hip_nvidia":
+    elif config == "hip_nvptx":
         direct += (
             ctx.toolchains[toolchain_type].cuda_toolkit +
             [ctx.toolchains[toolchain_type].cuda_libdir] +
@@ -192,14 +192,14 @@ def link_shared_object_inputs(ctx, in_files, toolchain_type):
 
     if config == "cpp":
         pass
-    elif config == "cuda_nvidia":
+    elif config == "cuda_nvptx":
         direct += (
             ctx.toolchains[toolchain_type].cuda_toolkit +
             [ctx.toolchains[toolchain_type].cuda_libdir] +
             [ctx.toolchains[toolchain_type].cuda_nvvm]
         )
 
-    elif config == "hip_nvidia":
+    elif config == "hip_nvptx":
         direct += (
             ctx.toolchains[toolchain_type].cuda_toolkit +
             [ctx.toolchains[toolchain_type].cuda_libdir] +

@@ -13,11 +13,11 @@ def _ll_transition_impl(settings, attr):
     if attr.compilation_mode == "omp_cpu":
         return {"//ll:current_ll_toolchain_configuration": "omp_cpu"}
 
-    if attr.compilation_mode == "cuda_nvidia":
-        return {"//ll:current_ll_toolchain_configuration": "cuda_nvidia"}
+    if attr.compilation_mode == "cuda_nvptx":
+        return {"//ll:current_ll_toolchain_configuration": "cuda_nvptx"}
 
-    if attr.compilation_mode == "hip_nvidia":
-        return {"//ll:current_ll_toolchain_configuration": "hip_nvidia"}
+    if attr.compilation_mode == "hip_nvptx":
+        return {"//ll:current_ll_toolchain_configuration": "hip_nvptx"}
 
     if attr.compilation_mode == "sycl_cpu":
         return {"//ll:current_ll_toolchain_configuration": "sycl_cpu"}
@@ -43,11 +43,11 @@ def _ll_toolchain_transition_impl(settings, attr):
     if attr.compilation_mode == "omp_cpu":
         return {"//ll:current_ll_toolchain_configuration": "omp_cpu"}
 
-    if attr.toolchain_configuration == "cuda_nvidia":
-        return {"//ll:current_ll_toolchain_configuration": "cuda_nvidia"}
+    if attr.toolchain_configuration == "cuda_nvptx":
+        return {"//ll:current_ll_toolchain_configuration": "cuda_nvptx"}
 
-    if attr.toolchain_configuration == "hip_nvidia":
-        return {"//ll:current_ll_toolchain_configuration": "hip_nvidia"}
+    if attr.toolchain_configuration == "hip_nvptx":
+        return {"//ll:current_ll_toolchain_configuration": "hip_nvptx"}
 
     if attr.toolchain_configuration == "sycl_cpu":
         return {"//ll:current_ll_toolchain_configuration": "sycl_cpu"}
@@ -82,22 +82,22 @@ transition_to_cpp = transition(
     outputs = ["//ll:current_ll_toolchain_configuration"],
 )
 
-def _transition_to_cuda_nvidia_impl(settings, attr):
+def _transition_to_cuda_nvptx_impl(settings, attr):
     _ignore = (settings, attr)
-    return {"//ll:current_ll_toolchain_configuration": "cuda_nvidia"}
+    return {"//ll:current_ll_toolchain_configuration": "cuda_nvptx"}
 
-transition_to_cuda_nvidia = transition(
-    implementation = _transition_to_cuda_nvidia_impl,
+transition_to_cuda_nvptx = transition(
+    implementation = _transition_to_cuda_nvptx_impl,
     inputs = ["//ll:current_ll_toolchain_configuration"],
     outputs = ["//ll:current_ll_toolchain_configuration"],
 )
 
-def _transition_to_hip_nvidia_impl(settings, attr):
+def _transition_to_hip_nvptx_impl(settings, attr):
     _ignore = (settings, attr)
-    return {"//ll:current_ll_toolchain_configuration": "hip_nvidia"}
+    return {"//ll:current_ll_toolchain_configuration": "hip_nvptx"}
 
-transition_to_hip_nvidia = transition(
-    implementation = _transition_to_hip_nvidia_impl,
+transition_to_hip_nvptx = transition(
+    implementation = _transition_to_hip_nvptx_impl,
     inputs = ["//ll:current_ll_toolchain_configuration"],
     outputs = ["//ll:current_ll_toolchain_configuration"],
 )

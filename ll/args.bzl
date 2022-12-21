@@ -88,8 +88,8 @@ def compile_object_args(
         args.add("-Xarch_host", "-glldb")
 
         if ctx.attr.compilation_mode in [
-            "cuda_nvidia",
-            "hip_nvidia",
+            "cuda_nvptx",
+            "hip_nvptx",
             "sycl_cuda",
         ]:
             args.add_all(["-Xarch_device", "-gdwarf-2"])
@@ -107,8 +107,8 @@ def compile_object_args(
         args.add_all(["-Xarch_host", "-gdwarf-5"])
 
         if ctx.attr.compilation_mode in [
-            "cuda_nvidia",
-            "hip_nvidia",
+            "cuda_nvptx",
+            "hip_nvptx",
             "sycl_cuda",
         ]:
             args.add_all(["-Xarch_device", "-gdwarf-2"])
@@ -132,8 +132,8 @@ def compile_object_args(
 
     # Optimization.
     if ctx.attr.compilation_mode in [
-        "cuda_nvidia",
-        "hip_nvidia",
+        "cuda_nvptx",
+        "hip_nvptx",
         "sycl_cuda",
     ] and ctx.var["COMPILATION_MODE"] != "dbg":
         args.add_all(["-Xarch_device", "-O3"])
@@ -166,8 +166,8 @@ def compile_object_args(
 
     # Maybe enable heterogeneous compilation.
     if ctx.attr.compilation_mode in [
-        "cuda_nvidia",
-        "hip_nvidia",
+        "cuda_nvptx",
+        "hip_nvptx",
         "sycl_cuda",
     ]:
         args.add("-Wno-unknown-cuda-version")  # Will always be unknown.
@@ -187,7 +187,7 @@ def compile_object_args(
             ],
             format_each = "-I%s/include",
         )
-    if ctx.attr.compilation_mode == "hip_nvidia":
+    if ctx.attr.compilation_mode == "hip_nvptx":
         args.add_all(
             [
                 Label("@hip").workspace_root,
@@ -423,8 +423,8 @@ def link_executable_args(ctx, in_files, out_file, mode):
         fail("Invalid linking mode.")
 
     if ctx.attr.compilation_mode in [
-        "cuda_nvidia",
-        "hip_nvidia",
+        "cuda_nvptx",
+        "hip_nvptx",
         "sycl_cuda",
     ]:
         args.add("-lrt")

@@ -92,8 +92,8 @@ string_flag(
         "bootstrap",
         "cpp",
         "omp_cpu",
-        "cuda_nvidia",
-        "hip_nvidia",
+        "cuda_nvptx",
+        "hip_nvptx",
         "sycl_cpu",
         "sycl_cuda",
     ],
@@ -122,16 +122,16 @@ config_setting(
 )
 
 config_setting(
-    name = "cuda_nvidia",
+    name = "cuda_nvptx",
     flag_values = {
-        ":current_ll_toolchain_configuration": "cuda_nvidia",
+        ":current_ll_toolchain_configuration": "cuda_nvptx",
     },
 )
 
 config_setting(
-    name = "hip_nvidia",
+    name = "hip_nvptx",
     flag_values = {
-        ":current_ll_toolchain_configuration": "hip_nvidia",
+        ":current_ll_toolchain_configuration": "hip_nvptx",
     },
 )
 
@@ -233,7 +233,7 @@ ll_toolchain(
 )
 
 ll_toolchain(
-    name = "ll_cuda_nvidia_toolchain_x86_64-unknown-linux-gnu",
+    name = "ll_cuda_nvptx_toolchain_x86_64-unknown-linux-gnu",
     address_sanitizer = [
         "@llvm-project//compiler-rt/lib/asan:clang_rt.asan",
         "@llvm-project//compiler-rt/lib/asan:clang_rt.asan_static",
@@ -276,7 +276,7 @@ ll_toolchain(
 )
 
 ll_toolchain(
-    name = "ll_hip_nvidia_toolchain_x86_64-unknown-linux-gnu",
+    name = "ll_hip_nvptx_toolchain_x86_64-unknown-linux-gnu",
     address_sanitizer = [
         "@llvm-project//compiler-rt/lib/asan:clang_rt.asan",
         "@llvm-project//compiler-rt/lib/asan:clang_rt.asan_static",
@@ -420,8 +420,8 @@ toolchain(
         ":bootstrap": ":ll_bootstrap_toolchain_x86_64-unknown-linux-gnu",
         ":cpp": ":ll_cpp_toolchain_x86_64-unknown-linux-gnu",
         ":omp_cpu": ":ll_omp_cpu_toolchain_x86_64-unknown-linux-gnu",
-        ":cuda_nvidia": ":ll_cuda_nvidia_toolchain_x86_64-unknown-linux-gnu",
-        ":hip_nvidia": ":ll_hip_nvidia_toolchain_x86_64-unknown-linux-gnu",
+        ":cuda_nvptx": ":ll_cuda_nvptx_toolchain_x86_64-unknown-linux-gnu",
+        ":hip_nvptx": ":ll_hip_nvptx_toolchain_x86_64-unknown-linux-gnu",
         ":sycl_cpu": ":ll_sycl_cpu_toolchain_x86_64-unknown-linux-gnu",
         ":sycl_cuda": ":ll_sycl_cuda_toolchain_x86_64-unknown-linux-gnu",
     }),

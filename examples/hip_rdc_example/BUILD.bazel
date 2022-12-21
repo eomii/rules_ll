@@ -14,7 +14,7 @@ ll_library(
     srcs = [
         "add.hip.cpp",
     ],
-    compilation_mode = "hip_nvidia",
+    compilation_mode = "hip_nvptx",
     compile_flags = COMPILE_FLAGS,
     exposed_hdrs = [
         "add.hip.hpp",
@@ -26,7 +26,7 @@ ll_library(
     srcs = [
         "multiply.hip.cpp",
     ],
-    compilation_mode = "hip_nvidia",
+    compilation_mode = "hip_nvptx",
     compile_flags = COMPILE_FLAGS,
     exposed_hdrs = [
         "multiply.hip.hpp",
@@ -38,7 +38,7 @@ ll_binary(
     srcs = [
         "main.hip.cpp",
     ],
-    compilation_mode = "hip_nvidia",
+    compilation_mode = "hip_nvptx",
     compile_flags = COMPILE_FLAGS,
     visibility = ["@//:__pkg__"],
     deps = [

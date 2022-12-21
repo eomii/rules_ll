@@ -2,13 +2,13 @@ load("@rules_ll//ll:defs.bzl", "ll_binary", "ll_compilation_database")
 
 # Run this via:
 #
-#     bazel run llvm_pass_example "namespace n { namespace m { class C {}; } }"
+#     bazel run frontend_action_example \
+#         "namespace n { namespace m { class C {}; } }"
 
 ll_binary(
     name = "frontend_action_example",
     srcs = ["main.cpp"],
     compile_flags = ["-std=c++20"],
-    defines = ["LLVM_ON_UNIX"],
     depends_on_llvm = 1,
     visibility = ["@//:__pkg__"],
 )

@@ -3,7 +3,7 @@ load("@rules_ll//ll:defs.bzl", "ll_binary", "ll_compilation_database")
 ll_binary(
     name = "cuda_example",
     srcs = ["example.cpp"],
-    compilation_mode = "cuda_nvidia",
+    compilation_mode = "cuda_nvptx",
     compile_flags = [
         "--std=c++20",
         "--offload-arch=sm_70",
