@@ -11,29 +11,31 @@ programming.
 - [Examples](https://github.com/eomii/rules_ll/tree/main/examples)
 - [Guides](https://ll.eomii.org/guides)
 
-## 🪄 C++ modules
+## ✨ C++ modules
 
 Use the `interfaces` and `exposed_interfaces` attributes to build C++ modules.
 [C++ modules guide](https://ll.eomii.org/guides/modules).
 
 ```python
 load(
-   "@rules_ll//ll:defs.bzl",
-   "ll_binary",
-   "ll_library",
+    "@rules_ll//ll:defs.bzl",
+    "ll_binary",
+    "ll_library",
 )
 
 ll_library(
-   name = "mymodule",
-   srcs = ["mymodule_impl.cpp"],
-   exposed_interfaces = {"mymodule_interface.cppm": "mymodule"},
-   compile_flags = ["-std=c++20"],
+    name = "mymodule",
+    srcs = ["mymodule_impl.cpp"],
+    exposed_interfaces = {
+        "mymodule_interface.cppm": "mymodule",
+    },
+    compile_flags = ["-std=c++20"],
 )
 
 ll_binary(
-   name = "main",
-   srcs = ["main.cpp"],
-   deps = [":mymodule"],
+    name = "main",
+    srcs = ["main.cpp"],
+    deps = [":mymodule"],
 )
 ```
 
@@ -69,14 +71,14 @@ Integrate sanitizers in your builds with the `sanitizer` attribute.
 
 ```python
 load(
-   "@rules_ll//ll:defs.bzl",
-   "ll_binary",
+    "@rules_ll//ll:defs.bzl",
+    "ll_binary",
 )
 
 ll_binary(
-   name = "sanitizer_example",
-   srcs = ["totally_didnt_shoot_myself_in_the_foot.cpp"],
-   sanitize = ["address"],
+    name = "sanitizer_example",
+    srcs = ["totally_didnt_shoot_myself_in_the_foot.cpp"],
+    sanitize = ["address"],
 )
 ```
 
@@ -86,8 +88,8 @@ Use CUDA and HIP without any manual setup. [CUDA and HIP guide](https://ll.eomii
 
 ```python
 load(
-   "@rules_ll//ll:defs.bzl",
-   "ll_binary",
+    "@rules_ll//ll:defs.bzl",
+    "ll_binary",
 )
 
 ll_binary(
