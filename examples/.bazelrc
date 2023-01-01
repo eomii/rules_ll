@@ -6,16 +6,13 @@ common --repo_env=BAZEL_CXXOPTS='-std=c++17:-O3'
 common --experimental_platform_in_output_dir
 
 # We require bzlmod.
-common --experimental_enable_bzlmod
+common --enable_bzlmod
 
 # Default to the BCR.
 common --registry=https://raw.githubusercontent.com/bazelbuild/bazel-central-registry/main/
 
 # Additional registry required by rules_ll.
 common --registry=https://raw.githubusercontent.com/eomii/bazel-eomii-registry/main/
-
-# We need temporarily unresolved symlinks for CUDA.
-common --experimental_allow_unresolved_symlinks
 
 # Encapsulate the build environment.
 common --incompatible_strict_action_env
