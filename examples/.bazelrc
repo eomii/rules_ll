@@ -1,18 +1,10 @@
-# Upstream LLVM/Clang requires C++17. This will only configure rules_cc.
+# LLVM/Clang requires C++17. This will only configure the rules_cc toolchain.
 common --repo_env=BAZEL_CXXOPTS='-std=c++17:-O3'
 
-# Separate the toolchain from regular code. This will put execution artifacts
-# into bazel-out/ll_linux_exec_platform-opt-exec-<hash>.
-common --experimental_platform_in_output_dir
-
-# We require bzlmod.
-common --enable_bzlmod
-
-# Default to the BCR.
-common --registry=https://raw.githubusercontent.com/bazelbuild/bazel-central-registry/main/
-
-# Additional registry required by rules_ll.
-common --registry=https://raw.githubusercontent.com/eomii/bazel-eomii-registry/main/
-
-# Encapsulate the build environment.
+# Don't inherit PATH and LD_LIBERARY_PATH.
 common --incompatible_strict_action_env
+
+# Bzlmod configuration.
+common --enable_bzlmod
+common --registry=https://raw.githubusercontent.com/bazelbuild/bazel-central-registry/main/
+common --registry=https://raw.githubusercontent.com/eomii/bazel-eomii-registry/main/
