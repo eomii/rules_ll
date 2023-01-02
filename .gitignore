@@ -4,9 +4,8 @@ bazel-*
 # rules_ll developers may have a clone of the LLVM project in this repo.
 llvm-project/
 
-# Sphinx generates various files which should not be tracked.
-docs/_static/__init__.py
-__pycache__/
-.doctrees/
-*.inv
-*.pickle
+# These styles are dynamically fetched by vale and shouldn't be tracked.
+styles/Google/
+styles/Microsoft/
+styles/alex/
+styles/write-good/
