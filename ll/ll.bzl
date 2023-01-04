@@ -137,6 +137,17 @@ def _ll_library_impl(ctx):
         LlCompilationDatabaseFragmentsInfo(
             cdfs = depset(out_cdfs, transitive = transitive_cdfs),
         ),
+        coverage_common.instrumented_files_info(
+            ctx,
+            dependency_attributes = ["deps", "data"],
+            source_attributes = [
+                "srcs",
+                "hdrs",
+                "exposed_hdrs",
+                "exposed_interfaces",
+                "interfaces",
+            ],
+        ),
     ]
 
 ll_library = rule(
@@ -216,6 +227,17 @@ def _ll_binary_impl(ctx):
         ),
         LlCompilationDatabaseFragmentsInfo(
             cdfs = depset(out_cdfs, transitive = transitive_cdfs),
+        ),
+        coverage_common.instrumented_files_info(
+            ctx,
+            dependency_attributes = ["deps", "data"],
+            source_attributes = [
+                "srcs",
+                "hdrs",
+                "exposed_hdrs",
+                "exposed_interfaces",
+                "interfaces",
+            ],
         ),
     ]
 

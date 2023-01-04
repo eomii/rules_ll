@@ -1,0 +1,24 @@
+load("@rules_ll//ll:defs.bzl", "ll_binary", "ll_coverage_test")
+
+ll_binary(
+    name = "main",
+    srcs = ["main.cpp"],
+    hdrs = ["main.hpp"],
+)
+
+# "bazel run" prints a basic line coverage report. This doesn't instrument the
+#     target.
+# "bazel test" doesn't print the report.
+# "bazel test --test_output=all" prints the basic line coverage report.
+# "bazel coverage" instruments the target and runs the instrumented binary to
+#     create a detailed set of reports containing line coverage, branch coverage
+#     and expanded regions as HTML files. This requires instrumentation and
+#     triggers a rebuild of the target. In this example the html outputs are at
+#
+#  bazel-bin/coverage_example/coverage_example/coverage_example.html/index.html
+
+ll_coverage_test(
+    name = "coverage_example",
+    size = "small",
+    target = ":main",
+)

@@ -184,6 +184,7 @@ ll_toolchain(
         "@llvm-project//compiler-rt/lib/msan:clang_rt.msan",
         "@llvm-project//compiler-rt/lib/msan:clang_rt.msan_cxx",
     ],
+    profile = "@llvm-project//compiler-rt/lib/profile:clang_rt.profile",
     thread_sanitizer = [
         "@llvm-project//compiler-rt/lib/tsan:clang_rt.tsan",
         "@llvm-project//compiler-rt/lib/tsan:clang_rt.tsan_cxx",
@@ -220,6 +221,7 @@ ll_toolchain(
         "@llvm-project//compiler-rt/lib/msan:clang_rt.msan",
         "@llvm-project//compiler-rt/lib/msan:clang_rt.msan_cxx",
     ],
+    profile = "@llvm-project//compiler-rt/lib/profile:clang_rt.profile",
     thread_sanitizer = [
         "@llvm-project//compiler-rt/lib/tsan:clang_rt.tsan",
         "@llvm-project//compiler-rt/lib/tsan:clang_rt.tsan_cxx",
@@ -263,6 +265,7 @@ ll_toolchain(
         "@llvm-project//compiler-rt/lib/msan:clang_rt.msan",
         "@llvm-project//compiler-rt/lib/msan:clang_rt.msan_cxx",
     ],
+    profile = "@llvm-project//compiler-rt/lib/profile:clang_rt.profile",
     thread_sanitizer = [
         "@llvm-project//compiler-rt/lib/tsan:clang_rt.tsan",
         "@llvm-project//compiler-rt/lib/tsan:clang_rt.tsan_cxx",
@@ -310,6 +313,7 @@ ll_toolchain(
         "@llvm-project//compiler-rt/lib/msan:clang_rt.msan",
         "@llvm-project//compiler-rt/lib/msan:clang_rt.msan_cxx",
     ],
+    profile = "@llvm-project//compiler-rt/lib/profile:clang_rt.profile",
     thread_sanitizer = [
         "@llvm-project//compiler-rt/lib/tsan:clang_rt.tsan",
         "@llvm-project//compiler-rt/lib/tsan:clang_rt.tsan_cxx",
@@ -351,6 +355,7 @@ ll_toolchain(
         "@llvm-project//compiler-rt/lib/msan:clang_rt.msan",
         "@llvm-project//compiler-rt/lib/msan:clang_rt.msan_cxx",
     ],
+    profile = "@llvm-project//compiler-rt/lib/profile:clang_rt.profile",
     thread_sanitizer = [
         "@llvm-project//compiler-rt/lib/tsan:clang_rt.tsan",
         "@llvm-project//compiler-rt/lib/tsan:clang_rt.tsan_cxx",
@@ -401,6 +406,7 @@ ll_toolchain(
         "@llvm-project//compiler-rt/lib/msan:clang_rt.msan",
         "@llvm-project//compiler-rt/lib/msan:clang_rt.msan_cxx",
     ],
+    profile = "@llvm-project//compiler-rt/lib/profile:clang_rt.profile",
     thread_sanitizer = [
         "@llvm-project//compiler-rt/lib/tsan:clang_rt.tsan",
         "@llvm-project//compiler-rt/lib/tsan:clang_rt.tsan_cxx",

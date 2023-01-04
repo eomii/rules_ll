@@ -380,6 +380,12 @@ LL_TOOLCHAIN_ATTRS = {
         cfg = transition_to_bootstrap,
         providers = [LlInfo],
     ),
+    "cov": attr.label(
+        doc = "The `llvm-cov` tool.",
+        cfg = transition_to_bootstrap,
+        default = "@llvm-project//llvm:llvm-cov",
+        executable = True,
+    ),
     "cpp_abihdrs": attr.label(
         doc = "The C++ ABI headers.",
         cfg = transition_to_bootstrap,
@@ -544,6 +550,16 @@ LL_TOOLCHAIN_ATTRS = {
         #     "@llvm-project//compiler-rt/lib/msan:clang_rt.msan",
         #     "@llvm-project//compiler-rt/lib/msan:clang_rt.msan_cxx",
         # ],
+    ),
+    "profdata": attr.label(
+        doc = "The `llvm-profdata` tool.",
+        cfg = transition_to_bootstrap,
+        default = "@llvm-project//llvm:llvm-profdata",
+        executable = True,
+    ),
+    "profile": attr.label(
+        doc = "The clang_rt.profile implementation",
+        # default = "@llvm-project//compiler-rt/lib/profile:clang_rt.profile",
     ),
     "symbolizer": attr.label(
         doc = "The `llvm-symbolizer`.",

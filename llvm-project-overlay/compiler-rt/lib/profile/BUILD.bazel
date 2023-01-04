@@ -1,0 +1,45 @@
+load("@rules_ll//ll:defs.bzl", "ll_library")
+
+ll_library(
+    name = "clang_rt.profile",
+    srcs = [
+        "GCDAProfiling.c",
+        "InstrProfiling.c",
+        "InstrProfilingBuffer.c",
+        "InstrProfilingFile.c",
+        "InstrProfilingInternal.c",
+        "InstrProfilingMerge.c",
+        "InstrProfilingMergeFile.c",
+        "InstrProfilingNameVar.c",
+        "InstrProfilingPlatformDarwin.c",
+        "InstrProfilingPlatformFuchsia.c",
+        "InstrProfilingPlatformLinux.c",
+        "InstrProfilingPlatformOther.c",
+        "InstrProfilingPlatformWindows.c",
+        "InstrProfilingRuntime.cpp",
+        "InstrProfilingUtil.c",
+        "InstrProfilingValue.c",
+        "InstrProfilingVersionVar.c",
+        "InstrProfilingWriter.c",
+    ],
+    hdrs = [
+        "InstrProfiling.h",
+        "InstrProfilingInternal.h",
+        "InstrProfilingPort.h",
+        "InstrProfilingUtil.h",
+        "WindowsMMap.h",
+    ],
+    compilation_mode = "bootstrap",
+    compile_flags = ["-nostdinc++"],
+    defines = [
+        "COMPILER_RT_HAS_UNAME=1",
+        "COMPILER_RT_HAS_FCNTL_LCK=1",
+        "COMPILER_RT_HAS_ATOMICS=1",
+    ],
+    relative_includes = [
+        "compiler-rt/lib",
+        "compiler-rt/include",
+    ],
+    visibility = ["//visibility:public"],
+    deps = ["//compiler-rt:compiler_rt_hdrs"],
+)

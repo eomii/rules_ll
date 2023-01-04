@@ -81,6 +81,7 @@ def _ll_toolchain_impl(ctx):
     return [
         platform_common.ToolchainInfo(
             c_driver = ctx.executable.c_driver,
+            cov = ctx.executable.cov,
             cpp_driver = ctx.executable.cpp_driver,
             archiver = ctx.executable.archiver,
             bitcode_linker = ctx.executable.bitcode_linker,
@@ -90,6 +91,8 @@ def _ll_toolchain_impl(ctx):
             address_sanitizer = ctx.files.address_sanitizer,
             leak_sanitizer = ctx.files.leak_sanitizer,
             memory_sanitizer = ctx.files.memory_sanitizer,
+            profdata = ctx.executable.profdata,
+            profile = ctx.files.profile,
             thread_sanitizer = ctx.files.thread_sanitizer,
             undefined_behavior_sanitizer = ctx.files.undefined_behavior_sanitizer,
             offload_bundler = ctx.executable.offload_bundler,

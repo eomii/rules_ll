@@ -58,5 +58,6 @@ def linking_tools(ctx, toolchain_type):
         ctx.toolchains[toolchain_type].leak_sanitizer +
         ctx.toolchains[toolchain_type].thread_sanitizer +
         ctx.toolchains[toolchain_type].memory_sanitizer +
-        ctx.toolchains[toolchain_type].undefined_behavior_sanitizer
+        ctx.toolchains[toolchain_type].undefined_behavior_sanitizer +
+        ctx.toolchains[toolchain_type].profile
     )

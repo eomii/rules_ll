@@ -399,11 +399,19 @@ index 000000000000..2ff01aa5006e
 +    )
 diff --git a/utils/bazel/llvm-project-overlay/compiler-rt/BUILD.bazel b/utils/bazel/llvm-project-overlay/compiler-rt/BUILD.bazel
 new file mode 100644
-index 000000000000..9641252aa551
+index 000000000000..df70cfcab65a
 --- /dev/null
 +++ b/utils/bazel/llvm-project-overlay/compiler-rt/BUILD.bazel
-@@ -0,0 +1,11 @@
+@@ -0,0 +1,19 @@
 +load("@rules_ll//ll:defs.bzl", "ll_library")
++
++ll_library(
++    name = "compiler_rt_hdrs",
++    compilation_mode = "bootstrap",
++    exposed_hdrs = glob(["include/**/*"]),
++    exposed_relative_includes = ["compiler_rt/include"],
++    visibility = ["//:__subpackages__"],
++)
 +
 +ll_library(
 +    name = "libll_compiler-rt",
@@ -1120,6 +1128,57 @@ index 000000000000..cba7a625a65f
 +    deps = [
 +        "//compiler-rt/lib/ubsan:RTUbsan_cxx",
 +    ],
++)
+diff --git a/utils/bazel/llvm-project-overlay/compiler-rt/lib/profile/BUILD.bazel b/utils/bazel/llvm-project-overlay/compiler-rt/lib/profile/BUILD.bazel
+new file mode 100644
+index 000000000000..d0c0c81c0878
+--- /dev/null
++++ b/utils/bazel/llvm-project-overlay/compiler-rt/lib/profile/BUILD.bazel
+@@ -0,0 +1,45 @@
++load("@rules_ll//ll:defs.bzl", "ll_library")
++
++ll_library(
++    name = "clang_rt.profile",
++    srcs = [
++        "GCDAProfiling.c",
++        "InstrProfiling.c",
++        "InstrProfilingBuffer.c",
++        "InstrProfilingFile.c",
++        "InstrProfilingInternal.c",
++        "InstrProfilingMerge.c",
++        "InstrProfilingMergeFile.c",
++        "InstrProfilingNameVar.c",
++        "InstrProfilingPlatformDarwin.c",
++        "InstrProfilingPlatformFuchsia.c",
++        "InstrProfilingPlatformLinux.c",
++        "InstrProfilingPlatformOther.c",
++        "InstrProfilingPlatformWindows.c",
++        "InstrProfilingRuntime.cpp",
++        "InstrProfilingUtil.c",
++        "InstrProfilingValue.c",
++        "InstrProfilingVersionVar.c",
++        "InstrProfilingWriter.c",
++    ],
++    hdrs = [
++        "InstrProfiling.h",
++        "InstrProfilingInternal.h",
++        "InstrProfilingPort.h",
++        "InstrProfilingUtil.h",
++        "WindowsMMap.h",
++    ],
++    compilation_mode = "bootstrap",
++    compile_flags = ["-nostdinc++"],
++    defines = [
++        "COMPILER_RT_HAS_UNAME=1",
++        "COMPILER_RT_HAS_FCNTL_LCK=1",
++        "COMPILER_RT_HAS_ATOMICS=1",
++    ],
++    relative_includes = [
++        "compiler-rt/lib",
++        "compiler-rt/include",
++    ],
++    visibility = ["//visibility:public"],
++    deps = ["//compiler-rt:compiler_rt_hdrs"],
 +)
 diff --git a/utils/bazel/llvm-project-overlay/compiler-rt/lib/sanitizer_common/BUILD.bazel b/utils/bazel/llvm-project-overlay/compiler-rt/lib/sanitizer_common/BUILD.bazel
 new file mode 100644

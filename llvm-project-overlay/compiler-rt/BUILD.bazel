@@ -1,6 +1,14 @@
 load("@rules_ll//ll:defs.bzl", "ll_library")
 
 ll_library(
+    name = "compiler_rt_hdrs",
+    compilation_mode = "bootstrap",
+    exposed_hdrs = glob(["include/**/*"]),
+    exposed_relative_includes = ["compiler_rt/include"],
+    visibility = ["//:__subpackages__"],
+)
+
+ll_library(
     name = "libll_compiler-rt",
     compilation_mode = "bootstrap",
     visibility = ["//visibility:public"],

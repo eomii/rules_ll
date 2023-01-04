@@ -80,7 +80,7 @@ def compile_object_args(
     args.add("-Wdate-time")
     args.add("-no-canonical-prefixes")
     args.add("-fdebug-compilation-dir=.")
-    args.add("-fno-coverage-mapping")  # TODO: Enable with hermetic path.
+    args.add("-fcoverage-compilation-dir=.")
 
     # Visualization.
     if ctx.var["COMPILATION_MODE"] == "dbg":
@@ -95,13 +95,13 @@ def compile_object_args(
             args.add_all(["-Xarch_device", "-gdwarf-2"])
             args.add("--cuda-noopt-device-debug")
 
-    # Sanitizers.
+    # Instrumentation.
     has_sanitizers = (ctx.attr.sanitize != [] and ctx.attr.sanitize != ["none"])
 
     if "address" in ctx.attr.sanitize and "leak" in ctx.attr.sanitize:
         fail("AddressSanitizer and LeakSanitizer are mutually exclusive.")
 
-    if has_sanitizers:
+    if has_sanitizers or ctx.coverage_instrumented:
         args.add("-fno-omit-frame-pointer")
         args.add_all(["-Xarch_host", "-glldb"])
         args.add_all(["-Xarch_host", "-gdwarf-5"])
@@ -113,6 +113,9 @@ def compile_object_args(
         ]:
             args.add_all(["-Xarch_device", "-gdwarf-2"])
             args.add("--cuda-noopt-device-debug")
+
+    if ctx.coverage_instrumented and ctx.attr.compilation_mode != "bootstrap":
+        args.add_all(["-fprofile-instr-generate", "-fcoverage-mapping"])
 
     if "address" in ctx.attr.sanitize:
         args.add("-fsanitize=address")
@@ -375,11 +378,15 @@ def link_executable_args(ctx, in_files, out_file, mode):
             format = "%s/crti.o",
         )
 
-    # Sanitizers.
+    # Instrumentation.
     has_sanitizers = (ctx.attr.sanitize != [] and ctx.attr.sanitize != ["none"])
-    if has_sanitizers:
+
+    if has_sanitizers or ctx.coverage_instrumented:
         args.add("--eh-frame-hdr")
         args.add("--whole-archive")
+
+    if ctx.coverage_instrumented and ctx.attr.compilation_mode != "bootstrap":
+        args.add_all(ctx.toolchains["//ll:toolchain_type"].profile)
 
     if "address" in ctx.attr.sanitize and "leak" in ctx.attr.sanitize:
         fail("AddressSanitizer and LeakSanitizer are mutually exclusive.")
@@ -401,7 +408,7 @@ def link_executable_args(ctx, in_files, out_file, mode):
             ctx.toolchains["//ll:toolchain_type"].undefined_behavior_sanitizer,
         )
 
-    if has_sanitizers:
+    if has_sanitizers or ctx.coverage_instrumented:
         args.add("--no-whole-archive")
 
     # Add dynamic linker.
