@@ -11,9 +11,3 @@ ll_binary(
     ],
     visibility = ["@//:__pkg__"],
 )
-
-ll_compilation_database(
-    name = "compile_commands",
-    config = "//:clang_tidy_config",
-    targets = [":cuda_example"],
-)

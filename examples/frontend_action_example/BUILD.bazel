@@ -12,9 +12,3 @@ ll_binary(
     depends_on_llvm = 1,
     visibility = ["@//:__pkg__"],
 )
-
-ll_compilation_database(
-    name = "compile_commands",
-    config = "//:clang_tidy_config",
-    targets = [":llvm_pass_example"],
-)

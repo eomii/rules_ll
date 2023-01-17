@@ -24,9 +24,3 @@ ll_binary(
     visibility = ["@//:__pkg__"],
     deps = [":hello_world"],
 )
-
-ll_compilation_database(
-    name = "compile_commands",
-    config = "//:clang_tidy_config",
-    targets = [":module_partition_example"],
-)

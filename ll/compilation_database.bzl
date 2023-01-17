@@ -93,6 +93,8 @@ with open(sys.argv[1], 'r') as in_file, open(sys.argv[2], 'w') as out_file:
                 fragment['arguments'] += ['--offload-host-only']
             if arg.startswith('--offload-arch'):
                 fragment['arguments'].remove(arg)
+            if arg == '--cuda-noopt-device-debug':
+                fragment['arguments'].remove(arg)
 
     json.dump(revised_compilation_database, out_file)
 """ $1 $2

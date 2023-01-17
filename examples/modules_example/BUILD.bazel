@@ -44,9 +44,3 @@ ll_binary(
         ":module_d",
     ],
 )
-
-ll_compilation_database(
-    name = "compile_commands",
-    config = "//:clang_tidy_config",
-    targets = [":modules_example"],
-)
