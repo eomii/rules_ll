@@ -1,0 +1,361 @@
+diff --git a/utils/bazel/WORKSPACE b/utils/bazel/WORKSPACE
+index de7c2ef1f..37ce8e94c 100644
+--- a/utils/bazel/WORKSPACE
++++ b/utils/bazel/WORKSPACE
+@@ -36,24 +36,16 @@ maybe(
+ 
+ maybe(
+     http_archive,
+-    name = "zlib",
++    name = "llvm_zlib",
+     build_file = "@llvm-raw//utils/bazel/third_party_build:zlib.BUILD",
+-    sha256 = "91844808532e5ce316b3c010929493c0244f3d37593afd6de04f71821d5136d9",
+-    strip_prefix = "zlib-1.2.12",
++    sha256 = "b3a24de97a8fdbc835b9833169501030b8977031bcb54b3b3ac13740f846ab30",
++    strip_prefix = "zlib-1.2.13",
+     urls = [
+-        "https://storage.googleapis.com/mirror.tensorflow.org/zlib.net/zlib-1.2.12.tar.gz",
+-        "https://zlib.net/zlib-1.2.12.tar.gz",
++        "https://storage.googleapis.com/mirror.tensorflow.org/zlib.net/zlib-1.2.13.tar.gz",
++        "https://zlib.net/zlib-1.2.13.tar.gz",
+     ],
+ )
+ 
+-load("@llvm-raw//utils/bazel:zlib.bzl", "llvm_zlib_from_env")
+-
+-maybe(
+-    llvm_zlib_from_env,
+-    name = "llvm_zlib",
+-    external_zlib = "@zlib",
+-)
+-
+ maybe(
+     http_archive,
+     name = "vulkan_headers",
+diff --git a/utils/bazel/configure.bzl b/utils/bazel/configure.bzl
+index 054e93016..45e94f37c 100644
+--- a/utils/bazel/configure.bzl
++++ b/utils/bazel/configure.bzl
+@@ -5,7 +5,6 @@
+ """Helper macros to configure the LLVM overlay project."""
+ 
+ load("@bazel_tools//tools/build_defs/repo:utils.bzl", "maybe")
+-load(":zlib.bzl", "llvm_zlib_disable", "llvm_zlib_system")
+ load(":terminfo.bzl", "llvm_terminfo_disable", "llvm_terminfo_system")
+ 
+ # Directory of overlay files relative to WORKSPACE
+@@ -176,22 +175,12 @@ llvm_configure = repository_rule(
+ )
+ 
+ def llvm_disable_optional_support_deps():
+-    maybe(
+-        llvm_zlib_disable,
+-        name = "llvm_zlib",
+-    )
+-
+     maybe(
+         llvm_terminfo_disable,
+         name = "llvm_terminfo",
+     )
+ 
+ def llvm_use_system_support_deps():
+-    maybe(
+-        llvm_zlib_system,
+-        name = "llvm_zlib",
+-    )
+-
+     maybe(
+         llvm_terminfo_system,
+         name = "llvm_terminfo",
+diff --git a/utils/bazel/deps_impl/zlib_disable.BUILD b/utils/bazel/deps_impl/zlib_disable.BUILD
+deleted file mode 100644
+index e2e4997d2..000000000
+--- a/utils/bazel/deps_impl/zlib_disable.BUILD
++++ /dev/null
+@@ -1,10 +0,0 @@
+-# This file is licensed under the Apache License v2.0 with LLVM Exceptions.
+-# See https://llvm.org/LICENSE.txt for license information.
+-# SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+-
+-# Empty stub library. This doesn't include zlib and doesn't set the LLVM
+-# `#define`s to enable it.
+-cc_library(
+-    name = "zlib",
+-    visibility = ["//visibility:public"],
+-)
+diff --git a/utils/bazel/deps_impl/zlib_external.BUILD b/utils/bazel/deps_impl/zlib_external.BUILD
+deleted file mode 100644
+index 7e505ffd1..000000000
+--- a/utils/bazel/deps_impl/zlib_external.BUILD
++++ /dev/null
+@@ -1,11 +0,0 @@
+-# This file is licensed under the Apache License v2.0 with LLVM Exceptions.
+-# See https://llvm.org/LICENSE.txt for license information.
+-# SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+-
+-# Wrapper around an external zlib library to add the relevant LLVM `#define`s.
+-cc_library(
+-    name = "zlib",
+-    defines = ["LLVM_ENABLE_ZLIB=1"],
+-    visibility = ["//visibility:public"],
+-    deps = ["@external_zlib_repo//:zlib_rule"],
+-)
+diff --git a/utils/bazel/deps_impl/zlib_system.BUILD b/utils/bazel/deps_impl/zlib_system.BUILD
+deleted file mode 100644
+index 8f591f0a9..000000000
+--- a/utils/bazel/deps_impl/zlib_system.BUILD
++++ /dev/null
+@@ -1,13 +0,0 @@
+-# This file is licensed under the Apache License v2.0 with LLVM Exceptions.
+-# See https://llvm.org/LICENSE.txt for license information.
+-# SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+-
+-# Wrapper library for the system's zlib. Using this only works if the toolchain
+-# already has the relevant header search and library search paths configured.
+-# It also sets the relevant LLVM `#define`s to enable zlib.
+-cc_library(
+-    name = "zlib",
+-    defines = ["LLVM_ENABLE_ZLIB=1"],
+-    linkopts = ["-lz"],
+-    visibility = ["//visibility:public"],
+-)
+diff --git a/utils/bazel/third_party_build/zlib.BUILD b/utils/bazel/third_party_build/zlib.BUILD
+index 7206e7f1f..4192b26be 100644
+--- a/utils/bazel/third_party_build/zlib.BUILD
++++ b/utils/bazel/third_party_build/zlib.BUILD
+@@ -1,6 +1,7 @@
+ # This file is licensed under the Apache License v2.0 with LLVM Exceptions.
+ # See https://llvm.org/LICENSE.txt for license information.
+ # SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
++load("@bazel_skylib//rules:common_settings.bzl", "bool_flag")
+ 
+ package(
+     default_visibility = ["//visibility:public"],
+@@ -8,39 +9,69 @@ package(
+     licenses = ["notice"],
+ )
+ 
++bool_flag(
++    name = "llvm_enable_zlib",
++    build_setting_default = True,
++)
++
++config_setting(
++    name = "llvm_zlib_enabled",
++    flag_values = {":llvm_enable_zlib": "true"},
++)
++
++config_setting(
++    name = "llvm_zlib_disabled",
++    flag_values = {":llvm_enable_zlib": "false"},
++)
++
+ cc_library(
+     name = "zlib",
+-    srcs = [
+-        "adler32.c",
+-        "compress.c",
+-        "crc32.c",
+-        "crc32.h",
+-        "deflate.c",
+-        "deflate.h",
+-        "gzclose.c",
+-        "gzguts.h",
+-        "gzlib.c",
+-        "gzread.c",
+-        "gzwrite.c",
+-        "infback.c",
+-        "inffast.c",
+-        "inffast.h",
+-        "inffixed.h",
+-        "inflate.c",
+-        "inflate.h",
+-        "inftrees.c",
+-        "inftrees.h",
+-        "trees.c",
+-        "trees.h",
+-        "uncompr.c",
+-        "zconf.h",
+-        "zutil.c",
+-        "zutil.h",
+-    ],
+-    hdrs = ["zlib.h"],
++    srcs = select({
++        ":llvm_zlib_disabled": [],
++        "//conditions:default": [
++            "adler32.c",
++            "compress.c",
++            "crc32.c",
++            "crc32.h",
++            "deflate.c",
++            "deflate.h",
++            "gzclose.c",
++            "gzguts.h",
++            "gzlib.c",
++            "gzread.c",
++            "gzwrite.c",
++            "infback.c",
++            "inffast.c",
++            "inffast.h",
++            "inffixed.h",
++            "inflate.c",
++            "inflate.h",
++            "inftrees.c",
++            "inftrees.h",
++            "trees.c",
++            "trees.h",
++            "uncompr.c",
++            "zconf.h",
++            "zutil.c",
++            "zutil.h",
++        ],
++    }),
++    hdrs = select({
++        ":llvm_zlib_disabled": [],
++        "//conditions:default": [
++            "zlib.h",
++        ],
++    }),
+     copts = [
+         "-Wno-shift-negative-value",
+         "-DZ_HAVE_UNISTD_H",
+     ],
++    defines = select({
++        ":llvm_zlib_disabled": [],
++        "//conditions:default": [
++            "LLVM_ENABLE_ZLIB=1",
++        ],
++    }),
+     includes = ["."],
++    visibility = ["//visibility:public"],
+ )
+diff --git a/utils/bazel/zlib.bzl b/utils/bazel/zlib.bzl
+deleted file mode 100644
+index 18f8a0023..000000000
+--- a/utils/bazel/zlib.bzl
++++ /dev/null
+@@ -1,112 +0,0 @@
+-# This file is licensed under the Apache License v2.0 with LLVM Exceptions.
+-# See https://llvm.org/LICENSE.txt for license information.
+-# SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+-
+-"""Repository rules to configure the zlib used by LLVM.
+-
+-Most users should pick one of the explicit rules to configure their use of zlib
+-with LLVM:
+-- `llvm_zlib_external` will link against an external Bazel zlib repository.
+-- `llvm_zlib_system` will link against the system zlib (non-hermetically).
+-- 'llvm_zlib_disable` will disable zlib completely.
+-
+-If you would like to make your build configurable, you can use
+-`llvm_zlib_from_env`. By default, this will disable zlib, but will inspect
+-the environment variable (most easily set with a `--repo_env` flag to the
+-Bazel invocation) `BAZEL_LLVM_ZLIB_STRATEGY`. If it is set to `external`,
+-then it will behave the same as `llvm_zlib_external`. If it is set to
+-`system` then it will behave the same as `llvm_zlib_system`. Any other
+-setting will disable zlib the same as not setting it at all.
+-"""
+-
+-def _llvm_zlib_external_impl(repository_ctx):
+-    repository_ctx.template(
+-        "BUILD",
+-        repository_ctx.attr._external_build_template,
+-        substitutions = {
+-            "@external_zlib_repo//:zlib_rule": repository_ctx.attr.external_zlib,
+-        },
+-        executable = False,
+-    )
+-
+-llvm_zlib_external = repository_rule(
+-    implementation = _llvm_zlib_external_impl,
+-    attrs = {
+-        "_external_build_template": attr.label(
+-            default = Label("//utils/bazel/deps_impl:zlib_external.BUILD"),
+-            allow_single_file = True,
+-        ),
+-        "external_zlib": attr.string(
+-            doc = "The dependency that should be used for the external zlib library.",
+-            mandatory = True,
+-        ),
+-    },
+-)
+-
+-def _llvm_zlib_system_impl(repository_ctx):
+-    repository_ctx.template(
+-        "BUILD",
+-        repository_ctx.attr._system_build_template,
+-        executable = False,
+-    )
+-
+-# While it may seem like this needs to be local, it doesn't actually inspect
+-# any local state, it just configures to build against that local state.
+-llvm_zlib_system = repository_rule(
+-    implementation = _llvm_zlib_system_impl,
+-    attrs = {
+-        "_system_build_template": attr.label(
+-            default = Label("//utils/bazel/deps_impl:zlib_system.BUILD"),
+-            allow_single_file = True,
+-        ),
+-    },
+-)
+-
+-def _llvm_zlib_disable_impl(repository_ctx):
+-    repository_ctx.template(
+-        "BUILD",
+-        repository_ctx.attr._disable_build_template,
+-        executable = False,
+-    )
+-
+-llvm_zlib_disable = repository_rule(
+-    implementation = _llvm_zlib_disable_impl,
+-    attrs = {
+-        "_disable_build_template": attr.label(
+-            default = Label("//utils/bazel/deps_impl:zlib_disable.BUILD"),
+-            allow_single_file = True,
+-        ),
+-    },
+-)
+-
+-def _llvm_zlib_from_env_impl(repository_ctx):
+-    zlib_strategy = repository_ctx.os.environ.get("BAZEL_LLVM_ZLIB_STRATEGY")
+-    if zlib_strategy == "external":
+-        _llvm_zlib_external_impl(repository_ctx)
+-    elif zlib_strategy == "system":
+-        _llvm_zlib_system_impl(repository_ctx)
+-    else:
+-        _llvm_zlib_disable_impl(repository_ctx)
+-
+-llvm_zlib_from_env = repository_rule(
+-    implementation = _llvm_zlib_from_env_impl,
+-    attrs = {
+-        "_disable_build_template": attr.label(
+-            default = Label("//utils/bazel/deps_impl:zlib_disable.BUILD"),
+-            allow_single_file = True,
+-        ),
+-        "_external_build_template": attr.label(
+-            default = Label("//utils/bazel/deps_impl:zlib_external.BUILD"),
+-            allow_single_file = True,
+-        ),
+-        "_system_build_template": attr.label(
+-            default = Label("//utils/bazel/deps_impl:zlib_system.BUILD"),
+-            allow_single_file = True,
+-        ),
+-        "external_zlib": attr.label(
+-            doc = "The dependency that should be used for the external zlib library.",
+-            mandatory = True,
+-        ),
+-    },
+-    environ = ["BAZEL_LLVM_ZLIB_STRATEGY"],
+-)
+diff --git a/utils/bazel/llvm-project-overlay/lld/BUILD.bazel b/utils/bazel/llvm-project-overlay/lld/BUILD.bazel
+index 22ec3cfad..505644900 100644
+--- a/utils/bazel/llvm-project-overlay/lld/BUILD.bazel
++++ b/utils/bazel/llvm-project-overlay/lld/BUILD.bazel
+@@ -107,6 +107,7 @@ cc_library(
+         "//llvm:Support",
+         "//llvm:TransformUtils",
+         "//llvm:config",
++        "@llvm_zlib//:zlib",
+     ],
+ )
+ 
