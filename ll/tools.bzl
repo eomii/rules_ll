@@ -52,7 +52,6 @@ def linking_tools(ctx, toolchain_type):
         ctx.toolchains[toolchain_type].linker,
         ctx.toolchains[toolchain_type].linker_executable,
         ctx.toolchains[toolchain_type].linker_wrapper,
-        ctx.toolchains[toolchain_type].local_library_path,
     ] + (
         ctx.toolchains[toolchain_type].address_sanitizer +
         ctx.toolchains[toolchain_type].leak_sanitizer +

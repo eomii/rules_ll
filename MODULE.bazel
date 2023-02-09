@@ -57,12 +57,9 @@ rules_ll_dependencies = use_extension(
     "@rules_ll//ll:init.bzl",
     "rules_ll_dependencies",
 )
-rules_ll_dependencies.configure(
-    local_library_path = "autodetect",
-)
+
 use_repo(
     rules_ll_dependencies,
-    "local_library_path",
     "hip",
     "hipamd",
     "cuda_cudart",

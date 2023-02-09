@@ -5,38 +5,6 @@ Initializer function which should be called in the `WORKSPACE.bazel` file.
 
 load("@bazel_skylib//lib:paths.bzl", "paths")
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
-load("//ll:os.bzl", "library_path")
-
-def _ll_local_library_path_impl(repository_ctx):
-    repository_ctx.file(
-        "WORKSPACE.bazel",
-        content = """# empty""",
-    )
-
-    repository_ctx.symlink(
-        library_path(repository_ctx),
-        "library_path",
-    )
-
-    repository_ctx.file(
-        "BUILD.bazel",
-        content = """filegroup(
-            name = "local_library_path",
-            srcs = [
-                ":library_path",
-            ],
-            visibility = ["//visibility:public"],
-        )""",
-    )
-
-ll_local_library_path = repository_rule(
-    implementation = _ll_local_library_path_impl,
-    attrs = {
-        "build_file_content": attr.string(),
-        "path": attr.string(),
-    },
-    local = True,
-)
 
 CUDA_BUILD_FILE = """
 filegroup(
@@ -46,20 +14,7 @@ filegroup(
 )
 """
 
-def initialize_rules_ll(local_library_path):
-    """Initializes rules_ll and its dependencies.
-
-    Args:
-        local_library_path: Either "autodetect" to autodetect this path for
-            supported operating systems, or the path to the directory containing
-            `Scrt1.o`, `crti.o`, `crtn.o` and other library files. This is
-            usually either `/usr/lib64` or `/usr/lib/x86_64-linux-gnu`.
-    """
-    ll_local_library_path(
-        name = "local_library_path",
-        path = local_library_path,
-    )
-
+def _initialize_rules_ll_impl(module_ctx):
     http_archive(
         name = "hip",
         build_file = Label("@rules_ll//third-party-overlays:hip.BUILD.bazel"),
@@ -156,14 +111,6 @@ def initialize_rules_ll(local_library_path):
         build_file_content = CUDA_BUILD_FILE,
     )
 
-def _initialize_rules_ll_impl(module_ctx):
-    for module in module_ctx.modules:
-        local_library_path = module.tags.configure[0].local_library_path
-    initialize_rules_ll(local_library_path)
-
 rules_ll_dependencies = module_extension(
     implementation = _initialize_rules_ll_impl,
-    tag_classes = {
-        "configure": tag_class(attrs = {"local_library_path": attr.string()}),
-    },
 )

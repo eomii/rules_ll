@@ -260,12 +260,6 @@ def link_shared_object(ctx, in_files, toolchain_type):
             out_file,
             mode = "shared_object",
         ),
-        execution_requirements = {
-            # We currently link to system libraries via local_library_path.
-            # This is not ideal and we ultimately need to integrate these
-            # targets to the toolchain hermetically.
-            "no-cache": "1",
-        },
         tools = linking_tools(ctx, toolchain_type),
         mnemonic = "LlLinkSharedObject",
         use_default_shell_env = False,
@@ -300,12 +294,6 @@ def link_executable(ctx, in_files, toolchain_type):
             out_file,
             mode = "executable",
         ),
-        execution_requirements = {
-            # We currently link to system libraries via local_library_path.
-            # This is not ideal and we ultimately need to integrate these
-            # targets to the toolchain hermetically.
-            "no-cache": "1",
-        },
         mnemonic = "LlLinkExecutable",
         use_default_shell_env = False,
         env = compile_object_environment(ctx, toolchain_type),

@@ -511,14 +511,6 @@ LL_TOOLCHAIN_ATTRS = {
         cfg = transition_to_bootstrap,
         default = LLVM_PROJECT_DEPS,
     ),
-    "local_library_path": attr.label(
-        doc = """A symlink to the local library path.
-
-        Most of the time `/usr/lib64` or `/usr/local/x86_64-linux-gnu`.
-        """,
-        default = "@local_library_path//:local_library_path",
-        allow_single_file = True,
-    ),
     "machine_code_tool": attr.label(
         doc = """The `llvm-mc` tool.
 

@@ -5,7 +5,6 @@ The functions that create `arguments` for use in rule actions.
 
 load("@bazel_skylib//lib:paths.bzl", "paths")
 load("//ll:llvm_project_deps.bzl", "LINUX_DEFINES")
-load("//ll:os.bzl", "library_path")
 
 def llvm_bindir_path(ctx):
     return "{bindir}/{llvm_project_workspace}".format(
@@ -369,13 +368,13 @@ def link_executable_args(ctx, in_files, out_file, mode):
 
     # Startup files.
     if mode == "executable":
+        if "LL_LDFLAGS" in ctx.configuration.default_shell_env.keys():
+            args.add_all(
+                ctx.configuration.default_shell_env["LL_LDFLAGS"].split(":"),
+            )
         args.add(
-            ctx.toolchains["//ll:toolchain_type"].local_library_path.path,
-            format = "%s/Scrt1.o",
-        )
-        args.add(
-            ctx.toolchains["//ll:toolchain_type"].local_library_path.path,
-            format = "%s/crti.o",
+            "-l:Scrt1.o",
+            "-l:crti.o",
         )
 
     # Instrumentation.
@@ -457,11 +456,6 @@ def link_executable_args(ctx, in_files, out_file, mode):
             args.add("-lcupti_static")
 
     # Additional system libraries.
-    args.add(
-        ctx.toolchains["//ll:toolchain_type"].local_library_path.path,
-        format = "-L%s",
-    )
-
     args.add("-lm")  # Math.
     args.add("-ldl")  # Dynamic linking.
     args.add("-lpthread")  # Thread support.
@@ -563,10 +557,7 @@ def link_executable_args(ctx, in_files, out_file, mode):
 
     # End files.
     if mode == "executable":
-        args.add(
-            ctx.toolchains["//ll:toolchain_type"].local_library_path.path,
-            format = "%s/crtn.o",
-        )
+        args.add("-l:crtn.o")
 
     args.add("-o", out_file)
 
