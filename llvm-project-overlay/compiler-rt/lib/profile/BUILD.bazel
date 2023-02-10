@@ -30,7 +30,6 @@ ll_library(
         "WindowsMMap.h",
     ],
     compilation_mode = "bootstrap",
-    compile_flags = ["-nostdinc++"],
     defines = [
         "COMPILER_RT_HAS_UNAME=1",
         "COMPILER_RT_HAS_FCNTL_LCK=1",

@@ -228,17 +228,14 @@ def compile_object_args(
     args.add(cdf, format = "-MJ%s")
 
     # Environment encapsulation.
-    # args.add("-nostdinc")
-    args.add("-nostdlib++")
-    args.add("-nostdinc++")
-    args.add("-nostdlib")
+    args.add("-nostdinc")
     args.add("--gcc-toolchain=NONE")
 
     clang_builtin_include_path = paths.join(
         llvm_bindir_path(ctx),
-        "clang/staging",
+        "clang/staging/include",
     )
-    args.add(clang_builtin_include_path, format = "-resource-dir=%s")
+    # args.add(clang_builtin_include_path, format = "-resource-dir=%s")
 
     # Includes. This reflects the order in which clang will search for included
     # files.
@@ -259,12 +256,20 @@ def compile_object_args(
         llvm_workspace_root = Label("@llvm-project").workspace_root
         args.add_all(
             [
-                clang_builtin_include_path,
                 paths.join(llvm_workspace_root, "libcxx/include"),
                 paths.join(llvm_workspace_root, "libcxxabi/include"),
                 paths.join(llvm_workspace_root, "libunwind/include"),
             ],
+            # Force removal of the previous -I includes and adjust them to
+            # become system includes.
             format_each = "-isystem%s",
+        )
+        args.add_all(
+            ctx.configuration.default_shell_env["LL_CFLAGS"].split(":"),
+        )
+        args.add(
+            clang_builtin_include_path,
+            format = "-idirafter%s",
         )
 
     # 4. Search directories specified via -idirafter for quoted and angled
@@ -366,12 +371,13 @@ def link_executable_args(ctx, in_files, out_file, mode):
     if ctx.var["COMPILATION_MODE"] == "dbg":
         args.add("--verbose")
 
+    if "LL_LDFLAGS" in ctx.configuration.default_shell_env.keys():
+        args.add_all(
+            ctx.configuration.default_shell_env["LL_LDFLAGS"].split(":"),
+        )
+
     # Startup files.
     if mode == "executable":
-        if "LL_LDFLAGS" in ctx.configuration.default_shell_env.keys():
-            args.add_all(
-                ctx.configuration.default_shell_env["LL_LDFLAGS"].split(":"),
-            )
         args.add(
             "-l:Scrt1.o",
             "-l:crti.o",

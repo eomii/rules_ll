@@ -38,6 +38,7 @@ pkgs.mkShell.override {
     pkgs.python3
     pkgs.which
     pkgs.llvmPackages_15.lld
+    pkgs.libxcrypt
     pkgs.glibc
     bazel
   ];

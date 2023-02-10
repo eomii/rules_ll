@@ -68,11 +68,7 @@ ll_library(
         "-fstrict-aliasing",
         "-fvisibility-inlines-hidden",
     ],
-    # Adding these headers via the data field lets us include them via
-    # a custom CPLUS_INCLUDE_PATH setting in the compilation environment for
-    # ll_bootstrap_library. So no include attribute needed to match this.
     data = [
-        ":libcxxabi_headers",
         "//libcxx:libcxx_headers",
         "//libcxx:libcxx_sources",
     ],
@@ -85,5 +81,13 @@ ll_library(
         "_LIBCXXABI_LINK_PTHREAD_LIB",
     ],
     exposed_hdrs = [":libcxxabi_headers"],
+    exposed_relative_angled_includes = ["libcxxabi/include"],
+    relative_angled_includes = [
+        "libcxx/include",
+        "libcxxabi/include",
+    ],
+    relative_includes = [
+        "libcxx/src",
+    ],
     visibility = ["//visibility:public"],
 )

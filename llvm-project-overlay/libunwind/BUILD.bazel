@@ -45,6 +45,7 @@ ll_library(
     exposed_hdrs = [
         ":libunwind_headers",
     ],
+    exposed_relative_angled_includes = ["libunwind/include"],
     visibility = ["//visibility:public"],
     deps = ["//compiler-rt:libll_compiler-rt"],
 )

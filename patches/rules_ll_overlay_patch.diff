@@ -1131,10 +1131,10 @@ index 000000000000..cba7a625a65f
 +)
 diff --git a/utils/bazel/llvm-project-overlay/compiler-rt/lib/profile/BUILD.bazel b/utils/bazel/llvm-project-overlay/compiler-rt/lib/profile/BUILD.bazel
 new file mode 100644
-index 000000000000..d0c0c81c0878
+index 000000000000..af5d7b8b7a82
 --- /dev/null
 +++ b/utils/bazel/llvm-project-overlay/compiler-rt/lib/profile/BUILD.bazel
-@@ -0,0 +1,45 @@
+@@ -0,0 +1,44 @@
 +load("@rules_ll//ll:defs.bzl", "ll_library")
 +
 +ll_library(
@@ -1167,7 +1167,6 @@ index 000000000000..d0c0c81c0878
 +        "WindowsMMap.h",
 +    ],
 +    compilation_mode = "bootstrap",
-+    compile_flags = ["-nostdinc++"],
 +    defines = [
 +        "COMPILER_RT_HAS_UNAME=1",
 +        "COMPILER_RT_HAS_FCNTL_LCK=1",
@@ -1669,10 +1668,10 @@ index 000000000000..736606a26b3d
 +)
 diff --git a/utils/bazel/llvm-project-overlay/libcxx/BUILD.bazel b/utils/bazel/llvm-project-overlay/libcxx/BUILD.bazel
 new file mode 100644
-index 000000000000..2b69c9ccce89
+index 000000000000..953ac9fc593c
 --- /dev/null
 +++ b/utils/bazel/llvm-project-overlay/libcxx/BUILD.bazel
-@@ -0,0 +1,129 @@
+@@ -0,0 +1,132 @@
 +load("@rules_ll//ll:defs.bzl", "ll_library")
 +
 +filegroup(
@@ -1783,12 +1782,8 @@ index 000000000000..2b69c9ccce89
 +        "-fvisibility-inlines-hidden",
 +        "-Wno-user-defined-literals",
 +    ],
-+    # Adding libcxx headers via the data field lets us include them via
-+    # a custom CPLUS_INCLUDE_PATH setting in the compilation environment for
-+    # ll_bootstrap_library. So no include attribute needed to match this.
 +    data = [
 +        "//libcxx:libcxx_headers",
-+        "//libcxxabi:libcxxabi_headers",
 +    ],
 +    defines = [
 +        "_LIBCPP_BUILDING_LIBRARY",
@@ -1800,7 +1795,14 @@ index 000000000000..2b69c9ccce89
 +        "_LIBCXXABI_BUILDING_LIBRARY",
 +        "LIBCXX_BUILDING_LIBCXXABI",
 +    ],
++    exposed_relative_angled_includes = [
++        "libcxx/include",
++    ],
++    relative_includes = [
++        "libcxx/src",
++    ],
 +    visibility = ["//visibility:public"],
++    deps = ["//libcxxabi:libll_cxxabi"],
 +)
 diff --git a/utils/bazel/llvm-project-overlay/libcxx/include/__config_site b/utils/bazel/llvm-project-overlay/libcxx/include/__config_site
 new file mode 100644
@@ -3265,10 +3267,10 @@ index 000000000000..c48427885af0
 +}
 diff --git a/utils/bazel/llvm-project-overlay/libcxxabi/BUILD.bazel b/utils/bazel/llvm-project-overlay/libcxxabi/BUILD.bazel
 new file mode 100644
-index 000000000000..daddb98dbddc
+index 000000000000..6098a1f48e6c
 --- /dev/null
 +++ b/utils/bazel/llvm-project-overlay/libcxxabi/BUILD.bazel
-@@ -0,0 +1,89 @@
+@@ -0,0 +1,93 @@
 +load("@rules_ll//ll:defs.bzl", "ll_library")
 +
 +filegroup(
@@ -3339,11 +3341,7 @@ index 000000000000..daddb98dbddc
 +        "-fstrict-aliasing",
 +        "-fvisibility-inlines-hidden",
 +    ],
-+    # Adding these headers via the data field lets us include them via
-+    # a custom CPLUS_INCLUDE_PATH setting in the compilation environment for
-+    # ll_bootstrap_library. So no include attribute needed to match this.
 +    data = [
-+        ":libcxxabi_headers",
 +        "//libcxx:libcxx_headers",
 +        "//libcxx:libcxx_sources",
 +    ],
@@ -3356,13 +3354,21 @@ index 000000000000..daddb98dbddc
 +        "_LIBCXXABI_LINK_PTHREAD_LIB",
 +    ],
 +    exposed_hdrs = [":libcxxabi_headers"],
++    exposed_relative_angled_includes = ["libcxxabi/include"],
++    relative_angled_includes = [
++        "libcxx/include",
++        "libcxxabi/include",
++    ],
++    relative_includes = [
++        "libcxx/src",
++    ],
 +    visibility = ["//visibility:public"],
 +)
 diff --git a/utils/bazel/llvm-project-overlay/libunwind/BUILD.bazel b/utils/bazel/llvm-project-overlay/libunwind/BUILD.bazel
-index f8448fb0e726..88c1aa2ddced 100644
+index f8448fb0e726..4e0ba5d44ee1 100644
 --- a/utils/bazel/llvm-project-overlay/libunwind/BUILD.bazel
 +++ b/utils/bazel/llvm-project-overlay/libunwind/BUILD.bazel
-@@ -19,3 +19,53 @@ cc_library(
+@@ -19,3 +19,54 @@ cc_library(
      ],
      strip_include_prefix = "include",
  )
@@ -3413,6 +3419,7 @@ index f8448fb0e726..88c1aa2ddced 100644
 +    exposed_hdrs = [
 +        ":libunwind_headers",
 +    ],
++    exposed_relative_angled_includes = ["libunwind/include"],
 +    visibility = ["//visibility:public"],
 +    deps = ["//compiler-rt:libll_compiler-rt"],
 +)

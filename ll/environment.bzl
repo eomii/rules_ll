@@ -38,7 +38,6 @@ def compile_object_environment(ctx, toolchain_type):
         }
     elif config == "bootstrap":
         return {
-            "CPLUS_INCLUDE_PATH": Label("@llvm-project").workspace_root + "/libcxx/src",
             "LLVM_SYMBOLIZER_PATH": ctx.toolchains[toolchain_type].symbolizer.path,
         }
     else:

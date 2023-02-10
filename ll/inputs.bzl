@@ -55,6 +55,7 @@ def compile_object_inputs(
 
     direct += (
         ctx.toolchains[toolchain_type].cpp_stdhdrs +
+        ctx.toolchains[toolchain_type].unwind_library +
         ctx.toolchains[toolchain_type].cpp_abihdrs +
         ctx.toolchains[toolchain_type].compiler_runtime
     )
