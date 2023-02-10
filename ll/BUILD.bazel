@@ -221,6 +221,7 @@ ll_toolchain(
         "@llvm-project//compiler-rt/lib/msan:clang_rt.msan",
         "@llvm-project//compiler-rt/lib/msan:clang_rt.msan_cxx",
     ],
+    omp_header = "@llvm-project//openmp:omp_header",
     profile = "@llvm-project//compiler-rt/lib/profile:clang_rt.profile",
     thread_sanitizer = [
         "@llvm-project//compiler-rt/lib/tsan:clang_rt.tsan",

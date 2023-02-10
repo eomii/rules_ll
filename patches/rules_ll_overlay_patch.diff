@@ -3425,10 +3425,10 @@ index f8448fb0e726..4e0ba5d44ee1 100644
 +)
 diff --git a/utils/bazel/llvm-project-overlay/openmp/BUILD.bazel b/utils/bazel/llvm-project-overlay/openmp/BUILD.bazel
 new file mode 100644
-index 000000000000..deba9e001ad8
+index 000000000000..e8ebc259bd77
 --- /dev/null
 +++ b/utils/bazel/llvm-project-overlay/openmp/BUILD.bazel
-@@ -0,0 +1,83 @@
+@@ -0,0 +1,89 @@
 +load("@rules_ll//ll:defs.bzl", "ll_library")
 +
 +LIBOMP_SOURCES = [
@@ -3479,6 +3479,12 @@ index 000000000000..deba9e001ad8
 +    "runtime/src/z_Linux_asm.S",
 +]
 +
++filegroup(
++    name = "omp_header",
++    srcs = ["runtime/src/include/omp.h"],
++    visibility = ["//visibility:public"],
++)
++
 +ll_library(
 +    name = "libomp",
 +    srcs = LIBOMP_SOURCES,
@@ -3503,7 +3509,7 @@ index 000000000000..deba9e001ad8
 +    exposed_hdrs = [
 +        "runtime/src/include/omp.h",
 +    ],
-+    exposed_relative_includes = [
++    exposed_relative_angled_includes = [
 +        "openmp/runtime/src/include",
 +    ],
 +    relative_includes = [

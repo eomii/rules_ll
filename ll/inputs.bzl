@@ -64,7 +64,7 @@ def compile_object_inputs(
         pass
     elif config == "omp_cpu":
         direct += (
-            ctx.toolchains[toolchain_type].libomp
+            ctx.toolchains[toolchain_type].omp_header
         )
     elif config == "cuda_nvptx":
         direct += (

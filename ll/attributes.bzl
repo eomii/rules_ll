@@ -412,6 +412,12 @@ LL_TOOLCHAIN_ATTRS = {
         cfg = transition_to_bootstrap,
         providers = [LlInfo],
     ),
+    "omp_header": attr.label(
+        doc = "The OpenMP header.",
+        cfg = transition_to_cpp,
+        allow_files = True,
+        # default = "@llvm-project//openmp:omp_header",
+    ),
     "libomp": attr.label(
         doc = "The OpenMP library.",
         cfg = transition_to_cpp,

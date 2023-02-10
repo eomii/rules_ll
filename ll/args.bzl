@@ -166,6 +166,12 @@ def compile_object_args(
     if ctx.attr.compilation_mode == "omp_cpu":
         args.add("-fopenmp")
 
+        # TODO: This is obviously not the way lol.
+        args.add(
+            ctx.toolchains["//ll:toolchain_type"].omp_header[0].dirname,
+            format = "-I%s",
+        )
+
     # Maybe enable heterogeneous compilation.
     if ctx.attr.compilation_mode in [
         "cuda_nvptx",

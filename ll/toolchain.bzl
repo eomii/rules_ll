@@ -107,6 +107,7 @@ def _ll_toolchain_impl(ctx):
             llvm_project_sources = llvm_project_sources,
             llvm_project_artifacts = llvm_project_artifacts,
             libomp = ctx.files.libomp,
+            omp_header = ctx.files.omp_header,
             clang_tidy = ctx.executable.clang_tidy,
             clang_tidy_runner = ctx.executable.clang_tidy_runner,
             symbolizer = ctx.executable.symbolizer,

@@ -48,6 +48,12 @@ LIBOMP_SOURCES = [
     "runtime/src/z_Linux_asm.S",
 ]
 
+filegroup(
+    name = "omp_header",
+    srcs = ["runtime/src/include/omp.h"],
+    visibility = ["//visibility:public"],
+)
+
 ll_library(
     name = "libomp",
     srcs = LIBOMP_SOURCES,
@@ -72,7 +78,7 @@ ll_library(
     exposed_hdrs = [
         "runtime/src/include/omp.h",
     ],
-    exposed_relative_includes = [
+    exposed_relative_angled_includes = [
         "openmp/runtime/src/include",
     ],
     relative_includes = [
