@@ -125,12 +125,18 @@ DEFAULT_ATTRS = {
         doc = """Exposed angled include paths, relative to the original target
         workspace.
 
+        Expands paths starting with `$(GENERATED)` to the workspace location in
+        the `GENDIR` path.
+
         Added to the compile command line arguments of direct dependents.
         """,
     ),
     "exposed_includes": attr.string_list(
         doc = """Exposed include paths, relative to the original target
         workspace.
+
+        Expands paths starting with `$(GENERATED)` to the workspace location in
+        the `GENDIR` path.
 
         Added to the compile command line arguments of direct dependents.
         """,
@@ -175,6 +181,9 @@ DEFAULT_ATTRS = {
         `angled_includes = ["include"]` to add the path to the workspace
         automatically.
 
+        Expands paths starting with `$(GENERATED)` to the workspace location in
+        the `GENDIR` path.
+
         Unavailable to downstream targets.
         """,
     ),
@@ -188,6 +197,9 @@ DEFAULT_ATTRS = {
         `compile_flags = ["-iquoteexternal/mydep.someversion/include"]`, use
         `includes = ["include"]` to add the path to the workspace
         automatically.
+
+        Expands paths starting with `$(GENERATED)` to the workspace location in
+        the `GENDIR` path.
 
         Unavailable to downstream targets.
         """,
