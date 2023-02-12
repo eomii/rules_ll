@@ -35,9 +35,9 @@ ll_library(
         "COMPILER_RT_HAS_FCNTL_LCK=1",
         "COMPILER_RT_HAS_ATOMICS=1",
     ],
-    relative_includes = [
-        "compiler-rt/lib",
+    includes = [
         "compiler-rt/include",
+        "compiler-rt/lib",
     ],
     visibility = ["//visibility:public"],
     deps = ["//compiler-rt:compiler_rt_hdrs"],

@@ -42,10 +42,10 @@ ll_library(
         "-fstrict-aliasing",
         "-fvisibility-inlines-hidden",
     ],
+    exposed_angled_includes = ["libunwind/include"],
     exposed_hdrs = [
         ":libunwind_headers",
     ],
-    exposed_relative_angled_includes = ["libunwind/include"],
     visibility = ["//visibility:public"],
     deps = ["//compiler-rt:libll_compiler-rt"],
 )

@@ -107,7 +107,7 @@ ll_library(
     ],
     defines = ["ASAN_DYNAMIC=1"],
     emit = ["objects"],
-    relative_includes = ["compiler-rt/lib"],
+    includes = ["compiler-rt/lib"],
     visibility = ["//visibility:public"],
 )
 
@@ -125,7 +125,7 @@ ll_library(
     ],
     compilation_mode = "bootstrap",
     emit = ["objects"],
-    relative_includes = ["compiler-rt/lib"],
+    includes = ["compiler-rt/lib"],
     visibility = ["//visibility:public"],
 )
 
@@ -141,7 +141,7 @@ ll_library(
     ],
     compilation_mode = "bootstrap",
     emit = ["objects"],
-    relative_includes = ["compiler-rt/lib"],
+    includes = ["compiler-rt/lib"],
     visibility = ["//visibility:public"],
 )
 
@@ -157,7 +157,7 @@ ll_library(
     ],
     compilation_mode = "bootstrap",
     emit = ["objects"],
-    relative_includes = ["compiler-rt/lib"],
+    includes = ["compiler-rt/lib"],
     visibility = ["//visibility:public"],
 )
 
@@ -172,7 +172,7 @@ ll_library(
     ],
     compilation_mode = "bootstrap",
     emit = ["objects"],
-    relative_includes = ["compiler-rt/lib"],
+    includes = ["compiler-rt/lib"],
     visibility = ["//visibility:public"],
 )
 

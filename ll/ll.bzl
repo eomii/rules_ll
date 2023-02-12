@@ -121,15 +121,15 @@ def _ll_library_impl(ctx):
             exposed_hdrs = depset(ctx.files.exposed_hdrs),
             exposed_defines = depset(ctx.attr.exposed_defines),
             exposed_includes = depset(
-                ctx.attr.exposed_includes + [
+                [
                     paths.join(ctx.label.workspace_root, suffix)
-                    for suffix in ctx.attr.exposed_relative_includes
+                    for suffix in ctx.attr.exposed_includes
                 ],
             ),
             exposed_angled_includes = depset(
-                ctx.attr.angled_includes + [
+                [
                     paths.join(ctx.label.workspace_root, suffix)
-                    for suffix in ctx.attr.exposed_relative_angled_includes
+                    for suffix in ctx.attr.exposed_angled_includes
                 ],
             ),
             exposed_bmis = depset(exposed_bmis),

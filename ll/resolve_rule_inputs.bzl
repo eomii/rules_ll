@@ -17,30 +17,21 @@ def resolve_rule_inputs(ctx, mode):
         transitive = [dep[LlInfo].exposed_defines for dep in ctx.attr.deps],
     )
 
-    exposed_includes = (
-        ctx.attr.exposed_includes if mode == "ll_library" else []
-    )
-    exposed_relative_includes = (
-        ctx.attr.exposed_relative_includes if mode == "ll_library" else []
-    )
     includes = depset(
-        ctx.attr.includes + exposed_includes + [
+        [
             paths.join(ctx.label.workspace_root, suffix)
-            for suffix in ctx.attr.relative_includes + exposed_relative_includes
+            for suffix in ctx.attr.includes + ctx.attr.exposed_includes
         ],
         transitive = [dep[LlInfo].exposed_includes for dep in ctx.attr.deps],
     )
 
-    exposed_angled_includes = (
-        ctx.attr.exposed_angled_includes if mode == "ll_library" else []
-    )
-    exposed_relative_angled_includes = (
-        ctx.attr.exposed_relative_angled_includes if mode == "ll_library" else []
-    )
     angled_includes = depset(
-        ctx.attr.angled_includes + exposed_angled_includes + [
+        ctx.attr.angled_includes + [
             paths.join(ctx.label.workspace_root, suffix)
-            for suffix in ctx.attr.relative_angled_includes + exposed_relative_angled_includes
+            for suffix in (
+                ctx.attr.angled_includes +
+                ctx.attr.exposed_angled_includes
+            )
         ],
         transitive = [
             dep[LlInfo].exposed_angled_includes

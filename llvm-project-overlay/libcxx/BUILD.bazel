@@ -121,10 +121,10 @@ ll_library(
         "_LIBCXXABI_BUILDING_LIBRARY",
         "LIBCXX_BUILDING_LIBCXXABI",
     ],
-    exposed_relative_angled_includes = [
+    exposed_angled_includes = [
         "libcxx/include",
     ],
-    relative_includes = [
+    includes = [
         "libcxx/src",
     ],
     visibility = ["//visibility:public"],

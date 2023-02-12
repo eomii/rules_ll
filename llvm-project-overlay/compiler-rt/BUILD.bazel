@@ -4,7 +4,7 @@ ll_library(
     name = "compiler_rt_hdrs",
     compilation_mode = "bootstrap",
     exposed_hdrs = glob(["include/**/*"]),
-    exposed_relative_includes = ["compiler_rt/include"],
+    exposed_includes = ["compiler_rt/include"],
     visibility = ["//:__subpackages__"],
 )
 

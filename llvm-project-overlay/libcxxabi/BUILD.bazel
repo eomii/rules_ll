@@ -60,6 +60,10 @@ ll_library(
         "src/demangle/StringView.h",
         "src/demangle/Utility.h",
     ],
+    angled_includes = [
+        "libcxx/include",
+        "libcxxabi/include",
+    ],
     compilation_mode = "bootstrap",
     compile_flags = [
         "-std=c++20",
@@ -80,13 +84,9 @@ ll_library(
         "_LIBCXXABI_BUILDING_LIBRARY",
         "_LIBCXXABI_LINK_PTHREAD_LIB",
     ],
+    exposed_angled_includes = ["libcxxabi/include"],
     exposed_hdrs = [":libcxxabi_headers"],
-    exposed_relative_angled_includes = ["libcxxabi/include"],
-    relative_angled_includes = [
-        "libcxx/include",
-        "libcxxabi/include",
-    ],
-    relative_includes = [
+    includes = [
         "libcxx/src",
     ],
     visibility = ["//visibility:public"],

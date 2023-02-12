@@ -78,10 +78,10 @@ ll_library(
         "//compiler-rt/lib/sanitizer_common:sanitizer_impl_headers",
         "//compiler-rt/lib/ubsan:ubsan_headers",
     ],
+    angled_includes = ["compiler-rt/lib"],
     compilation_mode = "bootstrap",
     compile_flags = ["-msse4.2"],
-    relative_angled_includes = ["compiler-rt/lib"],
-    relative_includes = ["compiler-rt/lib"],
+    includes = ["compiler-rt/lib"],
     visibility = ["//visibility:public"],
     deps = [
         "//compiler-rt/lib/interception:RTInterception",
@@ -106,7 +106,7 @@ ll_library(
     ],
     compilation_mode = "bootstrap",
     compile_flags = ["-msse4.2"],
-    relative_includes = ["compiler-rt/lib"],
+    includes = ["compiler-rt/lib"],
     visibility = ["//visibility:public"],
     deps = [
         "//compiler-rt/lib/ubsan:RTUbsan_cxx",

@@ -399,7 +399,7 @@ index 000000000000..2ff01aa5006e
 +    )
 diff --git a/utils/bazel/llvm-project-overlay/compiler-rt/BUILD.bazel b/utils/bazel/llvm-project-overlay/compiler-rt/BUILD.bazel
 new file mode 100644
-index 000000000000..df70cfcab65a
+index 000000000000..52dd36d41181
 --- /dev/null
 +++ b/utils/bazel/llvm-project-overlay/compiler-rt/BUILD.bazel
 @@ -0,0 +1,19 @@
@@ -409,7 +409,7 @@ index 000000000000..df70cfcab65a
 +    name = "compiler_rt_hdrs",
 +    compilation_mode = "bootstrap",
 +    exposed_hdrs = glob(["include/**/*"]),
-+    exposed_relative_includes = ["compiler_rt/include"],
++    exposed_includes = ["compiler_rt/include"],
 +    visibility = ["//:__subpackages__"],
 +)
 +
@@ -431,7 +431,7 @@ index 000000000000..1bb8bf6d7fd4
 +# empty
 diff --git a/utils/bazel/llvm-project-overlay/compiler-rt/lib/asan/BUILD.bazel b/utils/bazel/llvm-project-overlay/compiler-rt/lib/asan/BUILD.bazel
 new file mode 100644
-index 000000000000..e4652c7dcc3f
+index 000000000000..79b4371039c9
 --- /dev/null
 +++ b/utils/bazel/llvm-project-overlay/compiler-rt/lib/asan/BUILD.bazel
 @@ -0,0 +1,245 @@
@@ -544,7 +544,7 @@ index 000000000000..e4652c7dcc3f
 +    ],
 +    defines = ["ASAN_DYNAMIC=1"],
 +    emit = ["objects"],
-+    relative_includes = ["compiler-rt/lib"],
++    includes = ["compiler-rt/lib"],
 +    visibility = ["//visibility:public"],
 +)
 +
@@ -562,7 +562,7 @@ index 000000000000..e4652c7dcc3f
 +    ],
 +    compilation_mode = "bootstrap",
 +    emit = ["objects"],
-+    relative_includes = ["compiler-rt/lib"],
++    includes = ["compiler-rt/lib"],
 +    visibility = ["//visibility:public"],
 +)
 +
@@ -578,7 +578,7 @@ index 000000000000..e4652c7dcc3f
 +    ],
 +    compilation_mode = "bootstrap",
 +    emit = ["objects"],
-+    relative_includes = ["compiler-rt/lib"],
++    includes = ["compiler-rt/lib"],
 +    visibility = ["//visibility:public"],
 +)
 +
@@ -594,7 +594,7 @@ index 000000000000..e4652c7dcc3f
 +    ],
 +    compilation_mode = "bootstrap",
 +    emit = ["objects"],
-+    relative_includes = ["compiler-rt/lib"],
++    includes = ["compiler-rt/lib"],
 +    visibility = ["//visibility:public"],
 +)
 +
@@ -609,7 +609,7 @@ index 000000000000..e4652c7dcc3f
 +    ],
 +    compilation_mode = "bootstrap",
 +    emit = ["objects"],
-+    relative_includes = ["compiler-rt/lib"],
++    includes = ["compiler-rt/lib"],
 +    visibility = ["//visibility:public"],
 +)
 +
@@ -947,7 +947,7 @@ index 000000000000..fc768e047e7e
 +)
 diff --git a/utils/bazel/llvm-project-overlay/compiler-rt/lib/interception/BUILD.bazel b/utils/bazel/llvm-project-overlay/compiler-rt/lib/interception/BUILD.bazel
 new file mode 100644
-index 000000000000..831b2eb68fdb
+index 000000000000..4b8956e49b44
 --- /dev/null
 +++ b/utils/bazel/llvm-project-overlay/compiler-rt/lib/interception/BUILD.bazel
 @@ -0,0 +1,29 @@
@@ -977,12 +977,12 @@ index 000000000000..831b2eb68fdb
 +        "//compiler-rt/lib/sanitizer_common:sanitizer_impl_headers",
 +    ],
 +    compilation_mode = "bootstrap",
-+    relative_includes = ["compiler-rt/lib"],
++    includes = ["compiler-rt/lib"],
 +    visibility = ["//visibility:public"],
 +)
 diff --git a/utils/bazel/llvm-project-overlay/compiler-rt/lib/lsan/BUILD.bazel b/utils/bazel/llvm-project-overlay/compiler-rt/lib/lsan/BUILD.bazel
 new file mode 100644
-index 000000000000..7188ec5653b4
+index 000000000000..2a3ebd4fa2e9
 --- /dev/null
 +++ b/utils/bazel/llvm-project-overlay/compiler-rt/lib/lsan/BUILD.bazel
 @@ -0,0 +1,63 @@
@@ -1014,7 +1014,7 @@ index 000000000000..7188ec5653b4
 +        "//compiler-rt/lib/sanitizer_common:sanitizer_impl_headers",
 +    ],
 +    compilation_mode = "bootstrap",
-+    relative_includes = ["compiler-rt/lib"],
++    includes = ["compiler-rt/lib"],
 +    visibility = ["//visibility:public"],
 +)
 +
@@ -1038,7 +1038,7 @@ index 000000000000..7188ec5653b4
 +        "//compiler-rt/lib/sanitizer_common:sanitizer_impl_headers",
 +    ],
 +    compilation_mode = "bootstrap",
-+    relative_includes = ["compiler-rt/lib"],
++    includes = ["compiler-rt/lib"],
 +    visibility = ["//visibility:public"],
 +    deps = [
 +        ":RTLSanCommon",
@@ -1051,7 +1051,7 @@ index 000000000000..7188ec5653b4
 +)
 diff --git a/utils/bazel/llvm-project-overlay/compiler-rt/lib/msan/BUILD.bazel b/utils/bazel/llvm-project-overlay/compiler-rt/lib/msan/BUILD.bazel
 new file mode 100644
-index 000000000000..cba7a625a65f
+index 000000000000..706fa4d92273
 --- /dev/null
 +++ b/utils/bazel/llvm-project-overlay/compiler-rt/lib/msan/BUILD.bazel
 @@ -0,0 +1,74 @@
@@ -1096,7 +1096,7 @@ index 000000000000..cba7a625a65f
 +    compile_flags = [
 +        "-ffreestanding",
 +    ],
-+    relative_includes = ["compiler-rt/lib"],
++    includes = ["compiler-rt/lib"],
 +    visibility = ["//visibility:public"],
 +    deps = [
 +        "//compiler-rt/lib/interception:RTInterception",
@@ -1123,7 +1123,7 @@ index 000000000000..cba7a625a65f
 +    compile_flags = [
 +        "-ffreestanding",
 +    ],
-+    relative_includes = ["compiler-rt/lib"],
++    includes = ["compiler-rt/lib"],
 +    visibility = ["//visibility:public"],
 +    deps = [
 +        "//compiler-rt/lib/ubsan:RTUbsan_cxx",
@@ -1131,7 +1131,7 @@ index 000000000000..cba7a625a65f
 +)
 diff --git a/utils/bazel/llvm-project-overlay/compiler-rt/lib/profile/BUILD.bazel b/utils/bazel/llvm-project-overlay/compiler-rt/lib/profile/BUILD.bazel
 new file mode 100644
-index 000000000000..af5d7b8b7a82
+index 000000000000..e56f029eb68a
 --- /dev/null
 +++ b/utils/bazel/llvm-project-overlay/compiler-rt/lib/profile/BUILD.bazel
 @@ -0,0 +1,44 @@
@@ -1172,7 +1172,7 @@ index 000000000000..af5d7b8b7a82
 +        "COMPILER_RT_HAS_FCNTL_LCK=1",
 +        "COMPILER_RT_HAS_ATOMICS=1",
 +    ],
-+    relative_includes = [
++    includes = [
 +        "compiler-rt/lib",
 +        "compiler-rt/include",
 +    ],
@@ -1181,7 +1181,7 @@ index 000000000000..af5d7b8b7a82
 +)
 diff --git a/utils/bazel/llvm-project-overlay/compiler-rt/lib/sanitizer_common/BUILD.bazel b/utils/bazel/llvm-project-overlay/compiler-rt/lib/sanitizer_common/BUILD.bazel
 new file mode 100644
-index 000000000000..7f48882b7893
+index 000000000000..c02dd38470c2
 --- /dev/null
 +++ b/utils/bazel/llvm-project-overlay/compiler-rt/lib/sanitizer_common/BUILD.bazel
 @@ -0,0 +1,246 @@
@@ -1358,7 +1358,7 @@ index 000000000000..7f48882b7893
 +    ],
 +    hdrs = [":sanitizer_impl_headers"],
 +    compilation_mode = "bootstrap",
-+    relative_includes = ["compiler-rt/lib"],
++    includes = ["compiler-rt/lib"],
 +    visibility = ["//visibility:public"],
 +)
 +
@@ -1369,7 +1369,7 @@ index 000000000000..7f48882b7893
 +    ],
 +    hdrs = [":sanitizer_impl_headers"],
 +    compilation_mode = "bootstrap",
-+    relative_includes = ["compiler-rt/lib"],
++    includes = ["compiler-rt/lib"],
 +    visibility = ["//visibility:public"],
 +)
 +
@@ -1386,7 +1386,7 @@ index 000000000000..7f48882b7893
 +    ],
 +    hdrs = [":sanitizer_impl_headers"],
 +    compilation_mode = "bootstrap",
-+    relative_includes = ["compiler-rt/lib"],
++    includes = ["compiler-rt/lib"],
 +    visibility = ["//visibility:public"],
 +)
 +
@@ -1400,7 +1400,7 @@ index 000000000000..7f48882b7893
 +    ],
 +    hdrs = [":sanitizer_impl_headers"],
 +    compilation_mode = "bootstrap",
-+    relative_includes = ["compiler-rt/lib"],
++    includes = ["compiler-rt/lib"],
 +    visibility = ["//visibility:public"],
 +)
 +
@@ -1428,12 +1428,12 @@ index 000000000000..7f48882b7893
 +    ],
 +    hdrs = [":sanitizer_impl_headers"],
 +    compilation_mode = "bootstrap",
-+    relative_includes = ["compiler-rt/lib"],
++    includes = ["compiler-rt/lib"],
 +    visibility = ["//visibility:public"],
 +)
 diff --git a/utils/bazel/llvm-project-overlay/compiler-rt/lib/tsan/BUILD.bazel b/utils/bazel/llvm-project-overlay/compiler-rt/lib/tsan/BUILD.bazel
 new file mode 100644
-index 000000000000..45becbca839a
+index 000000000000..c5b82d242951
 --- /dev/null
 +++ b/utils/bazel/llvm-project-overlay/compiler-rt/lib/tsan/BUILD.bazel
 @@ -0,0 +1,114 @@
@@ -1519,8 +1519,8 @@ index 000000000000..45becbca839a
 +    ],
 +    compilation_mode = "bootstrap",
 +    compile_flags = ["-msse4.2"],
-+    relative_angled_includes = ["compiler-rt/lib"],
-+    relative_includes = ["compiler-rt/lib"],
++    angled_includes = ["compiler-rt/lib"],
++    includes = ["compiler-rt/lib"],
 +    visibility = ["//visibility:public"],
 +    deps = [
 +        "//compiler-rt/lib/interception:RTInterception",
@@ -1545,7 +1545,7 @@ index 000000000000..45becbca839a
 +    ],
 +    compilation_mode = "bootstrap",
 +    compile_flags = ["-msse4.2"],
-+    relative_includes = ["compiler-rt/lib"],
++    includes = ["compiler-rt/lib"],
 +    visibility = ["//visibility:public"],
 +    deps = [
 +        "//compiler-rt/lib/ubsan:RTUbsan_cxx",
@@ -1553,7 +1553,7 @@ index 000000000000..45becbca839a
 +)
 diff --git a/utils/bazel/llvm-project-overlay/compiler-rt/lib/ubsan/BUILD.bazel b/utils/bazel/llvm-project-overlay/compiler-rt/lib/ubsan/BUILD.bazel
 new file mode 100644
-index 000000000000..736606a26b3d
+index 000000000000..8ad56ad46df6
 --- /dev/null
 +++ b/utils/bazel/llvm-project-overlay/compiler-rt/lib/ubsan/BUILD.bazel
 @@ -0,0 +1,109 @@
@@ -1597,7 +1597,7 @@ index 000000000000..736606a26b3d
 +    defines = [
 +        "UBSAN_CAN_USE_CXXABI",
 +    ],
-+    relative_includes = ["compiler-rt/lib"],
++    includes = ["compiler-rt/lib"],
 +    visibility = ["//visibility:public"],
 +)
 +
@@ -1614,7 +1614,7 @@ index 000000000000..736606a26b3d
 +        "//compiler-rt/lib/sanitizer_common:sanitizer_impl_headers",
 +    ],
 +    compilation_mode = "bootstrap",
-+    relative_includes = ["compiler-rt/lib"],
++    includes = ["compiler-rt/lib"],
 +    visibility = ["//visibility:public"],
 +)
 +
@@ -1631,7 +1631,7 @@ index 000000000000..736606a26b3d
 +        "//compiler-rt/lib/sanitizer_common:sanitizer_impl_headers",
 +    ],
 +    compilation_mode = "bootstrap",
-+    relative_includes = ["compiler-rt/lib"],
++    includes = ["compiler-rt/lib"],
 +    visibility = ["//visibility:public"],
 +)
 +
@@ -1645,7 +1645,7 @@ index 000000000000..736606a26b3d
 +        "//compiler-rt/lib/sanitizer_common:sanitizer_impl_headers",
 +    ],
 +    compilation_mode = "bootstrap",
-+    relative_includes = ["compiler-rt/lib"],
++    includes = ["compiler-rt/lib"],
 +    visibility = ["//visibility:public"],
 +    deps = [
 +        ":RTUbsan",
@@ -1668,7 +1668,7 @@ index 000000000000..736606a26b3d
 +)
 diff --git a/utils/bazel/llvm-project-overlay/libcxx/BUILD.bazel b/utils/bazel/llvm-project-overlay/libcxx/BUILD.bazel
 new file mode 100644
-index 000000000000..953ac9fc593c
+index 000000000000..df83a6adffc8
 --- /dev/null
 +++ b/utils/bazel/llvm-project-overlay/libcxx/BUILD.bazel
 @@ -0,0 +1,132 @@
@@ -1795,10 +1795,10 @@ index 000000000000..953ac9fc593c
 +        "_LIBCXXABI_BUILDING_LIBRARY",
 +        "LIBCXX_BUILDING_LIBCXXABI",
 +    ],
-+    exposed_relative_angled_includes = [
++    exposed_angled_includes = [
 +        "libcxx/include",
 +    ],
-+    relative_includes = [
++    includes = [
 +        "libcxx/src",
 +    ],
 +    visibility = ["//visibility:public"],
@@ -3267,7 +3267,7 @@ index 000000000000..c48427885af0
 +}
 diff --git a/utils/bazel/llvm-project-overlay/libcxxabi/BUILD.bazel b/utils/bazel/llvm-project-overlay/libcxxabi/BUILD.bazel
 new file mode 100644
-index 000000000000..6098a1f48e6c
+index 000000000000..0012ea9a608b
 --- /dev/null
 +++ b/utils/bazel/llvm-project-overlay/libcxxabi/BUILD.bazel
 @@ -0,0 +1,93 @@
@@ -3354,18 +3354,18 @@ index 000000000000..6098a1f48e6c
 +        "_LIBCXXABI_LINK_PTHREAD_LIB",
 +    ],
 +    exposed_hdrs = [":libcxxabi_headers"],
-+    exposed_relative_angled_includes = ["libcxxabi/include"],
-+    relative_angled_includes = [
++    exposed_angled_includes = ["libcxxabi/include"],
++    angled_includes = [
 +        "libcxx/include",
 +        "libcxxabi/include",
 +    ],
-+    relative_includes = [
++    includes = [
 +        "libcxx/src",
 +    ],
 +    visibility = ["//visibility:public"],
 +)
 diff --git a/utils/bazel/llvm-project-overlay/libunwind/BUILD.bazel b/utils/bazel/llvm-project-overlay/libunwind/BUILD.bazel
-index f8448fb0e726..4e0ba5d44ee1 100644
+index f8448fb0e726..a70c9b4d77ba 100644
 --- a/utils/bazel/llvm-project-overlay/libunwind/BUILD.bazel
 +++ b/utils/bazel/llvm-project-overlay/libunwind/BUILD.bazel
 @@ -19,3 +19,54 @@ cc_library(
@@ -3419,16 +3419,18 @@ index f8448fb0e726..4e0ba5d44ee1 100644
 +    exposed_hdrs = [
 +        ":libunwind_headers",
 +    ],
-+    exposed_relative_angled_includes = ["libunwind/include"],
++    exposed_angled_includes = ["libunwind/include"],
 +    visibility = ["//visibility:public"],
 +    deps = ["//compiler-rt:libll_compiler-rt"],
 +)
 diff --git a/utils/bazel/llvm-project-overlay/openmp/BUILD.bazel b/utils/bazel/llvm-project-overlay/openmp/BUILD.bazel
 new file mode 100644
-index 000000000000..e8ebc259bd77
+index 000000000000..d410e9c80cce
 --- /dev/null
 +++ b/utils/bazel/llvm-project-overlay/openmp/BUILD.bazel
-@@ -0,0 +1,89 @@
+@@ -0,0 +1,91 @@
++
++load("@bazel_skylib//rules:expand_template.bzl", "expand_template")
 +load("@rules_ll//ll:defs.bzl", "ll_library")
 +
 +LIBOMP_SOURCES = [
@@ -3509,10 +3511,10 @@ index 000000000000..e8ebc259bd77
 +    exposed_hdrs = [
 +        "runtime/src/include/omp.h",
 +    ],
-+    exposed_relative_angled_includes = [
++    exposed_angled_includes = [
 +        "openmp/runtime/src/include",
 +    ],
-+    relative_includes = [
++    includes = [
 +        "openmp/runtime/src",
 +        "openmp/runtime/src/thirdparty/ittnotify",
 +    ],

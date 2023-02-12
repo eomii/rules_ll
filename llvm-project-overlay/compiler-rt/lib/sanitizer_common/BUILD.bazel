@@ -171,7 +171,7 @@ ll_library(
     ],
     hdrs = [":sanitizer_impl_headers"],
     compilation_mode = "bootstrap",
-    relative_includes = ["compiler-rt/lib"],
+    includes = ["compiler-rt/lib"],
     visibility = ["//visibility:public"],
 )
 
@@ -182,7 +182,7 @@ ll_library(
     ],
     hdrs = [":sanitizer_impl_headers"],
     compilation_mode = "bootstrap",
-    relative_includes = ["compiler-rt/lib"],
+    includes = ["compiler-rt/lib"],
     visibility = ["//visibility:public"],
 )
 
@@ -199,7 +199,7 @@ ll_library(
     ],
     hdrs = [":sanitizer_impl_headers"],
     compilation_mode = "bootstrap",
-    relative_includes = ["compiler-rt/lib"],
+    includes = ["compiler-rt/lib"],
     visibility = ["//visibility:public"],
 )
 
@@ -213,7 +213,7 @@ ll_library(
     ],
     hdrs = [":sanitizer_impl_headers"],
     compilation_mode = "bootstrap",
-    relative_includes = ["compiler-rt/lib"],
+    includes = ["compiler-rt/lib"],
     visibility = ["//visibility:public"],
 )
 
@@ -241,6 +241,6 @@ ll_library(
     ],
     hdrs = [":sanitizer_impl_headers"],
     compilation_mode = "bootstrap",
-    relative_includes = ["compiler-rt/lib"],
+    includes = ["compiler-rt/lib"],
     visibility = ["//visibility:public"],
 )

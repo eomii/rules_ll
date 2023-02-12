@@ -39,7 +39,7 @@ ll_library(
     compile_flags = [
         "-ffreestanding",
     ],
-    relative_includes = ["compiler-rt/lib"],
+    includes = ["compiler-rt/lib"],
     visibility = ["//visibility:public"],
     deps = [
         "//compiler-rt/lib/interception:RTInterception",
@@ -66,7 +66,7 @@ ll_library(
     compile_flags = [
         "-ffreestanding",
     ],
-    relative_includes = ["compiler-rt/lib"],
+    includes = ["compiler-rt/lib"],
     visibility = ["//visibility:public"],
     deps = [
         "//compiler-rt/lib/ubsan:RTUbsan_cxx",

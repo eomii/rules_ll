@@ -75,13 +75,13 @@ ll_library(
         "-std=c++17",
         "-Wno-switch",
     ],
+    exposed_angled_includes = [
+        "openmp/runtime/src/include",
+    ],
     exposed_hdrs = [
         "runtime/src/include/omp.h",
     ],
-    exposed_relative_angled_includes = [
-        "openmp/runtime/src/include",
-    ],
-    relative_includes = [
+    includes = [
         "openmp/runtime/src",
         "openmp/runtime/src/thirdparty/ittnotify",
     ],

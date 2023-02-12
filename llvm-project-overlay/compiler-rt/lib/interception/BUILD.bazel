@@ -24,6 +24,6 @@ ll_library(
         "//compiler-rt/lib/sanitizer_common:sanitizer_impl_headers",
     ],
     compilation_mode = "bootstrap",
-    relative_includes = ["compiler-rt/lib"],
+    includes = ["compiler-rt/lib"],
     visibility = ["//visibility:public"],
 )
