@@ -69,9 +69,9 @@ auto main() -> int {
   float *host_input_b = nullptr;
 
   // NOLINTBEGIN cppcoreguidelines-pro-type-reinterpret-cast
-  hip_assert(hipMallocHost(reinterpret_cast<void **>(&host_input_a),
+  hip_assert(hipHostMalloc(reinterpret_cast<void **>(&host_input_a),
                            kDimension * sizeof(float)));
-  hip_assert(hipMallocHost(reinterpret_cast<void **>(&host_input_b),
+  hip_assert(hipHostMalloc(reinterpret_cast<void **>(&host_input_b),
                            kDimension * sizeof(float)));
   // NOLINTEND cppcoreguidelines-pro-type-reinterpret-cast
 
