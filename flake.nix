@@ -40,6 +40,17 @@
             bazelisk $@
         fi
         '';
+      ll = pkgs.writeShellScriptBin "ll" ''
+        if [[ "$1" == "init" ]]; then
+          # Only appending for now to be nondestructive.
+          echo "# Empty." >> WORKSPACE.bazel
+          head -1 ${./.bazelversion} >> .bazelversion
+          head -1 ${./examples/MODULE.bazel} >> MODULE.bazel
+          cat ${./examples/.bazelrc} >> .bazelrc
+        else
+          echo "Command not understood."
+        fi
+      '';
     in rec {
       defaultPackage = devShell;
       devShell = pkgs.mkShell.override {
@@ -50,13 +61,18 @@
           pkgs.bazelisk
           pkgs.git
           pkgs.python3
+          pkgs.pre-commit
           pkgs.which
           pkgs.llvmPackages_15.lld
           pkgs.libxcrypt
           pkgs.glibc
           bazel
+          ll
         ];
-        shellHook = "export LD=ld.lld";
+        shellHook = ''
+          export LD=ld.lld
+          alias ls='ls --color=auto'
+        '';
       };
   });
 }
