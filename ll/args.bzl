@@ -262,6 +262,12 @@ def compile_object_args(
         llvm_workspace_root = Label("@llvm-project").workspace_root
         args.add_all(
             [
+                # TODO: Ugly. Find a better solution.
+                paths.join(
+                    ctx.var["GENDIR"],  # For __config_site
+                    llvm_workspace_root,
+                    "libcxx/include",
+                ),
                 paths.join(llvm_workspace_root, "libcxx/include"),
                 paths.join(llvm_workspace_root, "libcxxabi/include"),
                 paths.join(llvm_workspace_root, "libunwind/include"),

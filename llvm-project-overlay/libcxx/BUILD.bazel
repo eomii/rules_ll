@@ -1,8 +1,60 @@
 load("@rules_ll//ll:defs.bzl", "ll_library")
+load("@bazel_skylib//rules:expand_template.bzl", "expand_template")
+
+expand_template(
+    name = "module_modulemap_gen",
+    out = "include/module.modulemap",
+    substitutions = {
+        "@requires_LIBCXX_ENABLE_LOCALIZATION@": "",
+        "@requires_LIBCXX_ENABLE_FILESYSTEM@": "",
+        "@requires_LIBCXX_ENABLE_FSTREAM@": "",
+        "@requires_LIBCXX_ENABLE_THREADS@": "",
+        "@requires_LIBCXX_ENABLE_WIDE_CHARACTERS@": "",
+    },
+    template = "include/module.modulemap.in",
+)
+
+NO = "/* undefined by Bazel. */"
+
+expand_template(
+    name = "__config_site_gen",
+    out = "include/__config_site",
+    substitutions = {
+        "#cmakedefine _LIBCPP_ABI_VERSION @_LIBCPP_ABI_VERSION@": "#define _LIBCPP_ABI_VERSION 1",
+        "#cmakedefine _LIBCPP_ABI_NAMESPACE @_LIBCPP_ABI_NAMESPACE@": "#define _LIBCPP_ABI_NAMESPACE __1",
+        "#cmakedefine _LIBCPP_ABI_FORCE_ITANIUM": NO,
+        "#cmakedefine _LIBCPP_ABI_FORCE_MICROSOFT": NO,
+        "#cmakedefine _LIBCPP_HAS_NO_THREADS": NO,
+        "#cmakedefine _LIBCPP_HAS_NO_MONOTONIC_CLOCK": NO,
+        "#cmakedefine _LIBCPP_HAS_MUSL_LIBC": NO,
+        "#cmakedefine _LIBCPP_HAS_THREAD_API_PTHREAD": NO,
+        "#cmakedefine _LIBCPP_HAS_THREAD_API_EXTERNAL": NO,
+        "#cmakedefine _LIBCPP_HAS_THREAD_API_WIN32": NO,
+        "#cmakedefine _LIBCPP_HAS_THREAD_LIBRARY_EXTERNAL": NO,
+        "#cmakedefine _LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS": NO,
+        "#cmakedefine _LIBCPP_HAS_NO_VENDOR_AVAILABILITY_ANNOTATIONS": "#define _LIBCPP_HAS_NO_VENDOR_AVAILABILITY_ANNOTATIONS",
+        "#cmakedefine _LIBCPP_NO_VCRUNTIME": NO,
+        "#cmakedefine _LIBCPP_TYPEINFO_COMPARISON_IMPLEMENTATION @_LIBCPP_TYPEINFO_COMPARISON_IMPLEMENTATION@": NO,
+        "#cmakedefine _LIBCPP_HAS_NO_FILESYSTEM_LIBRARY": NO,
+        "#cmakedefine _LIBCPP_HAS_PARALLEL_ALGORITHMS": NO,
+        "#cmakedefine _LIBCPP_HAS_NO_RANDOM_DEVICE": NO,
+        "#cmakedefine _LIBCPP_HAS_NO_LOCALIZATION": NO,
+        "#cmakedefine _LIBCPP_HAS_NO_FSTREAM": NO,
+        "#cmakedefine _LIBCPP_HAS_NO_WIDE_CHARACTERS": NO,
+        "#cmakedefine01 _LIBCPP_ENABLE_ASSERTIONS_DEFAULT": "#define _LIBCPP_ENABLE_ASSERTIONS_DEFAULT 0",
+        "#cmakedefine _LIBCPP_ENABLE_DEBUG_MODE": NO,
+        "@_LIBCPP_ABI_DEFINES@": NO,
+        "@_LIBCPP_EXTRA_SITE_DEFINES@": NO,
+    },
+    template = "include/__config_site.in",
+)
 
 filegroup(
     name = "libcxx_headers",
-    srcs = glob(["include/**/*"]),
+    srcs = glob(["include/**/*"]) + [
+        ":module_modulemap_gen",
+        ":__config_site_gen",
+    ],
     visibility = ["//visibility:public"],
 )
 
@@ -108,9 +160,6 @@ ll_library(
         "-fvisibility-inlines-hidden",
         "-Wno-user-defined-literals",
     ],
-    data = [
-        "//libcxx:libcxx_headers",
-    ],
     defines = [
         "_LIBCPP_BUILDING_LIBRARY",
         "_LIBCPP_DISABLE_NEW_DELETE_DEFINITIONS",
@@ -123,6 +172,10 @@ ll_library(
     ],
     exposed_angled_includes = [
         "libcxx/include",
+        "$(GENERATED)/libcxx/include",
+    ],
+    exposed_hdrs = [
+        "//libcxx:libcxx_headers",
     ],
     includes = [
         "libcxx/src",

@@ -62,6 +62,7 @@ ll_library(
     ],
     angled_includes = [
         "libcxx/include",
+        "$(GENERATED)/libcxx/include",
         "libcxxabi/include",
     ],
     compilation_mode = "bootstrap",

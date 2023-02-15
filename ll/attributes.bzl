@@ -385,8 +385,8 @@ LL_TOOLCHAIN_ATTRS = {
     ),
     "cpp_stdhdrs": attr.label(
         doc = "The C++ standard library headers.",
-        cfg = transition_to_bootstrap,
         allow_files = True,
+        # Don't transition for now. It breaks the generated config.
     ),
     "cpp_stdlib": attr.label(
         doc = "The C++ standard library.",
