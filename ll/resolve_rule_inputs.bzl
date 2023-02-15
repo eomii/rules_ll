@@ -21,7 +21,7 @@ def expand_includes(ctx, include_string):
 
     return paths.join(ctx.label.workspace_root, include_string)
 
-def resolve_rule_inputs(ctx, mode):
+def resolve_rule_inputs(ctx):
     hdrs = depset(
         ctx.files.hdrs + ctx.files.exposed_hdrs,
         transitive = [dep[LlInfo].exposed_hdrs for dep in ctx.attr.deps],

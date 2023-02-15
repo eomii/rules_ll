@@ -47,7 +47,7 @@ def _ll_library_impl(ctx):
         includes,
         angled_includes,
         bmis,
-    ) = resolve_rule_inputs(ctx, "ll_library")
+    ) = resolve_rule_inputs(ctx)
 
     out_files = []
 
@@ -180,7 +180,7 @@ def _ll_binary_impl(ctx):
         includes,
         angled_includes,
         bmis,
-    ) = resolve_rule_inputs(ctx, "ll_binary")
+    ) = resolve_rule_inputs(ctx)
 
     out_cdfs = []
 

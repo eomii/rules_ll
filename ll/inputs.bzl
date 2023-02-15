@@ -47,7 +47,7 @@ def compile_object_inputs(
     transitive = [headers, interfaces]
 
     if ctx.attr.depends_on_llvm:
-        transitive += [ctx.toolchains[toolchain_type].llvm_project_sources]
+        transitive.append(ctx.toolchains[toolchain_type].llvm_project_sources)
 
     if config == "bootstrap":
         return depset(direct, transitive = transitive)

@@ -41,6 +41,7 @@ def _ll_coverage_impl(ctx):
     # Generate a website for visualization. This is only useful when this rule
     # was run via "bazel coverage", as coverage details require instrumented
     # builds.
+    maybe_html = []
     if ctx.configuration.coverage_enabled:
         html = ctx.actions.declare_file(
             ll_artifact(ctx, ctx.attr.name + ".html"),
@@ -67,6 +68,7 @@ def _ll_coverage_impl(ctx):
             executable = ctx.toolchains["//ll:toolchain_type"].cov,
             arguments = [args],
         )
+        maybe_html = [html]
 
     # This runner displays the coverage report summary when running via
     # "bazel run" or "bazel test --test_output=all".
@@ -91,10 +93,7 @@ def _ll_coverage_impl(ctx):
         transitive_files = ctx.attr.target[InstrumentedFilesInfo].instrumented_files,
     )
 
-    if ctx.configuration.coverage_enabled:
-        out_files = depset([profraw, profdata, html])
-    else:
-        out_files = depset([profraw, profdata])
+    out_files = depset([profraw, profdata] + maybe_html)
 
     return DefaultInfo(
         files = out_files,

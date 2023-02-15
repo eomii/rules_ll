@@ -1,4 +1,4 @@
-load("@rules_ll//ll:defs.bzl", "ll_binary", "ll_compilation_database")
+load("@rules_ll//ll:defs.bzl", "ll_binary")
 
 ll_binary(
     name = "format_example",

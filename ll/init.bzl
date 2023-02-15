@@ -13,7 +13,7 @@ filegroup(
 )
 """
 
-def _initialize_rules_ll_impl(module_ctx):
+def _initialize_rules_ll_impl(_):
     http_archive(
         name = "hip",
         build_file = Label("@rules_ll//third-party-overlays:hip.BUILD.bazel"),

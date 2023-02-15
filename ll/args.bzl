@@ -44,7 +44,7 @@ def _create_module_import(interface):
     return out
 
 def _create_local_module_import(interface):
-    file, module_name = interface
+    file, _ = interface
     out = "{}".format(file.path)
     return out
 
@@ -65,7 +65,6 @@ def compile_object_args(
         in_file,
         out_file,
         cdf,
-        headers,
         defines,
         includes,
         angled_includes,
