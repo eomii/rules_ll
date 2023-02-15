@@ -5,32 +5,27 @@ programming.
 
 ## ✨ Setup
 
-1. Install the [nix package manager](https://nixos.org/download.html).
+1. Install the [nix package manager](https://nixos.org/download.html) and enable
+   [flakes](https://nixos.wiki/wiki/Flakes).
 
-2. Enable [flakes](https://nixos.wiki/wiki/Flakes) in your nix installation.
-
-3. Enter a `rules_ll` development shell:
+2. Enter a `rules_ll` development shell:
 
     ```bash
     nix develop github:eomii/rules_ll
     ```
 
-4. Create a `rules_ll` compatible workspace:
+3. Create a `rules_ll` compatible workspace:
 
     ```bash
     ll init
     ```
 
-See [`rules_ll/examples`](https://github.com/eomii/rules_ll/tree/main/examples)
-for examples. The [Guides](https://ll.eomii.org/guides) explain more advanced
-features of `rules_ll` such as Clang-Tidy, C++ modules, and heterogeneous
-programming.
-
 ## 🔗 Links
 
-- [Discord Server](https://discord.gg/Ax67899n4y)
-- [Examples](https://github.com/eomii/rules_ll/tree/main/examples)
+- [Docs](https://ll.eomii.org)
 - [Guides](https://ll.eomii.org/guides)
+- [Examples](https://github.com/eomii/rules_ll/tree/main/examples)
+- [Discord](https://discord.gg/Ax67899n4y)
 
 ## 🚀 C++ modules
 
