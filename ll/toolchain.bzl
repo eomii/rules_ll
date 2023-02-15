@@ -4,7 +4,6 @@ This file declares the `ll_toolchain` rule.
 """
 
 load("//ll:attributes.bzl", "LL_TOOLCHAIN_ATTRS")
-load("//ll:transitions.bzl", "ll_toolchain_transition")
 
 def _ll_toolchain_impl(ctx):
     # We always need to invoke lld via an ld.lld -> lld symlink.

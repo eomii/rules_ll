@@ -3,10 +3,6 @@
 Implements the `ll_coverage_test` rule.
 """
 
-load(
-    "//ll:providers.bzl",
-    "LlCompilationDatabaseFragmentsInfo",
-)
 load("//ll:outputs.bzl", "ll_artifact")
 
 def _ll_coverage_impl(ctx):

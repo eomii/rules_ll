@@ -3,7 +3,6 @@
 Initializer function which should be called in the `WORKSPACE.bazel` file.
 """
 
-load("@bazel_skylib//lib:paths.bzl", "paths")
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
 CUDA_BUILD_FILE = """

@@ -4,7 +4,6 @@ Action inputs for rules.
 """
 
 load("@bazel_skylib//rules:common_settings.bzl", "BuildSettingInfo")
-load("@bazel_skylib//lib:paths.bzl", "paths")
 
 COMPILABLE_EXTENSIONS = [
     "ll",

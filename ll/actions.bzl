@@ -6,7 +6,6 @@ Every function in this file effectively wraps `ctx.actions.run` or
 `ctx.actions.run_shell`.
 """
 
-load("@bazel_skylib//lib:paths.bzl", "paths")
 load(
     "//ll:args.bzl",
     "compile_object_args",
