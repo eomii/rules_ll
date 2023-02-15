@@ -156,282 +156,133 @@ toolchain_type(name = "toolchain_type")
 # Toolchains.
 
 ll_toolchain(
-    name = "ll_bootstrap_toolchain_x86_64-unknown-linux-gnu",
+    name = "ll_toolchain_x86_64-unknown-linux-gnu",
+    address_sanitizer = select({
+        ":bootstrap": [],
+        "//conditions:default": [
+            "@llvm-project//compiler-rt/lib/asan:clang_rt.asan",
+            "@llvm-project//compiler-rt/lib/asan:clang_rt.asan_static",
+            "@llvm-project//compiler-rt/lib/asan:clang_rt.asan_cxx",
+        ],
+    }),
+    compiler_runtime = select({
+        ":bootstrap": [],
+        "//conditions:default": [
+            "@llvm-project//compiler-rt:libll_compiler-rt",
+            "@llvm-project//compiler-rt/lib/crt:crt",
+        ],
+    }),
+    cpp_abihdrs = select({
+        ":bootstrap": None,
+        "//conditions:default": "@llvm-project//libcxxabi:libcxxabi_headers",
+    }),
+    cpp_abilib = select({
+        ":bootstrap": None,
+        "//conditions:default": "@llvm-project//libcxxabi:libll_cxxabi",
+    }),
+    cpp_stdhdrs = select({
+        ":bootstrap": None,
+        "//conditions:default": "@llvm-project//libcxx:libcxx_headers",
+    }),
+    cpp_stdlib = select({
+        ":bootstrap": None,
+        "//conditions:default": "@llvm-project//libcxx:libll_cxx",
+    }),
+    cuda_toolkit = select({
+        ":bootstrap": [],
+        ":cpp": [],
+        ":omp_cpu": [],
+        "//conditions:default": [
+            "@cuda_cudart//:contents",
+            "@cuda_cupti//:contents",
+            "@cuda_nvcc//:contents",
+            "@cuda_nvprof//:contents",
+            "@cuda_profiler_api//:contents",
+            "@libcurand//:contents",
+        ],
+    }),
     exec_compatible_with = [":ll_exec_linux"],
-    visibility = ["//visibility:public"],
-)
-
-ll_toolchain(
-    name = "ll_cpp_toolchain_x86_64-unknown-linux-gnu",
-    address_sanitizer = [
-        "@llvm-project//compiler-rt/lib/asan:clang_rt.asan",
-        "@llvm-project//compiler-rt/lib/asan:clang_rt.asan_static",
-        "@llvm-project//compiler-rt/lib/asan:clang_rt.asan_cxx",
-    ],
-    compiler_runtime = [
-        "@llvm-project//compiler-rt:libll_compiler-rt",
-        "@llvm-project//compiler-rt/lib/crt:crt",
-    ],
-    cpp_abihdrs = "@llvm-project//libcxxabi:libcxxabi_headers",
-    cpp_abilib = "@llvm-project//libcxxabi:libll_cxxabi",
-    cpp_stdhdrs = "@llvm-project//libcxx:libcxx_headers",
-    cpp_stdlib = "@llvm-project//libcxx:libll_cxx",
-    exec_compatible_with = [":ll_exec_linux"],
-    leak_sanitizer = [
-        "@llvm-project//compiler-rt/lib/lsan:clang_rt.lsan",
-    ],
-    memory_sanitizer = [
-        "@llvm-project//compiler-rt/lib/msan:clang_rt.msan",
-        "@llvm-project//compiler-rt/lib/msan:clang_rt.msan_cxx",
-    ],
-    profile = "@llvm-project//compiler-rt/lib/profile:clang_rt.profile",
-    thread_sanitizer = [
-        "@llvm-project//compiler-rt/lib/tsan:clang_rt.tsan",
-        "@llvm-project//compiler-rt/lib/tsan:clang_rt.tsan_cxx",
-    ],
-    undefined_behavior_sanitizer = [
-        "@llvm-project//compiler-rt/lib/ubsan:clang_rt.ubsan_standalone",
-        "@llvm-project//compiler-rt/lib/ubsan:clang_rt.ubsan_standalone_cxx",
-    ],
-    unwind_library = "@llvm-project//libunwind:libll_unwind",
-    visibility = ["//visibility:public"],
-)
-
-ll_toolchain(
-    name = "ll_omp_cpu_toolchain_x86_64-unknown-linux-gnu",
-    address_sanitizer = [
-        "@llvm-project//compiler-rt/lib/asan:clang_rt.asan",
-        "@llvm-project//compiler-rt/lib/asan:clang_rt.asan_static",
-        "@llvm-project//compiler-rt/lib/asan:clang_rt.asan_cxx",
-    ],
-    compiler_runtime = [
-        "@llvm-project//compiler-rt:libll_compiler-rt",
-        "@llvm-project//compiler-rt/lib/crt:crt",
-    ],
-    cpp_abihdrs = "@llvm-project//libcxxabi:libcxxabi_headers",
-    cpp_abilib = "@llvm-project//libcxxabi:libll_cxxabi",
-    cpp_stdhdrs = "@llvm-project//libcxx:libcxx_headers",
-    cpp_stdlib = "@llvm-project//libcxx:libll_cxx",
-    exec_compatible_with = [":ll_exec_linux"],
-    leak_sanitizer = [
-        "@llvm-project//compiler-rt/lib/lsan:clang_rt.lsan",
-    ],
-    libomp = "@llvm-project//openmp:libomp",
-    memory_sanitizer = [
-        "@llvm-project//compiler-rt/lib/msan:clang_rt.msan",
-        "@llvm-project//compiler-rt/lib/msan:clang_rt.msan_cxx",
-    ],
-    omp_header = "@llvm-project//openmp:omp_header",
-    profile = "@llvm-project//compiler-rt/lib/profile:clang_rt.profile",
-    thread_sanitizer = [
-        "@llvm-project//compiler-rt/lib/tsan:clang_rt.tsan",
-        "@llvm-project//compiler-rt/lib/tsan:clang_rt.tsan_cxx",
-    ],
-    undefined_behavior_sanitizer = [
-        "@llvm-project//compiler-rt/lib/ubsan:clang_rt.ubsan_standalone",
-        "@llvm-project//compiler-rt/lib/ubsan:clang_rt.ubsan_standalone_cxx",
-    ],
-    unwind_library = "@llvm-project//libunwind:libll_unwind",
-    visibility = ["//visibility:public"],
-)
-
-ll_toolchain(
-    name = "ll_cuda_nvptx_toolchain_x86_64-unknown-linux-gnu",
-    address_sanitizer = [
-        "@llvm-project//compiler-rt/lib/asan:clang_rt.asan",
-        "@llvm-project//compiler-rt/lib/asan:clang_rt.asan_static",
-        "@llvm-project//compiler-rt/lib/asan:clang_rt.asan_cxx",
-    ],
-    compiler_runtime = [
-        "@llvm-project//compiler-rt:libll_compiler-rt",
-        "@llvm-project//compiler-rt/lib/crt:crt",
-    ],
-    cpp_abihdrs = "@llvm-project//libcxxabi:libcxxabi_headers",
-    cpp_abilib = "@llvm-project//libcxxabi:libll_cxxabi",
-    cpp_stdhdrs = "@llvm-project//libcxx:libcxx_headers",
-    cpp_stdlib = "@llvm-project//libcxx:libll_cxx",
-    cuda_toolkit = [
-        "@cuda_cudart//:contents",
-        "@cuda_cupti//:contents",
-        "@cuda_nvcc//:contents",
-        "@cuda_nvprof//:contents",
-        "@cuda_profiler_api//:contents",
-        "@libcurand//:contents",
-    ],
-    exec_compatible_with = [":ll_exec_linux"],
-    leak_sanitizer = [
-        "@llvm-project//compiler-rt/lib/lsan:clang_rt.lsan",
-    ],
-    memory_sanitizer = [
-        "@llvm-project//compiler-rt/lib/msan:clang_rt.msan",
-        "@llvm-project//compiler-rt/lib/msan:clang_rt.msan_cxx",
-    ],
-    profile = "@llvm-project//compiler-rt/lib/profile:clang_rt.profile",
-    thread_sanitizer = [
-        "@llvm-project//compiler-rt/lib/tsan:clang_rt.tsan",
-        "@llvm-project//compiler-rt/lib/tsan:clang_rt.tsan_cxx",
-    ],
-    undefined_behavior_sanitizer = [
-        "@llvm-project//compiler-rt/lib/ubsan:clang_rt.ubsan_standalone",
-        "@llvm-project//compiler-rt/lib/ubsan:clang_rt.ubsan_standalone_cxx",
-    ],
-    unwind_library = "@llvm-project//libunwind:libll_unwind",
-    visibility = ["//visibility:public"],
-)
-
-ll_toolchain(
-    name = "ll_hip_nvptx_toolchain_x86_64-unknown-linux-gnu",
-    address_sanitizer = [
-        "@llvm-project//compiler-rt/lib/asan:clang_rt.asan",
-        "@llvm-project//compiler-rt/lib/asan:clang_rt.asan_static",
-        "@llvm-project//compiler-rt/lib/asan:clang_rt.asan_cxx",
-    ],
-    compiler_runtime = [
-        "@llvm-project//compiler-rt:libll_compiler-rt",
-        "@llvm-project//compiler-rt/lib/crt:crt",
-    ],
-    cpp_abihdrs = "@llvm-project//libcxxabi:libcxxabi_headers",
-    cpp_abilib = "@llvm-project//libcxxabi:libll_cxxabi",
-    cpp_stdhdrs = "@llvm-project//libcxx:libcxx_headers",
-    cpp_stdlib = "@llvm-project//libcxx:libll_cxx",
-    cuda_toolkit = [
-        "@cuda_cudart//:contents",
-        "@cuda_cupti//:contents",
-        "@cuda_nvcc//:contents",
-        "@cuda_nvprof//:contents",
-        "@cuda_profiler_api//:contents",
-        "@libcurand//:contents",
-    ],
-    exec_compatible_with = [":ll_exec_linux"],
-    hip_libraries = [
-        "@hip//:headers",
-        "@hipamd//:headers",
-    ],
-    leak_sanitizer = [
-        "@llvm-project//compiler-rt/lib/lsan:clang_rt.lsan",
-    ],
-    memory_sanitizer = [
-        "@llvm-project//compiler-rt/lib/msan:clang_rt.msan",
-        "@llvm-project//compiler-rt/lib/msan:clang_rt.msan_cxx",
-    ],
-    profile = "@llvm-project//compiler-rt/lib/profile:clang_rt.profile",
-    thread_sanitizer = [
-        "@llvm-project//compiler-rt/lib/tsan:clang_rt.tsan",
-        "@llvm-project//compiler-rt/lib/tsan:clang_rt.tsan_cxx",
-    ],
-    undefined_behavior_sanitizer = [
-        "@llvm-project//compiler-rt/lib/ubsan:clang_rt.ubsan_standalone",
-        "@llvm-project//compiler-rt/lib/ubsan:clang_rt.ubsan_standalone_cxx",
-    ],
-    unwind_library = "@llvm-project//libunwind:libll_unwind",
-    visibility = ["//visibility:public"],
-)
-
-ll_toolchain(
-    name = "ll_sycl_cpu_toolchain_x86_64-unknown-linux-gnu",
-    address_sanitizer = [
-        "@llvm-project//compiler-rt/lib/asan:clang_rt.asan",
-        "@llvm-project//compiler-rt/lib/asan:clang_rt.asan_static",
-        "@llvm-project//compiler-rt/lib/asan:clang_rt.asan_cxx",
-    ],
-    compiler_runtime = [
-        "@llvm-project//compiler-rt:libll_compiler-rt",
-        "@llvm-project//compiler-rt/lib/crt:crt",
-    ],
-    cpp_abihdrs = "@llvm-project//libcxxabi:libcxxabi_headers",
-    cpp_abilib = "@llvm-project//libcxxabi:libll_cxxabi",
-    cpp_stdhdrs = "@llvm-project//libcxx:libcxx_headers",
-    cpp_stdlib = "@llvm-project//libcxx:libll_cxx",
-    exec_compatible_with = [":ll_exec_linux"],
-    hipsycl_hdrs = [
-        "@hipsycl//:sycl_headers",
-    ],
-    hipsycl_omp_backend = "@hipsycl//:rt-backend-omp",
-    hipsycl_plugin = "@hipsycl//:libhipSYCL_clang",
-    hipsycl_runtime = "@hipsycl//:hipSYCL-rt",
-    leak_sanitizer = [
-        "@llvm-project//compiler-rt/lib/lsan:clang_rt.lsan",
-    ],
-    memory_sanitizer = [
-        "@llvm-project//compiler-rt/lib/msan:clang_rt.msan",
-        "@llvm-project//compiler-rt/lib/msan:clang_rt.msan_cxx",
-    ],
-    profile = "@llvm-project//compiler-rt/lib/profile:clang_rt.profile",
-    thread_sanitizer = [
-        "@llvm-project//compiler-rt/lib/tsan:clang_rt.tsan",
-        "@llvm-project//compiler-rt/lib/tsan:clang_rt.tsan_cxx",
-    ],
-    undefined_behavior_sanitizer = [
-        "@llvm-project//compiler-rt/lib/ubsan:clang_rt.ubsan_standalone",
-        "@llvm-project//compiler-rt/lib/ubsan:clang_rt.ubsan_standalone_cxx",
-    ],
-    unwind_library = "@llvm-project//libunwind:libll_unwind",
-    visibility = ["//visibility:public"],
-)
-
-ll_toolchain(
-    name = "ll_sycl_cuda_toolchain_x86_64-unknown-linux-gnu",
-    address_sanitizer = [
-        "@llvm-project//compiler-rt/lib/asan:clang_rt.asan",
-        "@llvm-project//compiler-rt/lib/asan:clang_rt.asan_static",
-        "@llvm-project//compiler-rt/lib/asan:clang_rt.asan_cxx",
-    ],
-    compiler_runtime = [
-        "@llvm-project//compiler-rt:libll_compiler-rt",
-        "@llvm-project//compiler-rt/lib/crt:crt",
-    ],
-    cpp_abihdrs = "@llvm-project//libcxxabi:libcxxabi_headers",
-    cpp_abilib = "@llvm-project//libcxxabi:libll_cxxabi",
-    cpp_stdhdrs = "@llvm-project//libcxx:libcxx_headers",
-    cpp_stdlib = "@llvm-project//libcxx:libll_cxx",
-    cuda_toolkit = [
-        "@cuda_cudart//:contents",
-        "@cuda_cupti//:contents",
-        "@cuda_nvcc//:contents",
-        "@cuda_nvprof//:contents",
-        "@cuda_profiler_api//:contents",
-        "@libcurand//:contents",
-    ],
-    exec_compatible_with = [":ll_exec_linux"],
-    hipsycl_cuda_backend = "@hipsycl//:rt-backend-cuda",
-    hipsycl_hdrs = [
-        "@hipsycl//:sycl_headers",
-    ],
-    hipsycl_omp_backend = "@hipsycl//:rt-backend-omp",
-    hipsycl_plugin = "@hipsycl//:libhipSYCL_clang",
-    hipsycl_runtime = "@hipsycl//:hipSYCL-rt",
-    leak_sanitizer = [
-        "@llvm-project//compiler-rt/lib/lsan:clang_rt.lsan",
-    ],
-    memory_sanitizer = [
-        "@llvm-project//compiler-rt/lib/msan:clang_rt.msan",
-        "@llvm-project//compiler-rt/lib/msan:clang_rt.msan_cxx",
-    ],
-    profile = "@llvm-project//compiler-rt/lib/profile:clang_rt.profile",
-    thread_sanitizer = [
-        "@llvm-project//compiler-rt/lib/tsan:clang_rt.tsan",
-        "@llvm-project//compiler-rt/lib/tsan:clang_rt.tsan_cxx",
-    ],
-    undefined_behavior_sanitizer = [
-        "@llvm-project//compiler-rt/lib/ubsan:clang_rt.ubsan_standalone",
-        "@llvm-project//compiler-rt/lib/ubsan:clang_rt.ubsan_standalone_cxx",
-    ],
-    unwind_library = "@llvm-project//libunwind:libll_unwind",
+    hip_libraries = select({
+        ":hip_nvptx": [
+            "@hip//:headers",
+            "@hipamd//:headers",
+        ],
+        "//conditions:default": [],
+    }),
+    hipsycl_cuda_backend = select({
+        ":sycl_cuda": "@hipsycl//:rt-backend-cuda",
+        "//conditions:default": None,
+    }),
+    hipsycl_hdrs = select({
+        ":sycl_cpu": ["@hipsycl//:sycl_headers"],
+        ":sycl_cuda": ["@hipsycl//:sycl_headers"],
+        "//conditions:default": [],
+    }),
+    hipsycl_omp_backend = select({
+        ":sycl_cpu": "@hipsycl//:rt-backend-omp",
+        ":sycl_cuda": "@hipsycl//:rt-backend-omp",
+        "//conditions:default": None,
+    }),
+    hipsycl_plugin = select({
+        ":sycl_cpu": "@hipsycl//:libhipSYCL_clang",
+        ":sycl_cuda": "@hipsycl//:libhipSYCL_clang",
+        "//conditions:default": None,
+    }),
+    hipsycl_runtime = select({
+        ":sycl_cpu": "@hipsycl//:hipSYCL-rt",
+        ":sycl_cuda": "@hipsycl//:hipSYCL-rt",
+        "//conditions:default": None,
+    }),
+    leak_sanitizer = select({
+        ":bootstrap": [],
+        "//conditions:default": [
+            "@llvm-project//compiler-rt/lib/lsan:clang_rt.lsan",
+        ],
+    }),
+    libomp = select({
+        "omp_cpu": "@llvm-project//openmp:libomp",
+        "//conditions:default": None,
+    }),
+    memory_sanitizer = select({
+        ":bootstrap": [],
+        "//conditions:default": [
+            "@llvm-project//compiler-rt/lib/msan:clang_rt.msan",
+            "@llvm-project//compiler-rt/lib/msan:clang_rt.msan_cxx",
+        ],
+    }),
+    omp_header = select({
+        "omp_cpu": "@llvm-project//openmp:omp_header",
+        "//conditions:default": None,
+    }),
+    profile = select({
+        ":bootstrap": None,
+        "//conditions:default": "@llvm-project//compiler-rt/lib/profile:clang_rt.profile",
+    }),
+    thread_sanitizer = select({
+        ":bootstrap": None,
+        "//conditions:default": [
+            "@llvm-project//compiler-rt/lib/tsan:clang_rt.tsan",
+            "@llvm-project//compiler-rt/lib/tsan:clang_rt.tsan_cxx",
+        ],
+    }),
+    undefined_behavior_sanitizer = select({
+        ":bootstrap": [],
+        "//conditions:default": [
+            "@llvm-project//compiler-rt/lib/ubsan:clang_rt.ubsan_standalone",
+            "@llvm-project//compiler-rt/lib/ubsan:clang_rt.ubsan_standalone_cxx",
+        ],
+    }),
+    unwind_library = select({
+        ":bootstrap": None,
+        "//conditions:default": "@llvm-project//libunwind:libll_unwind",
+    }),
     visibility = ["//visibility:public"],
 )
 
 toolchain(
     name = "ll_toolchain",
     exec_compatible_with = [":ll_exec_linux"],
-    toolchain = select({
-        ":bootstrap": ":ll_bootstrap_toolchain_x86_64-unknown-linux-gnu",
-        ":cpp": ":ll_cpp_toolchain_x86_64-unknown-linux-gnu",
-        ":omp_cpu": ":ll_omp_cpu_toolchain_x86_64-unknown-linux-gnu",
-        ":cuda_nvptx": ":ll_cuda_nvptx_toolchain_x86_64-unknown-linux-gnu",
-        ":hip_nvptx": ":ll_hip_nvptx_toolchain_x86_64-unknown-linux-gnu",
-        ":sycl_cpu": ":ll_sycl_cpu_toolchain_x86_64-unknown-linux-gnu",
-        ":sycl_cuda": ":ll_sycl_cuda_toolchain_x86_64-unknown-linux-gnu",
-    }),
+    toolchain = ":ll_toolchain_x86_64-unknown-linux-gnu",
     toolchain_type = ":toolchain_type",
     visibility = ["//visibility:public"],
 )
