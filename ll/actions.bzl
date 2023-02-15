@@ -52,8 +52,7 @@ def compile_objects(
         includes,
         angled_includes,
         bmis,
-        internal_bmis,
-        toolchain_type):
+        internal_bmis):
     internal_bmi_files = [bmi for bmi, _ in internal_bmis]
     out_files = []
     cdfs = []
@@ -68,7 +67,6 @@ def compile_objects(
             angled_includes,
             bmis,
             [],  # Internal BMIs can't depend on each other.
-            toolchain_type,
         )
         out_files.append(file_out)
         cdfs.append(cdf_out)
@@ -83,7 +81,6 @@ def compile_objects(
             angled_includes,
             bmis,
             internal_bmis,
-            toolchain_type,
         )
         out_files.append(file_out)
         cdfs.append(cdf_out)
@@ -98,8 +95,7 @@ def compile_object(
         includes,
         angled_includes,
         bmis,
-        internal_bmis,
-        toolchain_type):
+        internal_bmis):
     file_out, cdf_out = compile_object_outputs(ctx, in_file)
 
     ctx.actions.run(
@@ -110,10 +106,9 @@ def compile_object(
             headers,
             bmis,
             internal_bmis,
-            toolchain_type,
         ),
-        executable = compiler_driver(ctx, in_file, toolchain_type),
-        tools = compile_object_tools(ctx, toolchain_type),
+        executable = compiler_driver(ctx, in_file),
+        tools = compile_object_tools(ctx),
         arguments = compile_object_args(
             ctx,
             in_file,
@@ -127,7 +122,7 @@ def compile_object(
         ),
         mnemonic = "LlCompileObject",
         use_default_shell_env = False,
-        env = compile_object_environment(ctx, toolchain_type),
+        env = compile_object_environment(ctx),
     )
     return file_out, cdf_out
 
@@ -138,7 +133,6 @@ def precompile_interfaces(
         includes,
         angled_includes,
         bmis,
-        toolchain_type,
         binary):
     cdfs = []
 
@@ -153,7 +147,6 @@ def precompile_interfaces(
             includes,
             angled_includes,
             bmis,
-            toolchain_type,
         )
         internal_bmis.append((file_out, module_name))
         cdfs.append(cdf_out)
@@ -174,7 +167,6 @@ def precompile_interfaces(
                     internal_bmis,
                     transitive = [bmis],
                 ),
-                toolchain_type,
             )
             exposed_bmis.append((file_out, module_name))
             cdfs.append(cdf_out)
@@ -188,8 +180,9 @@ def precompile_interface(
         defines,
         includes,
         angled_includes,
-        bmis,
-        toolchain_type):
+        bmis):
+    toolchain = ctx.toolchains["//ll:toolchain_type"]
+
     file_out, cdf_out = precompile_interface_outputs(ctx, in_file)
 
     ctx.actions.run(
@@ -200,10 +193,9 @@ def precompile_interface(
             headers,
             bmis,
             [],  # No local BMIs. we are producing these here.
-            toolchain_type,
         ),
-        executable = ctx.toolchains[toolchain_type].cpp_driver,
-        tools = compile_object_tools(ctx, toolchain_type),
+        executable = toolchain.cpp_driver,
+        tools = compile_object_tools(ctx),
         arguments = compile_object_args(
             ctx,
             in_file,
@@ -222,69 +214,74 @@ def precompile_interface(
             "no-sandbox": "1",
         },
         use_default_shell_env = False,
-        env = compile_object_environment(ctx, toolchain_type),
+        env = compile_object_environment(ctx),
     )
     return file_out, cdf_out
 
-def create_archive_library(
-        ctx,
-        in_files,
-        toolchain_type):
+def create_archive_library(ctx, in_files):
+    toolchain = ctx.toolchains["//ll:toolchain_type"]
+
     out_file = create_archive_library_outputs(ctx)
     in_files = create_archive_library_inputs(ctx, in_files)
 
     ctx.actions.run(
         outputs = [out_file],
         inputs = in_files,
-        executable = ctx.toolchains[toolchain_type].archiver,
+        executable = toolchain.archiver,
         arguments = create_archive_library_args(ctx, in_files, out_file),
         mnemonic = "LlCreateArchiveLibrary",
         use_default_shell_env = False,
     )
     return out_file
 
-def link_shared_object(ctx, in_files, toolchain_type):
+def link_shared_object(ctx, in_files):
+    toolchain = ctx.toolchains["//ll:toolchain_type"]
+
     out_file = link_shared_object_outputs(ctx)
-    in_files = link_shared_object_inputs(ctx, in_files, toolchain_type)
+    in_files = link_shared_object_inputs(ctx, in_files)
 
     ctx.actions.run(
         outputs = [out_file],
         inputs = in_files,
-        executable = ctx.toolchains[toolchain_type].linker_wrapper,
+        executable = toolchain.linker_wrapper,
         arguments = link_executable_args(
             ctx,
             in_files,
             out_file,
             mode = "shared_object",
         ),
-        tools = linking_tools(ctx, toolchain_type),
+        tools = linking_tools(ctx),
         mnemonic = "LlLinkSharedObject",
         use_default_shell_env = False,
     )
     return out_file
 
-def link_bitcode_library(ctx, in_files, toolchain_type):
+def link_bitcode_library(ctx, in_files):
+    toolchain = ctx.toolchains["//ll:toolchain_type"]
+
     out_file = link_bitcode_library_outputs(ctx)
 
     ctx.actions.run(
         outputs = [out_file],
         inputs = link_bitcode_library_inputs(ctx, in_files),
-        executable = ctx.toolchains[toolchain_type].bitcode_linker,
+        executable = toolchain.bitcode_linker,
         arguments = link_bitcode_library_args(ctx, in_files, out_file),
         mnemonic = "LlLinkBitcodeLibrary",
         use_default_shell_env = False,
     )
     return out_file
 
-def link_executable(ctx, in_files, toolchain_type):
+def link_executable(ctx, in_files):
+    toolchain = ctx.toolchains["//ll:toolchain_type"]
+
     out_file = link_executable_outputs(ctx)
-    in_files = link_executable_inputs(ctx, in_files, toolchain_type)
+    in_files = link_executable_inputs(ctx, in_files)
 
     ctx.actions.run(
         outputs = [out_file],
         inputs = in_files,
-        executable = ctx.toolchains[toolchain_type].linker_wrapper,
-        tools = linking_tools(ctx, toolchain_type),
+        executable = toolchain.linker_wrapper,
+        tools = linking_tools(ctx),
         arguments = link_executable_args(
             ctx,
             in_files,
@@ -293,6 +290,6 @@ def link_executable(ctx, in_files, toolchain_type):
         ),
         mnemonic = "LlLinkExecutable",
         use_default_shell_env = False,
-        env = compile_object_environment(ctx, toolchain_type),
+        env = compile_object_environment(ctx),
     )
     return out_file

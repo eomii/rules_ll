@@ -10,6 +10,8 @@ load(
 load("//ll:outputs.bzl", "ll_artifact")
 
 def _ll_compilation_database(ctx):
+    toolchain = ctx.toolchains["//ll:toolchain_type"]
+
     inputs = []
 
     for target in ctx.attr.targets:
@@ -114,8 +116,8 @@ with open(sys.argv[1], 'r') as in_file, open(sys.argv[2], 'w') as out_file:
 echo "Running clang-tidy. This may take a while.";
 {runner} -j $(nproc) -quiet -use-color -clang-tidy-binary={binary} -config-file={config};
 """.format(
-        runner = ctx.toolchains["//ll:toolchain_type"].clang_tidy_runner.short_path,
-        binary = ctx.toolchains["//ll:toolchain_type"].clang_tidy.short_path,
+        runner = toolchain.clang_tidy_runner.short_path,
+        binary = toolchain.clang_tidy.short_path,
         config = ctx.file.config.short_path,
     )
     ctx.actions.write(clang_tidy_runner, runfile_content, is_executable = True)
@@ -123,8 +125,8 @@ echo "Running clang-tidy. This may take a while.";
     runfiles = ctx.runfiles(
         files = [
             cdb,
-            ctx.toolchains["//ll:toolchain_type"].clang_tidy_runner,
-            ctx.toolchains["//ll:toolchain_type"].clang_tidy,
+            toolchain.clang_tidy_runner,
+            toolchain.clang_tidy,
             ctx.file.config,
         ],
     )

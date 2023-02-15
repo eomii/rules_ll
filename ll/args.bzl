@@ -70,6 +70,8 @@ def compile_object_args(
         angled_includes,
         bmis,
         internal_bmis):
+    toolchain = ctx.toolchains["//ll:toolchain_type"]
+
     args = ctx.actions.args()
 
     args.add("-fcolor-diagnostics")
@@ -167,7 +169,7 @@ def compile_object_args(
 
         # TODO: This is obviously not the way lol.
         args.add(
-            ctx.toolchains["//ll:toolchain_type"].omp_header[0].dirname,
+            toolchain.omp_header[0].dirname,
             format = "-I%s",
         )
 
@@ -217,12 +219,12 @@ def compile_object_args(
             args.add("-U__SIZEOF_FLOAT128__")
 
         args.add(
-            ctx.toolchains["//ll:toolchain_type"].hipsycl_plugin,
+            toolchain.hipsycl_plugin,
             format = "-fplugin=%s",
         )
 
         args.add(
-            ctx.toolchains["//ll:toolchain_type"].hipsycl_plugin,
+            toolchain.hipsycl_plugin,
             format = "-fpass-plugin=%s",
         )
 
@@ -289,14 +291,14 @@ def compile_object_args(
     #    specify these in the compile_flags attribute.
     if ctx.attr.depends_on_llvm:
         args.add_all(
-            ctx.toolchains["//ll:toolchain_type"].llvm_project_sources,
+            toolchain.llvm_project_sources,
             map_each = _construct_llvm_include_path,
             format_each = "-idirafter%s",
             uniquify = True,
             omit_if_empty = True,
         )
         args.add_all(
-            ctx.toolchains["//ll:toolchain_type"].llvm_project_sources,
+            toolchain.llvm_project_sources,
             map_each = _construct_clang_include_path,
             format_each = "-idirafter%s",
             uniquify = True,
@@ -362,16 +364,14 @@ def compile_object_args(
     return [args]
 
 def link_executable_args(ctx, in_files, out_file, mode):
+    toolchain = ctx.toolchains["//ll:toolchain_type"]
+
     args = ctx.actions.args()
 
     # Provide host and device linker info to clang-linker-wrapper.
     args.add("--cuda-path={}".format(Label("@cuda_nvcc").workspace_root))
     args.add("--host-triple=x86_64-pc-linux-gnu")
-    args.add(
-        "--linker-path={}".format(
-            ctx.toolchains["//ll:toolchain_type"].linker.path,
-        ),
-    )
+    args.add("--linker-path={}".format(toolchain.linker.path))
 
     args.add("--color-diagnostics")
 
@@ -402,26 +402,26 @@ def link_executable_args(ctx, in_files, out_file, mode):
         args.add("--whole-archive")
 
     if ctx.coverage_instrumented and ctx.attr.compilation_mode != "bootstrap":
-        args.add_all(ctx.toolchains["//ll:toolchain_type"].profile)
+        args.add_all(toolchain.profile)
 
     if "address" in ctx.attr.sanitize and "leak" in ctx.attr.sanitize:
         fail("AddressSanitizer and LeakSanitizer are mutually exclusive.")
 
     if "address" in ctx.attr.sanitize:
-        args.add_all(ctx.toolchains["//ll:toolchain_type"].address_sanitizer)
+        args.add_all(toolchain.address_sanitizer)
 
     if "leak" in ctx.attr.sanitize:
-        args.add_all(ctx.toolchains["//ll:toolchain_type"].leak_sanitizer)
+        args.add_all(toolchain.leak_sanitizer)
 
     if "memory" in ctx.attr.sanitize:
-        args.add_all(ctx.toolchains["//ll:toolchain_type"].memory_sanitizer)
+        args.add_all(toolchain.memory_sanitizer)
 
     if "thread" in ctx.attr.sanitize:
-        args.add_all(ctx.toolchains["//ll:toolchain_type"].thread_sanitizer)
+        args.add_all(toolchain.thread_sanitizer)
 
     if "undefined_behavior" in ctx.attr.sanitize:
         args.add_all(
-            ctx.toolchains["//ll:toolchain_type"].undefined_behavior_sanitizer,
+            toolchain.undefined_behavior_sanitizer,
         )
 
     if has_sanitizers or ctx.coverage_instrumented:
@@ -457,11 +457,11 @@ def link_executable_args(ctx, in_files, out_file, mode):
 
         # # TODO(aaronmondal): This is broken, but we should make this work.
         # args.add(
-        #     ctx.toolchains["//ll:toolchain_type"].cuda_libdir.short_path[3:],
+        #     toolchain.cuda_libdir.short_path[3:],
         #     format = "-rpath=$ORIGIN/../../external/%s",
         # )
         # args.add(
-        #     ctx.toolchains["//ll:toolchain_type"].cuda_nvvm.short_path[3:],
+        #     toolchain.cuda_nvvm.short_path[3:],
         #     format = "-rpath=$ORIGIN/../../external/%s",
         # )
 
@@ -481,7 +481,7 @@ def link_executable_args(ctx, in_files, out_file, mode):
     if ctx.attr.compilation_mode in ["sycl_cpu", "sycl_cuda"]:
         args.add("-lomp")
         sycl_shared_libraries = [
-            ctx.toolchains["//ll:toolchain_type"].hipsycl_runtime,
+            toolchain.hipsycl_runtime,
         ]
         args.add_all(
             sycl_shared_libraries,

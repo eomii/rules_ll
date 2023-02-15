@@ -6,6 +6,8 @@ Implements the `ll_coverage_test` rule.
 load("//ll:outputs.bzl", "ll_artifact")
 
 def _ll_coverage_impl(ctx):
+    toolchain = ctx.toolchains["//ll:toolchain_type"]
+
     # Generate the raw profile data.
     profraw = ctx.actions.declare_file(
         ll_artifact(ctx, ctx.executable.target.basename + ".profraw"),
@@ -34,7 +36,7 @@ def _ll_coverage_impl(ctx):
     ctx.actions.run(
         inputs = [profraw],
         outputs = [profdata],
-        executable = ctx.toolchains["//ll:toolchain_type"].profdata,
+        executable = toolchain.profdata,
         arguments = [args],
     )
 
@@ -65,7 +67,7 @@ def _ll_coverage_impl(ctx):
             inputs = [profdata, ctx.executable.target],
             tools = ctx.attr.target[InstrumentedFilesInfo].instrumented_files,
             outputs = [html],
-            executable = ctx.toolchains["//ll:toolchain_type"].cov,
+            executable = toolchain.cov,
             arguments = [args],
         )
         maybe_html = [html]
@@ -78,7 +80,7 @@ def _ll_coverage_impl(ctx):
     runfile_content = """#!/bin/bash
 {cov} report {executable} -instr-profile={profdata}
 """.format(
-        cov = ctx.toolchains["//ll:toolchain_type"].cov.short_path,
+        cov = toolchain.cov.short_path,
         executable = ctx.executable.target.short_path,
         profdata = profdata.short_path,
     )
@@ -87,7 +89,7 @@ def _ll_coverage_impl(ctx):
     runfiles = ctx.runfiles(
         files = [
             profdata,
-            ctx.toolchains["//ll:toolchain_type"].cov,
+            toolchain.cov,
             ctx.executable.target,
         ],
         transitive_files = ctx.attr.target[InstrumentedFilesInfo].instrumented_files,

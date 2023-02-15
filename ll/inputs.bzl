@@ -30,9 +30,9 @@ def compile_object_inputs(
         in_file,
         headers,
         interfaces,
-        local_interfaces,
-        toolchain_type):
+        local_interfaces):
     config = ctx.attr.toolchain_configuration[BuildSettingInfo].value
+    toolchain = ctx.toolchains["//ll:toolchain_type"]
 
     interfaces = depset([file for file, _ in interfaces.to_list()])
     local_interfaces = [file for file, _ in local_interfaces]
@@ -42,44 +42,44 @@ def compile_object_inputs(
         local_interfaces +
         ctx.files.srcs +
         ctx.files.data +
-        ctx.toolchains[toolchain_type].builtin_includes
+        toolchain.builtin_includes
     )
     transitive = [headers, interfaces]
 
     if ctx.attr.depends_on_llvm:
-        transitive.append(ctx.toolchains[toolchain_type].llvm_project_sources)
+        transitive.append(toolchain.llvm_project_sources)
 
     if config == "bootstrap":
         return depset(direct, transitive = transitive)
 
     direct += (
-        ctx.toolchains[toolchain_type].cpp_stdhdrs +
-        ctx.toolchains[toolchain_type].unwind_library +
-        ctx.toolchains[toolchain_type].cpp_abihdrs +
-        ctx.toolchains[toolchain_type].compiler_runtime
+        toolchain.cpp_stdhdrs +
+        toolchain.unwind_library +
+        toolchain.cpp_abihdrs +
+        toolchain.compiler_runtime
     )
 
     if config == "cpp":
         pass
     elif config == "omp_cpu":
         direct += (
-            ctx.toolchains[toolchain_type].omp_header
+            toolchain.omp_header
         )
     elif config == "cuda_nvptx":
         direct += (
-            ctx.toolchains[toolchain_type].cuda_toolkit
+            toolchain.cuda_toolkit
         )
     elif config == "hip_nvptx":
         direct += (
-            ctx.toolchains[toolchain_type].cuda_toolkit +
-            ctx.toolchains[toolchain_type].hip_libraries
+            toolchain.cuda_toolkit +
+            toolchain.hip_libraries
         )
     elif config == "sycl_cpu":
-        direct += ctx.toolchains[toolchain_type].hipsycl_hdrs
+        direct += toolchain.hipsycl_hdrs
     elif config == "sycl_cuda":
         direct += (
-            ctx.toolchains[toolchain_type].cuda_toolkit +
-            ctx.toolchains[toolchain_type].hipsycl_hdrs
+            toolchain.cuda_toolkit +
+            toolchain.hipsycl_hdrs
         )
     else:
         fail("Cannot compile with this toolchain config: {}.".format(config))
@@ -95,8 +95,9 @@ def create_archive_library_inputs(ctx, in_files):
         ],
     )
 
-def link_executable_inputs(ctx, in_files, toolchain_type):
+def link_executable_inputs(ctx, in_files):
     config = ctx.attr.toolchain_configuration[BuildSettingInfo].value
+    toolchain = ctx.toolchains["//ll:toolchain_type"]
 
     direct = (
         in_files +
@@ -109,52 +110,52 @@ def link_executable_inputs(ctx, in_files, toolchain_type):
         return depset(direct)
 
     direct += (
-        ctx.toolchains[toolchain_type].cpp_stdlib +
-        ctx.toolchains[toolchain_type].unwind_library +
-        ctx.toolchains[toolchain_type].cpp_abilib +
-        ctx.toolchains[toolchain_type].compiler_runtime
+        toolchain.cpp_stdlib +
+        toolchain.unwind_library +
+        toolchain.cpp_abilib +
+        toolchain.compiler_runtime
     )
 
     if ctx.attr.depends_on_llvm:
-        direct += ctx.toolchains[toolchain_type].llvm_project_artifacts
+        direct += toolchain.llvm_project_artifacts
 
     if config == "cpp":
         pass
     elif config == "omp_cpu":
         direct += (
-            ctx.toolchains[toolchain_type].libomp
+            toolchain.libomp
         )
     elif config == "cuda_nvptx":
         direct += (
-            ctx.toolchains[toolchain_type].cuda_toolkit +
-            [ctx.toolchains[toolchain_type].cuda_libdir] +
-            [ctx.toolchains[toolchain_type].cuda_bindir] +
-            [ctx.toolchains[toolchain_type].cuda_nvvm]
+            toolchain.cuda_toolkit +
+            [toolchain.cuda_libdir] +
+            [toolchain.cuda_bindir] +
+            [toolchain.cuda_nvvm]
         )
 
     elif config == "hip_nvptx":
         direct += (
-            ctx.toolchains[toolchain_type].cuda_toolkit +
-            [ctx.toolchains[toolchain_type].cuda_libdir] +
-            [ctx.toolchains[toolchain_type].cuda_bindir] +
-            [ctx.toolchains[toolchain_type].cuda_nvvm] +
-            ctx.toolchains[toolchain_type].hip_libraries
+            toolchain.cuda_toolkit +
+            [toolchain.cuda_libdir] +
+            [toolchain.cuda_bindir] +
+            [toolchain.cuda_nvvm] +
+            toolchain.hip_libraries
         )
     elif config == "sycl_cpu":
         direct += [
-            ctx.toolchains[toolchain_type].hipsycl_runtime,
-            ctx.toolchains[toolchain_type].hipsycl_omp_backend,
+            toolchain.hipsycl_runtime,
+            toolchain.hipsycl_omp_backend,
         ]
     elif config == "sycl_cuda":
         direct += (
-            ctx.toolchains[toolchain_type].cuda_toolkit +
+            toolchain.cuda_toolkit +
             [
-                ctx.toolchains[toolchain_type].cuda_bindir,
-                ctx.toolchains[toolchain_type].cuda_libdir,
-                ctx.toolchains[toolchain_type].cuda_nvvm,
-                ctx.toolchains[toolchain_type].hipsycl_runtime,
-                # ctx.toolchains[toolchain_type].hipsycl_omp_backend,
-                # ctx.toolchains[toolchain_type].hipsycl_cuda_backend,
+                toolchain.cuda_bindir,
+                toolchain.cuda_libdir,
+                toolchain.cuda_nvvm,
+                toolchain.hipsycl_runtime,
+                # toolchain.hipsycl_omp_backend,
+                # toolchain.hipsycl_cuda_backend,
             ]
         )
     else:
@@ -163,13 +164,11 @@ def link_executable_inputs(ctx, in_files, toolchain_type):
     return depset(direct)
 
 def link_bitcode_library_inputs(ctx, in_files):
-    if "//ll:toolchain_type" in ctx.toolchains:
-        return depset(in_files + ctx.files.deps + ctx.files.bitcode_libraries)
-    else:
-        fail("Can only link bitcode when using \"//ll:toolchain_type\".")
+    return depset(in_files + ctx.files.deps + ctx.files.bitcode_libraries)
 
-def link_shared_object_inputs(ctx, in_files, toolchain_type):
+def link_shared_object_inputs(ctx, in_files):
     config = ctx.attr.toolchain_configuration[BuildSettingInfo].value
+    toolchain = ctx.toolchains["//ll:toolchain_type"]
 
     direct = (
         in_files +
@@ -178,33 +177,33 @@ def link_shared_object_inputs(ctx, in_files, toolchain_type):
     )
 
     if ctx.attr.depends_on_llvm:
-        direct += ctx.toolchains["//ll:toolchain_type"].llvm_project_artifacts
+        direct += toolchain.llvm_project_artifacts
 
     if config == "bootstrap":
         return depset(direct)
 
     direct += (
-        ctx.toolchains[toolchain_type].cpp_stdlib +
-        ctx.toolchains[toolchain_type].cpp_abilib +
-        ctx.toolchains[toolchain_type].unwind_library +
-        ctx.toolchains[toolchain_type].compiler_runtime
+        toolchain.cpp_stdlib +
+        toolchain.cpp_abilib +
+        toolchain.unwind_library +
+        toolchain.compiler_runtime
     )
 
     if config == "cpp":
         pass
     elif config == "cuda_nvptx":
         direct += (
-            ctx.toolchains[toolchain_type].cuda_toolkit +
-            [ctx.toolchains[toolchain_type].cuda_libdir] +
-            [ctx.toolchains[toolchain_type].cuda_nvvm]
+            toolchain.cuda_toolkit +
+            [toolchain.cuda_libdir] +
+            [toolchain.cuda_nvvm]
         )
 
     elif config == "hip_nvptx":
         direct += (
-            ctx.toolchains[toolchain_type].cuda_toolkit +
-            [ctx.toolchains[toolchain_type].cuda_libdir] +
-            [ctx.toolchains[toolchain_type].cuda_nvvm] +
-            ctx.toolchains[toolchain_type].hip_libraries
+            toolchain.cuda_toolkit +
+            [toolchain.cuda_libdir] +
+            [toolchain.cuda_nvvm] +
+            toolchain.hip_libraries
         )
     else:
         fail("Cannot link shared objects with this toolchain.")

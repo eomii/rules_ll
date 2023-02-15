@@ -24,9 +24,6 @@ load("//ll:providers.bzl", "LlCompilationDatabaseFragmentsInfo", "LlInfo")
 load("//ll:transitions.bzl", "ll_transition")
 load("@bazel_skylib//lib:paths.bzl", "paths")
 
-def select_toolchain_type(ctx):
-    return "//ll:toolchain_type"
-
 def _ll_library_impl(ctx):
     for emit in ctx.attr.emit:
         if emit not in [
@@ -62,7 +59,6 @@ def _ll_library_impl(ctx):
         includes = includes,
         angled_includes = angled_includes,
         bmis = bmis,
-        toolchain_type = select_toolchain_type(ctx),
         binary = False,
     )
 
@@ -76,7 +72,6 @@ def _ll_library_impl(ctx):
         angled_includes = angled_includes,
         bmis = bmis,
         internal_bmis = internal_bmis + exposed_bmis,
-        toolchain_type = select_toolchain_type(ctx),
     )
 
     out_cdfs += cdfs
@@ -86,7 +81,6 @@ def _ll_library_impl(ctx):
             create_archive_library(
                 ctx,
                 in_files = intermediary_objects,
-                toolchain_type = select_toolchain_type(ctx),
             ),
         )
     if "shared_object" in ctx.attr.emit:
@@ -94,7 +88,6 @@ def _ll_library_impl(ctx):
             link_shared_object(
                 ctx,
                 in_files = intermediary_objects,
-                toolchain_type = select_toolchain_type(ctx),
             ),
         )
     if "bitcode" in ctx.attr.emit:
@@ -102,7 +95,6 @@ def _ll_library_impl(ctx):
             link_bitcode_library(
                 ctx,
                 in_files = intermediary_objects,
-                toolchain_type = select_toolchain_type(ctx),
             ),
         )
     if "objects" in ctx.attr.emit:
@@ -191,7 +183,6 @@ def _ll_binary_impl(ctx):
         includes = includes,
         angled_includes = angled_includes,
         bmis = bmis,
-        toolchain_type = select_toolchain_type(ctx),
         binary = True,
     )
 
@@ -205,14 +196,12 @@ def _ll_binary_impl(ctx):
         angled_includes = angled_includes,
         bmis = bmis,
         internal_bmis = internal_bmis + exposed_bmis,
-        toolchain_type = select_toolchain_type(ctx),
     )
     out_cdfs += cdfs
 
     out_file = link_executable(
         ctx,
         in_files = intermediary_objects + ctx.files.deps,
-        toolchain_type = select_toolchain_type(ctx),
     )
 
     transitive_cdfs = [

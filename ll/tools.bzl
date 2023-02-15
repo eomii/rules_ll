@@ -5,21 +5,22 @@ Tools used by actions.
 
 load("@bazel_skylib//rules:common_settings.bzl", "BuildSettingInfo")
 
-def compile_object_tools(ctx, toolchain_type):
+def compile_object_tools(ctx):
     config = ctx.attr.toolchain_configuration[BuildSettingInfo].value
+    toolchain = ctx.toolchains["//ll:toolchain_type"]
 
     tools = [
-        ctx.toolchains[toolchain_type].symbolizer,
+        toolchain.symbolizer,
     ]
 
     if config == "bootstrap":
         return tools
 
     tools += [
-        ctx.toolchains[toolchain_type].bitcode_linker,
-        ctx.toolchains[toolchain_type].linker,
-        ctx.toolchains[toolchain_type].linker_executable,
-        ctx.toolchains[toolchain_type].linker_wrapper,
+        toolchain.bitcode_linker,
+        toolchain.linker,
+        toolchain.linker_executable,
+        toolchain.linker_wrapper,
     ]
 
     if config in ["cpp", "omp_cpu"]:
@@ -27,36 +28,37 @@ def compile_object_tools(ctx, toolchain_type):
 
     if config in ["cuda_nvptx", "hip_nvptx"]:
         return tools + [
-            ctx.toolchains[toolchain_type].offload_bundler,
-            ctx.toolchains[toolchain_type].offload_packager,
+            toolchain.offload_bundler,
+            toolchain.offload_packager,
         ]
 
     if config in ["sycl_cpu", "sycl_cuda"]:
         return tools + [
-            ctx.toolchains[toolchain_type].hipsycl_plugin,
-            ctx.toolchains[toolchain_type].offload_bundler,
-            ctx.toolchains[toolchain_type].offload_packager,
-            ctx.toolchains[toolchain_type].hipsycl_omp_backend,
-            ctx.toolchains[toolchain_type].hipsycl_cuda_backend,
+            toolchain.hipsycl_plugin,
+            toolchain.offload_bundler,
+            toolchain.offload_packager,
+            toolchain.hipsycl_omp_backend,
+            toolchain.hipsycl_cuda_backend,
         ]
 
     fail("Unregognized toolchain toolchain configuration.")
 
-def linking_tools(ctx, toolchain_type):
+def linking_tools(ctx):
     config = ctx.attr.toolchain_configuration[BuildSettingInfo].value
+    toolchain = ctx.toolchains["//ll:toolchain_type"]
 
     if config == "bootstrap":
         fail("Cannot link with bootstrap toolchain.")
 
     return [
-        ctx.toolchains[toolchain_type].linker,
-        ctx.toolchains[toolchain_type].linker_executable,
-        ctx.toolchains[toolchain_type].linker_wrapper,
+        toolchain.linker,
+        toolchain.linker_executable,
+        toolchain.linker_wrapper,
     ] + (
-        ctx.toolchains[toolchain_type].address_sanitizer +
-        ctx.toolchains[toolchain_type].leak_sanitizer +
-        ctx.toolchains[toolchain_type].thread_sanitizer +
-        ctx.toolchains[toolchain_type].memory_sanitizer +
-        ctx.toolchains[toolchain_type].undefined_behavior_sanitizer +
-        ctx.toolchains[toolchain_type].profile
+        toolchain.address_sanitizer +
+        toolchain.leak_sanitizer +
+        toolchain.thread_sanitizer +
+        toolchain.memory_sanitizer +
+        toolchain.undefined_behavior_sanitizer +
+        toolchain.profile
     )
