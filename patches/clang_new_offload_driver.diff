@@ -2,7 +2,7 @@ diff --git a/utils/bazel/llvm-project-overlay/clang/BUILD.bazel b/utils/bazel/ll
 index efe71e73a5e9..4ed1c91a4f27 100644
 --- a/utils/bazel/llvm-project-overlay/clang/BUILD.bazel
 +++ b/utils/bazel/llvm-project-overlay/clang/BUILD.bazel
-@@ -2126,6 +2126,67 @@ cc_binary(
+@@ -2126,6 +2126,68 @@ cc_binary(
      ],
  )
  
@@ -62,6 +62,7 @@ index efe71e73a5e9..4ed1c91a4f27 100644
 +        "//llvm:Object",
 +        "//llvm:Option",
 +        "//llvm:Support",
++        "//llvm:TargetParser",
 +        "//llvm:CodeGen",
 +        "//llvm:LTO",
 +    ],

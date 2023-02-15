@@ -131,7 +131,7 @@ index 7206e7f1f..4192b26be 100644
  
  package(
      default_visibility = ["//visibility:public"],
-@@ -8,39 +9,69 @@ package(
+@@ -8,39 +9,70 @@ package(
      licenses = ["notice"],
  )
  
@@ -219,6 +219,7 @@ index 7206e7f1f..4192b26be 100644
      copts = [
          "-Wno-shift-negative-value",
          "-DZ_HAVE_UNISTD_H",
++        "-Wno-deprecated-non-prototype",
      ],
 +    defines = select({
 +        ":llvm_zlib_disabled": [],
@@ -351,11 +352,12 @@ diff --git a/utils/bazel/llvm-project-overlay/lld/BUILD.bazel b/utils/bazel/llvm
 index 22ec3cfad..505644900 100644
 --- a/utils/bazel/llvm-project-overlay/lld/BUILD.bazel
 +++ b/utils/bazel/llvm-project-overlay/lld/BUILD.bazel
-@@ -107,6 +107,7 @@ cc_library(
-         "//llvm:Support",
+@@ -108,6 +108,7 @@ cc_library(
+         "//llvm:TargetParser",
          "//llvm:TransformUtils",
          "//llvm:config",
 +        "@llvm_zlib//:zlib",
      ],
  )
  
+
