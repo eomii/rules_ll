@@ -9,8 +9,8 @@ load("//ll:providers.bzl", "LlInfo")
 def expand_includes(ctx, include_string):
     """Prefixes `include_path` with the path to the workspace root.
 
-    If `include_path` starts with `$(GENERATED)`, it is additionally prefixed
-    with the path `GENDIR`.
+    If `include_path` starts with `$(GENERATED)`, prefixes with the`GENDIR`
+    path as well.
     """
 
     if include_string.startswith("$(GENERATED)"):

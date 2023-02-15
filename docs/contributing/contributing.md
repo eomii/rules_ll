@@ -4,10 +4,10 @@
 
 ## Pre-commit hooks
 
-Install the pre-commit hooks and verify that all checks pass:
+From within a `rules_ll` shell, install the pre-commit hooks and verify that all
+checks pass:
 
 ```bash
-pip install -r requirements.txt
 pre-commit install
 pre-commit run --all-files
 ```
@@ -22,7 +22,8 @@ After this, they run automatically on every local commit.
 mkdocs serve
 ```
 
-If you change anything in the `ll/` directory, regenerate the API reference docs:
+If you change docstrings in the `ll/` directory, regenerate the API reference
+docs:
 
 ```bash
 ./generate_docs.sh
@@ -30,16 +31,8 @@ If you change anything in the `ll/` directory, regenerate the API reference docs
 
 This populates the `docs/reference/` directory with the updated markdown files.
 
-The text quality linter Vale has no pre-commit integration at the moment. You
-can run these commands to set it up instead:
-
-```bash
-wget https://github.com/errata-ai/vale/releases/download/v2.21.3/vale_2.21.3_Linux_64-bit.tar.gz
-mkdir bin && tar -xvzf vale_2.21.3_Linux_64-bit.tar.gz -C bin
-export PATH=./bin:"$PATH"
-```
-
-Sync Vale once to get the right packages:
+The text quality linter Vale has no pre-commit integration at the moment. Sync
+Vale manually once to get the right packages:
 
 ```bash
 vale sync

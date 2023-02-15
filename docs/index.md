@@ -16,7 +16,7 @@ programming.
 ## Links
 
 - [Discord Server](https://discord.gg/Ax67899n4y)
-- [Quickstart](quickstart/quickstart.md)
+- [Setup](setup/setup.md)
 - [Examples](https://github.com/eomii/rules_ll/tree/main/examples)
 - [Guides](guides/index.md)
 

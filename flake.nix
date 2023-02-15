@@ -61,11 +61,13 @@
           pkgs.bazelisk
           pkgs.git
           pkgs.python3
+          pkgs.python310Packages.mkdocs-material
           pkgs.pre-commit
           pkgs.which
           pkgs.llvmPackages_15.lld
           pkgs.libxcrypt
           pkgs.glibc
+          pkgs.vale
           bazel
           ll
         ];

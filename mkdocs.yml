@@ -36,7 +36,7 @@ markdown_extensions:
 -   pymdownx.details
 nav:
 -   Home: index.md
--   Quickstart: quickstart/quickstart.md
+-   Setup: setup/setup.md
 -   Rules: rules/defs.md
 -   Guides:
     -   guides/index.md
@@ -50,13 +50,13 @@ nav:
     -   //ll:args: reference/args.md
     -   //ll:attributes: reference/attributes.md
     -   //ll:compilation_database: reference/compilation_database.md
+    -   //ll:coverage: reference/coverage.md
     -   //ll:defs: reference/defs.md
     -   //ll:driver: reference/driver.md
     -   //ll:environment: reference/environment.md
     -   //ll:inputs: reference/inputs.md
     -   //ll:ll: reference/ll.md
     -   //ll:llvm_project_deps: reference/llvm_project_deps.md
-    -   //ll:os: reference/os.md
     -   //ll:outputs: reference/outputs.md
     -   //ll:providers: reference/providers.md
     -   //ll:resolve_rule_inputs: reference/resolve_rule_inputs.md

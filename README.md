@@ -3,15 +3,36 @@
 An upstream Clang/LLVM-based Bazel toolchain for modern C++ and heterogeneous
 programming.
 
-[**Quickstart**](https://ll.eomii.org/quickstart/quickstart)
+## ✨ Setup
 
-## Links
+1. Install the [nix package manager](https://nixos.org/download.html).
+
+2. Enable [flakes](https://nixos.wiki/wiki/Flakes) in your nix installation.
+
+3. Enter a `rules_ll` development shell:
+
+    ```bash
+    nix develop github:eomii/rules_ll
+    ```
+
+4. Create a `rules_ll` compatible workspace:
+
+    ```bash
+    ll init
+    ```
+
+See [`rules_ll/examples`](https://github.com/eomii/rules_ll/tree/main/examples)
+for examples. The [Guides](https://ll.eomii.org/guides) explain more advanced
+features of `rules_ll` such as Clang-Tidy, C++ modules, and heterogeneous
+programming.
+
+## 🔗 Links
 
 - [Discord Server](https://discord.gg/Ax67899n4y)
 - [Examples](https://github.com/eomii/rules_ll/tree/main/examples)
 - [Guides](https://ll.eomii.org/guides)
 
-## ✨ C++ modules
+## 🚀 C++ modules
 
 Use the `interfaces` and `exposed_interfaces` attributes to build C++ modules.
 [C++ modules guide](https://ll.eomii.org/guides/modules).
