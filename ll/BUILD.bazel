@@ -2,6 +2,7 @@ load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
 load("@bazel_skylib//rules:common_settings.bzl", "string_flag")
 load("@stardoc//stardoc:stardoc.bzl", "stardoc")
 load("//ll:toolchain.bzl", "ll_toolchain")
+load("//ll:transitions.bzl", "COMPILATION_MODES")
 
 LL_MODULES = [
     "actions",
@@ -88,66 +89,19 @@ platform(
 string_flag(
     name = "current_ll_toolchain_configuration",
     build_setting_default = "cpp",
-    values = [
-        "bootstrap",
-        "cpp",
-        "omp_cpu",
-        "cuda_nvptx",
-        "hip_nvptx",
-        "sycl_cpu",
-        "sycl_cuda",
-    ],
+    values = COMPILATION_MODES,
     visibility = ["//visibility:public"],
 )
 
-config_setting(
-    name = "bootstrap",
-    flag_values = {
-        ":current_ll_toolchain_configuration": "bootstrap",
-    },
-)
-
-config_setting(
-    name = "cpp",
-    flag_values = {
-        ":current_ll_toolchain_configuration": "cpp",
-    },
-)
-
-config_setting(
-    name = "omp_cpu",
-    flag_values = {
-        ":current_ll_toolchain_configuration": "omp_cpu",
-    },
-)
-
-config_setting(
-    name = "cuda_nvptx",
-    flag_values = {
-        ":current_ll_toolchain_configuration": "cuda_nvptx",
-    },
-)
-
-config_setting(
-    name = "hip_nvptx",
-    flag_values = {
-        ":current_ll_toolchain_configuration": "hip_nvptx",
-    },
-)
-
-config_setting(
-    name = "sycl_cpu",
-    flag_values = {
-        ":current_ll_toolchain_configuration": "sycl_cpu",
-    },
-)
-
-config_setting(
-    name = "sycl_cuda",
-    flag_values = {
-        ":current_ll_toolchain_configuration": "sycl_cuda",
-    },
-)
+[
+    config_setting(
+        name = mode,
+        flag_values = {
+            ":current_ll_toolchain_configuration": mode,
+        },
+    )
+    for mode in COMPILATION_MODES
+]
 
 # Toolchain Types.
 
