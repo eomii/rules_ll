@@ -10,8 +10,8 @@ Every function in this file effectively wraps `ctx.actions.run` or
 
 ## `compile_object`
 
-<pre><code>compile_object(<a href="#compile_object-ctx">ctx</a>, <a href="#compile_object-in_file">in_file</a>, <a href="#compile_object-headers">headers</a>, <a href="#compile_object-defines">defines</a>, <a href="#compile_object-includes">includes</a>, <a href="#compile_object-angled_includes">angled_includes</a>, <a href="#compile_object-bmis">bmis</a>, <a href="#compile_object-internal_bmis">internal_bmis</a>,
-               <a href="#compile_object-toolchain_type">toolchain_type</a>)</code></pre>
+<pre><code>compile_object(<a href="#compile_object-ctx">ctx</a>, <a href="#compile_object-in_file">in_file</a>, <a href="#compile_object-headers">headers</a>, <a href="#compile_object-defines">defines</a>, <a href="#compile_object-includes">includes</a>, <a href="#compile_object-angled_includes">angled_includes</a>, <a href="#compile_object-bmis">bmis</a>, <a href="#compile_object-internal_bmis">internal_bmis</a>)</code></pre>
+
 
 `parameters`
 
@@ -25,15 +25,14 @@ Every function in this file effectively wraps `ctx.actions.run` or
 | <a id="compile_object-angled_includes"></a>`angled_includes` |  |
 | <a id="compile_object-bmis"></a>`bmis` |  |
 | <a id="compile_object-internal_bmis"></a>`internal_bmis` |  |
-| <a id="compile_object-toolchain_type"></a>`toolchain_type` |  |
 
 
 <a id="compile_objects"></a>
 
 ## `compile_objects`
 
-<pre><code>compile_objects(<a href="#compile_objects-ctx">ctx</a>, <a href="#compile_objects-headers">headers</a>, <a href="#compile_objects-defines">defines</a>, <a href="#compile_objects-includes">includes</a>, <a href="#compile_objects-angled_includes">angled_includes</a>, <a href="#compile_objects-bmis">bmis</a>, <a href="#compile_objects-internal_bmis">internal_bmis</a>,
-                <a href="#compile_objects-toolchain_type">toolchain_type</a>)</code></pre>
+<pre><code>compile_objects(<a href="#compile_objects-ctx">ctx</a>, <a href="#compile_objects-headers">headers</a>, <a href="#compile_objects-defines">defines</a>, <a href="#compile_objects-includes">includes</a>, <a href="#compile_objects-angled_includes">angled_includes</a>, <a href="#compile_objects-bmis">bmis</a>, <a href="#compile_objects-internal_bmis">internal_bmis</a>)</code></pre>
+
 
 `parameters`
 
@@ -46,14 +45,14 @@ Every function in this file effectively wraps `ctx.actions.run` or
 | <a id="compile_objects-angled_includes"></a>`angled_includes` |  |
 | <a id="compile_objects-bmis"></a>`bmis` |  |
 | <a id="compile_objects-internal_bmis"></a>`internal_bmis` |  |
-| <a id="compile_objects-toolchain_type"></a>`toolchain_type` |  |
 
 
 <a id="create_archive_library"></a>
 
 ## `create_archive_library`
 
-<pre><code>create_archive_library(<a href="#create_archive_library-ctx">ctx</a>, <a href="#create_archive_library-in_files">in_files</a>, <a href="#create_archive_library-toolchain_type">toolchain_type</a>)</code></pre>
+<pre><code>create_archive_library(<a href="#create_archive_library-ctx">ctx</a>, <a href="#create_archive_library-in_files">in_files</a>)</code></pre>
+
 
 `parameters`
 
@@ -61,14 +60,14 @@ Every function in this file effectively wraps `ctx.actions.run` or
 | :---- | :---------- |
 | <a id="create_archive_library-ctx"></a>`ctx` |  |
 | <a id="create_archive_library-in_files"></a>`in_files` |  |
-| <a id="create_archive_library-toolchain_type"></a>`toolchain_type` |  |
 
 
 <a id="link_bitcode_library"></a>
 
 ## `link_bitcode_library`
 
-<pre><code>link_bitcode_library(<a href="#link_bitcode_library-ctx">ctx</a>, <a href="#link_bitcode_library-in_files">in_files</a>, <a href="#link_bitcode_library-toolchain_type">toolchain_type</a>)</code></pre>
+<pre><code>link_bitcode_library(<a href="#link_bitcode_library-ctx">ctx</a>, <a href="#link_bitcode_library-in_files">in_files</a>)</code></pre>
+
 
 `parameters`
 
@@ -76,14 +75,14 @@ Every function in this file effectively wraps `ctx.actions.run` or
 | :---- | :---------- |
 | <a id="link_bitcode_library-ctx"></a>`ctx` |  |
 | <a id="link_bitcode_library-in_files"></a>`in_files` |  |
-| <a id="link_bitcode_library-toolchain_type"></a>`toolchain_type` |  |
 
 
 <a id="link_executable"></a>
 
 ## `link_executable`
 
-<pre><code>link_executable(<a href="#link_executable-ctx">ctx</a>, <a href="#link_executable-in_files">in_files</a>, <a href="#link_executable-toolchain_type">toolchain_type</a>)</code></pre>
+<pre><code>link_executable(<a href="#link_executable-ctx">ctx</a>, <a href="#link_executable-in_files">in_files</a>)</code></pre>
+
 
 `parameters`
 
@@ -91,14 +90,14 @@ Every function in this file effectively wraps `ctx.actions.run` or
 | :---- | :---------- |
 | <a id="link_executable-ctx"></a>`ctx` |  |
 | <a id="link_executable-in_files"></a>`in_files` |  |
-| <a id="link_executable-toolchain_type"></a>`toolchain_type` |  |
 
 
 <a id="link_shared_object"></a>
 
 ## `link_shared_object`
 
-<pre><code>link_shared_object(<a href="#link_shared_object-ctx">ctx</a>, <a href="#link_shared_object-in_files">in_files</a>, <a href="#link_shared_object-toolchain_type">toolchain_type</a>)</code></pre>
+<pre><code>link_shared_object(<a href="#link_shared_object-ctx">ctx</a>, <a href="#link_shared_object-in_files">in_files</a>)</code></pre>
+
 
 `parameters`
 
@@ -106,15 +105,14 @@ Every function in this file effectively wraps `ctx.actions.run` or
 | :---- | :---------- |
 | <a id="link_shared_object-ctx"></a>`ctx` |  |
 | <a id="link_shared_object-in_files"></a>`in_files` |  |
-| <a id="link_shared_object-toolchain_type"></a>`toolchain_type` |  |
 
 
 <a id="precompile_interface"></a>
 
 ## `precompile_interface`
 
-<pre><code>precompile_interface(<a href="#precompile_interface-ctx">ctx</a>, <a href="#precompile_interface-in_file">in_file</a>, <a href="#precompile_interface-headers">headers</a>, <a href="#precompile_interface-defines">defines</a>, <a href="#precompile_interface-includes">includes</a>, <a href="#precompile_interface-angled_includes">angled_includes</a>, <a href="#precompile_interface-bmis">bmis</a>,
-                     <a href="#precompile_interface-toolchain_type">toolchain_type</a>)</code></pre>
+<pre><code>precompile_interface(<a href="#precompile_interface-ctx">ctx</a>, <a href="#precompile_interface-in_file">in_file</a>, <a href="#precompile_interface-headers">headers</a>, <a href="#precompile_interface-defines">defines</a>, <a href="#precompile_interface-includes">includes</a>, <a href="#precompile_interface-angled_includes">angled_includes</a>, <a href="#precompile_interface-bmis">bmis</a>)</code></pre>
+
 
 `parameters`
 
@@ -127,15 +125,14 @@ Every function in this file effectively wraps `ctx.actions.run` or
 | <a id="precompile_interface-includes"></a>`includes` |  |
 | <a id="precompile_interface-angled_includes"></a>`angled_includes` |  |
 | <a id="precompile_interface-bmis"></a>`bmis` |  |
-| <a id="precompile_interface-toolchain_type"></a>`toolchain_type` |  |
 
 
 <a id="precompile_interfaces"></a>
 
 ## `precompile_interfaces`
 
-<pre><code>precompile_interfaces(<a href="#precompile_interfaces-ctx">ctx</a>, <a href="#precompile_interfaces-headers">headers</a>, <a href="#precompile_interfaces-defines">defines</a>, <a href="#precompile_interfaces-includes">includes</a>, <a href="#precompile_interfaces-angled_includes">angled_includes</a>, <a href="#precompile_interfaces-bmis">bmis</a>, <a href="#precompile_interfaces-toolchain_type">toolchain_type</a>,
-                      <a href="#precompile_interfaces-binary">binary</a>)</code></pre>
+<pre><code>precompile_interfaces(<a href="#precompile_interfaces-ctx">ctx</a>, <a href="#precompile_interfaces-headers">headers</a>, <a href="#precompile_interfaces-defines">defines</a>, <a href="#precompile_interfaces-includes">includes</a>, <a href="#precompile_interfaces-angled_includes">angled_includes</a>, <a href="#precompile_interfaces-bmis">bmis</a>, <a href="#precompile_interfaces-binary">binary</a>)</code></pre>
+
 
 `parameters`
 
@@ -147,5 +144,4 @@ Every function in this file effectively wraps `ctx.actions.run` or
 | <a id="precompile_interfaces-includes"></a>`includes` |  |
 | <a id="precompile_interfaces-angled_includes"></a>`angled_includes` |  |
 | <a id="precompile_interfaces-bmis"></a>`bmis` |  |
-| <a id="precompile_interfaces-toolchain_type"></a>`toolchain_type` |  |
 | <a id="precompile_interfaces-binary"></a>`binary` |  |

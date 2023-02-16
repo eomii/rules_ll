@@ -97,16 +97,3 @@ Example:
 | <a id="ll_library-shared_object_link_flags"></a>`shared_object_link_flags` | <code>List of strings</code>, optional, defaults to <code>[]</code>.<br><br> Flags for the linker when emitting shared objects.<br><br>        Used if <code>emit</code> includes <code>"shared_object"</code>.   |
 | <a id="ll_library-srcs"></a>`srcs` | <code><a href="https://bazel.build/docs/build-ref.html#labels">List of labels</a></code>, optional, defaults to <code>[]</code>.<br><br> Compilable source files for this target.<br><br>        Allowed file extensions: <code>[".ll", ".o", ".S", ".c", ".cl", ".cpp"]</code>.<br><br>        Place headers in the <code>hdrs</code> attribute.   |
 | <a id="ll_library-toolchain_configuration"></a>`toolchain_configuration` | <code><a href="https://bazel.build/docs/build-ref.html#labels">Label</a></code>, optional, defaults to <code>//ll:current_ll_toolchain_configuration</code>.<br><br> TODO   |
-
-
-<a id="select_toolchain_type"></a>
-
-## `select_toolchain_type`
-
-<pre><code>select_toolchain_type(<a href="#select_toolchain_type-ctx">ctx</a>)</code></pre>
-
-`parameters`
-
-| Name  | Description |
-| :---- | :---------- |
-| <a id="select_toolchain_type-ctx"></a>`ctx` |  |

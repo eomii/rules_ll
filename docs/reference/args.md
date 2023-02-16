@@ -7,8 +7,9 @@ The functions that create `arguments` for use in rule actions.
 
 ## `compile_object_args`
 
-<pre><code>compile_object_args(<a href="#compile_object_args-ctx">ctx</a>, <a href="#compile_object_args-in_file">in_file</a>, <a href="#compile_object_args-out_file">out_file</a>, <a href="#compile_object_args-cdf">cdf</a>, <a href="#compile_object_args-headers">headers</a>, <a href="#compile_object_args-defines">defines</a>, <a href="#compile_object_args-includes">includes</a>, <a href="#compile_object_args-angled_includes">angled_includes</a>, <a href="#compile_object_args-bmis">bmis</a>,
+<pre><code>compile_object_args(<a href="#compile_object_args-ctx">ctx</a>, <a href="#compile_object_args-in_file">in_file</a>, <a href="#compile_object_args-out_file">out_file</a>, <a href="#compile_object_args-cdf">cdf</a>, <a href="#compile_object_args-defines">defines</a>, <a href="#compile_object_args-includes">includes</a>, <a href="#compile_object_args-angled_includes">angled_includes</a>, <a href="#compile_object_args-bmis">bmis</a>,
                     <a href="#compile_object_args-internal_bmis">internal_bmis</a>)</code></pre>
+
 
 `parameters`
 
@@ -18,7 +19,6 @@ The functions that create `arguments` for use in rule actions.
 | <a id="compile_object_args-in_file"></a>`in_file` |  |
 | <a id="compile_object_args-out_file"></a>`out_file` |  |
 | <a id="compile_object_args-cdf"></a>`cdf` |  |
-| <a id="compile_object_args-headers"></a>`headers` |  |
 | <a id="compile_object_args-defines"></a>`defines` |  |
 | <a id="compile_object_args-includes"></a>`includes` |  |
 | <a id="compile_object_args-angled_includes"></a>`angled_includes` |  |
@@ -31,6 +31,7 @@ The functions that create `arguments` for use in rule actions.
 ## `create_archive_library_args`
 
 <pre><code>create_archive_library_args(<a href="#create_archive_library_args-ctx">ctx</a>, <a href="#create_archive_library_args-in_files">in_files</a>, <a href="#create_archive_library_args-out_file">out_file</a>)</code></pre>
+
 
 `parameters`
 
@@ -47,6 +48,7 @@ The functions that create `arguments` for use in rule actions.
 
 <pre><code>link_bitcode_library_args(<a href="#link_bitcode_library_args-ctx">ctx</a>, <a href="#link_bitcode_library_args-in_files">in_files</a>, <a href="#link_bitcode_library_args-out_file">out_file</a>)</code></pre>
 
+
 `parameters`
 
 | Name  | Description |
@@ -61,6 +63,7 @@ The functions that create `arguments` for use in rule actions.
 ## `link_executable_args`
 
 <pre><code>link_executable_args(<a href="#link_executable_args-ctx">ctx</a>, <a href="#link_executable_args-in_files">in_files</a>, <a href="#link_executable_args-out_file">out_file</a>, <a href="#link_executable_args-mode">mode</a>)</code></pre>
+
 
 `parameters`
 
@@ -77,6 +80,7 @@ The functions that create `arguments` for use in rule actions.
 ## `llvm_bindir_path`
 
 <pre><code>llvm_bindir_path(<a href="#llvm_bindir_path-ctx">ctx</a>)</code></pre>
+
 
 `parameters`
 

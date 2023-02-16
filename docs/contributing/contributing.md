@@ -22,7 +22,7 @@ After this, they run automatically on every local commit.
 mkdocs serve
 ```
 
-If you change docstrings in the `ll/` directory, regenerate the API reference
+If you change documentation in the `ll/` directory, regenerate the API reference
 docs:
 
 ```bash

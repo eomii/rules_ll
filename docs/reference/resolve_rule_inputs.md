@@ -12,6 +12,7 @@ Prefixes `include_path` with the path to the workspace root.
 
 If `include_path` starts with `$(GENERATED)`, prefixes with the`GENDIR`
 path as well.
+
 `parameters`
 
 | Name  | Description |
@@ -24,11 +25,11 @@ path as well.
 
 ## `resolve_rule_inputs`
 
-<pre><code>resolve_rule_inputs(<a href="#resolve_rule_inputs-ctx">ctx</a>, <a href="#resolve_rule_inputs-mode">mode</a>)</code></pre>
+<pre><code>resolve_rule_inputs(<a href="#resolve_rule_inputs-ctx">ctx</a>)</code></pre>
+
 
 `parameters`
 
 | Name  | Description |
 | :---- | :---------- |
 | <a id="resolve_rule_inputs-ctx"></a>`ctx` |  |
-| <a id="resolve_rule_inputs-mode"></a>`mode` |  |
