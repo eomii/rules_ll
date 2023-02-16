@@ -1,3 +1,4 @@
+---
 site_name: rules_ll
 site_url: https://ll.eomii.org/
 repo_name: eomii/rules_ll
@@ -23,44 +24,44 @@ theme:
     - navigation.sections
     - navigation.indexes
 extra_css:
--   stylesheets/extra.css
+  - stylesheets/extra.css
 markdown_extensions:
--   attr_list
--   def_list
--   md_in_html
--   admonition
--   pymdownx.highlight:
+  - attr_list
+  - def_list
+  - md_in_html
+  - admonition
+  - pymdownx.highlight:
       use_pygments: true
--   pymdownx.snippets
--   pymdownx.superfences
--   pymdownx.details
+  - pymdownx.snippets
+  - pymdownx.superfences
+  - pymdownx.details
 nav:
--   Home: index.md
--   Setup: setup/setup.md
--   Rules: rules/defs.md
--   Guides:
-    -   guides/index.md
-    -   Clang-tidy: guides/clang_tidy.md
-    -   C++ Modules: guides/modules.md
-    -   CUDA and HIP: guides/cuda_and_hip.md
-    -   Sanitizers: guides/sanitizers.md
--   Reference:
-    -   reference/index.md
-    -   //ll:actions: reference/actions.md
-    -   //ll:args: reference/args.md
-    -   //ll:attributes: reference/attributes.md
-    -   //ll:compilation_database: reference/compilation_database.md
-    -   //ll:coverage: reference/coverage.md
-    -   //ll:defs: reference/defs.md
-    -   //ll:driver: reference/driver.md
-    -   //ll:environment: reference/environment.md
-    -   //ll:inputs: reference/inputs.md
-    -   //ll:ll: reference/ll.md
-    -   //ll:llvm_project_deps: reference/llvm_project_deps.md
-    -   //ll:outputs: reference/outputs.md
-    -   //ll:providers: reference/providers.md
-    -   //ll:resolve_rule_inputs: reference/resolve_rule_inputs.md
-    -   //ll:toolchain: reference/toolchain.md
-    -   //ll:tools: reference/tools.md
-    -   //ll:transitions: reference/transitions.md
--   Contributing: contributing/contributing.md
+  - Home: index.md
+  - Setup: setup/setup.md
+  - Rules: rules/defs.md
+  - Guides:
+      - guides/index.md
+      - Clang-tidy: guides/clang_tidy.md
+      - C++ Modules: guides/modules.md
+      - CUDA and HIP: guides/cuda_and_hip.md
+      - Sanitizers: guides/sanitizers.md
+  - Reference:
+      - reference/index.md
+      - //ll:actions: reference/actions.md
+      - //ll:args: reference/args.md
+      - //ll:attributes: reference/attributes.md
+      - //ll:compilation_database: reference/compilation_database.md
+      - //ll:coverage: reference/coverage.md
+      - //ll:defs: reference/defs.md
+      - //ll:driver: reference/driver.md
+      - //ll:environment: reference/environment.md
+      - //ll:inputs: reference/inputs.md
+      - //ll:ll: reference/ll.md
+      - //ll:llvm_project_deps: reference/llvm_project_deps.md
+      - //ll:outputs: reference/outputs.md
+      - //ll:providers: reference/providers.md
+      - //ll:resolve_rule_inputs: reference/resolve_rule_inputs.md
+      - //ll:toolchain: reference/toolchain.md
+      - //ll:tools: reference/tools.md
+      - //ll:transitions: reference/transitions.md
+  - Contributing: contributing/contributing.md

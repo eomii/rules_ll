@@ -4,10 +4,11 @@
 
 ## Pre-commit hooks
 
-From within a `rules_ll` shell, install the pre-commit hooks and verify that all
-checks pass:
+From within a `rules_ll` shell, setup vale and the pre-commit hooks and verify
+that all checks pass:
 
 ```bash
+vale sync
 pre-commit install
 pre-commit run --all-files
 ```
@@ -30,16 +31,3 @@ docs:
 ```
 
 This populates the `docs/reference/` directory with the updated markdown files.
-
-The text quality linter Vale has no pre-commit integration at the moment. Sync
-Vale manually once to get the right packages:
-
-```bash
-vale sync
-```
-
-Then you can use it on the docs directory to find text inconsistencies:
-
-```bash
-vale docs
-```
