@@ -10,7 +10,7 @@ Every function in this file effectively wraps `ctx.actions.run` or
 
 ## `compile_object`
 
-<pre><code>compile_object(<a href="#compile_object-ctx">ctx</a>, <a href="#compile_object-in_file">in_file</a>, <a href="#compile_object-headers">headers</a>, <a href="#compile_object-defines">defines</a>, <a href="#compile_object-includes">includes</a>, <a href="#compile_object-angled_includes">angled_includes</a>, <a href="#compile_object-bmis">bmis</a>, <a href="#compile_object-internal_bmis">internal_bmis</a>)</code></pre>
+<pre><code>compile_object(<a href="#compile_object-ctx">ctx</a>, <a href="#compile_object-in_file">in_file</a>, <a href="#compile_object-headers">headers</a>, <a href="#compile_object-defines">defines</a>, <a href="#compile_object-includes">includes</a>, <a href="#compile_object-angled_includes">angled_includes</a>, <a href="#compile_object-bmis">bmis</a>)</code></pre>
 
 
 `parameters`
@@ -24,7 +24,6 @@ Every function in this file effectively wraps `ctx.actions.run` or
 | <a id="compile_object-includes"></a>`includes` |  |
 | <a id="compile_object-angled_includes"></a>`angled_includes` |  |
 | <a id="compile_object-bmis"></a>`bmis` |  |
-| <a id="compile_object-internal_bmis"></a>`internal_bmis` |  |
 
 
 <a id="compile_objects"></a>

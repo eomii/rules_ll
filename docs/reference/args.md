@@ -7,8 +7,7 @@ The functions that create `arguments` for use in rule actions.
 
 ## `compile_object_args`
 
-<pre><code>compile_object_args(<a href="#compile_object_args-ctx">ctx</a>, <a href="#compile_object_args-in_file">in_file</a>, <a href="#compile_object_args-out_file">out_file</a>, <a href="#compile_object_args-cdf">cdf</a>, <a href="#compile_object_args-defines">defines</a>, <a href="#compile_object_args-includes">includes</a>, <a href="#compile_object_args-angled_includes">angled_includes</a>, <a href="#compile_object_args-bmis">bmis</a>,
-                    <a href="#compile_object_args-internal_bmis">internal_bmis</a>)</code></pre>
+<pre><code>compile_object_args(<a href="#compile_object_args-ctx">ctx</a>, <a href="#compile_object_args-in_file">in_file</a>, <a href="#compile_object_args-out_file">out_file</a>, <a href="#compile_object_args-cdf">cdf</a>, <a href="#compile_object_args-defines">defines</a>, <a href="#compile_object_args-includes">includes</a>, <a href="#compile_object_args-angled_includes">angled_includes</a>, <a href="#compile_object_args-bmis">bmis</a>)</code></pre>
 
 
 `parameters`
@@ -23,7 +22,6 @@ The functions that create `arguments` for use in rule actions.
 | <a id="compile_object_args-includes"></a>`includes` |  |
 | <a id="compile_object_args-angled_includes"></a>`angled_includes` |  |
 | <a id="compile_object_args-bmis"></a>`bmis` |  |
-| <a id="compile_object_args-internal_bmis"></a>`internal_bmis` |  |
 
 
 <a id="create_archive_library_args"></a>

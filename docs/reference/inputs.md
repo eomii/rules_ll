@@ -21,7 +21,7 @@ Action inputs for rules.
 
 ## `compile_object_inputs`
 
-<pre><code>compile_object_inputs(<a href="#compile_object_inputs-ctx">ctx</a>, <a href="#compile_object_inputs-in_file">in_file</a>, <a href="#compile_object_inputs-headers">headers</a>, <a href="#compile_object_inputs-interfaces">interfaces</a>, <a href="#compile_object_inputs-local_interfaces">local_interfaces</a>)</code></pre>
+<pre><code>compile_object_inputs(<a href="#compile_object_inputs-ctx">ctx</a>, <a href="#compile_object_inputs-in_file">in_file</a>, <a href="#compile_object_inputs-headers">headers</a>, <a href="#compile_object_inputs-interfaces">interfaces</a>)</code></pre>
 
 
 `parameters`
@@ -32,7 +32,6 @@ Action inputs for rules.
 | <a id="compile_object_inputs-in_file"></a>`in_file` |  |
 | <a id="compile_object_inputs-headers"></a>`headers` |  |
 | <a id="compile_object_inputs-interfaces"></a>`interfaces` |  |
-| <a id="compile_object_inputs-local_interfaces"></a>`local_interfaces` |  |
 
 
 <a id="create_archive_library_inputs"></a>
