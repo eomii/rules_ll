@@ -1,43 +1,44 @@
+---
 repos:
--   repo: https://github.com/pre-commit/pre-commit-hooks
+  - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.1.0
     hooks:
-    -   id: trailing-whitespace
+      - id: trailing-whitespace
         exclude: ^patches/
-    -   id: end-of-file-fixer
+      - id: end-of-file-fixer
         exclude: ^patches/
-    -   id: fix-byte-order-marker
-    -   id: mixed-line-ending
-    -   id: check-yaml
-    -   id: check-case-conflict
-    -   id: detect-private-key
+      - id: fix-byte-order-marker
+      - id: mixed-line-ending
+      - id: check-yaml
+      - id: check-case-conflict
+      - id: detect-private-key
 
--   repo: https://github.com/PyCQA/doc8
-    rev: 0.10.1
+  - repo: https://github.com/errata-ai/vale
+    rev: v2.23.0
     hooks:
-    -   id: doc8
-        name: doc8
-        description: This hook runs doc8 for linting docs
-        entry: python -m doc8
-        language: python
-        files: \.rst$
+      - id: vale
 
--   repo: https://github.com/jlebar/pre-commit-hooks.git
+  - repo: https://github.com/jlebar/pre-commit-hooks.git
     rev: fb5e481f35f5a9b32a06ccfc28b8d6dda4525f75
     hooks:
-      -   id: bazel-buildifier
+      - id: bazel-buildifier
 
--   repo: https://github.com/pre-commit/mirrors-clang-format
+  - repo: https://github.com/pre-commit/mirrors-clang-format
     rev: v15.0.4
     hooks:
-    -   id: clang-format
+      - id: clang-format
         exclude: ^(docs/|^llvm-project-overlay/)
 
--   repo: https://github.com/jackdewinter/pymarkdown
+  - repo: https://github.com/jackdewinter/pymarkdown
     rev: v0.9.8
     hooks:
-    -   id: pymarkdown
+      - id: pymarkdown
         exclude: ^(docs/reference/|docs/rules/)
         args:
           - --config=.pymarkdown.json
           - scan
+
+  - repo: https://github.com/adrienverge/yamllint.git
+    rev: v1.17.0
+    hooks:
+      - id: yamllint
