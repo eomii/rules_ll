@@ -66,7 +66,6 @@ def compile_objects(
             includes,
             angled_includes,
             bmis,
-            [],  # Internal BMIs can't depend on each other.
         )
         out_files.append(file_out)
         cdfs.append(cdf_out)
@@ -79,8 +78,7 @@ def compile_objects(
             defines,
             includes,
             angled_includes,
-            bmis,
-            internal_bmis,
+            depset(internal_bmis, transitive = [bmis]),
         )
         out_files.append(file_out)
         cdfs.append(cdf_out)
@@ -94,8 +92,7 @@ def compile_object(
         defines,
         includes,
         angled_includes,
-        bmis,
-        internal_bmis):
+        bmis):
     file_out, cdf_out = compile_object_outputs(ctx, in_file)
 
     ctx.actions.run(
@@ -105,7 +102,6 @@ def compile_object(
             in_file,
             headers,
             bmis,
-            internal_bmis,
         ),
         executable = compiler_driver(ctx, in_file),
         tools = compile_object_tools(ctx),
@@ -118,7 +114,6 @@ def compile_object(
             includes,
             angled_includes,
             bmis,
-            internal_bmis,
         ),
         mnemonic = "LlCompileObject",
         use_default_shell_env = False,
@@ -192,7 +187,6 @@ def precompile_interface(
             in_file,
             headers,
             bmis,
-            [],  # No local BMIs. we are producing these here.
         ),
         executable = toolchain.cpp_driver,
         tools = compile_object_tools(ctx),
@@ -205,7 +199,6 @@ def precompile_interface(
             includes,
             angled_includes,
             bmis,
-            [],  # No local BMIs. we are producing these here.
         ),
         mnemonic = "LlPrecomileModuleInterfaceUnit",
         execution_requirements = {

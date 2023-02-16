@@ -29,17 +29,14 @@ def compile_object_inputs(
         ctx,
         in_file,
         headers,
-        interfaces,
-        local_interfaces):
+        interfaces):
     config = ctx.attr.toolchain_configuration[BuildSettingInfo].value
     toolchain = ctx.toolchains["//ll:toolchain_type"]
 
     interfaces = depset([file for file, _ in interfaces.to_list()])
-    local_interfaces = [file for file, _ in local_interfaces]
 
     direct = (
         [in_file] +
-        local_interfaces +
         ctx.files.srcs +
         ctx.files.data +
         toolchain.builtin_includes

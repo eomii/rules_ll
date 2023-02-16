@@ -43,11 +43,6 @@ def _create_module_import(interface):
     out = "{}={}".format(module_name, file.path)
     return out
 
-def _create_local_module_import(interface):
-    file, _ = interface
-    out = "{}".format(file.path)
-    return out
-
 def _get_dirname(file):
     """Returns file.dirname."""
     return file.dirname
@@ -68,8 +63,7 @@ def compile_object_args(
         defines,
         includes,
         angled_includes,
-        bmis,
-        internal_bmis):
+        bmis):
     toolchain = ctx.toolchains["//ll:toolchain_type"]
 
     args = ctx.actions.args()
@@ -331,20 +325,6 @@ def compile_object_args(
     if out_file.extension == "pcm":
         args.add("-Xclang")
         args.add("-fmodules-embed-all-files")
-
-    # Load local module interfaces unconditionally without declaring a module
-    # name. When these are made available to downstream targets, they will be
-    # treated as modules. This issue is caused by `module M;` not implicitly
-    # declaring a dependency on `M` in the same way that `import M` would.
-    # TODO: This is probably a bug in Clang. Discussion at
-    #       https://github.com/llvm/llvm-project/issues/57293.
-    args.add_all(
-        internal_bmis,
-        map_each = _create_local_module_import,
-        format_each = "-fmodule-file=%s",
-        uniquify = True,
-        omit_if_empty = True,
-    )
 
     # Load modules conditionally by declaring the module name.
     args.add_all(
