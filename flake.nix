@@ -57,6 +57,7 @@
         # Toggle this to test building clang with clang and gcc host compilers.
         stdenv = pkgs.clang15Stdenv;
       } {
+        name = "rules_ll-shell";
         buildInputs = [
           pkgs.bazelisk
           pkgs.git
@@ -72,6 +73,7 @@
           ll
         ];
         shellHook = ''
+          unalias ll
           export LD=ld.lld
           alias ls='ls --color=auto'
         '';
