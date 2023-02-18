@@ -1,6 +1,3 @@
-# LLVM/Clang requires C++17. This will only configure the rules_cc toolchain.
-common --repo_env=BAZEL_CXXOPTS='-std=c++17:-O3'
-
 # Don't inherit PATH and LD_LIBERARY_PATH.
 common --incompatible_strict_action_env
 

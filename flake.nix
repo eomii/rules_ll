@@ -2,7 +2,9 @@
   description = "rules_ll development environment";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs";
+    # Temporary workaround.
+    # nixpkgs.url = "github:nixos/nixpkgs";
+    nixpkgs.url = "github:rrbutani/nixpkgs/fix/llvm-15-libcxx-linker-script-bug";
     flake-utils.url = "github:numtide/flake-utils";
   };
 
@@ -26,6 +28,11 @@
         LL_CFLAGS=''${LL_CFLAGS+$LL_CFLAGS:}$LL_NIX_CFLAGS_COMPILE
         LL_LDFLAGS=''${LL_LDFLAGS+$LL_LDFLAGS:}$LL_NIX_LDFLAGS
 
+        # Only used by rules_cc
+        BAZEL_CXXOPTS="-std=c++17:-O3:-nostdinc++:-nostdlib++:-isystem${pkgs.llvmPackages_15.libcxx.dev}/include/c++/v1"
+
+        BAZEL_LINKOPTS="-L${pkgs.llvmPackages_15.libcxx}/lib:-L${pkgs.llvmPackages_15.libcxxabi}/lib:-lc++:-Wl,-rpath,${pkgs.llvmPackages_15.libcxx}/lib,-rpath,${pkgs.llvmPackages_15.libcxxabi}/lib"
+
         if [[
             "$1" == "build" ||
             "$1" == "coverage" ||
@@ -35,6 +42,8 @@
             bazelisk $1 \
                 --action_env=LL_CFLAGS=$LL_CFLAGS \
                 --action_env=LL_LDFLAGS=$LL_LDFLAGS \
+                --action_env=BAZEL_CXXOPTS=$BAZEL_CXXOPTS \
+                --action_env=BAZEL_LINKOPTS=$BAZEL_LINKOPTS \
                 ''${@:2}
         else
             bazelisk $@
@@ -59,21 +68,29 @@
       } {
         name = "rules_ll-shell";
         buildInputs = [
+          pkgs.llvmPackages_15.clang
+          pkgs.llvmPackages_15.compiler-rt
+          pkgs.llvmPackages_15.libcxx
+          pkgs.llvmPackages_15.libcxxabi
+          pkgs.llvmPackages_15.libunwind
+          pkgs.llvmPackages_15.lld
+
           pkgs.bazelisk
           pkgs.git
           pkgs.python3
           pkgs.python310Packages.mkdocs-material
           pkgs.pre-commit
           pkgs.which
-          pkgs.llvmPackages_15.lld
           pkgs.libxcrypt
           pkgs.glibc
           pkgs.vale
+
           bazel
           ll
         ];
+
         shellHook = ''
-          unalias ll
+          # unalias ll
           export LD=ld.lld
           alias ls='ls --color=auto'
         '';
