@@ -271,9 +271,10 @@ def compile_object_args(
             # become system includes.
             format_each = "-isystem%s",
         )
-        args.add_all(
-            ctx.configuration.default_shell_env["LL_CFLAGS"].split(":"),
-        )
+        if ctx.configuration.default_shell_env.get("LL_CFLAGS") != None:
+            args.add_all(
+                ctx.configuration.default_shell_env["LL_CFLAGS"].split(":"),
+            )
         args.add(
             clang_builtin_include_path,
             format = "-idirafter%s",
@@ -407,8 +408,14 @@ def link_executable_args(ctx, in_files, out_file, mode):
     if has_sanitizers or ctx.coverage_instrumented:
         args.add("--no-whole-archive")
 
-    # Add dynamic linker.
-    args.add("-dynamic-linker=/lib64/ld-linux-x86-64.so.2")
+    # Add dynamic linker. When in a nix env, make sure to use the nix variant.
+    if ctx.configuration.default_shell_env.get("LL_DYNAMIC_LINKER") != None:
+        args.add(
+            ctx.configuration.default_shell_env["LL_DYNAMIC_LINKER"],
+            format = "--dynamic-linker=%s",
+        )
+    else:
+        args.add("-dynamic-linker=/lib64/ld-linux-x86-64.so.2")
 
     # Optimization.
     if ctx.var["COMPILATION_MODE"] != "dbg":

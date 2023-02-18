@@ -27,6 +27,7 @@
 
         LL_CFLAGS=''${LL_CFLAGS+$LL_CFLAGS:}$LL_NIX_CFLAGS_COMPILE
         LL_LDFLAGS=''${LL_LDFLAGS+$LL_LDFLAGS:}$LL_NIX_LDFLAGS
+        LL_DYNAMIC_LINKER=${pkgs.glibc}/lib/ld-linux-x86-64.so.2
 
         # Only used by rules_cc
         BAZEL_CXXOPTS="-std=c++17:-O3:-nostdinc++:-nostdlib++:-isystem${pkgs.llvmPackages_15.libcxx.dev}/include/c++/v1"
@@ -42,6 +43,7 @@
             bazelisk $1 \
                 --action_env=LL_CFLAGS=$LL_CFLAGS \
                 --action_env=LL_LDFLAGS=$LL_LDFLAGS \
+                --action_env=LL_DYNAMIC_LINKER=$LL_DYNAMIC_LINKER \
                 --action_env=BAZEL_CXXOPTS=$BAZEL_CXXOPTS \
                 --action_env=BAZEL_LINKOPTS=$BAZEL_LINKOPTS \
                 ''${@:2}
