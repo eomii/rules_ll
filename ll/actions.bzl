@@ -201,6 +201,12 @@ def precompile_interface(
             bmis,
         ),
         mnemonic = "LlPrecomileModuleInterfaceUnit",
+        execution_requirements = {
+            # Required so that module paths do not depend on the specific
+            # sandbox instance used during precompilation.
+            "no-sandbox": "1",
+        },
+        use_default_shell_env = False,
         env = compile_object_environment(ctx),
     )
     return file_out, cdf_out
