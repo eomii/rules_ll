@@ -232,11 +232,11 @@ def compile_object_args(
     args.add("-nostdinc")
     args.add("--gcc-toolchain=NONE")
 
-    clang_builtin_include_path = paths.join(
-        llvm_bindir_path(ctx),
-        "clang/staging/include",
-    )
-    # args.add(clang_builtin_include_path, format = "-resource-dir=%s")
+    # Builtin includes.
+    clang_resource_dir = paths.join(llvm_bindir_path(ctx), "clang/staging")
+    args.add(clang_resource_dir, format = "-resource-dir=%s")
+    if in_file.extension != "pcm":
+        args.add(clang_resource_dir, format = "-idirafter%s/include")
 
     # Includes. This reflects the order in which clang will search for included
     # files.
@@ -275,10 +275,6 @@ def compile_object_args(
             args.add_all(
                 ctx.configuration.default_shell_env["LL_CFLAGS"].split(":"),
             )
-        args.add(
-            clang_builtin_include_path,
-            format = "-idirafter%s",
-        )
 
     # 4. Search directories specified via -idirafter for quoted and angled
     #    includes. Since most users will not need this flag, there is no
