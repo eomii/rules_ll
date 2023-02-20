@@ -1,5 +1,7 @@
 bazel_dep(name="rules_ll", version="20230218.0")
 local_path_override(module_name = "rules_ll", path = "..")
 
+bazel_dep(name = "bazel_skylib", version = "1.4.1")
+
 # hipSYCL under development.
 # local_path_override(module_name = "hipsycl", path="/mnt/hipSYCL")

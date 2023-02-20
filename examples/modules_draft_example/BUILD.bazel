@@ -72,5 +72,6 @@ ll_binary(
     name = "modules_draft_example",
     srcs = ["main.cpp"],
     compile_flags = ["-std=c++20"],
+    visibility = ["@//:__pkg__"],
     deps = [":A"],
 )

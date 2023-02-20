@@ -21,4 +21,5 @@ ll_coverage_test(
     name = "coverage_example",
     size = "small",
     target = ":main",
+    visibility = ["@//:__pkg__"],
 )

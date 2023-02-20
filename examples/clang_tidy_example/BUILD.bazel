@@ -42,14 +42,15 @@ ll_compilation_database(
 )
 
 ll_compilation_database(
-    name = "clang_tidy_example",
-    config = "//:clang_tidy_config",
-    targets = [":executable"],
-)
-
-ll_compilation_database(
     name = "compilation_database_with_excludes",
     config = "//:clang_tidy_config",
     exclude = ["lib_1"],
     targets = [":executable"],
+)
+
+ll_compilation_database(
+    name = "clang_tidy_example",
+    config = "//:clang_tidy_config",
+    targets = [":executable"],
+    visibility = ["@//:__pkg__"],
 )

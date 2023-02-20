@@ -1,4 +1,6 @@
 load("@rules_ll//ll:defs.bzl", "ll_compilation_database")
+load("@bazel_skylib//rules:native_binary.bzl", "native_test")
+load("@bazel_skylib//rules:diff_test.bzl", "diff_test")
 
 filegroup(
     name = "clang_tidy_config",
@@ -22,5 +24,43 @@ ll_compilation_database(
         "//openmp_example",
         # "//sanitizers",  # Not clang-tidy conform.
         "//shared_library_example",
+    ],
+)
+
+# Tests start below.
+
+EXAMPLES = [
+    "format_example",
+    "frontend_action_example",
+    "modules_example",
+    "module_partition_example",
+    "openmp_example",
+    # "coverage_example",
+    # "sanitizers",
+    # "clang_tidy_example",
+    "shared_library_example",
+    "modules_draft_example",
+
+    # GPU tests.
+    # "cuda_example",
+    # "hip_example",
+    # "hip_rdc_example",
+]
+
+TESTS = [
+    native_test(
+        name = "{}_test".format(name),
+        src = "//{}".format(name),
+        out = "{}_test".format(name),
+        data = ["//{}".format(name)],
+    )
+    for name in EXAMPLES
+]
+
+test_suite(
+    name = "examples",
+    tests = [
+        "{}_test".format(name)
+        for name in EXAMPLES
     ],
 )
