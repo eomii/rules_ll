@@ -77,6 +77,7 @@
           pkgs.llvmPackages_15.libunwind
           pkgs.llvmPackages_15.lld
 
+          pkgs.shellcheck
           pkgs.bazelisk
           pkgs.git
           pkgs.python3

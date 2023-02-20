@@ -1,4 +1,4 @@
-#/bin/sh
+#!/bin/sh
 
 # Build docs_source.
 bazel build --noexperimental_enable_bzlmod //ll:docs

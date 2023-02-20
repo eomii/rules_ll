@@ -1,4 +1,4 @@
-!/bin/bash
+#!/bin/bash
 # Usage:
 #
 #     ./create_release.sh <tag>
@@ -13,27 +13,27 @@ TAG="$1";
 
 RELEASE_DIR=$TAG;
 
-ARTIFACT=$(printf "$TAG.zip");
+ARTIFACT=$(printf '%s.zip' "$TAG");
 
 ARTIFACT_URL=$(
-    printf 'https://github.com/eomii/rules_ll/archive/refs/tags/%s.zip' $TAG
+    printf 'https://github.com/eomii/rules_ll/archive/refs/tags/%s.zip' "$TAG"
 );
 
-STRIP_PREFIX=$(printf "rules_ll-%s" $TAG);
+STRIP_PREFIX=$(printf 'rules_ll-%s' "$TAG");
 
-mkdir $RELEASE_DIR;
+mkdir "$RELEASE_DIR";
 
-wget $ARTIFACT_URL;
+wget "$ARTIFACT_URL";
 
-unzip -p $ARTIFACT $STRIP_PREFIX/MODULE.bazel > $RELEASE_DIR/MODULE.bazel;
+unzip -p "$ARTIFACT" "$STRIP_PREFIX/MODULE.bazel" > "$RELEASE_DIR/MODULE.bazel";
 
-SHA256=$(cat $ARTIFACT | openssl sha256 -binary | openssl base64 -A);
+SHA256=$(openssl sha256 -binary "$ARTIFACT" | openssl base64 -A);
 
 printf '{
     "integrity": "sha256-%s",
     "strip_prefix": "%s",
     "url": "%s"
 }
-' $SHA256 $STRIP_PREFIX $ARTIFACT_URL > $RELEASE_DIR/source.json;
+' "$SHA256" "$STRIP_PREFIX" "$ARTIFACT_URL" > "$RELEASE_DIR/source.json";
 
-rm $ARTIFACT;
+rm "$ARTIFACT";

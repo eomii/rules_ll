@@ -42,3 +42,11 @@ repos:
     rev: v1.17.0
     hooks:
       - id: yamllint
+
+    # TODO: Use the official repo when this patch is merged.
+  - repo: https://github.com/taoufik07/shellcheck-precommit
+    rev: v0.8.0
+    hooks:
+      - id: shellcheck
+        args:
+          - --color=always
