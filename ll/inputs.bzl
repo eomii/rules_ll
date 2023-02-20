@@ -59,25 +59,15 @@ def compile_object_inputs(
     if config == "cpp":
         pass
     elif config == "omp_cpu":
-        direct += (
-            toolchain.omp_header
-        )
+        direct += toolchain.omp_header
     elif config == "cuda_nvptx":
-        direct += (
-            toolchain.cuda_toolkit
-        )
+        pass
     elif config == "hip_nvptx":
-        direct += (
-            toolchain.cuda_toolkit +
-            toolchain.hip_libraries
-        )
+        direct += toolchain.hip_libraries
     elif config == "sycl_cpu":
         direct += toolchain.hipsycl_hdrs
     elif config == "sycl_cuda":
-        direct += (
-            toolchain.cuda_toolkit +
-            toolchain.hipsycl_hdrs
-        )
+        direct += toolchain.hipsycl_hdrs
     else:
         fail("Cannot compile with this toolchain config: {}.".format(config))
 
@@ -119,42 +109,22 @@ def link_executable_inputs(ctx, in_files):
     if config == "cpp":
         pass
     elif config == "omp_cpu":
-        direct += (
-            toolchain.libomp
-        )
+        direct += toolchain.libomp
     elif config == "cuda_nvptx":
-        direct += (
-            toolchain.cuda_toolkit +
-            [toolchain.cuda_libdir] +
-            [toolchain.cuda_bindir] +
-            [toolchain.cuda_nvvm]
-        )
-
+        pass
     elif config == "hip_nvptx":
-        direct += (
-            toolchain.cuda_toolkit +
-            [toolchain.cuda_libdir] +
-            [toolchain.cuda_bindir] +
-            [toolchain.cuda_nvvm] +
-            toolchain.hip_libraries
-        )
+        direct += toolchain.hip_libraries
     elif config == "sycl_cpu":
         direct += [
             toolchain.hipsycl_runtime,
             toolchain.hipsycl_omp_backend,
         ]
     elif config == "sycl_cuda":
-        direct += (
-            toolchain.cuda_toolkit +
-            [
-                toolchain.cuda_bindir,
-                toolchain.cuda_libdir,
-                toolchain.cuda_nvvm,
-                toolchain.hipsycl_runtime,
-                # toolchain.hipsycl_omp_backend,
-                # toolchain.hipsycl_cuda_backend,
-            ]
-        )
+        direct += [
+            toolchain.hipsycl_runtime,
+            # toolchain.hipsycl_omp_backend,
+            # toolchain.hipsycl_cuda_backend,
+        ]
     else:
         fail("Cannot link with this toolchain.")
 
@@ -189,17 +159,9 @@ def link_shared_object_inputs(ctx, in_files):
     if config == "cpp":
         pass
     elif config == "cuda_nvptx":
-        direct += (
-            toolchain.cuda_toolkit +
-            [toolchain.cuda_libdir] +
-            [toolchain.cuda_nvvm]
-        )
-
+        pass
     elif config == "hip_nvptx":
         direct += (
-            toolchain.cuda_toolkit +
-            [toolchain.cuda_libdir] +
-            [toolchain.cuda_nvvm] +
             toolchain.hip_libraries
         )
     else:

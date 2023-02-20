@@ -17,17 +17,25 @@
   outputs = { self, nixpkgs, flake-utils, ... }:
     flake-utils.lib.eachDefaultSystem (system:
     let
-      pkgs = nixpkgs.legacyPackages.${system};
+      # pkgs = import nixpkgs.legacyPackages.${system} {
+      #   config = { allowUnfree = true; }; };
+      pkgs = import nixpkgs {
+        inherit system;
+        # legacyPackages = ${system};
+        config.allowUnfree = true;
+      };
       bazel = pkgs.writeShellScriptBin "bazel" ''
         # Add the nix cflags and ldflags to the Bazel action envs.
         # This is safe to do since the Nix environment is reproducible.
 
         LL_NIX_CFLAGS_COMPILE=`echo $NIX_CFLAGS_COMPILE | tr ' ' ':'`
-        LL_NIX_LDFLAGS=`echo $NIX_LDFLAGS | tr ' ' ':'`
+        LL_NIX_LDFLAGS=`echo $NIX_LDFLAGS_FOR_TARGET | tr ' ' ':'`
 
         LL_CFLAGS=''${LL_CFLAGS+$LL_CFLAGS:}$LL_NIX_CFLAGS_COMPILE
         LL_LDFLAGS=''${LL_LDFLAGS+$LL_LDFLAGS:}$LL_NIX_LDFLAGS
         LL_DYNAMIC_LINKER=${pkgs.glibc}/lib/ld-linux-x86-64.so.2
+        LL_CUDA=${pkgs.cudaPackages_12.cudatoolkit}
+        LL_CUDA_RPATH=${pkgs.linuxPackages_6_1.nvidia_x11}/lib
 
         # Only used by rules_cc
         BAZEL_CXXOPTS="-std=c++17:-O3:-nostdinc++:-nostdlib++:-isystem${pkgs.llvmPackages_15.libcxx.dev}/include/c++/v1"
@@ -44,6 +52,8 @@
                 --action_env=LL_CFLAGS=$LL_CFLAGS \
                 --action_env=LL_LDFLAGS=$LL_LDFLAGS \
                 --action_env=LL_DYNAMIC_LINKER=$LL_DYNAMIC_LINKER \
+                --action_env=LL_CUDA=$LL_CUDA \
+                --action_env=LL_CUDA_RPATH=$LL_CUDA_RPATH \
                 --action_env=BAZEL_CXXOPTS=$BAZEL_CXXOPTS \
                 --action_env=BAZEL_LINKOPTS=$BAZEL_LINKOPTS \
                 ''${@:2}
@@ -76,6 +86,9 @@
           pkgs.llvmPackages_15.libcxxabi
           pkgs.llvmPackages_15.libunwind
           pkgs.llvmPackages_15.lld
+
+          pkgs.linuxPackages_6_1.nvidia_x11
+          pkgs.cudaPackages_12.cudatoolkit
 
           pkgs.shellcheck
           pkgs.bazelisk

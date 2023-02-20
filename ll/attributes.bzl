@@ -405,21 +405,6 @@ LL_TOOLCHAIN_ATTRS = {
         providers = [LlInfo],
         # default = "@llvm-project//openmp:libomp",
     ),
-    "cuda_toolkit": attr.label_list(
-        doc = """The Nvidia CUDA toolkit files.
-
-        `rules_ll` still uses `clang` to compile CUDA device code.
-
-        Using this implies acceptance of Nvidia's license for CUDA.
-        """,
-        # default = [
-        #     "@cuda_cudart//:contents",
-        #     "@cuda_nvcc//:contents",
-        #     "@cuda_nvprof//:contents",
-        #     "@libcurand//:contents",
-        # ],
-        cfg = transition_to_cpp,
-    ),
     "hip_libraries": attr.label_list(
         doc = """The HIP libraries.
 

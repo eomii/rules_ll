@@ -176,20 +176,11 @@ def compile_object_args(
         args.add("-Wno-unknown-cuda-version")  # Will always be unknown.
         args.add("-xcuda")
         args.add("--offload-new-driver")
-        args.add(
-            Label("@cuda_nvcc").workspace_root,
-            format = "--cuda-path=%s",
-        )
-        args.add_all(
-            [
-                Label("@cuda_cudart").workspace_root,
-                Label("@cuda_cupti").workspace_root,
-                Label("@cuda_nvprof").workspace_root,
-                Label("@cuda_profiler_api").workspace_root,
-                Label("@libcurand").workspace_root,
-            ],
-            format_each = "-I%s/include",
-        )
+        if ctx.configuration.default_shell_env.get("LL_CUDA") != None:
+            args.add(
+                ctx.configuration.default_shell_env["LL_CUDA"],
+                format = "--cuda-path=%s",
+            )
     if ctx.attr.compilation_mode == "hip_nvptx":
         args.add_all(
             [
@@ -346,9 +337,16 @@ def link_executable_args(ctx, in_files, out_file, mode):
     args = ctx.actions.args()
 
     # Provide host and device linker info to clang-linker-wrapper.
-    args.add("--cuda-path={}".format(Label("@cuda_nvcc").workspace_root))
+    if ctx.configuration.default_shell_env.get("LL_CUDA") != None:
+        args.add(
+            ctx.configuration.default_shell_env["LL_CUDA"],
+            format = "--cuda-path=%s",
+        )
+
     args.add("--host-triple=x86_64-pc-linux-gnu")
     args.add("--linker-path={}".format(toolchain.linker.path))
+
+    args.add("--")
 
     args.add("--color-diagnostics")
 
@@ -434,26 +432,14 @@ def link_executable_args(ctx, in_files, out_file, mode):
         "sycl_cuda",
     ]:
         args.add("-lrt")
-        args.add(Label("@cuda_cudart").workspace_root, format = "-L%s/lib")
-        args.add(Label("@cuda_cupti").workspace_root, format = "-L%s/lib")
-        args.add(Label("@cuda_nvcc").workspace_root, format = "-L%s/nvvm/lib64")
-
-        # # TODO(aaronmondal): This is broken, but we should make this work.
-        # args.add(
-        #     toolchain.cuda_libdir.short_path[3:],
-        #     format = "-rpath=$ORIGIN/../../external/%s",
-        # )
-        # args.add(
-        #     toolchain.cuda_nvvm.short_path[3:],
-        #     format = "-rpath=$ORIGIN/../../external/%s",
-        # )
-
-        if ctx.label.name != "rt-backend-cuda":
-            # This will wrongly be remapped to a local cuda installation.
-            args.add("-l:stubs/libcuda.so")
-
-            args.add("-lcudart_static")
-            args.add("-lcupti_static")
+        args.add("-lcuda")
+        if ctx.configuration.default_shell_env.get("LL_CUDA_RPATH") != None:
+            args.add(
+                ctx.configuration.default_shell_env["LL_CUDA_RPATH"],
+                format = "-rpath=%s",
+            )
+        args.add("-lcudart_static")
+        args.add("-lcupti_static")
 
     # Additional system libraries.
     args.add("-lm")  # Math.

@@ -62,10 +62,4 @@ use_repo(
     rules_ll_dependencies,
     "hip",
     "hipamd",
-    "cuda_cudart",
-    "cuda_cupti",
-    "cuda_nvcc",
-    "cuda_nvprof",
-    "cuda_profiler_api",
-    "libcurand",
 )

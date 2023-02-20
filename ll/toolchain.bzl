@@ -14,29 +14,6 @@ def _ll_toolchain_impl(ctx):
         is_executable = True,
     )
 
-    # TODO: Workaround. Will likely be resolved in the Bazel 6.0 Release.
-    if ctx.files.cuda_toolkit != None:
-        cuda_toolkit = ctx.files.cuda_toolkit
-        cuda_libdir = ctx.actions.declare_symlink("cuda/lib")
-        ctx.actions.symlink(
-            output = cuda_libdir,
-            target_path = "{}/lib".format(Label("@cuda_cudart").workspace_root),
-        )
-        cuda_nvvm = ctx.actions.declare_symlink("cuda/lib64")
-        ctx.actions.symlink(
-            output = cuda_nvvm,
-            target_path = "{}/nvvm/lib64".format(Label("@cuda_nvcc").workspace_root),
-        )
-        cuda_bindir = ctx.actions.declare_symlink("cuda/bin")
-        ctx.actions.symlink(
-            output = cuda_bindir,
-            target_path = "{}/bin".format(Label("@cuda_nvcc").workspace_root),
-        )
-    else:
-        cuda_toolkit = []
-        cuda_libdir = None
-        cuda_bindir = None
-
     if ctx.file.hipsycl_runtime != None:
         hipsycl_runtime = ctx.actions.declare_file("hipSYCL-rt.so")
         ctx.actions.symlink(
@@ -111,10 +88,6 @@ def _ll_toolchain_impl(ctx):
             clang_tidy_runner = ctx.executable.clang_tidy_runner,
             symbolizer = ctx.executable.symbolizer,
             machine_code_tool = ctx.executable.machine_code_tool,
-            cuda_toolkit = cuda_toolkit,
-            cuda_libdir = cuda_libdir,
-            cuda_bindir = cuda_bindir,
-            cuda_nvvm = cuda_nvvm,
             hip_libraries = ctx.files.hip_libraries,
             hipsycl_plugin = ctx.file.hipsycl_plugin,
             hipsycl_runtime = hipsycl_runtime,
