@@ -7,7 +7,7 @@
 From within a `rules_ll` shell, setup vale and the pre-commit hooks and verify
 that all checks pass:
 
-```bash
+```bash title="(from within the rules_ll root directory)"
 vale sync
 pre-commit install
 pre-commit run --all-files
@@ -19,15 +19,28 @@ After this, they run automatically on every local commit.
 
 `rules_ll` uses `mkdocs` for the docs. To run a local development server:
 
-```bash
+```bash title="(from within the rules_ll root directory)"
 mkdocs serve
 ```
 
 If you change documentation in the `ll/` directory, regenerate the API reference
 docs:
 
-```bash
+```bash title="(from within the rules_ll root directory)"
 ./generate_docs.sh
 ```
 
 This populates the `docs/reference/` directory with the updated markdown files.
+
+## Tests
+
+The examples at `rules_ll/examples` are also the tests for the project. To test
+all examples:
+
+```bash title="(from within the rules_ll/examples directory)"
+bazel test //:examples
+```
+
+Since not everyone has a GPU compatible with `rules_ll`, heterogeneous examples
+are disabled by default. Make sure to enable them in `examples/BUILD.bazel` when
+changing logic affecting heterogeneous code paths.
