@@ -106,7 +106,9 @@
         ];
 
         shellHook = ''
-          # unalias ll
+          # Ensure that the ll command points to our ll binary.
+          [[ $(type -t ll) == "alias" ]] && unalias ll
+
           export LD=ld.lld
           alias ls='ls --color=auto'
         '';
