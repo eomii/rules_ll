@@ -5,7 +5,7 @@ you build CUDA and HIP code with minimal adjustments to your build files.
 
 At the moment `rules_ll` supports Nvidia GPUs.
 
-You can find full examples at [`rules_ll/examples`](https://github.com/eomii/rules_ll/tree/main/examples).
+You can find examples at [`rules_ll/examples`](https://github.com/eomii/rules_ll/tree/main/examples).
 
 !!! warning
 
@@ -16,7 +16,7 @@ You can find full examples at [`rules_ll/examples`](https://github.com/eomii/rul
 You do **not** need to install the CUDA Toolkit or HIP libraries to use the
 heterogeneous toolchains - `rules_ll` does that for you. You **do** need to
 install an Nvidia driver on the host system though. Since `rules_ll` bumps CUDA
-versions rather aggressively, that you use the latest drivers.
+versions rather aggressively, make sure to use the latest drivers.
 
 ## Example
 
@@ -28,7 +28,7 @@ Heterogeneous targets need to know about three things:
    Nvidia GPUs. Support for `amdgpu` (AMD GPUs) and `spirv` (Intel GPUs) coming
    soon.
 3. The offload architectures of the target GPU models. For Nvidia GPUs also
-   known as *compute capability*. Find a list of Nvidia GPU models and
+   known as *compute capability*. You can find a list of Nvidia GPU models and
    corresponding compute capabilities [here](https://developer.nvidia.com/cuda-gpus).
 
 The `ll_library` and `ll_binary` rules have a `compilation_mode` attribute which
@@ -39,13 +39,15 @@ you can set according to the scheme `<framework>_<target_arch>`:
 | CUDA      | NVPTX               | `cuda_nvptx`       |
 | HIP       | NVPTX               | `hip_nvptx`        |
 
-`rules_ll` doesn't have custom attributes to handle offloading architectures.
-Add an `--offload-arch` flag to `compile_flags` instead.
+To offload to specific architectures, add the corresponding architecture to
+`compile_flags` with the `--offload-arch` flag.
 
 For instance, to build HIP code for an Nvidia Titan V (which has compute
 capability 7.0), you could use a target like this:
 
-```python title="BUILD.bazel" hl_lines="4 6"
+```python title="BUILD.bazel" hl_lines="6 8"
+load("@rules_ll//ll:defs.bzl", "ll_binary")
+
 ll_binary(
    name = "my_hip_nvidia_target",
    srcs = ["main.cpp"],
@@ -53,6 +55,20 @@ ll_binary(
    compile_flags = [
       "--offload-arch=sm_70",
    ],
+)
+```
+
+To target all supported NVPTX offload architectures, use the `OFFLOAD_ALL_NVPTX`
+shortcut:
+
+```python title="BUILD.bazel" hl_lines="7"
+load("@rules_ll//ll:defs.bzl", "OFFLOAD_ALL_NVPTX", "ll_binary")
+
+ll_binary(
+   name = "my_hip_nvidia_target",
+   srcs = ["main.cpp"],
+   compilation_mode = "hip_nvptx",
+   compile_flags = OFFLOAD_ALL_NVPTX,
 )
 ```
 

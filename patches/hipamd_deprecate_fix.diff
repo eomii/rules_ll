@@ -1,5 +1,5 @@
 diff --git a/include/hip/nvidia_detail/nvidia_hip_runtime_api.h b/include/hip/nvidia_detail/nvidia_hip_runtime_api.h
-index 884754d1..05a5b86c 100644
+index 884754d1..a38b5b39 100644
 --- a/include/hip/nvidia_detail/nvidia_hip_runtime_api.h
 +++ b/include/hip/nvidia_detail/nvidia_hip_runtime_api.h
 @@ -36,6 +36,7 @@ THE SOFTWARE.
@@ -10,7 +10,41 @@ index 884754d1..05a5b86c 100644
  
  #ifdef __cplusplus
  extern "C" {
-@@ -2477,6 +2478,7 @@ inline static hipError_t hipFuncSetCacheConfig(const void* func, hipFuncCache_t
+@@ -2353,17 +2354,21 @@ inline static hipError_t hipCtxGetFlags(unsigned int* flags) {
+     return hipCUResultTohipError(cuCtxGetFlags(flags));
+ }
+ 
++#if CUDA_VERSION < CUDA_12000
+ inline static hipError_t hipCtxDetach(hipCtx_t ctx) {
+     return hipCUResultTohipError(cuCtxDetach(ctx));
+ }
++#endif  // CUDA_VERSION < CUDA_12000
+ 
+ inline static hipError_t hipDeviceGet(hipDevice_t* device, int ordinal) {
+     return hipCUResultTohipError(cuDeviceGet(device, ordinal));
+ }
+ 
++#if CUDA_VERSION < CUDA_12000
+ inline static hipError_t hipDeviceComputeCapability(int* major, int* minor, hipDevice_t device) {
+     return hipCUResultTohipError(cuDeviceComputeCapability(major, minor, device));
+ }
++#endif  // CUDA_VERSION < CUDA12000
+ 
+ inline static hipError_t hipDeviceGetName(char* name, int len, hipDevice_t device) {
+     return hipCUResultTohipError(cuDeviceGetName(name, len, device));
+@@ -2427,9 +2432,11 @@ inline static hipError_t hipModuleGetFunction(hipFunction_t* function, hipModule
+     return hipCUResultTohipError(cuModuleGetFunction(function, module, kname));
+ }
+ 
++#if CUDA_VERSION < CUDA_12000
+ inline static hipError_t hipModuleGetTexRef(hipTexRef* pTexRef, hipModule_t hmod, const char* name){
+     return hipCUResultTohipError(cuModuleGetTexRef(pTexRef, hmod, name));
+ }
++#endif  // CUDA_VERSION < CUDA_12000
+ 
+ inline static hipError_t hipFuncGetAttributes(hipFuncAttributes* attr, const void* func) {
+     return hipCUDAErrorTohipError(cudaFuncGetAttributes(attr, func));
+@@ -2477,6 +2484,7 @@ inline static hipError_t hipFuncSetCacheConfig(const void* func, hipFuncCache_t
      return hipCUDAErrorTohipError(cudaFuncSetCacheConfig(func, cacheConfig));
  }
  
@@ -18,7 +52,7 @@ index 884754d1..05a5b86c 100644
  __HIP_DEPRECATED inline static hipError_t hipBindTexture(size_t* offset,
                                                           struct textureReference* tex,
                                                           const void* devPtr,
-@@ -2490,6 +2492,7 @@ __HIP_DEPRECATED inline static hipError_t hipBindTexture2D(
+@@ -2490,6 +2498,7 @@ __HIP_DEPRECATED inline static hipError_t hipBindTexture2D(
      const hipChannelFormatDesc* desc, size_t width, size_t height, size_t pitch) {
      return hipCUDAErrorTohipError(cudaBindTexture2D(offset, tex, devPtr, desc, width, height, pitch));
  }
@@ -26,32 +60,61 @@ index 884754d1..05a5b86c 100644
  
  inline static hipChannelFormatDesc hipCreateChannelDesc(int x, int y, int z, int w,
                                                          hipChannelFormatKind f) {
-@@ -2522,10 +2525,12 @@ inline static hipError_t hipGetTextureObjectResourceDesc(hipResourceDesc* pResDe
+@@ -2522,10 +2531,12 @@ inline static hipError_t hipGetTextureObjectResourceDesc(hipResourceDesc* pResDe
      return hipCUDAErrorTohipError(cudaGetTextureObjectResourceDesc( pResDesc, textureObject));
  }
  
-+#if CUDA_VERSION < 12000
++#if CUDA_VERSION < CUDA_12000
  __HIP_DEPRECATED inline static hipError_t hipGetTextureAlignmentOffset(
      size_t* offset, const struct textureReference* texref) {
      return hipCUDAErrorTohipError(cudaGetTextureAlignmentOffset(offset,texref));
  }
-+#endif  // CUDA_VERSION < 12000
++#endif  // CUDA_VERSION < CUDA_12000
  
  inline static hipError_t hipGetChannelDesc(hipChannelFormatDesc* desc, hipArray_const_t array)
  {
-@@ -2676,6 +2681,7 @@ inline static hipError_t hipOccupancyMaxActiveBlocksPerMultiprocessorWithFlags(
+@@ -2539,10 +2550,12 @@ inline static hipError_t hipLaunchCooperativeKernel(const void* f, dim3 gridDim,
+             cudaLaunchCooperativeKernel(f, gridDim, blockDim, kernelParams, sharedMemBytes, stream));
+ }
+ 
++#if CUDA_VERSION < CUDA_12000
+ inline static hipError_t hipLaunchCooperativeKernelMultiDevice(hipLaunchParams* launchParamsList,
+                                                  int  numDevices, unsigned int  flags) {
+     return hipCUDAErrorTohipError(cudaLaunchCooperativeKernelMultiDevice(launchParamsList, numDevices, flags));
+ }
++#endif
+ 
+ #if CUDA_VERSION >= CUDA_11020
+ // ========================== HIP Stream Ordered Memory Allocator =================================
+@@ -2676,6 +2689,7 @@ inline static hipError_t hipOccupancyMaxActiveBlocksPerMultiprocessorWithFlags(
                                                                   blockSize, dynamicSMemSize, flags));
  }
  
-+#if CUDA_VERSION < 12000
++#if CUDA_VERSION < CUDA_12000
  template <class T, int dim, enum cudaTextureReadMode readMode>
  inline static hipError_t hipBindTexture(size_t* offset, const struct texture<T, dim, readMode>& tex,
                                          const void* devPtr, size_t size = UINT_MAX) {
-@@ -2718,6 +2724,7 @@ __HIP_DEPRECATED inline static hipError_t hipBindTextureToArray(
+@@ -2718,6 +2732,7 @@ __HIP_DEPRECATED inline static hipError_t hipBindTextureToArray(
      struct texture<T, dim, readMode>& tex, hipArray_const_t array) {
      return hipCUDAErrorTohipError(cudaBindTextureToArray(tex, array));
  }
-+#endif  // CUDA_VERSION < 12000
++#endif  // CUDA_VERSION < CUDA_12000
  
  template <class T>
  inline static hipChannelFormatDesc hipCreateChannelDesc() {
+@@ -2754,6 +2769,7 @@ inline static hipError_t hipTexObjectGetTextureDesc(HIP_TEXTURE_DESC* pTexDesc,
+     return hipCUResultTohipError(cuTexObjectGetTextureDesc(pTexDesc, (CUtexObject)texObject));
+ }
+ 
++#if CUDA_VERSION < CUDA_12000
+ __HIP_DEPRECATED inline static hipError_t hipTexRefSetAddressMode(hipTexRef hTexRef, int dim, hipAddress_mode am){
+     return hipCUResultTohipError(cuTexRefSetAddressMode(hTexRef,dim,am));
+ }
+@@ -2781,6 +2797,7 @@ __HIP_DEPRECATED inline static hipError_t hipTexRefSetFlags(hipTexRef hTexRef, u
+ __HIP_DEPRECATED inline static hipError_t hipTexRefSetArray(hipTexRef hTexRef, hiparray hArray, unsigned int Flags){
+     return hipCUResultTohipError(cuTexRefSetArray(hTexRef,hArray,Flags));
+ }
++#endif  // CUDA_VERSION < 12000
+ 
+ inline static hipError_t hipArrayCreate(hiparray* pHandle, const HIP_ARRAY_DESCRIPTOR* pAllocateArray){
+     return hipCUResultTohipError(cuArrayCreate(pHandle, pAllocateArray));

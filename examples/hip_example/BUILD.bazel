@@ -1,13 +1,11 @@
-load("@rules_ll//ll:defs.bzl", "ll_binary")
+load("@rules_ll//ll:defs.bzl", "OFFLOAD_ALL_NVPTX", "ll_binary")
 
 ll_binary(
     name = "hip_example",
     srcs = ["example.cpp"],
     compilation_mode = "hip_nvptx",
-    compile_flags = [
+    compile_flags = OFFLOAD_ALL_NVPTX + [
         "--std=c++20",
-        "--offload-arch=sm_70",
-        "-Wno-deprecated",
     ],
     visibility = ["@//:__pkg__"],
 )

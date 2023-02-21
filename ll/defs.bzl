@@ -27,3 +27,7 @@ ll_library = _ll_library
 ll_binary = _ll_binary
 ll_compilation_database = _ll_compilation_database
 ll_coverage_test = _ll_coverage_test
+
+OFFLOAD_ALL_NVPTX = [
+    "--offload-arch=sm_50,sm_52,sm_60,sm_61,sm_62,sm_70,sm_75,sm_80,sm_86,sm_87,sm_89,sm_89",
+]
