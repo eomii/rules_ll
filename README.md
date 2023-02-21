@@ -1,5 +1,7 @@
 # `rules_ll`
 
+[![OpenSSF Best Practices](https://bestpractices.coreinfrastructure.org/projects/6822/badge)](https://bestpractices.coreinfrastructure.org/projects/6822)
+
 An upstream Clang/LLVM-based Bazel toolchain for modern C++ and heterogeneous
 programming.
 
