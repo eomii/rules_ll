@@ -34,7 +34,7 @@ This populates the `docs/reference/` directory with the updated markdown files.
 
 ## Tests
 
-The examples at `rules_ll/examples` are also the tests for the project. To test
+The examples at `rules_ll/examples` also act as tests for the project. To test
 all examples:
 
 ```bash title="(from within the rules_ll/examples directory)"
@@ -42,5 +42,5 @@ bazel test //:examples
 ```
 
 Since not everyone has a GPU compatible with `rules_ll`, heterogeneous examples
-are disabled by default. Make sure to enable them in `examples/BUILD.bazel` when
-changing logic affecting heterogeneous code paths.
+don't run by default. Make sure to enable them in `examples/BUILD.bazel`
+when changing logic affecting heterogeneous code paths.

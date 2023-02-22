@@ -64,4 +64,6 @@ nav:
       - //ll:toolchain: reference/toolchain.md
       - //ll:tools: reference/tools.md
       - //ll:transitions: reference/transitions.md
-  - Contributing: contributing/contributing.md
+  - Contributing:
+      - contributing/contributing.md
+      - Code of conduct: contributing/code_of_conduct.md

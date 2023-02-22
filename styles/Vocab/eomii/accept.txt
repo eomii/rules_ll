@@ -20,6 +20,7 @@ archiver
 backend
 buildable
 bundler
+eomii
 multithreading
 namespace
 precompilation
