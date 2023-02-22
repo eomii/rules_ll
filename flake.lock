@@ -17,16 +17,15 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1676357583,
-        "narHash": "sha256-I0uuiv0ej+kyg78RuAbUKPbFqHK/9LRH7H35vyiGj6s=",
-        "owner": "rrbutani",
+        "lastModified": 1677080879,
+        "narHash": "sha256-0SjW4/d3Rkw6C7hHZ5lxT4r6Pw9vzQb6Il6zYWwe2Bo=",
+        "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "99b2500ca56fd269396e5388fdd5c2550b48d033",
+        "rev": "f5dad40450d272a1ea2413f4a67ac08760649e89",
         "type": "github"
       },
       "original": {
-        "owner": "rrbutani",
-        "ref": "fix/llvm-15-libcxx-linker-script-bug",
+        "owner": "nixos",
         "repo": "nixpkgs",
         "type": "github"
       }

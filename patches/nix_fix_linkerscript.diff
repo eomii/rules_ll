@@ -1,0 +1,101 @@
+diff --git a/pkgs/development/compilers/llvm/15/libcxx/default.nix b/pkgs/development/compilers/llvm/15/libcxx/default.nix
+index 7762df29386ef..48a40d5da050b 100644
+--- a/pkgs/development/compilers/llvm/15/libcxx/default.nix
++++ b/pkgs/development/compilers/llvm/15/libcxx/default.nix
+@@ -1,5 +1,5 @@
+ { lib, stdenv, llvm_meta
+-, monorepoSrc, runCommand
++, monorepoSrc, runCommand, fetchpatch
+ , cmake, ninja, python3, fixDarwinDylibNames, version
+ , cxxabi ? if stdenv.hostPlatform.isFreeBSD then libcxxrt else libcxxabi
+ , libcxxabi, libcxxrt
+@@ -47,6 +47,15 @@ stdenv.mkDerivation rec {
+ 
+   patches = [
+     ./gnu-install-dirs.patch
++    # See:
++    #   - https://reviews.llvm.org/D133566
++    #   - https://github.com/NixOS/nixpkgs/issues/214524#issuecomment-1429146432
++    # !!! Drop in LLVM 16+
++    (fetchpatch {
++      url = "https://github.com/llvm/llvm-project/commit/57c7bb3ec89565c68f858d316504668f9d214d59.patch";
++      hash = "sha256-AaM9A6tQ4YAw7uDqCIV4VaiUyLZv+unwcOqbakwW9/k=";
++      relative = "libcxx";
++    })
+   ] ++ lib.optionals stdenv.hostPlatform.isMusl [
+     ../../libcxx-0001-musl-hacks.patch
+   ];
+@@ -66,14 +75,16 @@ stdenv.mkDerivation rec {
+ 
+   cmakeFlags = let
+     # See: https://libcxx.llvm.org/BuildingLibcxx.html#cmdoption-arg-libcxx-cxx-abi-string
+-    libcxx_cxx_abi_opt = {
+-      "c++abi" = "system-libcxxabi";
+-      "cxxrt" = "libcxxrt";
++    # And: https://github.com/llvm/llvm-project/blob/aa656f6c2dec73faceeed21e15401d8f0c743c8b/libcxx/cmake/Modules/HandleLibCXXABI.cmake#L82-L180
++    libcxx_cxx_abi_options = {
++      "c++abi" = { name = "system-libcxxabi"; headers = "${cxxabi.dev}/include/c++/v1"; };
++      "cxxrt" = { name = "libcxxrt"; headers = "${cxxabi}/include"; };
+     }.${cxxabi.libName} or (throw "unknown cxxabi: ${cxxabi.libName} (${cxxabi.pname})");
+   in [
+     "-DLLVM_ENABLE_RUNTIMES=libcxx"
+-    "-DLIBCXX_CXX_ABI=${if headersOnly then "none" else libcxx_cxx_abi_opt}"
+-  ] ++ lib.optional (!headersOnly && cxxabi.libName == "c++abi") "-DLIBCXX_CXX_ABI_INCLUDE_PATHS=${cxxabi.dev}/include/c++/v1"
++    "-DLIBCXX_CXX_ABI=${if headersOnly then "none" else libcxx_cxx_abi_options.name}"
++  ] ++ lib.optional (!headersOnly) "-DLIBCXX_CXX_ABI_INCLUDE_PATHS=${libcxx_cxx_abi_options.headers}"
++    ++ lib.optional (!headersOnly) "-DLIBCXX_CXX_ABI_LIBRARY_PATH=${cxxabi}/lib"
+     ++ lib.optional (stdenv.hostPlatform.isMusl || stdenv.hostPlatform.isWasi) "-DLIBCXX_HAS_MUSL_LIBC=1"
+     ++ lib.optional (stdenv.hostPlatform.useLLVM or false) "-DLIBCXX_USE_COMPILER_RT=ON"
+     ++ lib.optionals stdenv.hostPlatform.isWasm [
+diff --git a/pkgs/test/default.nix b/pkgs/test/default.nix
+index 39039c5950e46..78fa4b80df9a2 100644
+--- a/pkgs/test/default.nix
++++ b/pkgs/test/default.nix
+@@ -3,23 +3,30 @@
+ with pkgs;
+ 
+ {
+-  cc-wrapper = callPackage ./cc-wrapper { };
+-  cc-wrapper-gcc = callPackage ./cc-wrapper { stdenv = gccStdenv; };
+-  cc-wrapper-gcc7 = callPackage ./cc-wrapper { stdenv = gcc7Stdenv; };
+-  cc-wrapper-gcc8 = callPackage ./cc-wrapper { stdenv = gcc8Stdenv; };
+-  cc-wrapper-gcc9 = callPackage ./cc-wrapper { stdenv = gcc9Stdenv; };
+-  cc-wrapper-clang = callPackage ./cc-wrapper { stdenv = llvmPackages.stdenv; };
+-  cc-wrapper-libcxx = callPackage ./cc-wrapper { stdenv = llvmPackages.libcxxStdenv; };
+-  cc-wrapper-clang-5 = callPackage ./cc-wrapper { stdenv = llvmPackages_5.stdenv; };
+-  cc-wrapper-libcxx-5 = callPackage ./cc-wrapper { stdenv = llvmPackages_5.libcxxStdenv; };
+-  cc-wrapper-clang-6 = callPackage ./cc-wrapper { stdenv = llvmPackages_6.stdenv; };
+-  cc-wrapper-libcxx-6 = callPackage ./cc-wrapper { stdenv = llvmPackages_6.libcxxStdenv; };
+-  cc-wrapper-clang-7 = callPackage ./cc-wrapper { stdenv = llvmPackages_7.stdenv; };
+-  cc-wrapper-libcxx-7 = callPackage ./cc-wrapper { stdenv = llvmPackages_7.libcxxStdenv; };
+-  cc-wrapper-clang-8 = callPackage ./cc-wrapper { stdenv = llvmPackages_8.stdenv; };
+-  cc-wrapper-libcxx-8 = callPackage ./cc-wrapper { stdenv = llvmPackages_8.libcxxStdenv; };
+-  cc-wrapper-clang-9 = callPackage ./cc-wrapper { stdenv = llvmPackages_9.stdenv; };
+-  cc-wrapper-libcxx-9 = callPackage ./cc-wrapper { stdenv = llvmPackages_9.libcxxStdenv; };
++  cc-wrapper = with builtins; let
++    pkgNames = (attrNames pkgs);
++    llvmTests = let
++      pkgSets = lib.pipe pkgNames [
++        (filter (lib.hasPrefix "llvmPackages"))
++        (filter (n: n != "llvmPackages_rocm"))
++      ];
++      tests = lib.genAttrs pkgSets (name: recurseIntoAttrs {
++        clang = callPackage ./cc-wrapper { stdenv = pkgs.${name}.stdenv; };
++        libcxx = callPackage ./cc-wrapper { stdenv = pkgs.${name}.libcxxStdenv; };
++      });
++    in
++      recurseIntoAttrs tests;
++    gccTests = let
++      pkgSets = lib.pipe (attrNames pkgs) [
++        (filter (lib.hasPrefix "gcc"))
++        (filter (lib.hasSuffix "Stdenv"))
++        (filter (n: n != "gccCrossLibcStdenv"))
++      ];
++    in lib.genAttrs pkgSets (name: callPackage ./cc-wrapper { stdenv = pkgs.${name}; });
++  in recurseIntoAttrs {
++    default = callPackage ./cc-wrapper { };
++  } // llvmTests // gccTests;
++
+   stdenv-inputs = callPackage ./stdenv-inputs { };
+   stdenv = callPackage ./stdenv { };
+ 

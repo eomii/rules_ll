@@ -2,9 +2,7 @@
   description = "rules_ll development environment";
 
   inputs = {
-    # Temporary workaround.
-    # nixpkgs.url = "github:nixos/nixpkgs";
-    nixpkgs.url = "github:rrbutani/nixpkgs/fix/llvm-15-libcxx-linker-script-bug";
+    nixpkgs.url = "github:nixos/nixpkgs";
     flake-utils.url = "github:numtide/flake-utils";
   };
 
@@ -17,11 +15,13 @@
   outputs = { self, nixpkgs, flake-utils, ... }:
     flake-utils.lib.eachDefaultSystem (system:
       let
-        # pkgs = import nixpkgs.legacyPackages.${system} {
-        #   config = { allowUnfree = true; }; };
-        pkgs = import nixpkgs {
+        nixpkgs-patched = (import nixpkgs { inherit system; }).applyPatches {
+          name = "nixpkgs-patched";
+          src = nixpkgs;
+          patches = [ ./patches/nix_fix_linkerscript.diff ];
+        };
+        pkgs = import nixpkgs-patched {
           inherit system;
-          # legacyPackages = ${system};
           config.allowUnfree = true;
         };
         bazel = pkgs.writeShellScriptBin "bazel" ''
