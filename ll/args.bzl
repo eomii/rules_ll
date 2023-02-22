@@ -18,18 +18,16 @@ def _construct_llvm_include_path(file):
     This function looks at a file, and strips everything after "llvm/include",
     so that the returned path is "<some_leading_path>/llvm/include". This lets
     us handle outputs in transitioned output directories.
+
+    If the file is not in an `llvm/include` directory, returns `None`.
     """
     filepath = file.path
     if filepath.find("/llvm/include/") != -1:
         first_segment = filepath.partition("/llvm/include/")[0]
         out = paths.join(first_segment, "llvm/include")
         return out
-    fail(
-        """Something unexpected went wrong when depending on LLVM. Please
-         create an issue at https://github.com/eomii/rules_ll with information
-         on how you got to this error.
-         """,
-    )
+
+    return None
 
 def _construct_clang_include_path(file):
     """Construct the paths to LLVM include directories.
@@ -37,18 +35,16 @@ def _construct_clang_include_path(file):
     This function looks at a file, and strips everything after "clang/include",
     so that the returned path is "<some_leading_path>/clang/include". This lets
     us handle outputs in transitioned output directories.
+
+    If the file is not in a `clang/include` directory, returns `None`.
     """
     filepath = file.path
     if filepath.find("/clang/include/") != -1:
         first_segment = filepath.partition("/clang/include/")[0]
         out = paths.join(first_segment, "clang/include")
         return out
-    fail(
-        """Something unexpected went wrong when depending on Clang. Please
-         create an issue at https://github.com/eomii/rules_ll with information
-         on how you got to this error.
-         """,
-    )
+
+    return None
 
 def _create_module_import(interface):
     file, module_name = interface
