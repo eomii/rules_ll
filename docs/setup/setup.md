@@ -35,17 +35,24 @@ This guide explains how to set up `rules_ll`.
       GPUs. You can find a list of compute capabilities at
       <https://developer.nvidia.com/cuda-gpus>.
 
-1. Install the [nix package manager](https://nixos.org/download.html).
+1. Install the [nix package manager](https://nixos.org/download.html) and enable
+   [flakes](https://nixos.wiki/wiki/Flakes).
 
-2. Enable [flakes](https://nixos.wiki/wiki/Flakes) in your nix installation.
-
-3. Enter a `rules_ll` development shell:
+2. Enter a `rules_ll` development shell. For the default toolchains:
 
     ```bash
     nix develop github:eomii/rules_ll
     ```
 
-4. Create a `rules_ll` compatible workspace:
+    To use CUDA packages and toolchains, make sure to read the [CUDA license](
+    https://docs.nvidia.com/cuda/eula/index.html) and use the unfree `rules_ll`
+    shell:
+
+    ```bash
+    nix develop github:eomii/rules_ll#unfree
+    ```
+
+3. Create a `rules_ll` compatible workspace:
 
     ```bash
     ll init
