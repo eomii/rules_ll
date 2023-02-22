@@ -36,7 +36,11 @@ markdown_extensions:
   - pymdownx.superfences
   - pymdownx.details
 nav:
-  - Home: index.md
+  - Home:
+      - index.md
+      - Code of conduct: CODE_OF_CONDUCT.md
+      - Contributing: CONTRIBUTING.md
+      - Security: SECURITY.md
   - Setup: setup/setup.md
   - Rules: rules/defs.md
   - Guides:
@@ -64,6 +68,3 @@ nav:
       - //ll:toolchain: reference/toolchain.md
       - //ll:tools: reference/tools.md
       - //ll:transitions: reference/transitions.md
-  - Contributing:
-      - contributing/contributing.md
-      - Code of conduct: contributing/code_of_conduct.md
