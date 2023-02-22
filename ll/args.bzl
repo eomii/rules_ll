@@ -1,6 +1,6 @@
 """# `//ll:args.bzl`
 
-The functions that create `arguments` for use in rule actions.
+The functions that create `Args` for use in rule actions.
 """
 
 load("@bazel_skylib//lib:paths.bzl", "paths")
@@ -24,6 +24,12 @@ def _construct_llvm_include_path(file):
         first_segment = filepath.partition("/llvm/include/")[0]
         out = paths.join(first_segment, "llvm/include")
         return out
+    fail(
+        """Something unexpected went wrong when depending on LLVM. Please
+         create an issue at https://github.com/eomii/rules_ll with information
+         on how you got to this error.
+         """,
+    )
 
 def _construct_clang_include_path(file):
     """Construct the paths to LLVM include directories.
@@ -37,6 +43,12 @@ def _construct_clang_include_path(file):
         first_segment = filepath.partition("/clang/include/")[0]
         out = paths.join(first_segment, "clang/include")
         return out
+    fail(
+        """Something unexpected went wrong when depending on Clang. Please
+         create an issue at https://github.com/eomii/rules_ll with information
+         on how you got to this error.
+         """,
+    )
 
 def _create_module_import(interface):
     file, module_name = interface
@@ -64,6 +76,25 @@ def compile_object_args(
         includes,
         angled_includes,
         bmis):
+    """Construct `Args` for compile actions.
+
+    Args:
+        ctx: The rule context.
+        in_file: The input file to compile.
+        out_file: The output file.
+        cdf: A file to store the compilation database fragment.
+        defines: A `depset` of defines for the target. Added with `-D`.
+        includes: A `depset` of includes for the target. Added with `-iquote`.
+        angled_includes: A `depset` of angled includes for the target. Added with
+            `-I`.
+        bmis: A tuple `(interface, name)`, consisting of a binary module
+            interface `interface` and a module name `name`. Added in a scheme
+            resembling `-fmodule-file=name=interface`.
+
+    Returns:
+        An `Args` object.
+    """
+
     toolchain = ctx.toolchains["//ll:toolchain_type"]
 
     args = ctx.actions.args()
@@ -332,6 +363,18 @@ def compile_object_args(
     return [args]
 
 def link_executable_args(ctx, in_files, out_file, mode):
+    """Construct `Args` for link actions.
+
+    Args:
+        ctx: The rule context.
+        in_files: A `depset` of input files.
+        out_file: The output file.
+        mode: Either `"executable"` or `"shared_object"`, depending on the
+            desired output type.
+
+    Returns:
+        An `Args` object.
+    """
     toolchain = ctx.toolchains["//ll:toolchain_type"]
 
     args = ctx.actions.args()
@@ -550,6 +593,16 @@ def link_executable_args(ctx, in_files, out_file, mode):
     return [args]
 
 def link_bitcode_library_args(ctx, in_files, out_file):
+    """Construct `Args` for bitcode link actions.
+
+    Args:
+        ctx: The rule context.
+        in_files: A `depset` of input files.
+        out_file: The output file.
+
+    Returns:
+        An `Args` object.
+    """
     args = ctx.actions.args()
 
     if ctx.var["COMPILATION_MODE"] == "dbg":
@@ -564,6 +617,18 @@ def link_bitcode_library_args(ctx, in_files, out_file):
     return [args]
 
 def create_archive_library_args(ctx, in_files, out_file):
+    """Construct `Args` for archive actions.
+
+    Uses `-cqL` for regular archiving and `-vqL` for debug builds.
+
+    Args:
+        ctx: The rule context.
+        in_files: A `depset` of input files.
+        out_file: The output file.
+
+    Returns:
+        An `Args` object.
+    """
     args = ctx.actions.args()
 
     # -v: Verbose.

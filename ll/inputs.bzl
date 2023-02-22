@@ -25,14 +25,30 @@ def compilable_sources(ctx):
         if src.extension in COMPILABLE_EXTENSIONS
     ]
 
+#TODO: Documentation lacking.
 def compile_object_inputs(
         ctx,
         in_file,
         headers,
         interfaces):
+    """Collect all inputs for a compile action.
+
+    Takes files from the arguments and adds files from the `srcs` and `data`
+    fields and various toolchain dependencies.
+
+    Args:
+        ctx: The rule context.
+        in_file: The input file.
+        headers: A `depset` of headers.
+        interfaces: A `depset` of `(interface, name)` tuples.
+
+    Returns:
+        A `depset` of files.
+    """
     config = ctx.attr.toolchain_configuration[BuildSettingInfo].value
     toolchain = ctx.toolchains["//ll:toolchain_type"]
 
+    # TODO: This variable name is misleading.
     interfaces = depset([file for file, _ in interfaces.to_list()])
 
     direct = (
@@ -83,6 +99,18 @@ def create_archive_library_inputs(ctx, in_files):
     )
 
 def link_executable_inputs(ctx, in_files):
+    """Collect all inputs for link actions producing executables.
+
+    Apart from `in_files`, adds files from the `deps`, `libraries` and `data`
+    fields and various toolchain dependencies.
+
+    Args:
+        ctx: The rule context.
+        in_files: A list of files.
+
+    Returns:
+        A `depset` of files.
+    """
     config = ctx.attr.toolchain_configuration[BuildSettingInfo].value
     toolchain = ctx.toolchains["//ll:toolchain_type"]
 
@@ -120,11 +148,10 @@ def link_executable_inputs(ctx, in_files):
             toolchain.hipsycl_omp_backend,
         ]
     elif config == "sycl_cuda":
-        direct += [
-            toolchain.hipsycl_runtime,
-            # toolchain.hipsycl_omp_backend,
-            # toolchain.hipsycl_cuda_backend,
-        ]
+        direct.append(toolchain.hipsycl_runtime)
+        # toolchain.hipsycl_omp_backend,
+        # toolchain.hipsycl_cuda_backend,
+
     else:
         fail("Cannot link with this toolchain.")
 
@@ -134,6 +161,18 @@ def link_bitcode_library_inputs(ctx, in_files):
     return depset(in_files + ctx.files.deps + ctx.files.bitcode_libraries)
 
 def link_shared_object_inputs(ctx, in_files):
+    """Collect input files for link actions.
+
+    Adds files from the `deps` and `data` fields and various toolchain
+    dependencies.
+
+    Args:
+        ctx: The rule context.
+        in_files: A list of files.
+
+    Returns:
+        A `depset` of files.
+    """
     config = ctx.attr.toolchain_configuration[BuildSettingInfo].value
     toolchain = ctx.toolchains["//ll:toolchain_type"]
 

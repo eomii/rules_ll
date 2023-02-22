@@ -13,7 +13,9 @@ COMPILATION_MODES = [
     "sycl_cuda",
 ]
 
-def _ll_transition_impl(settings, attr):
+def _ll_transition_impl(
+        settings,  # @unused
+        attr):
     for mode in COMPILATION_MODES:
         if attr.compilation_mode == mode:
             return {"//ll:current_ll_toolchain_configuration": mode}
@@ -26,7 +28,9 @@ ll_transition = transition(
     outputs = ["//ll:current_ll_toolchain_configuration"],
 )
 
-def _transition_to_bootstrap_impl(settings, attr):
+def _transition_to_bootstrap_impl(
+        settings,  # @unused
+        attr):  # @unused
     return {"//ll:current_ll_toolchain_configuration": "bootstrap"}
 
 transition_to_bootstrap = transition(
@@ -35,7 +39,9 @@ transition_to_bootstrap = transition(
     outputs = ["//ll:current_ll_toolchain_configuration"],
 )
 
-def _transition_to_cpp_impl(settings, attr):
+def _transition_to_cpp_impl(
+        settings,  # @unused
+        attr):  # @unused
     return {"//ll:current_ll_toolchain_configuration": "cpp"}
 
 transition_to_cpp = transition(

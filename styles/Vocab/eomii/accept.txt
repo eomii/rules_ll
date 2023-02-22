@@ -24,6 +24,7 @@ eomii
 multithreading
 namespace
 precompilation
+precompile
 precompiled
 precompiles
 sandboxed

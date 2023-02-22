@@ -26,10 +26,15 @@ path as well.
 ## `resolve_rule_inputs`
 
 <pre><code>resolve_rule_inputs(<a href="#resolve_rule_inputs-ctx">ctx</a>)</code></pre>
-
+Gather the inputs for downstream actions.
 
 `parameters`
 
 | Name  | Description |
 | :---- | :---------- |
-| <a id="resolve_rule_inputs-ctx"></a>`ctx` |  |
+| <a id="resolve_rule_inputs-ctx"></a>`ctx` | The rule context.  |
+
+`returns`
+
+A tuple `(hdrs, defines, includes, angled_includes, bmis)`. See
+  [//ll:actions.bzl](actions.md) for usage.

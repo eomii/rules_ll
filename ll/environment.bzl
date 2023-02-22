@@ -13,7 +13,6 @@ def compile_object_environment(ctx):
 
     Args:
         ctx: The rule context.
-        toolchain_type: The toolchain type. Set this to `"//ll:toolchain_type"`.
 
     Returns:
         A `dict` for use in the `environment` of an action.

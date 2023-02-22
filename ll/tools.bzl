@@ -6,6 +6,14 @@ Tools used by actions.
 load("@bazel_skylib//rules:common_settings.bzl", "BuildSettingInfo")
 
 def compile_object_tools(ctx):
+    """Tools for use in compile actions.
+
+    Args:
+        ctx: The rule context.
+
+    Returns:
+        A list of labels.
+    """
     config = ctx.attr.toolchain_configuration[BuildSettingInfo].value
     toolchain = ctx.toolchains["//ll:toolchain_type"]
 
@@ -44,6 +52,14 @@ def compile_object_tools(ctx):
     fail("Unregognized toolchain toolchain configuration.")
 
 def linking_tools(ctx):
+    """Tools for use in link actions.
+
+    Args:
+        ctx: The rule context.
+
+    Returns:
+        A list of labels.
+    """
     config = ctx.attr.toolchain_configuration[BuildSettingInfo].value
     toolchain = ctx.toolchains["//ll:toolchain_type"]
 

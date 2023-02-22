@@ -7,9 +7,9 @@ load("@bazel_skylib//lib:paths.bzl", "paths")
 load("//ll:providers.bzl", "LlInfo")
 
 def expand_includes(ctx, include_string):
-    """Prefixes `include_path` with the path to the workspace root.
+    """Prefix `include_string` with the path to the workspace root.
 
-    If `include_path` starts with `$(GENERATED)`, prefixes with the`GENDIR`
+    If `include_string` starts with `$(GENERATED)`, prefixes with the`GENDIR`
     path as well.
     """
 
@@ -22,6 +22,15 @@ def expand_includes(ctx, include_string):
     return paths.join(ctx.label.workspace_root, include_string)
 
 def resolve_rule_inputs(ctx):
+    """Gather the inputs for downstream actions.
+
+    Args:
+        ctx: The rule context.
+
+    Returns:
+        A tuple `(hdrs, defines, includes, angled_includes, bmis)`. See
+        [//ll:actions.bzl](actions.md) for usage.
+    """
     hdrs = depset(
         ctx.files.hdrs + ctx.files.exposed_hdrs,
         transitive = [dep[LlInfo].exposed_hdrs for dep in ctx.attr.deps],

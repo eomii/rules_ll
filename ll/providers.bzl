@@ -22,6 +22,7 @@ LlCompilationDatabaseFragmentsInfo = provider(
 )
 
 LlCompilationDatabaseInfo = provider(
+    doc = "Provider for a compilation database.",
     fields = {
         "compilation_database": """A `compile_commands.json` file.
 

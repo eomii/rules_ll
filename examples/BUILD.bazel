@@ -1,6 +1,5 @@
 load("@rules_ll//ll:defs.bzl", "ll_compilation_database")
 load("@bazel_skylib//rules:native_binary.bzl", "native_test")
-load("@bazel_skylib//rules:diff_test.bzl", "diff_test")
 
 filegroup(
     name = "clang_tidy_config",
@@ -47,7 +46,7 @@ EXAMPLES = [
     # "hip_rdc_example",
 ]
 
-TESTS = [
+[
     native_test(
         name = "{}_test".format(name),
         src = "//{}".format(name),

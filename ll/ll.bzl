@@ -59,7 +59,7 @@ def _ll_library_impl(ctx):
         includes = includes,
         angled_includes = angled_includes,
         bmis = bmis,
-        binary = False,
+        precompile_exposed = True,
     )
 
     out_cdfs += cdfs
@@ -183,7 +183,7 @@ def _ll_binary_impl(ctx):
         includes = includes,
         angled_includes = angled_includes,
         bmis = bmis,
-        binary = True,
+        precompile_exposed = False,
     )
 
     out_cdfs += cdfs

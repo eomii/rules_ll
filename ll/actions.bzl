@@ -53,6 +53,23 @@ def compile_objects(
         angled_includes,
         bmis,
         internal_bmis):
+    """Create compiled objects emitted by the rule.
+
+    Args:
+        ctx: The rule context.
+        headers: A `depset` of files made available to compile actions.
+        defines: A `depset` of defines passed to compile actions.
+        includes: A `depset` of includes passed to compile actions.
+        angled_includes: A `depset` of angled includes passed to compile actions.
+        bmis: A `depset` of tuples `(interface, name)`, each consisting of a
+            binary module interface `interface` and a module name `name`.
+        internal_bmis: Like `bmis`, but can't see the files in `bmis` during
+            compilation.
+
+    Returns:
+        A tuple `(out_files, cdfs)`, of output files and compilation database
+        fragments.
+    """
     internal_bmi_files = [bmi for bmi, _ in internal_bmis]
     out_files = []
     cdfs = []
@@ -93,6 +110,24 @@ def compile_object(
         includes,
         angled_includes,
         bmis):
+    """Create a compiled object.
+
+    Args:
+        ctx: The rule context.
+        in_file: The input file to compile.
+        headers: A `depset` of files made available to the compile action.
+        defines: A `depset` of defines passed to the compile action.
+        includes: A `depset` of includes passed to the compile action.
+        angled_includes: A `depset` of angled includes passed to the compile
+            action.
+        bmis: A `depset` of tuples `(interface, name)`, each consisting of a
+            binary module interface `interface` and a module name `name`.
+
+    Returns:
+        A tuple `(out_file, cdf)`, of an output file and a compilation database
+        fragment.
+    """
+
     file_out, cdf_out = compile_object_outputs(ctx, in_file)
 
     ctx.actions.run(
@@ -128,7 +163,23 @@ def precompile_interfaces(
         includes,
         angled_includes,
         bmis,
-        binary):
+        precompile_exposed):
+    """Create precompiled module interfaces.
+
+    Args:
+        ctx: The rule context.
+        headers: A `depset` of files made available to compile actions.
+        defines: A `depset` of defines passed to compile actions.
+        includes: A `depset` of includes passed to compile actions.
+        angled_includes: A `depset` of angled includes passed to compile actions.
+        bmis: A `depset` of tuples `(interface, name)`, each consisting of a
+            binary module interface `interface` and a module name `name`.
+        precompile_exposed: A `boolean` indicating whether to precompile exposed
+            BMIs. Set to `True` for libraries and to `False` for binaries.
+
+    Returns:
+        A tuple `(internal_bmis, exposed_bmis, cdfs)`.
+    """
     cdfs = []
 
     # Internal BMIs. Not exposed to downstream targets.
@@ -149,7 +200,7 @@ def precompile_interfaces(
     # Exposed BMIs are available to direct dependents of the target. Internal
     # BMIs are available to the precompilation steps for these interfaces.
     exposed_bmis = []
-    if not binary:
+    if precompile_exposed:
         for in_file, module_name in ctx.attr.exposed_interfaces.items():
             file_out, cdf_out = precompile_interface(
                 ctx,
@@ -212,6 +263,15 @@ def precompile_interface(
     return file_out, cdf_out
 
 def create_archive_library(ctx, in_files):
+    """Create an archive action for an archive.
+
+    Args:
+        ctx: The rule context.
+        in_files: A `depset` of input files.
+
+    Returns:
+        An output file.
+    """
     toolchain = ctx.toolchains["//ll:toolchain_type"]
 
     out_file = create_archive_library_outputs(ctx)
@@ -228,6 +288,15 @@ def create_archive_library(ctx, in_files):
     return out_file
 
 def link_shared_object(ctx, in_files):
+    """Create a link action for a shared object.
+
+    Args:
+        ctx: The rule context.
+        in_files: A `depset` of input files.
+
+    Returns:
+        An output file.
+    """
     toolchain = ctx.toolchains["//ll:toolchain_type"]
 
     out_file = link_shared_object_outputs(ctx)
@@ -250,6 +319,15 @@ def link_shared_object(ctx, in_files):
     return out_file
 
 def link_bitcode_library(ctx, in_files):
+    """Create a bitcode link action for a bitcode file.
+
+    Args:
+        ctx: The rule context.
+        in_files: A `depset` of input files.
+
+    Returns:
+        An output file.
+    """
     toolchain = ctx.toolchains["//ll:toolchain_type"]
 
     out_file = link_bitcode_library_outputs(ctx)
@@ -265,6 +343,15 @@ def link_bitcode_library(ctx, in_files):
     return out_file
 
 def link_executable(ctx, in_files):
+    """Create a link action for an executable.
+
+    Args:
+        ctx: The rule context.
+        in_files: A `depset` of input files.
+
+    Returns:
+        An output file.
+    """
     toolchain = ctx.toolchains["//ll:toolchain_type"]
 
     out_file = link_executable_outputs(ctx)

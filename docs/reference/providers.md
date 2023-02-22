@@ -23,7 +23,7 @@ Stores compilation database fragments.
 ## `LlCompilationDatabaseInfo`
 
 <pre><code>LlCompilationDatabaseInfo(<a href="#LlCompilationDatabaseInfo-compilation_database">compilation_database</a>)</code></pre>
-
+Provider for a compilation database.
 
 `fields`
 
