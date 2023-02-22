@@ -1,5 +1,4 @@
-{
-  pkgs ? import (fetchTarball "https://github.com/NixOS/nixpkgs/archive/6f1d04bdb55d6160958430f594022b73b7e20711.tar.gz") {}
+{ pkgs ? import (fetchTarball "https://github.com/NixOS/nixpkgs/archive/6f1d04bdb55d6160958430f594022b73b7e20711.tar.gz") { }
 }:
 
 let
@@ -26,11 +25,13 @@ let
     else
         bazelisk $@
     fi
-    '';
+  '';
 in
-pkgs.mkShell.override {
+pkgs.mkShell.override
+{
   stdenv = pkgs.clang15Stdenv;
-} {
+}
+{
 
   buildInputs = [
     pkgs.bazelisk
