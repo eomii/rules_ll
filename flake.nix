@@ -64,7 +64,7 @@
               # Add the nix cflags and ldflags to the Bazel action envs.
               # This is safe to do since the Nix environment is reproducible.
 
-              LL_NIX_CFLAGS_COMPILE=`echo $NIX_CFLAGS_COMPILE | tr ' ' ':'`
+              LL_NIX_CFLAGS_COMPILE=`echo $NIX_CFLAGS_COMPILE_FOR_TARGET | tr ' ' ':'`
               LL_NIX_LDFLAGS=`echo $NIX_LDFLAGS_FOR_TARGET | tr ' ' ':'`
             '' + (if unfree then ''
               LL_CUDA=${pkgsUnfree.cudaPackages_12.cudatoolkit}
