@@ -13,128 +13,125 @@
   };
 
   outputs = { self, nixpkgs, flake-utils, ... }:
-    flake-utils.lib.eachSystem [
-      "x86_64-linux"
-    ]
-      (system:
-        let
+    flake-utils.lib.eachDefaultSystem (system:
+      let
 
-          nixpkgs-patched = (import nixpkgs { inherit system; }).applyPatches {
-            name = "nixpkgs-patched";
-            src = nixpkgs;
-            patches = [ ./patches/nix_fix_linkerscript.diff ];
-          };
+        nixpkgs-patched = (import nixpkgs { inherit system; }).applyPatches {
+          name = "nixpkgs-patched";
+          src = nixpkgs;
+          patches = [ ./patches/nix_fix_linkerscript.diff ];
+        };
 
-          pkgs = import nixpkgs-patched { inherit system; };
+        pkgs = import nixpkgs-patched { inherit system; };
 
-          pkgsUnfree = import nixpkgs-patched {
-            inherit system;
-            config.allowUnfree = true;
-          };
+        pkgsUnfree = import nixpkgs-patched {
+          inherit system;
+          config.allowUnfree = true;
+        };
 
-          ll = pkgs.writeShellScriptBin "ll" ''
-            if [[ "$1" == "init" ]]; then
-              # Only appending for now to be nondestructive.
-              echo "# Empty." >> WORKSPACE.bazel
-              head -1 ${./.bazelversion} >> .bazelversion
-              head -1 ${./examples/MODULE.bazel} >> MODULE.bazel
-              cat ${./examples/.bazelrc} >> .bazelrc
-            else
-              echo "Command not understood."
-            fi
-          '';
+        ll = pkgs.writeShellScriptBin "ll" ''
+          if [[ "$1" == "init" ]]; then
+            # Only appending for now to be nondestructive.
+            echo "# Empty." >> WORKSPACE.bazel
+            head -1 ${./.bazelversion} >> .bazelversion
+            head -1 ${./examples/MODULE.bazel} >> MODULE.bazel
+            cat ${./examples/.bazelrc} >> .bazelrc
+          else
+            echo "Command not understood."
+          fi
+        '';
 
-        in
-        rec {
+      in
+      rec {
 
-          packages = {
-            default = devShells.default;
-            unfree = devShells.unfree;
-          };
+        packages = {
+          default = devShells.default;
+          unfree = devShells.unfree;
+        };
 
-          devShells = {
-            default = devShellBuilder false; # Disable unfree packages.
-            unfree = devShellBuilder true; # Enable unfree packages.
-          };
+        devShells = {
+          default = devShellBuilder false; # Disable unfree packages.
+          unfree = devShellBuilder true; # Enable unfree packages.
+        };
 
-          devShellBuilder = (unfree: pkgs.mkShell.override
-            {
-              # Toggle this to test building clang with clang and gcc host compilers.
-              stdenv = pkgs.clang15Stdenv;
-            }
-            rec {
-              bazel = pkgs.writeShellScriptBin "bazel" (''
-                # Add the nix cflags and ldflags to the Bazel action envs.
-                # This is safe to do since the Nix environment is reproducible.
+        devShellBuilder = (unfree: pkgs.mkShell.override
+          {
+            # Toggle this to test building clang with clang and gcc host compilers.
+            stdenv = pkgs.clang15Stdenv;
+          }
+          rec {
+            bazel = pkgs.writeShellScriptBin "bazel" (''
+              # Add the nix cflags and ldflags to the Bazel action envs.
+              # This is safe to do since the Nix environment is reproducible.
 
-                LL_NIX_CFLAGS_COMPILE=`echo $NIX_CFLAGS_COMPILE_FOR_TARGET | tr ' ' ':'`
-                LL_NIX_LDFLAGS=`echo $NIX_LDFLAGS_FOR_TARGET | tr ' ' ':'`
-              '' + (if unfree then ''
-                LL_CUDA=${pkgsUnfree.cudaPackages_12.cudatoolkit}
-                LL_CUDA_RPATH=${pkgsUnfree.linuxPackages_6_1.nvidia_x11}/lib
-              '' else "") + ''
-                LL_CFLAGS=''${LL_CFLAGS+$LL_CFLAGS:}$LL_NIX_CFLAGS_COMPILE
-                LL_LDFLAGS=''${LL_LDFLAGS+$LL_LDFLAGS:}$LL_NIX_LDFLAGS
-                LL_DYNAMIC_LINKER=${pkgs.glibc}/lib/ld-linux-x86-64.so.2
+              LL_NIX_CFLAGS_COMPILE=`echo $NIX_CFLAGS_COMPILE | tr ' ' ':'`
+              LL_NIX_LDFLAGS=`echo $NIX_LDFLAGS_FOR_TARGET | tr ' ' ':'`
+            '' + (if unfree then ''
+              LL_CUDA=${pkgsUnfree.cudaPackages_12.cudatoolkit}
+              LL_CUDA_RPATH=${pkgsUnfree.linuxPackages_6_1.nvidia_x11}/lib
+            '' else "") + ''
+              LL_CFLAGS=''${LL_CFLAGS+$LL_CFLAGS:}$LL_NIX_CFLAGS_COMPILE
+              LL_LDFLAGS=''${LL_LDFLAGS+$LL_LDFLAGS:}$LL_NIX_LDFLAGS
+              LL_DYNAMIC_LINKER=${pkgs.glibc}/lib/ld-linux-x86-64.so.2
 
-                # Only used by rules_cc
-                BAZEL_CXXOPTS="-std=c++17:-O3:-nostdinc++:-nostdlib++:-isystem${pkgs.llvmPackages_15.libcxx.dev}/include/c++/v1"
+              # Only used by rules_cc
+              BAZEL_CXXOPTS="-std=c++17:-O3:-nostdinc++:-nostdlib++:-isystem${pkgs.llvmPackages_15.libcxx.dev}/include/c++/v1"
 
-                BAZEL_LINKOPTS="-L${pkgs.llvmPackages_15.libcxx}/lib:-L${pkgs.llvmPackages_15.libcxxabi}/lib:-lc++:-Wl,-rpath,${pkgs.llvmPackages_15.libcxx}/lib,-rpath,${pkgs.llvmPackages_15.libcxxabi}/lib"
+              BAZEL_LINKOPTS="-L${pkgs.llvmPackages_15.libcxx}/lib:-L${pkgs.llvmPackages_15.libcxxabi}/lib:-lc++:-Wl,-rpath,${pkgs.llvmPackages_15.libcxx}/lib,-rpath,${pkgs.llvmPackages_15.libcxxabi}/lib"
 
-                if [[
-                    "$1" == "build" ||
-                    "$1" == "coverage" ||
-                    "$1" == "run" ||
-                    "$1" == "test"
-                ]]; then
-                    bazelisk $1 \
-                        --action_env=LL_CFLAGS=$LL_CFLAGS \
-                        --action_env=LL_LDFLAGS=$LL_LDFLAGS \
-                        --action_env=LL_DYNAMIC_LINKER=$LL_DYNAMIC_LINKER \
-                        --action_env=LL_CUDA=$LL_CUDA \
-                        --action_env=LL_CUDA_RPATH=$LL_CUDA_RPATH \
-                        --action_env=BAZEL_CXXOPTS=$BAZEL_CXXOPTS \
-                        --action_env=BAZEL_LINKOPTS=$BAZEL_LINKOPTS \
-                        ''${@:2}
-                else
-                    bazelisk $@
-                fi
-              '');
-              name = "rules_ll-shell";
-              buildInputs = [
-                pkgs.llvmPackages_15.clang
-                pkgs.llvmPackages_15.compiler-rt
-                pkgs.llvmPackages_15.libcxx
-                pkgs.llvmPackages_15.libcxxabi
-                pkgs.llvmPackages_15.libunwind
-                pkgs.llvmPackages_15.lld
+              if [[
+                  "$1" == "build" ||
+                  "$1" == "coverage" ||
+                  "$1" == "run" ||
+                  "$1" == "test"
+              ]]; then
+                  bazelisk $1 \
+                      --action_env=LL_CFLAGS=$LL_CFLAGS \
+                      --action_env=LL_LDFLAGS=$LL_LDFLAGS \
+                      --action_env=LL_DYNAMIC_LINKER=$LL_DYNAMIC_LINKER \
+                      --action_env=LL_CUDA=$LL_CUDA \
+                      --action_env=LL_CUDA_RPATH=$LL_CUDA_RPATH \
+                      --action_env=BAZEL_CXXOPTS=$BAZEL_CXXOPTS \
+                      --action_env=BAZEL_LINKOPTS=$BAZEL_LINKOPTS \
+                      ''${@:2}
+              else
+                  bazelisk $@
+              fi
+            '');
+            name = "rules_ll-shell";
+            buildInputs = [
+              pkgs.llvmPackages_15.clang
+              pkgs.llvmPackages_15.compiler-rt
+              pkgs.llvmPackages_15.libcxx
+              pkgs.llvmPackages_15.libcxxabi
+              pkgs.llvmPackages_15.libunwind
+              pkgs.llvmPackages_15.lld
 
-                pkgs.shellcheck
-                pkgs.bazelisk
-                pkgs.git
-                pkgs.python3
-                pkgs.python310Packages.mkdocs-material
-                pkgs.pre-commit
-                pkgs.which
-                pkgs.libxcrypt
-                pkgs.glibc
-                pkgs.vale
+              pkgs.shellcheck
+              pkgs.bazelisk
+              pkgs.git
+              pkgs.python3
+              pkgs.python310Packages.mkdocs-material
+              pkgs.pre-commit
+              pkgs.which
+              pkgs.libxcrypt
+              pkgs.glibc
+              pkgs.vale
 
-                bazel
-                ll
-              ] ++ (if unfree then [
-                pkgsUnfree.linuxPackages_6_1.nvidia_x11
-                pkgsUnfree.cudaPackages_12.cudatoolkit
-              ] else [ ]);
+              bazel
+              ll
+            ] ++ (if unfree then [
+              pkgsUnfree.linuxPackages_6_1.nvidia_x11
+              pkgsUnfree.cudaPackages_12.cudatoolkit
+            ] else [ ]);
 
-              shellHook = ''
-                # Ensure that the ll command points to our ll binary.
-                [[ $(type -t ll) == "alias" ]] && unalias ll
+            shellHook = ''
+              # Ensure that the ll command points to our ll binary.
+              [[ $(type -t ll) == "alias" ]] && unalias ll
 
-                export LD=ld.lld
-                alias ls='ls --color=auto'
-              '';
-            });
-        });
+              export LD=ld.lld
+              alias ls='ls --color=auto'
+            '';
+          });
+      });
 }
