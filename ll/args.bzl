@@ -59,9 +59,18 @@ def _get_basename(file):
     """Returns file.dirname."""
     return file.basename
 
-def _get_owner_package(file):
-    """Returns file.owner.workspace_root + file.owner.package."""
-    return file.owner.workspace_root + "/" + file.owner.package + "/" + file.owner.name
+def _get_rpath_appendix(file):
+    "Step back $ORIGIN to the workspace root and then step forward to the file."
+    backsteps_to_workspace_root = "/.." * (
+        len(file.short_path.split("/")) -
+        len(file.owner.package.split("/"))
+    )
+    return paths.join(
+        backsteps_to_workspace_root,
+        file.owner.workspace_root,
+        file.owner.package,
+        file.owner.name,
+    )
 
 def compile_object_args(
         ctx,
@@ -83,9 +92,9 @@ def compile_object_args(
         includes: A `depset` of includes for the target. Added with `-iquote`.
         angled_includes: A `depset` of angled includes for the target. Added with
             `-I`.
-        bmis: A tuple `(interface, name)`, consisting of a binary module
-            interface `interface` and a module name `name`. Added in a scheme
-            resembling `-fmodule-file=name=interface`.
+        bmis: A `depset` of tuples `(interface, name)`, each consisting of a
+            binary module interface `interface` and a module name `name`. Added
+            in a scheme resembling `-fmodule-file=name=interface`.
 
     Returns:
         An `Args` object.
@@ -507,7 +516,7 @@ def link_executable_args(ctx, in_files, out_file, mode):
         )
         args.add_all(
             sycl_shared_libraries,
-            map_each = _get_owner_package,
+            map_each = _get_rpath_appendix,
             format_each = "-rpath=$ORIGIN/../..%s",
             uniquify = True,
             omit_if_empty = True,
@@ -574,8 +583,8 @@ def link_executable_args(ctx, in_files, out_file, mode):
     )
     args.add_all(
         shared_link_files,
-        map_each = _get_owner_package,
-        format_each = "-rpath=$ORIGIN/../..%s",
+        map_each = _get_rpath_appendix,
+        format_each = "-rpath=$ORIGIN%s",
         uniquify = True,
         omit_if_empty = True,
     )
