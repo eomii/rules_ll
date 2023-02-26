@@ -66,15 +66,20 @@
               bazel = pkgs.writeShellScriptBin "bazel" (''
                 # Add the nix cflags and ldflags to the Bazel action envs.
                 # This is safe to do since the Nix environment is reproducible.
-
                 LL_NIX_CFLAGS_COMPILE=`echo $NIX_CFLAGS_COMPILE_FOR_TARGET | tr ' ' ':'`
                 LL_NIX_LDFLAGS=`echo $NIX_LDFLAGS_FOR_TARGET | tr ' ' ':'`
+
+                # Flags for AMD dependencies.
+                LL_LIBDRM_INCLUDES=-isystem${pkgs.libdrm.dev}/include/libdrm
+                LL_AMD_RPATHS=-rpath=${pkgs.libdrm}/lib:-rpath=${pkgs.numactl}/lib:-rpath=${pkgs.libglvnd}/lib:-rpath=${pkgs.elfutils}/lib:-rpath=${pkgs.libglvnd}/lib:-rpath=${pkgs.xorg.libX11}/lib
+
               '' + (if unfree then ''
                 LL_CUDA=${pkgsUnfree.cudaPackages_12.cudatoolkit}
                 LL_CUDA_RPATH=${pkgsUnfree.linuxPackages_6_1.nvidia_x11}/lib
               '' else "") + ''
-                LL_CFLAGS=''${LL_CFLAGS+$LL_CFLAGS:}$LL_NIX_CFLAGS_COMPILE
-                LL_LDFLAGS=''${LL_LDFLAGS+$LL_LDFLAGS:}$LL_NIX_LDFLAGS
+
+                LL_CFLAGS=''${LL_CFLAGS+$LL_CFLAGS:}$LL_NIX_CFLAGS_COMPILE:$LL_LIBDRM_INCLUDES
+                LL_LDFLAGS=''${LL_LDFLAGS+$LL_LDFLAGS:}$LL_NIX_LDFLAGS:$LL_AMD_RPATHS
                 LL_DYNAMIC_LINKER=${pkgs.glibc}/lib/ld-linux-x86-64.so.2
 
                 # Only used by rules_cc
@@ -103,24 +108,43 @@
               '');
               name = "rules_ll-shell";
               buildInputs = [
+                # Host toolchain.
+                pkgs.bazelisk
                 pkgs.llvmPackages_15.clang
                 pkgs.llvmPackages_15.compiler-rt
                 pkgs.llvmPackages_15.libcxx
                 pkgs.llvmPackages_15.libcxxabi
                 pkgs.llvmPackages_15.libunwind
                 pkgs.llvmPackages_15.lld
+                pkgs.libxcrypt
+                pkgs.glibc
 
+                # Heterogeneous programming.
+
+                # It's unintuitive that we would need libdrm, but the
+                # ROCT-Thunk-Interface hard-depends on it.
+                pkgs.libdrm
+
+                # Required by the ROCT-Thunk-Interface.
+                pkgs.numactl
+
+                # Required by the ROCR-Runtime.
+                pkgs.elfutils
+
+                # Required by the AMD-OpenCL-Runtime.
+                pkgs.libglvnd
+                pkgs.xorg.libX11
+
+                # Development dependencies. TODO: Move out of default flake.
                 pkgs.shellcheck
-                pkgs.bazelisk
                 pkgs.git
                 pkgs.python3
                 pkgs.python310Packages.mkdocs-material
                 pkgs.pre-commit
                 pkgs.which
-                pkgs.libxcrypt
-                pkgs.glibc
                 pkgs.vale
 
+                # Custom wrappers for rules_ll.
                 bazel
                 ll
               ] ++ (if unfree then [
