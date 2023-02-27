@@ -50,19 +50,34 @@
           packages = {
             default = devShells.default;
             unfree = devShells.unfree;
+            dev = devShells.dev;
           };
 
           devShells = {
-            default = devShellBuilder false; # Disable unfree packages.
-            unfree = devShellBuilder true; # Enable unfree packages.
+            default = mkLlShell { };
+            unfree = mkLlShell { unfree = true; };
+            dev = mkLlShell {
+              unfree = true;
+              deps = [
+                pkgs.shellcheck
+                pkgs.git
+                pkgs.python3
+                pkgs.python310Packages.mkdocs-material
+                pkgs.pre-commit
+                pkgs.which
+                pkgs.vale
+              ];
+            };
           };
 
-          devShellBuilder = (unfree: pkgs.mkShell.override
+          mkLlShell = ({ unfree ? false, deps ? [ ] }: pkgs.mkShell.override
             {
               # Toggle this to test building clang with clang and gcc host compilers.
               stdenv = pkgs.clang15Stdenv;
             }
             rec {
+              name = "rules_ll-shell";
+
               bazel = pkgs.writeShellScriptBin "bazel" (''
                 # Add the nix cflags and ldflags to the Bazel action envs.
                 # This is safe to do since the Nix environment is reproducible.
@@ -106,8 +121,7 @@
                     bazelisk $@
                 fi
               '');
-              name = "rules_ll-shell";
-              buildInputs = [
+              buildInputs = deps ++ [
                 # Host toolchain.
                 pkgs.bazelisk
                 pkgs.llvmPackages_15.clang
@@ -121,11 +135,8 @@
 
                 # Heterogeneous programming.
 
-                # It's unintuitive that we would need libdrm, but the
-                # ROCT-Thunk-Interface hard-depends on it.
-                pkgs.libdrm
-
                 # Required by the ROCT-Thunk-Interface.
+                pkgs.libdrm
                 pkgs.numactl
 
                 # Required by the ROCR-Runtime.
@@ -134,15 +145,6 @@
                 # Required by the AMD-OpenCL-Runtime.
                 pkgs.libglvnd
                 pkgs.xorg.libX11
-
-                # Development dependencies. TODO: Move out of default flake.
-                pkgs.shellcheck
-                pkgs.git
-                pkgs.python3
-                pkgs.python310Packages.mkdocs-material
-                pkgs.pre-commit
-                pkgs.which
-                pkgs.vale
 
                 # Custom wrappers for rules_ll.
                 bazel

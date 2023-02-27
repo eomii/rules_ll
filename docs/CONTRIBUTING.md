@@ -4,8 +4,15 @@
 
 ## Pre-commit hooks
 
-From within a `rules_ll` shell, setup vale and the pre-commit hooks and verify
-that all checks pass:
+Use the `rules_ll` development shell to get the various tools you need to work
+on the project:
+
+```bash
+nix develop github:eomii/rules_ll#dev
+```
+
+From within the `rules_ll` development shell, setup vale and the pre-commit
+hooks and verify that all checks pass:
 
 ```bash title="(from within the rules_ll root directory)"
 vale sync
