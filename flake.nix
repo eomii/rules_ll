@@ -86,7 +86,7 @@
 
                 # Flags for AMD dependencies.
                 LL_LIBDRM_INCLUDES=-isystem${pkgs.libdrm.dev}/include/libdrm
-                LL_AMD_RPATHS=-rpath=${pkgs.libdrm}/lib:-rpath=${pkgs.numactl}/lib:-rpath=${pkgs.libglvnd}/lib:-rpath=${pkgs.elfutils}/lib:-rpath=${pkgs.libglvnd}/lib:-rpath=${pkgs.xorg.libX11}/lib
+                LL_AMD_RPATHS=-rpath=${pkgs.libdrm}/lib:-rpath=${pkgs.numactl}/lib:-rpath=${pkgs.libglvnd}/lib:-rpath=${pkgs.elfutils.out}/lib:-rpath=${pkgs.libglvnd}/lib:-rpath=${pkgs.xorg.libX11}/lib
 
               '' + (if unfree then ''
                 LL_CUDA=${pkgsUnfree.cudaPackages_12.cudatoolkit}
