@@ -29,20 +29,20 @@ def _initialize_rules_ll_impl(_):
             "
             >> include/hip/hip_version.h""",
         ],
-        sha256 = "23e51d3af517cd63019f8d199e46b84d5a18251d148e727f3985e8d99ccb0e58",
-        strip_prefix = "HIP-rocm-5.4.3",
+        sha256 = "b6ca016f0d28c53fb75bcf0e8e7bc2054411265be43ee048711913814505cf50",
+        strip_prefix = "HIP-c629e630247c17dafb2bc5c85dad8770175e1d33",
         urls = [
-            "https://github.com/ROCm-Developer-Tools/HIP/archive/refs/tags/rocm-5.4.3.tar.gz",
+            "https://github.com/ROCm-Developer-Tools/HIP/archive/c629e630247c17dafb2bc5c85dad8770175e1d33.zip",
         ],
     )
 
     http_archive(
         name = "hipamd",
         build_file = "@rules_ll//third-party-overlays:hipamd.BUILD.bazel",
-        sha256 = "45e6ebb772ac8e5f2015420b106a755bd921c38a92f5a3121a2c9b22c98bb8ba",
-        strip_prefix = "hipamd-rocm-5.4.3",
+        sha256 = "1fbe0252cd545bd88cfbe195f7c068a4e83741cb581b3170e5bc8864cebdd6f2",
+        strip_prefix = "hipamd-312dff7b794337aa040be0691acc78e9f968a8d2",
         urls = [
-            "https://github.com/ROCm-Developer-Tools/hipamd/archive/refs/tags/rocm-5.4.3.zip",
+            "https://github.com/ROCm-Developer-Tools/hipamd/archive/312dff7b794337aa040be0691acc78e9f968a8d2.zip",
         ],
         patches = [
             "@rules_ll//patches:hipamd_deprecate_fix.diff",
