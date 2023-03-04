@@ -18,6 +18,7 @@ LLVM_PROJECT_DEPS = [
     "@llvm-project//clang:crosstu",
     "@llvm-project//clang:driver",
     "@llvm-project//clang:edit",
+    "@llvm-project//clang:extract_api",
     "@llvm-project//clang:format",
     "@llvm-project//clang:frontend",
     "@llvm-project//clang:frontend_rewrite",
@@ -117,8 +118,161 @@ LLVM_PROJECT_DEPS = [
     "@llvm-project//llvm:remark_linker",
     "@llvm-project//llvm:tblgen",
 
+    # LLD
+    "@llvm-project//lld:ELF",
+    "@llvm-project//lld:Common",
+
     # External dependencies.
     "@zlib",
+
+    # TODO: Ideally we'd only need to explicitly specify the AllTargets*
+    # equivalents of these targets, but then we can't build new compilers
+    # targeting these architectures. Check whether this is an error in the llvm
+    # overlay or intended behavior.
+
+    # AMDGPU
+    "@llvm-project//llvm:AMDGPUCodeGen",
+    "@llvm-project//llvm:AMDGPUDisassembler",
+    "@llvm-project//llvm:AMDGPUAsmParser",
+    "@llvm-project//llvm:AMDGPUTargetMCA",
+    "@llvm-project//llvm:AMDGPUUtilsAndDesc",
+    "@llvm-project//llvm:AMDGPUInfo",
+
+    # WebAssembly
+    "@llvm-project//llvm:WebAssemblyCodeGen",
+    "@llvm-project//llvm:WebAssemblyDisassembler",
+    "@llvm-project//llvm:WebAssemblyAsmParser",
+    "@llvm-project//llvm:WebAssemblyTargetMCA",
+    "@llvm-project//llvm:WebAssemblyUtilsAndDesc",
+    "@llvm-project//llvm:WebAssemblyInfo",
+
+    # AArch64
+    "@llvm-project//llvm:AArch64CodeGen",
+    "@llvm-project//llvm:AArch64Disassembler",
+    "@llvm-project//llvm:AArch64AsmParser",
+    "@llvm-project//llvm:AArch64TargetMCA",
+    "@llvm-project//llvm:AArch64UtilsAndDesc",
+    "@llvm-project//llvm:AArch64Info",
+
+    # BPF
+    "@llvm-project//llvm:BPFCodeGen",
+    "@llvm-project//llvm:BPFDisassembler",
+    "@llvm-project//llvm:BPFAsmParser",
+    "@llvm-project//llvm:BPFTargetMCA",
+    "@llvm-project//llvm:BPFUtilsAndDesc",
+    "@llvm-project//llvm:BPFInfo",
+
+    # Lanai
+    "@llvm-project//llvm:LanaiCodeGen",
+    "@llvm-project//llvm:LanaiDisassembler",
+    "@llvm-project//llvm:LanaiAsmParser",
+    "@llvm-project//llvm:LanaiTargetMCA",
+    "@llvm-project//llvm:LanaiUtilsAndDesc",
+    "@llvm-project//llvm:LanaiInfo",
+
+    # MSP430
+    "@llvm-project//llvm:MSP430CodeGen",
+    "@llvm-project//llvm:MSP430Disassembler",
+    "@llvm-project//llvm:MSP430AsmParser",
+    "@llvm-project//llvm:MSP430TargetMCA",
+    "@llvm-project//llvm:MSP430UtilsAndDesc",
+    "@llvm-project//llvm:MSP430Info",
+
+    # AVR
+    "@llvm-project//llvm:AVRCodeGen",
+    "@llvm-project//llvm:AVRDisassembler",
+    "@llvm-project//llvm:AVRAsmParser",
+    "@llvm-project//llvm:AVRTargetMCA",
+    "@llvm-project//llvm:AVRUtilsAndDesc",
+    "@llvm-project//llvm:AVRInfo",
+
+    # Hexagon
+    "@llvm-project//llvm:HexagonCodeGen",
+    "@llvm-project//llvm:HexagonDisassembler",
+    "@llvm-project//llvm:HexagonAsmParser",
+    "@llvm-project//llvm:HexagonTargetMCA",
+    "@llvm-project//llvm:HexagonUtilsAndDesc",
+    "@llvm-project//llvm:HexagonInfo",
+
+    # VE
+    "@llvm-project//llvm:VECodeGen",
+    "@llvm-project//llvm:VEDisassembler",
+    "@llvm-project//llvm:VEAsmParser",
+    "@llvm-project//llvm:VETargetMCA",
+    "@llvm-project//llvm:VEUtilsAndDesc",
+    "@llvm-project//llvm:VEInfo",
+
+    # NVPTX
+    "@llvm-project//llvm:NVPTXCodeGen",
+    "@llvm-project//llvm:NVPTXDisassembler",
+    "@llvm-project//llvm:NVPTXAsmParser",
+    "@llvm-project//llvm:NVPTXTargetMCA",
+    "@llvm-project//llvm:NVPTXUtilsAndDesc",
+    "@llvm-project//llvm:NVPTXInfo",
+
+    # XCore
+    "@llvm-project//llvm:XCoreCodeGen",
+    "@llvm-project//llvm:XCoreDisassembler",
+    "@llvm-project//llvm:XCoreAsmParser",
+    "@llvm-project//llvm:XCoreTargetMCA",
+    "@llvm-project//llvm:XCoreUtilsAndDesc",
+    "@llvm-project//llvm:XCoreInfo",
+
+    # X86
+    "@llvm-project//llvm:X86CodeGen",
+    "@llvm-project//llvm:X86Disassembler",
+    "@llvm-project//llvm:X86AsmParser",
+    "@llvm-project//llvm:X86TargetMCA",
+    "@llvm-project//llvm:X86UtilsAndDesc",
+    "@llvm-project//llvm:X86Info",
+
+    # RISCV
+    "@llvm-project//llvm:RISCVCodeGen",
+    "@llvm-project//llvm:RISCVDisassembler",
+    "@llvm-project//llvm:RISCVAsmParser",
+    "@llvm-project//llvm:RISCVTargetMCA",
+    "@llvm-project//llvm:RISCVUtilsAndDesc",
+    "@llvm-project//llvm:RISCVInfo",
+
+    # Mips
+    "@llvm-project//llvm:MipsCodeGen",
+    "@llvm-project//llvm:MipsDisassembler",
+    "@llvm-project//llvm:MipsAsmParser",
+    "@llvm-project//llvm:MipsTargetMCA",
+    "@llvm-project//llvm:MipsUtilsAndDesc",
+    "@llvm-project//llvm:MipsInfo",
+
+    # PowerPC
+    "@llvm-project//llvm:PowerPCCodeGen",
+    "@llvm-project//llvm:PowerPCDisassembler",
+    "@llvm-project//llvm:PowerPCAsmParser",
+    "@llvm-project//llvm:PowerPCTargetMCA",
+    "@llvm-project//llvm:PowerPCUtilsAndDesc",
+    "@llvm-project//llvm:PowerPCInfo",
+
+    # SystemZ
+    "@llvm-project//llvm:SystemZCodeGen",
+    "@llvm-project//llvm:SystemZDisassembler",
+    "@llvm-project//llvm:SystemZAsmParser",
+    "@llvm-project//llvm:SystemZTargetMCA",
+    "@llvm-project//llvm:SystemZUtilsAndDesc",
+    "@llvm-project//llvm:SystemZInfo",
+
+    # ARM
+    "@llvm-project//llvm:ARMCodeGen",
+    "@llvm-project//llvm:ARMDisassembler",
+    "@llvm-project//llvm:ARMAsmParser",
+    "@llvm-project//llvm:ARMTargetMCA",
+    "@llvm-project//llvm:ARMUtilsAndDesc",
+    "@llvm-project//llvm:ARMInfo",
+
+    # Sparc
+    "@llvm-project//llvm:SparcCodeGen",
+    "@llvm-project//llvm:SparcDisassembler",
+    "@llvm-project//llvm:SparcAsmParser",
+    "@llvm-project//llvm:SparcTargetMCA",
+    "@llvm-project//llvm:SparcUtilsAndDesc",
+    "@llvm-project//llvm:SparcInfo",
 ]
 
 POSIX_DEFINES = [
@@ -142,6 +296,7 @@ POSIX_DEFINES = [
 ]
 
 LINUX_DEFINES = POSIX_DEFINES + [
+    "LLVM_VERSION_MAJOR=17",
     "_GNU_SOURCE",
     "HAVE_LINK_H=1",
     "HAVE_LSEEK64=1",
