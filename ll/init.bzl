@@ -50,6 +50,20 @@ def _initialize_rules_ll_impl(_):
         patch_args = ["-p1"],
     )
 
+    http_archive(
+        name = "roct",
+        build_file = "@rules_ll//third-party-overlays:roct.BUILD.bazel",
+        sha256 = "0c305a57c97772ca973bcbc02dda6ab229c75c63ca5ae19e3c68a774ea18346f",
+        strip_prefix = "ROCT-Thunk-Interface-rocm-5.4.3",
+        urls = [
+            "https://github.com/RadeonOpenCompute/ROCT-Thunk-Interface/archive/refs/tags/rocm-5.4.3.zip",
+        ],
+        patches = [
+            "@rules_ll//patches:roct_adjust_kfd_bin_dir.diff",
+        ],
+        patch_args = ["-p1"],
+    )
+
 rules_ll_dependencies = module_extension(
     implementation = _initialize_rules_ll_impl,
 )

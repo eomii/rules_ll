@@ -1,0 +1,13 @@
+diff --git a/tests/kfdtest/scripts/run_kfdtest.sh b/tests/kfdtest/scripts/run_kfdtest.sh
+index f84ed0e..baebbbc 100755
+--- a/tests/kfdtest/scripts/run_kfdtest.sh
++++ b/tests/kfdtest/scripts/run_kfdtest.sh
+@@ -58,7 +58,7 @@ fi
+ if [ -z "$(command -v kfdtest)" ]; then
+     if [ -z "$BIN_DIR" ]; then
+         if [ -e "${0%/*}/kfdtest" ]; then
+-            BIN_DIR="${0%/*}"
++            BIN_DIR="${0%/*}/kfdtest"  # Customized for rules_ll.
+         else
+             # The default location
+             BIN_DIR="/opt/rocm/bin"

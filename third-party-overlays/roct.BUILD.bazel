@@ -1,0 +1,240 @@
+load("@rules_ll//ll:defs.bzl", "ll_binary", "ll_library")
+load("@bazel_skylib//rules:copy_file.bzl", "copy_file")
+load("@bazel_skylib//rules:native_binary.bzl", "native_binary")
+load("@bazel_skylib//rules:common_settings.bzl", "bool_flag")
+
+bool_flag(
+    name = "shared_libhsakmt",
+    build_setting_default = False,
+)
+
+config_setting(
+    name = "shared",
+    flag_values = {":shared_libhsakmt": "true"},
+)
+
+copy_file(
+    name = "hsakmttypes_h",
+    src = "include/hsakmt.h",
+    out = "hsakmt/hsakmt.h",
+    visibility = ["//visibility:public"],
+)
+
+copy_file(
+    name = "hsakmt_h",
+    src = "include/hsakmttypes.h",
+    out = "hsakmt/hsakmttypes.h",
+    visibility = ["//visibility:public"],
+)
+
+filegroup(
+    name = "hsakmt_headers",
+    srcs = [":hsakmt_h", ":hsakmttypes_h"],
+    visibility = ["//visibility:public"],
+)
+
+ll_library(
+    name = "libhsakmt",
+    includes = [
+        # "src",
+        "include",
+        "$(GENERATED)/hsakmt",
+    ],
+    exposed_angled_includes = [
+        "$(GENERATED)/",
+        # "include",
+    ],
+    hdrs = [
+        "src/fmm.h",
+        "src/libhsakmt.h",
+        "src/pmc_table.h",
+        "src/rbtree.h",
+        "src/rbtree_amd.h",
+
+        # Careful. AMD also distributes this file as part of the linux headers,
+        # usually installed at /usr/include/linux. That header is not the same
+        # as the one we use here.
+        "include/linux/kfd_ioctl.h",
+    ],
+    exposed_hdrs = [":hsakmt_headers"],
+    compile_flags = [
+        "-std=gnu99",
+        # CMake uses -O2. Since we know our compiler, let's just use -O3.
+        "-O3",
+        "-fvisibility=hidden",
+        "-W",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-Wno-unused-parameter",  # TODO: This should be handled better.
+        "-Wformat-security",
+        "-Wswitch-default",
+        "-Wundef",
+        "-Wshadow",
+        "-Wpointer-arith",
+        "-Wbad-function-cast",
+        "-Wcast-qual",
+        "-Wstrict-prototypes",
+        "-Wmissing-prototypes",
+        "-Wmissing-declarations",
+        "-Wredundant-decls",
+        "-Wunreachable-code",
+    ],
+    srcs = [
+        "src/debug.c",
+        "src/events.c",
+        "src/fmm.c",
+        "src/globals.c",
+        "src/libhsakmt.c",
+        "src/memory.c",
+        "src/openclose.c",
+        "src/perfctr.c",
+        "src/pmc_table.c",
+        "src/queues.c",
+        "src/time.c",
+        "src/topology.c",
+        "src/rbtree.c",
+        "src/spm.c",
+        "src/version.c",
+        "src/svm.c",
+    ],
+    visibility = ["//visibility:public"],
+    emit = select({
+        ":shared": ["shared_object"],
+        "//conditions:default": ["archive"],
+    }),
+    shared_object_link_flags = select({
+        # TODO: Use version script once it's properly supported in rules_ll.
+        ":shared": [
+            # Make sure we are not missing anything.
+            "--no-undefined",
+            "-znodelete",
+
+            # Pulled in from the nix environment or the host.
+            "-lnuma",
+            "-ldrm",
+            "-ldrm_amdgpu",
+        ],
+        "//conditions:default": [],
+    }),
+)
+
+ll_binary(
+    name = "reopen",
+    srcs = [
+        "tests/reopen/kmtreopen.c",
+    ],
+    deps = select(
+        {
+            ":shared": [
+                ":libhsakmt",
+            ],
+        },
+        no_match_error = """
+
+This test requires building libhsakmt with --@roct//:shared_libhsakmt.""",
+    ),
+    link_flags = [
+        # Pulled in from the nix environment or the host.
+        "-lnuma",
+        "-ldrm",
+        "-ldrm_amdgpu",
+    ],
+)
+
+# Don't run this test directly. Only invoke it via the kfdtest_sh target wich
+# automatically excludes broken tests.
+ll_binary(
+    name = "kfdtest",
+    srcs = [
+        "tests/kfdtest/src/AqlQueue.cpp",
+        "tests/kfdtest/src/BasePacket.cpp",
+        "tests/kfdtest/src/BaseQueue.cpp",
+        "tests/kfdtest/src/Dispatch.cpp",
+        "tests/kfdtest/src/GoogleTestExtension.cpp",
+        "tests/kfdtest/src/IndirectBuffer.cpp",
+        "tests/kfdtest/src/Assemble.cpp",
+        "tests/kfdtest/src/ShaderStore.cpp",
+        "tests/kfdtest/src/LinuxOSWrapper.cpp",
+        "tests/kfdtest/src/PM4Packet.cpp",
+        "tests/kfdtest/src/PM4Queue.cpp",
+        "tests/kfdtest/src/RDMAUtil.cpp",
+        "tests/kfdtest/src/SDMAPacket.cpp",
+        "tests/kfdtest/src/SDMAQueue.cpp",
+        "tests/kfdtest/src/KFDBaseComponentTest.cpp",
+        "tests/kfdtest/src/KFDMultiProcessTest.cpp",
+        "tests/kfdtest/src/KFDTestMain.cpp",
+        "tests/kfdtest/src/KFDTestUtil.cpp",
+        "tests/kfdtest/src/KFDTestUtilQueue.cpp",
+        "tests/kfdtest/src/KFDOpenCloseKFDTest.cpp",
+        "tests/kfdtest/src/KFDTopologyTest.cpp",
+        "tests/kfdtest/src/KFDMemoryTest.cpp",
+        "tests/kfdtest/src/KFDLocalMemoryTest.cpp",
+        "tests/kfdtest/src/KFDEventTest.cpp",
+        "tests/kfdtest/src/KFDQMTest.cpp",
+        "tests/kfdtest/src/KFDCWSRTest.cpp",
+        "tests/kfdtest/src/KFDExceptionTest.cpp",
+        "tests/kfdtest/src/KFDGraphicsInterop.cpp",
+        "tests/kfdtest/src/KFDPerfCounters.cpp",
+        "tests/kfdtest/src/KFDGWSTest.cpp",
+        "tests/kfdtest/src/KFDIPCTest.cpp",
+        "tests/kfdtest/src/KFDASMTest.cpp",
+        "tests/kfdtest/src/KFDEvictTest.cpp",
+        "tests/kfdtest/src/KFDHWSTest.cpp",
+        "tests/kfdtest/src/KFDPerformanceTest.cpp",
+        "tests/kfdtest/src/KFDPMTest.cpp",
+        "tests/kfdtest/src/KFDSVMRangeTest.cpp",
+        "tests/kfdtest/src/KFDSVMEvictTest.cpp",
+        "tests/kfdtest/src/KFDRASTest.cpp",
+        "tests/kfdtest/src/RDMATest.cpp",
+        "tests/kfdtest/gtest-1.6.0/gtest-all.cpp",
+    ],
+    hdrs = glob([
+        "tests/kfdtest/src/*.hpp",
+        "tests/kfdtest/include/*.h",
+        "tests/kfdtest/include/asic_reg/*.h",
+    ]) + [
+        "tests/kfdtest/gtest-1.6.0/gtest/gtest.h",
+    ],
+    includes = [
+        "tests/kfdtest/include",
+    ],
+    angled_includes = [
+        "tests/kfdtest/gtest-1.6.0",
+    ],
+    compile_flags = [
+        "-std=c++17",
+        "-O2",
+    ],
+    depends_on_llvm = 1,
+    link_flags = [
+        "-ldrm",
+        "-ldrm_amdgpu",
+    ] + select({
+        ":shared": [],
+        "//conditions:default": ["-lnuma"],
+    }),
+    deps = [":libhsakmt"],
+)
+
+copy_file(
+    name = "kfdtest_exclude",
+    src = "tests/kfdtest/scripts/kfdtest.exclude",
+    out = "kfdtest.exclude",
+)
+
+# Don't run these tests from within a desktop environment. It will crash the
+# system. The gfx11 architecture seems to be not well supported at the moment.
+#
+# For gfx11 specifically, consider running with:
+#
+#     --exclude "KFDQMTest.PM4EventInterrupt:KFDIPCText.*"
+native_binary(
+    name = "kfdtest_sh",
+    src = "tests/kfdtest/scripts/run_kfdtest.sh",
+    data = [
+        ":kfdtest_exclude",
+        ":kfdtest",
+    ],
+    out = "run_kfdtest.sh",
+)

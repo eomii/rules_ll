@@ -61,4 +61,5 @@ use_repo(
     rules_ll_dependencies,
     "hip",
     "hipamd",
+    "roct",
 )
