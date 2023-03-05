@@ -1,0 +1,183 @@
+load("@rules_ll//ll:defs.bzl", "ll_library")
+load("@bazel_skylib//rules:copy_file.bzl", "copy_file")
+load("@bazel_skylib//rules:common_settings.bzl", "bool_flag")
+
+bool_flag(
+    name = "shared_libhsa-runtime64",
+    build_setting_default = False,
+)
+
+config_setting(
+    name = "shared",
+    flag_values = {":shared_libhsa-runtime64": "true"},
+)
+
+HSA_COMMON_CXX_FLAGS = [
+    "-Wall",
+    # CMake uses c++11, but that causes errors for us. C++17 seems to work fine.
+    "-std=c++17",
+    "-fno-strict-aliasing",
+    "-m64",
+    "-msse",
+    "-msse2",
+]
+
+HSA_COMMON_DEFS = [
+    "__STDC_LIMIT_MACROS",
+    "__STDC_CONSTANT_MACROS",
+    "__STDC_FORMAT_MACROS",
+    "LITTLEENDIAN_CPU=1",
+]
+
+CORE_RUNTIME_TARGET_DEFINES = HSA_COMMON_DEFS + [
+    "__linux__",
+    "HSA_EXPORT=1",
+    "HSA_EXPORT_FINALIZER=1",
+    "HSA_EXPORT_IMAGES=1",
+    "HSA_DEPRECATED=",
+]
+
+HSA_CXX_FLAGS = HSA_COMMON_CXX_FLAGS + [
+    "-fexceptions",
+    "-fno-rtti",
+    "-fvisibility=hidden",
+    # We skip disabling some warnings from CMake.
+    "-Wno-null-conversion",
+    "-Wno-unused-variable",
+    "-Wno-unused-but-set-variable",
+    "-Wno-missing-braces",
+    "-Wno-bitwise-instead-of-logical",  # Not in CMake.
+    "-fno-math-errno",
+    "-fno-threadsafe-statics",
+    "-fmerge-all-constants",
+    "-fms-extensions",
+]
+
+HSA_HEADER_NAMES = [
+    "Brig",
+    "amd_hsa_common",
+    "amd_hsa_elf",
+    "amd_hsa_kernel_code",
+    "amd_hsa_queue",
+    "amd_hsa_signal",
+    "hsa",
+    "hsa_api_trace",
+    "hsa_ext_amd",
+    "hsa_ext_finalize",
+    "hsa_ext_image",
+    "hsa_ven_amd_aqlprofile",
+    "hsa_ven_amd_loader",
+]
+
+[
+    copy_file(
+        name = "hsa_header_{}".format(name),
+        src = "src/inc/{}.h".format(name),
+        out = "hsa/{}.h".format(name),
+    )
+    for name in HSA_HEADER_NAMES
+]
+
+ll_library(
+    name = "hsa_headers",
+    exposed_hdrs = [":hsa_header_{}".format(name) for name in HSA_HEADER_NAMES],
+    exposed_includes = ["$(GENERATED)/"],
+    visibility = ["//visibility:public"],
+)
+
+
+ll_library(
+    name = "libhsa-runtime64",
+    srcs = [
+        "src/core/util/lnx/os_linux.cpp",
+        "src/core/util/small_heap.cpp",
+        "src/core/util/timer.cpp",
+        "src/core/util/flag.cpp",
+        "src/core/runtime/amd_blit_kernel.cpp",
+        "src/core/runtime/amd_blit_sdma.cpp",
+        "src/core/runtime/amd_cpu_agent.cpp",
+        "src/core/runtime/amd_gpu_agent.cpp",
+        "src/core/runtime/amd_hsa_loader.cpp",
+        "src/core/runtime/amd_aql_queue.cpp",
+        "src/core/runtime/amd_loader_context.cpp",
+        "src/core/runtime/hsa_ven_amd_loader.cpp",
+        "src/core/runtime/amd_memory_region.cpp",
+        "src/core/runtime/amd_filter_device.cpp",
+        "src/core/runtime/amd_topology.cpp",
+        "src/core/runtime/default_signal.cpp",
+        "src/core/runtime/host_queue.cpp",
+        "src/core/runtime/hsa.cpp",
+        "src/core/runtime/hsa_api_trace.cpp",
+        "src/core/runtime/hsa_ext_amd.cpp",
+        "src/core/runtime/hsa_ext_interface.cpp",
+        "src/core/runtime/interrupt_signal.cpp",
+        "src/core/runtime/intercept_queue.cpp",
+        "src/core/runtime/ipc_signal.cpp",
+        "src/core/runtime/isa.cpp",
+        "src/core/runtime/runtime.cpp",
+        "src/core/runtime/signal.cpp",
+        "src/core/runtime/queue.cpp",
+        "src/core/runtime/cache.cpp",
+        "src/core/runtime/svm_profiler.cpp",
+        "src/core/common/shared.cpp",
+        "src/core/common/hsa_table_interface.cpp",
+        "src/loader/executable.cpp",
+        "src/libamdhsacode/amd_elf_image.cpp",
+        "src/libamdhsacode/amd_hsa_code_util.cpp",
+        "src/libamdhsacode/amd_hsa_locks.cpp",
+        "src/libamdhsacode/amd_options.cpp",
+        "src/libamdhsacode/amd_hsa_code.cpp",
+    ],
+    includes = [
+        "src",
+        "src/libamdhsacode",
+    ],
+    hdrs = glob([
+        "src/libamdhsacode/amd_hsa_code_util.hpp",
+        "src/libamdhsacode/amd_hsa_locks.hpp",
+        "src/libamdhsacode/amd_options.hpp",
+
+        # TODO: Support the image runtime.
+        "src/image/inc/hsa_ext_image_impl.h",
+
+        "src/core/common/shared.h",
+        "src/core/inc/*.h",
+        "src/core/inc/*.hpp",
+        "src/core/util/*.h",
+        "src/core/util/*.hpp",
+        "src/inc/*.h",
+
+        # TODO: At the moment we generate trap_handler_v2.h offline and patch
+        # the final header in. Recreate the logic to generate it properly.
+        "src/core/runtime/amd_trap_handler_v2.h",
+
+        "src/loader/executable.hpp",
+        "src/loader/AMDHSAKernelDescriptor.h",
+    ]),
+    compile_flags = HSA_CXX_FLAGS,
+    defines = CORE_RUNTIME_TARGET_DEFINES + [
+        # Workaround for bug https://github.com/RadeonOpenCompute/ROCm/issues/1880#issuecomment-1416759759.
+        "NDEBUG",
+    ],
+    emit = select({
+        ":shared": ["shared_object"],
+        "//conditions:default": ["archive"],
+    }),
+    shared_object_link_flags = select({
+        ":shared": [
+            # Ensure that we are not missing anything.
+            "--no-undefined",
+
+            # Pulled in from the nix environment or the host.
+            "-lelf",
+            "-ldrm",
+            "-ldrm_amdgpu",
+        ],
+        "//conditions:default": [],
+    }) + select({
+        "@roct//:shared": [],
+        "//conditions:default": ["-lnuma"],
+    }),
+    deps = ["@roct//:libhsakmt"],
+    visibility = ["//visibility:public"],
+)

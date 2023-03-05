@@ -62,5 +62,6 @@ use_repo(
     "hip",
     "hipamd",
     "rocm-device-libs",
+    "rocr",
     "roct",
 )
