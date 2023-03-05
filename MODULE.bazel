@@ -59,6 +59,7 @@ rules_ll_dependencies = use_extension(
 
 use_repo(
     rules_ll_dependencies,
+    "comgr",
     "hip",
     "hipamd",
     "rocm-device-libs",

@@ -79,6 +79,20 @@ def _initialize_rules_ll_impl(_):
     )
 
     http_archive(
+        name = "comgr",
+        build_file = "@rules_ll//third-party-overlays:comgr.BUILD.bazel",
+        sha256 = "e76989539fb2454cddb54221bcc81b37c0b429195142a106e592b3e812adc3d8",
+        strip_prefix = "ROCm-CompilerSupport-5650602bbd8df037c0095d46f526e481b262c02c",
+        urls = [
+            "https://github.com/RadeonOpenCompute/ROCm-CompilerSupport/archive/5650602bbd8df037c0095d46f526e481b262c02c.zip",
+        ],
+        patches = [
+            "@rules_ll//patches:comgr_bc2h.diff",
+        ],
+        patch_args = ["-p1"],
+    )
+
+    http_archive(
         name = "rocm-device-libs",
         build_file = "@rules_ll//third-party-overlays:rocm-device-libs.BUILD.bazel",
         sha256 = "163dab2ded87a0e282597ab160ec3788da3293c4149462c780260c0412a81973",
