@@ -1,0 +1,44 @@
+diff --git a/src/hip_graph_internal.hpp b/src/hip_graph_internal.hpp
+index e2bee8a1..b4e986bc 100644
+--- a/src/hip_graph_internal.hpp
++++ b/src/hip_graph_internal.hpp
+@@ -1066,11 +1066,11 @@ class hipGraphMemcpyNode : public hipGraphNode {
+     pCopyParams_ = new hipMemcpy3DParms(*rhs.pCopyParams_);
+   }
+ 
+-  hipGraphNode* clone() const {
++  hipGraphNode* clone() const override {
+     return new hipGraphMemcpyNode(static_cast<hipGraphMemcpyNode const&>(*this));
+   }
+ 
+-  hipError_t CreateCommand(amd::HostQueue* queue) {
++  hipError_t CreateCommand(amd::HostQueue* queue) override {
+     if (IsHtoHMemcpy(pCopyParams_->dstPtr.ptr, pCopyParams_->srcPtr.ptr, pCopyParams_->kind)) {
+       return hipSuccess;
+     }
+@@ -1106,14 +1106,14 @@ class hipGraphMemcpyNode : public hipGraphNode {
+     std::memcpy(pCopyParams_, params, sizeof(hipMemcpy3DParms));
+     return hipSuccess;
+   }
+-  hipError_t SetParams(hipGraphNode* node) {
++  hipError_t SetParams(hipGraphNode* node) override {
+     const hipGraphMemcpyNode* memcpyNode = static_cast<hipGraphMemcpyNode const*>(node);
+     return SetParams(memcpyNode->pCopyParams_);
+   }
+   // ToDo: use this when commands are cloned and command params are to be updated
+   hipError_t SetCommandParams(const hipMemcpy3DParms* pNodeParams);
+   hipError_t ValidateParams(const hipMemcpy3DParms* pNodeParams);
+-  std::string GetLabel(hipGraphDebugDotFlags flag) {
++  std::string GetLabel(hipGraphDebugDotFlags flag) override {
+     const HIP_MEMCPY3D pCopy = hip::getDrvMemcpy3DDesc(*pCopyParams_);
+     hipMemoryType srcMemoryType = pCopy.srcMemoryType;
+     if (srcMemoryType == hipMemoryTypeUnified) {
+@@ -1185,7 +1185,7 @@ class hipGraphMemcpyNode : public hipGraphNode {
+     }
+     return label;
+   }
+-  std::string GetShape(hipGraphDebugDotFlags flag) {
++  std::string GetShape(hipGraphDebugDotFlags flag) override {
+     if (flag == hipGraphDebugDotFlagsMemcpyNodeParams || flag == hipGraphDebugDotFlagsVerbose) {
+       return "record";
+     } else {

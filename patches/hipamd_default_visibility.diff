@@ -1,0 +1,49 @@
+diff --git a/src/hip_platform.cpp b/src/hip_platform.cpp
+index aebd7f99..702670e6 100644
+--- a/src/hip_platform.cpp
++++ b/src/hip_platform.cpp
+@@ -69,7 +69,8 @@ static bool isCompatibleCodeObject(const std::string& codeobj_target_id, const c
+   return codeobj_target_id == short_name;
+ }
+ 
+-extern "C" hip::FatBinaryInfo** __hipRegisterFatBinary(const void* data) {
++extern "C" __attribute__((visibility("default"))) hip::FatBinaryInfo** __hipRegisterFatBinary(
++    const void* data) {
+   const __CudaFatBinaryWrapper* fbwrapper = reinterpret_cast<const __CudaFatBinaryWrapper*>(data);
+   if (fbwrapper->magic != __hipFatMAGIC2 || fbwrapper->version != 1) {
+     LogPrintfError("Cannot Register fat binary. FatMagic: %u version: %u ", fbwrapper->magic,
+@@ -79,7 +80,7 @@ extern "C" hip::FatBinaryInfo** __hipRegisterFatBinary(const void* data) {
+   return PlatformState::instance().addFatBinary(fbwrapper->binary);
+ }
+ 
+-extern "C" void __hipRegisterFunction(hip::FatBinaryInfo** modules, const void* hostFunction,
++extern "C" __attribute__((visibility("default"))) void __hipRegisterFunction(hip::FatBinaryInfo** modules, const void* hostFunction,
+                                       char* deviceFunction, const char* deviceName,
+                                       unsigned int threadLimit, uint3* tid, uint3* bid,
+                                       dim3* blockDim, dim3* gridDim, int* wSize) {
+@@ -139,7 +140,7 @@ extern "C" void __hipRegisterSurface(
+ extern "C" void __hipRegisterManagedVar(
+     void* hipModule,  // Pointer to hip module returned from __hipRegisterFatbinary
+     void** pointer,   // Pointer to a chunk of managed memory with size \p size and alignment \p
+-                     // align HIP runtime allocates such managed memory and assign it to \p pointer
++                      // align HIP runtime allocates such managed memory and assign it to \p pointer
+     void* init_value,  // Initial value to be copied into \p pointer
+     const char* name,  // Name of the variable in code object
+     size_t size, unsigned align) {
+@@ -174,7 +175,7 @@ extern "C" void __hipRegisterTexture(
+   guarantee((err == hipSuccess), "Cannot register Static Global Var");
+ }
+ 
+-extern "C" void __hipUnregisterFatBinary(hip::FatBinaryInfo** modules) {
++extern "C" __attribute__((visibility("default"))) void __hipUnregisterFatBinary(hip::FatBinaryInfo** modules) {
+   hipError_t err = PlatformState::instance().removeFatBinary(modules);
+   guarantee((err == hipSuccess), "Cannot Unregister Fat Binary");
+ }
+@@ -277,7 +278,6 @@ hipError_t hipGetSymbolSize(size_t* sizePtr, const void* symbol) {
+ 
+ hipError_t ihipCreateGlobalVarObj(const char* name, hipModule_t hmod, amd::Memory** amd_mem_obj,
+                                   hipDeviceptr_t* dptr, size_t* bytes) {
+-
+   /* Get Device Program pointer*/
+   amd::Program* program = as_amd(reinterpret_cast<cl_program>(hmod));
+   device::Program* dev_program = program->getDeviceProgram(*hip::getCurrentDevice()->devices()[0]);

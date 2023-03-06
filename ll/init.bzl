@@ -20,9 +20,9 @@ def _initialize_rules_ll_impl(_):
         patch_cmds = [
             """echo "
             #define HIP_VERSION_MAJOR 5
-            #define HIP_VERSION_MINOR 4
-            #define HIP_VERSION_PATCH 3
-            #define HIP_VERSION 50303000
+            #define HIP_VERSION_MINOR 5
+            #define HIP_VERSION_PATCH 0
+            #define HIP_VERSION 50500000
             #define HIP_VERSION_GITHASH "0000"
             #define HIP_VERSION_BUILD_NAME "rules_hip_custom_build_name_string"
             #define HIP_VERSION_BUILD_ID 0
@@ -46,6 +46,10 @@ def _initialize_rules_ll_impl(_):
         ],
         patches = [
             "@rules_ll//patches:hipamd_deprecate_fix.diff",
+            "@rules_ll//patches:hipamd_correct_jit_option.diff",
+            "@rules_ll//patches:hipamd_inconsistent_overrides.diff",
+            "@rules_ll//patches:hipamd_fix_extraneous_parentheses.diff",
+            "@rules_ll//patches:hipamd_default_visibility.diff",
         ],
         patch_args = ["-p1"],
     )

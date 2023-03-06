@@ -1,5 +1,16 @@
+load("@rules_ll//ll:defs.bzl", "ll_library")
+
+# Target for the toolchains.
 filegroup(
     name = "headers",
     srcs = glob(["include/**", "include/hip/hip_version.h"]),
+    visibility = ["//visibility:public"],
+)
+
+# Target for hipamd.
+ll_library(
+    name = "hip_headers",
+    exposed_hdrs = [":headers"],
+    exposed_angled_includes = ["include"],
     visibility = ["//visibility:public"],
 )

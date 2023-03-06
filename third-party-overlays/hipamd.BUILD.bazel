@@ -1,5 +1,113 @@
+load("@rules_ll//ll:defs.bzl", "ll_library")
+load("@bazel_skylib//rules:common_settings.bzl", "bool_flag")
+load("@rules_ll//third-party-overlays:rocclr_config.bzl", "ROCCLR_DEFINES")
+
+bool_flag(
+    name = "shared_libamdhip64",
+    build_setting_default = False,
+)
+
+config_setting(
+    name = "shared",
+    flag_values = {":shared_libamdhip64": "true"},
+)
+
+# Target for the toolchians.
 filegroup(
     name = "headers",
     srcs = glob(["include/**"]),
     visibility = ["//visibility:public"],
+)
+
+ll_library(
+    name = "libamdhip64",
+    includes = ["src"],
+    angled_includes = ["include"],
+    srcs = [
+        "src/cl_gl.cpp",
+        "src/fixme.cpp",
+        "src/hip_activity.cpp",
+        "src/hip_code_object.cpp",
+        "src/hip_context.cpp",
+        "src/hip_device_runtime.cpp",
+        "src/hip_device.cpp",
+        "src/hip_error.cpp",
+        "src/hip_event.cpp",
+        "src/hip_event_ipc.cpp",
+        "src/hip_fatbin.cpp",
+        "src/hip_global.cpp",
+        "src/hip_graph_internal.cpp",
+        "src/hip_graph.cpp",
+        "src/hip_hmm.cpp",
+        "src/hip_intercept.cpp",
+        "src/hip_memory.cpp",
+        "src/hip_mempool.cpp",
+        "src/hip_mempool_impl.cpp",
+        "src/hip_module.cpp",
+        "src/hip_peer.cpp",
+        "src/hip_platform.cpp",
+        "src/hip_profile.cpp",
+        "src/hip_stream_ops.cpp",
+        "src/hip_stream.cpp",
+        "src/hip_surface.cpp",
+        "src/hip_texture.cpp",
+        "src/hip_gl.cpp",
+        "src/hip_vm.cpp",
+    ],
+    hdrs = glob([
+        "src/*.h",
+        "src/*.hpp",
+        "include/hip/amd_detail/*.h",
+        "include/hip/amd_detail/*.hpp",
+    ]),
+    deps = [
+        "@rocclr//:rocclr",
+        "@rocm-opencl-runtime//:CL2.2",
+        "@hip//:hip_headers",
+        "@rocm-opencl-runtime//:headers",
+        "@comgr//:amd_comgr",
+        "@rocr//:libhsa-runtime64",
+    ] + select({
+        "@roct//:shared": ["@roct//:libhsakmt"],
+        "//conditions:default": []
+    }),
+    defines = ROCCLR_DEFINES + [
+        "HIP_VERSION_MAJOR=5",
+        "HIP_VERSION_MINOR=5",
+        "HIP_VERSION_PATCH=0",
+        "HIP_VERSION=50500000",
+        'HIP_VERSION_GITHASH="0000"',
+        'HIP_VERSION_BUILD_NAME="rules_hip_custom_build_name_string"',
+        "HIP_VERSION_BUILD_ID=0",
+
+        "__HIP_PLATFORM_AMD__",
+    ],
+    compile_flags = [
+        "-std=c++17",
+        "-O2",  # TODO: Might want to tweak this.
+        # "-fvisibility=hidden",  # TODO: Enable after verifying with the tests.
+        "-Wno-delete-abstract-non-virtual-dtor",  # TODO: Fix this.
+    ],
+    visibility = ["//visibility:public"],
+    depends_on_llvm = 1,
+    emit = select({
+        ":shared": ["shared_object"],
+        "//conditions:default": ["archive"],
+    }),
+    shared_object_link_flags = select({
+        ":shared": [
+            "--no-undefined",
+
+            # Required by rocr.
+            "-lnuma",
+            "-ldrm",
+            "-ldrm_amdgpu",
+        ],
+        "//conditions:default": [],
+    }) + select({
+        "@rocr//:shared": [],
+        "//conditions:default": [
+            "-lelf",
+        ],
+    })
 )
