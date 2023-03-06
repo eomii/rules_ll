@@ -93,6 +93,16 @@ def _initialize_rules_ll_impl(_):
     )
 
     http_archive(
+        name = "rocclr",
+        build_file = "@rules_ll//third-party-overlays:rocclr.BUILD.bazel",
+        sha256 = "7f49ffc6fd4183284e8ff2cf8b0e4897732979803ce3d1aec3780fae6ff0d482",
+        strip_prefix = "ROCclr-20dfaee8767f7bc9df722fdbc397d77eed267607",
+        urls = [
+            "https://github.com/ROCm-Developer-Tools/ROCclr/archive/20dfaee8767f7bc9df722fdbc397d77eed267607.zip",
+        ],
+    )
+
+    http_archive(
         name = "rocm-opencl-runtime",
         build_file = "@rules_ll//third-party-overlays:rocm-opencl-runtime.BUILD.bazel",
         sha256 = "6094046eb40a05b05075278c262a6c6f332f2a98a132eee969aab8e44d6154c5",
