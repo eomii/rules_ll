@@ -1,0 +1,191 @@
+load("@rules_ll//ll:defs.bzl", "ll_library")
+
+ll_library(
+    name = "CL2.2",
+    exposed_angled_includes = ["khronos/headers/opencl2.2"],
+    exposed_hdrs = glob([
+        "khronos/headers/opencl2.2/CL/*.h",
+        "khronos/headers/opencl2.2/CL/*.hpp",
+    ]),
+    visibility = ["//visibility:public"],
+)
+
+ll_library(
+    name = "CL2.1",
+    exposed_angled_includes = ["khronos/headers/opencl2.1"],
+    exposed_hdrs = glob([
+        "khronos/headers/opencl2.1/CL/*.h",
+        "khronos/headers/opencl2.1/CL/*.hpp",
+    ])
+)
+
+ll_library(
+    name = "headers",
+    exposed_hdrs = glob(["amdocl/*.hpp", "amdocl/*.h"]),
+    exposed_includes = [
+        "amdocl",
+        # An unfortunate include. Let's see whether we can change this upstream.
+        ".",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+# TODO: Everything below this point under (suspended) construction for now. This
+# is not needed for hip but we probably want to support native OpenCL toolchains
+# in rules_ll at some point to ease transitioning from OCL to HIP.
+
+'''
+load("@bazel_skylib//rules:common_settings.bzl", "bool_flag")
+
+bool_flag(
+    name = "shared_libamdocl64",
+    build_setting_default = False,
+)
+
+config_setting(
+    name = "shared",
+    flag_values = {":shared_libamdocl64": "true"},
+)
+
+
+ll_library(
+    name = "libamdocl64",
+    # exposed_hdrs = glob(["amdocl/*.hpp", "amdocl/*.h"]),
+    # exposed_includes = [
+    #     "ROCm-OpenCL-Runtime/amdocl",
+    #     "ROCm-OpenCL-Runtime",
+    # ],
+    srcs = [
+        "amdocl/cl_command.cpp",
+        "amdocl/cl_context.cpp",
+        "amdocl/cl_counter.cpp",
+        "amdocl/cl_d3d9.cpp",
+        "amdocl/cl_d3d10.cpp",
+        "amdocl/cl_d3d11.cpp",
+        "amdocl/cl_device.cpp",
+        "amdocl/cl_event.cpp",
+        "amdocl/cl_execute.cpp",
+        "amdocl/cl_gl.cpp",
+        "amdocl/cl_icd.cpp",
+        "amdocl/cl_kernel_info_amd.cpp",
+        "amdocl/cl_memobj.cpp",
+        "amdocl/cl_p2p_amd.cpp",
+        "amdocl/cl_pipe.cpp",
+        "amdocl/cl_platform_amd.cpp",
+        "amdocl/cl_profile_amd.cpp",
+        "amdocl/cl_program.cpp",
+        "amdocl/cl_sampler.cpp",
+        "amdocl/cl_sdi_amd.cpp",
+        "amdocl/cl_svm.cpp",
+        "amdocl/cl_thread_trace_amd.cpp",
+    ],
+    deps = [
+        ":CL2.2",
+        ":headers",
+        "@rocr//:libhsa-runtime64",
+        "@rocclr//:headers",
+        "@rocclr//:rocclr",
+    ],
+    depends_on_llvm = 1,
+    visibility = ["//visibility:public"],
+    emit = select({
+        ":shared": ["shared_object"],
+        "//conditions:default": ["archive"],
+    }),
+    shared_object_link_flags = select({
+        ":shared": [
+            "--no-undefined",
+            "-lnuma",  # For rocclr which we only distribute as archive.
+        ],
+        "//conditions:default": [],
+    }) + select({
+        "@rocr//:shared": [],
+        "//conditions:default": [
+            "-ldrm",
+            "-ldrm_amdgpu",
+            "-lelf",
+        ],
+    }),
+)
+
+# Testing Infrastructure
+
+ll_library(
+    name = "test_headers",
+    exposed_includes = [
+        "tests/ocltst/include",
+    ],
+    exposed_hdrs = glob(["tests/ocltst/include/**/*.h"]),
+)
+
+ll_library(
+    name = "test_module_headers",
+    exposed_includes = [
+        "tests/ocltst/module/include",
+    ],
+    exposed_hdrs = glob(["tests/ocltst/module/include/*.h"]),
+)
+
+ll_library(
+    name = "test_module_common",
+    includes = [
+        "tests/ocltst/module/include",
+    ],
+    hdrs = [
+        "tests/ocltst/module/common/Timer.h",
+        "tests/ocltst/module/common/OCLGLCommon.h",
+    ],
+    srcs = [
+        "tests/ocltst/module/common/BaseTestImp.cpp",
+        "tests/ocltst/module/common/OCLTestImp.cpp",
+        "tests/ocltst/module/common/OCLTestListImp.cpp",
+        "tests/ocltst/module/common/OCLTestUtils.cpp",
+        "tests/ocltst/module/common/OCLThread.cpp",
+        "tests/ocltst/module/common/OCLWrapper.cpp",
+        "tests/ocltst/module/common/Timer.cpp",
+    ],
+    compile_flags = [
+        "-std=c++20",
+    ],
+    deps = [
+        ":test_headers",
+        ":test_module_headers",
+        ":CL2.2",
+        ":libamdocl64",
+        ":headers",
+    ],
+)
+
+ll_binary(
+    name = "ocltst",
+    hdrs = glob(["tests/ocltst/env/*.h"]),
+    compile_flags = ["-std=c++17"],
+    srcs = [
+        "tests/ocltst/env/oclTestLog.cpp",
+        "tests/ocltst/env/oclsysinfo.cpp",
+        "tests/ocltst/env/ocltst.cpp",
+        "tests/ocltst/env/pfm.cpp",
+        "tests/ocltst/env/Timer.cpp",
+        "tests/ocltst/module/common/BaseTestImp.cpp",
+        "tests/ocltst/module/common/OCLTestImp.cpp",
+        "tests/ocltst/module/common/OCLThread.cpp",
+        "tests/ocltst/module/common/OCLWrapper.cpp",
+    ],
+    deps = [
+        ":test_headers",
+        ":test_module_headers",
+        ":CL2.2",
+        ":libamdocl64",
+        ":headers",
+        # "//ROCclr:ROCclr",
+    ],
+    depends_on_llvm = 1,
+    link_flags = [
+        "-lrt",
+        "-lnuma",
+        "-lelf",
+        "-ldrm",
+        "-ldrm_amdgpu",
+    ],
+)
+'''
