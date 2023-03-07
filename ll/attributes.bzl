@@ -399,6 +399,24 @@ LL_TOOLCHAIN_ATTRS = {
         allow_files = True,
         # default = "@llvm-project//openmp:omp_header",
     ),
+    "opt": attr.label(
+        doc = "The LLVM opt tool.",
+        cfg = transition_to_bootstrap,
+        allow_single_file = True,
+        executable = True,
+        default = "@llvm-project//llvm:opt",
+    ),
+    "objcopy": attr.label(
+        doc = """The llvm-objcopy tool.
+
+        Technically only required by AMGGPU toolchains, but it's such a basic
+        tool that it makes sense to ship it as part of the default toolchain.
+        """,
+        cfg = transition_to_bootstrap,
+        allow_single_file = True,
+        executable = True,
+        default = "@llvm-project//llvm:llvm-objcopy",
+    ),
     "libomp": attr.label(
         doc = "The OpenMP library.",
         cfg = transition_to_cpp,

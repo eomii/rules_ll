@@ -25,7 +25,10 @@ def compile_object_environment(ctx):
             "LINK": toolchain.bitcode_linker.path,
             "LLD": toolchain.linker.path,
             "LLVM_SYMBOLIZER_PATH": toolchain.symbolizer.path,
-            "PATH": "$PATH:" + toolchain.linker_executable.dirname,
+            "PATH": ":".join([
+                toolchain.linker.dirname,
+                toolchain.linker_executable.dirname,
+            ]),
         }
     elif config in ["cuda_nvptx", "hip_nvptx", "sycl_cuda"]:
         return {
@@ -33,7 +36,11 @@ def compile_object_environment(ctx):
             "LINK": toolchain.bitcode_linker.path,
             "LLD": toolchain.linker.path,
             "LLVM_SYMBOLIZER_PATH": toolchain.symbolizer.path,
-            "PATH": "$PATH:" + toolchain.linker_executable.dirname,
+            "PATH": ":".join([
+                toolchain.linker.dirname,
+                toolchain.linker_executable.dirname,
+                toolchain.objcopy.dirname,  # Offload-bundler looks here.
+            ]),
             "HIPSCYL_DEBUG_LEVEL": "4",
         }
     elif config == "bootstrap":

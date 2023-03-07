@@ -29,6 +29,8 @@ def compile_object_tools(ctx):
         toolchain.linker,
         toolchain.linker_executable,
         toolchain.linker_wrapper,
+        toolchain.objcopy,
+        toolchain.opt,
     ]
 
     if config in ["cpp", "omp_cpu"]:
