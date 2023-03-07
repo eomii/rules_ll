@@ -9,7 +9,6 @@ load(
     "//ll:actions.bzl",
     "compile_objects",
     "create_archive_library",
-    "link_bitcode_library",
     "link_executable",
     "link_shared_object",
     "precompile_interfaces",
@@ -19,22 +18,20 @@ load(
     "LL_BINARY_ATTRS",
     "LL_LIBRARY_ATTRS",
 )
-load("//ll:resolve_rule_inputs.bzl", "resolve_rule_inputs")
+load("//ll:resolve_rule_inputs.bzl", "expand_includes", "resolve_rule_inputs")
 load("//ll:providers.bzl", "LlCompilationDatabaseFragmentsInfo", "LlInfo")
 load("//ll:transitions.bzl", "ll_transition")
-load("@bazel_skylib//lib:paths.bzl", "paths")
 
 def _ll_library_impl(ctx):
     for emit in ctx.attr.emit:
         if emit not in [
             "archive",
             "shared_object",
-            "bitcode",
             "objects",
         ]:
             fail(
-                """Invalid value passed to emit attribute. Allowed valuse are
-                 "archive", "shared_object", "bitcode", "objects". Got {}.
+                """Invalid value passed to emit attribute. Allowed values are
+                 "archive", "shared_object", "objects". Got {}.
                  """.format(emit),
             )
 
@@ -90,13 +87,7 @@ def _ll_library_impl(ctx):
                 in_files = intermediary_objects,
             ),
         )
-    if "bitcode" in ctx.attr.emit:
-        out_files.append(
-            link_bitcode_library(
-                ctx,
-                in_files = intermediary_objects,
-            ),
-        )
+
     if "objects" in ctx.attr.emit:
         out_files += intermediary_objects
 
@@ -114,13 +105,13 @@ def _ll_library_impl(ctx):
             exposed_defines = depset(ctx.attr.exposed_defines),
             exposed_includes = depset(
                 [
-                    paths.join(ctx.label.workspace_root, suffix)
+                    expand_includes(ctx, suffix)
                     for suffix in ctx.attr.exposed_includes
                 ],
             ),
             exposed_angled_includes = depset(
                 [
-                    paths.join(ctx.label.workspace_root, suffix)
+                    expand_includes(ctx, suffix)
                     for suffix in ctx.attr.exposed_angled_includes
                 ],
             ),

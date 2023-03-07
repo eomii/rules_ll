@@ -248,19 +248,6 @@ DEFAULT_ATTRS = {
 }
 
 LIBRARY_ATTRS = {
-    "bitcode_libraries": attr.label_list(
-        doc = """Bitcode libraries linked to the output.
-
-        Used if `emit` includes `"bitcode"`.
-        """,
-        allow_files = [".bc"],
-    ),
-    "bitcode_link_flags": attr.string_list(
-        doc = """Flags for the bitcode linker.
-
-        Used if `emit` includes `"bitcode"`.
-        """,
-    ),
     "emit": attr.string_list(
         doc = """Sets the output mode.
 
@@ -271,9 +258,6 @@ LIBRARY_ATTRS = {
 
         `"shared_object"` invokes the linker and adds a shared object with a
         `.so` extension to the outputs.
-
-        `"bitcode"` invokes the bitcode linker and adds an LLVM bitcode file
-        with a `.bc` extension to the outputs.
 
         `"objects"` adds loose object files to the outputs.
         """,
