@@ -1,4 +1,4 @@
-load("@rules_ll//ll:defs.bzl", "ll_library")
+load("@rules_ll//ll:defs.bzl", "ll_binary", "ll_library", "OFFLOAD_ALL_AMDGPU")
 
 # Target for the toolchains.
 filegroup(
@@ -13,4 +13,18 @@ ll_library(
     exposed_hdrs = [":headers"],
     exposed_angled_includes = ["include"],
     visibility = ["//visibility:public"],
+)
+
+ll_binary(
+    name = "performance_compute_dot_product",
+    srcs = [
+        "tests/performance/compute/hipPerfDotProduct.cpp",
+        "tests/src/test_common.cpp",
+    ],
+    hdrs = ["tests/src/test_common.h"],
+    includes = ["tests/src"],
+    compile_flags = OFFLOAD_ALL_AMDGPU + [
+        "-std=c++17",
+    ],
+    compilation_mode = "hip_amdgpu",
 )

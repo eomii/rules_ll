@@ -30,7 +30,7 @@ def compile_object_environment(ctx):
                 toolchain.linker_executable.dirname,
             ]),
         }
-    elif config in ["cuda_nvptx", "hip_nvptx", "sycl_cuda"]:
+    elif config in ["cuda_nvptx", "hip_amdgpu", "hip_nvptx", "sycl_cuda"]:
         return {
             "CLANG_OFFLOAD_BUNDLER": toolchain.offload_bundler.path,
             "LINK": toolchain.bitcode_linker.path,

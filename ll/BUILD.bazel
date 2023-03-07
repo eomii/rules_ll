@@ -144,11 +144,19 @@ ll_toolchain(
     }),
     exec_compatible_with = [":ll_exec_linux"],
     hip_libraries = select({
+        ":hip_amdgpu": [
+            "@hip//:headers",
+            "@hipamd//:headers",
+        ],
         ":hip_nvptx": [
             "@hip//:headers",
             "@hipamd//:headers",
         ],
         "//conditions:default": [],
+    }),
+    hip_runtime = select({
+        ":hip_amdgpu": "@hipamd//:libamdhip64",
+        "//conditions:default": None,
     }),
     hipsycl_cuda_backend = select({
         ":sycl_cuda": "@hipsycl//:rt-backend-cuda",
@@ -198,6 +206,10 @@ ll_toolchain(
     profile = select({
         ":bootstrap": None,
         "//conditions:default": "@llvm-project//compiler-rt/lib/profile:clang_rt.profile",
+    }),
+    rocm_device_libs = select({
+        ":hip_amdgpu": "@rocm-device-libs//:rocm-device-libs",
+        "//conditions:default": None,
     }),
     thread_sanitizer = select({
         ":bootstrap": None,

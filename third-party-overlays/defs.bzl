@@ -10,12 +10,16 @@ load("@rules_ll//ll:transitions.bzl", "transition_to_bootstrap")
 
 CLANG_OCL_FLAGS = [
     "-xcl",
+    "-Xclang",
     "-cl-std=CL2.0",
-    "--target=amdgcn-amd-amdhsa",
+    "-target",
+    "amdgcn-amd-amdhsa",
     "-fvisibility=protected",
     "-fomit-frame-pointer",
     "-Xclang",
     "-finclude-default-header",
+    "-Xclang",
+    "-fexperimental-strict-floating-point",
     "-nogpulib",
     "-cl-no-stdinc",
 ]

@@ -6,7 +6,6 @@ Action inputs for rules.
 load("@bazel_skylib//rules:common_settings.bzl", "BuildSettingInfo")
 
 COMPILABLE_EXTENSIONS = [
-    "ll",
     "c",
     "cl",
     "cpp",
@@ -80,6 +79,12 @@ def compile_object_inputs(
         pass
     elif config == "hip_nvptx":
         direct += toolchain.hip_libraries
+    elif config == "hip_amdgpu":
+        direct += (
+            toolchain.hip_libraries +
+            toolchain.rocm_device_libs +
+            [toolchain.hip_runtime]
+        )
     elif config == "sycl_cpu":
         direct += toolchain.hipsycl_hdrs
     elif config == "sycl_cuda":
@@ -140,7 +145,9 @@ def link_executable_inputs(ctx, in_files):
         direct += toolchain.libomp
     elif config == "cuda_nvptx":
         pass
-    elif config == "hip_nvptx":
+    elif config in ["hip_nvptx", "hip_amdgpu"]:
+        if config == "hip_amdgpu":
+            direct.append(toolchain.hip_runtime)
         direct += toolchain.hip_libraries
     elif config == "sycl_cpu":
         direct += [
@@ -156,9 +163,6 @@ def link_executable_inputs(ctx, in_files):
         fail("Cannot link with this toolchain.")
 
     return depset(direct)
-
-def link_bitcode_library_inputs(ctx, in_files):
-    return depset(in_files + ctx.files.deps + ctx.files.bitcode_libraries)
 
 def link_shared_object_inputs(ctx, in_files):
     """Collect input files for link actions.
@@ -199,7 +203,7 @@ def link_shared_object_inputs(ctx, in_files):
         pass
     elif config == "cuda_nvptx":
         pass
-    elif config == "hip_nvptx":
+    elif config in ["hip_nvptx", "hip_amdgpu"]:
         direct += (
             toolchain.hip_libraries
         )

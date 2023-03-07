@@ -25,10 +25,6 @@ def link_executable_outputs(ctx):
     """For a label `filename` return a file of the same name."""
     return ctx.actions.declare_file(ll_artifact(ctx, ctx.label.name))
 
-def link_bitcode_library_outputs(ctx):
-    """For a label `filename` return a file `filename.bc`."""
-    return ctx.actions.declare_file(ll_artifact(ctx, ctx.label.name + ".bc"))
-
 def link_shared_object_outputs(ctx):
     """For a label `filename` return a file `filename.so`."""
     return ctx.actions.declare_file(ll_artifact(ctx, ctx.label.name + ".so"))

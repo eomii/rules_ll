@@ -15,8 +15,29 @@ def compiler_driver(ctx, in_file):
     """
     toolchain = ctx.toolchains["//ll:toolchain_type"]
 
-    driver = toolchain.c_driver
-    if in_file.extension in ["cpp", "hpp", "ipp", "cl", "cc", "cppm", "pch", "cxx", "cu"]:
+    driver = None
+    if in_file.extension in ["c", "S"]:
+        driver = toolchain.c_driver
+    elif in_file.extension in [
+        "cc",
+        "cl",
+        "cpp",
+        "cppm",
+        "cu",
+        "cxx",
+        "hip",
+        "hpp",
+        "ipp",
+        "mpp",
+        "pch",
+        "pcm",
+    ]:
         driver = toolchain.cpp_driver
+    else:
+        fail(
+            "Unknown filetype for {}. Don't know what driver to choose.".format(
+                in_file,
+            ),
+        )
 
     return driver

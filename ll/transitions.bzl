@@ -8,6 +8,7 @@ COMPILATION_MODES = [
     "cpp",
     "omp_cpu",
     "cuda_nvptx",
+    "hip_amdgpu",
     "hip_nvptx",
     "sycl_cpu",
     "sycl_cuda",

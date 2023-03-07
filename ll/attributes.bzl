@@ -44,6 +44,7 @@ DEFAULT_ATTRS = {
             "cpp",
             "omp_cpu",
             "cuda_nvptx",
+            "hip_amdgpu",
             "hip_nvptx",
             "sycl_cpu",
             "sycl_cuda",
@@ -423,6 +424,12 @@ LL_TOOLCHAIN_ATTRS = {
         # ],
         cfg = transition_to_cpp,
     ),
+    "hip_runtime": attr.label(
+        doc = "The libamdhip64 runtime.",
+        # default = "@hipamd//:libamdhip64",
+        allow_single_file = True,
+        cfg = transition_to_cpp,
+    ),
     "hipsycl_plugin": attr.label(
         doc = """TODO""",
         cfg = transition_to_cpp,
@@ -526,6 +533,11 @@ LL_TOOLCHAIN_ATTRS = {
     "profile": attr.label(
         doc = "The clang_rt.profile implementation",
         # default = "@llvm-project//compiler-rt/lib/profile:clang_rt.profile",
+    ),
+    "rocm_device_libs": attr.label(
+        doc = "The ROCm-Device-Libs.",
+        # default "@rocm-device-libs//:rocm-device-libs",
+        cfg = transition_to_cpp,
     ),
     "symbolizer": attr.label(
         doc = "The `llvm-symbolizer`.",

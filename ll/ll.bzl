@@ -200,10 +200,16 @@ def _ll_binary_impl(ctx):
         for dep in ctx.attr.deps
     ]
 
+    runfiles = None
+    if ctx.attr.compilation_mode == "hip_amdgpu":
+        toolchain = ctx.toolchains["//ll:toolchain_type"]
+        runfiles = ctx.runfiles(files = [toolchain.hip_runtime])
+
     return [
         DefaultInfo(
             files = depset([out_file]),
             executable = out_file,
+            runfiles = runfiles,
         ),
         LlCompilationDatabaseFragmentsInfo(
             cdfs = depset(out_cdfs, transitive = transitive_cdfs),

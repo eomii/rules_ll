@@ -36,7 +36,7 @@ def compile_object_tools(ctx):
     if config in ["cpp", "omp_cpu"]:
         return tools
 
-    if config in ["cuda_nvptx", "hip_nvptx"]:
+    if config in ["cuda_nvptx", "hip_nvptx", "hip_amdgpu"]:
         return tools + [
             toolchain.offload_bundler,
             toolchain.offload_packager,

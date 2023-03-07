@@ -166,6 +166,7 @@ def compile_object_args(
     # Optimization.
     if ctx.attr.compilation_mode in [
         "cuda_nvptx",
+        "hip_amdgpu",
         "hip_nvptx",
         "sycl_cuda",
     ] and ctx.var["COMPILATION_MODE"] != "dbg":
@@ -206,18 +207,25 @@ def compile_object_args(
     # Maybe enable heterogeneous compilation.
     if ctx.attr.compilation_mode in [
         "cuda_nvptx",
+        "hip_amdgpu",
+        "hip_nvptx",
+        "sycl_cuda",
+    ]:
+        args.add("--offload-new-driver")
+
+    if ctx.attr.compilation_mode in [
+        "cuda_nvptx",
         "hip_nvptx",
         "sycl_cuda",
     ]:
         args.add("-Wno-unknown-cuda-version")  # Will always be unknown.
         args.add("-xcuda")
-        args.add("--offload-new-driver")
         if ctx.configuration.default_shell_env.get("LL_CUDA") != None:
             args.add(
                 ctx.configuration.default_shell_env["LL_CUDA"],
                 format = "--cuda-path=%s",
             )
-    if ctx.attr.compilation_mode == "hip_nvptx":
+    if ctx.attr.compilation_mode in ["hip_nvptx", "hip_amdgpu"]:
         args.add_all(
             [
                 Label("@hip").workspace_root,
@@ -225,6 +233,18 @@ def compile_object_args(
             ],
             format_each = "-I%s/include",
         )
+
+    clang_resource_dir = paths.join(llvm_bindir_path(ctx), "clang/staging")
+
+    if ctx.attr.compilation_mode == "hip_amdgpu":
+        args.add("-xhip")
+        args.add(toolchain.hip_runtime.path, format = "--rocm-path=%s")
+        args.add(clang_resource_dir, format = "-isystem%s")
+        args.add(
+            toolchain.rocm_device_libs[0].dirname,  # .../amdgcn/bitcode
+            format = "--rocm-device-lib-path=%s",
+        )
+
     if ctx.attr.compilation_mode in ["sycl_cpu", "sycl_cuda"]:
         args.add(
             Label("@hipsycl//hipsycl_headers").workspace_root,
@@ -260,7 +280,6 @@ def compile_object_args(
     args.add("--gcc-toolchain=NONE")
 
     # Builtin includes.
-    clang_resource_dir = paths.join(llvm_bindir_path(ctx), "clang/staging")
     args.add(clang_resource_dir, format = "-resource-dir=%s")
     if in_file.extension != "pcm":
         args.add(clang_resource_dir, format = "-idirafter%s/include")
@@ -386,6 +405,7 @@ def link_executable_args(ctx, in_files, out_file, mode):
 
     # Provide host and device linker info to clang-linker-wrapper.
     if ctx.configuration.default_shell_env.get("LL_CUDA") != None:
+        # TODO: Incorrectly sets this even when the cuda path is empty.
         args.add(
             ctx.configuration.default_shell_env["LL_CUDA"],
             format = "--cuda-path=%s",
@@ -479,7 +499,6 @@ def link_executable_args(ctx, in_files, out_file, mode):
         "hip_nvptx",
         "sycl_cuda",
     ]:
-        args.add("-lrt")
         args.add("-lcuda")
         if ctx.configuration.default_shell_env.get("LL_CUDA_RPATH") != None:
             args.add(
@@ -488,6 +507,18 @@ def link_executable_args(ctx, in_files, out_file, mode):
             )
         args.add("-lcudart_static")
         args.add("-lcupti_static")
+    if ctx.attr.compilation_mode == "hip_amdgpu":
+        args.add(toolchain.hip_runtime.dirname, format = "-L%s")
+        args.add(toolchain.hip_runtime.basename, format = "-l:%s")
+        hip_runtime_rpath = paths.join(
+            "{}.runfiles".format(ctx.label.name),
+            ctx.workspace_name,
+            paths.dirname(toolchain.hip_runtime.short_path),
+        )
+        args.add(
+            hip_runtime_rpath,
+            format = "-rpath=$ORIGIN/%s",
+        )
 
     # Additional system libraries.
     args.add("-lm")  # Math.
@@ -592,30 +623,6 @@ def link_executable_args(ctx, in_files, out_file, mode):
     # End files.
     if mode == "executable":
         args.add("-l:crtn.o")
-
-    args.add("-o", out_file)
-
-    return [args]
-
-def link_bitcode_library_args(ctx, in_files, out_file):
-    """Construct `Args` for bitcode link actions.
-
-    Args:
-        ctx: The rule context.
-        in_files: A `depset` of input files.
-        out_file: The output file.
-
-    Returns:
-        An `Args` object.
-    """
-    args = ctx.actions.args()
-
-    if ctx.var["COMPILATION_MODE"] == "dbg":
-        args.add("-v")
-
-    args.add_all(ctx.attr.bitcode_link_flags)
-
-    args.add_all(in_files)
 
     args.add("-o", out_file)
 
