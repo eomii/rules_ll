@@ -6,7 +6,7 @@ load(
 )
 
 ll_binary(
-    name = "hip_example",
+    name = "nvptx",
     srcs = ["example.cpp"],
     compilation_mode = "hip_nvptx",
     compile_flags = OFFLOAD_ALL_NVPTX + [
@@ -16,7 +16,7 @@ ll_binary(
 )
 
 ll_binary(
-    name = "amd",
+    name = "amdgpu",
     srcs = ["example.cpp"],
     compilation_mode = "hip_amdgpu",
     compile_flags = OFFLOAD_ALL_AMDGPU + [

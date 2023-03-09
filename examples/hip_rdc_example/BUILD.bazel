@@ -1,46 +1,101 @@
-load("@rules_ll//ll:defs.bzl", "OFFLOAD_ALL_NVPTX", "ll_binary", "ll_library")
+load(
+    "@rules_ll//ll:defs.bzl",
+    "OFFLOAD_ALL_AMDGPU",
+    "OFFLOAD_ALL_NVPTX",
+    "ll_binary",
+    "ll_library",
+)
+
+# AMDGPU.
 
 # Without the -fgpu-rdc flag this build would fail. The device code needs to be
 # relocatable so that the kernel symbols can be resolved.
-COMPILE_FLAGS = OFFLOAD_ALL_NVPTX + [
+COMPILE_FLAGS_AMDGPU = OFFLOAD_ALL_AMDGPU + [
     "-std=c++20",
     "-fgpu-rdc",
 ]
 
 ll_library(
-    name = "add",
+    name = "add_amdgpu",
     srcs = [
         "add.hip.cpp",
     ],
-    compilation_mode = "hip_nvptx",
-    compile_flags = COMPILE_FLAGS,
+    compilation_mode = "hip_amdgpu",
+    compile_flags = COMPILE_FLAGS_AMDGPU,
     exposed_hdrs = [
         "add.hip.hpp",
     ],
 )
 
 ll_library(
-    name = "multiply",
+    name = "multiply_amdgpu",
     srcs = [
         "multiply.hip.cpp",
     ],
-    compilation_mode = "hip_nvptx",
-    compile_flags = COMPILE_FLAGS,
+    compilation_mode = "hip_amdgpu",
+    compile_flags = COMPILE_FLAGS_AMDGPU,
     exposed_hdrs = [
         "multiply.hip.hpp",
     ],
 )
 
 ll_binary(
-    name = "hip_rdc_example",
+    name = "amdgpu",
+    srcs = [
+        "main.hip.cpp",
+    ],
+    compilation_mode = "hip_amdgpu",
+    compile_flags = COMPILE_FLAGS_AMDGPU,
+    visibility = ["@//:__pkg__"],
+    deps = [
+        ":add_amdgpu",
+        ":multiply_amdgpu",
+    ],
+)
+
+# NVPTX.
+
+# Without the -fgpu-rdc flag this build would fail. The device code needs to be
+# relocatable so that the kernel symbols can be resolved.
+COMPILE_FLAGS_NVPTX = OFFLOAD_ALL_NVPTX + [
+    "-std=c++20",
+    "-fgpu-rdc",
+]
+
+ll_library(
+    name = "add_nvptx",
+    srcs = [
+        "add.hip.cpp",
+    ],
+    compilation_mode = "hip_nvptx",
+    compile_flags = COMPILE_FLAGS_NVPTX,
+    exposed_hdrs = [
+        "add.hip.hpp",
+    ],
+)
+
+ll_library(
+    name = "multiply_nvptx",
+    srcs = [
+        "multiply.hip.cpp",
+    ],
+    compilation_mode = "hip_nvptx",
+    compile_flags = COMPILE_FLAGS_NVPTX,
+    exposed_hdrs = [
+        "multiply.hip.hpp",
+    ],
+)
+
+ll_binary(
+    name = "nvptx",
     srcs = [
         "main.hip.cpp",
     ],
     compilation_mode = "hip_nvptx",
-    compile_flags = COMPILE_FLAGS,
+    compile_flags = COMPILE_FLAGS_NVPTX,
     visibility = ["@//:__pkg__"],
     deps = [
-        ":add",
-        ":multiply",
+        ":add_nvptx",
+        ":multiply_nvptx",
     ],
 )

@@ -28,6 +28,10 @@ ll_compilation_database(
 
 # Tests start below.
 
+test_suite(name = "all")
+
+# CPU tests.
+
 EXAMPLES = [
     "format_example",
     "frontend_action_example",
@@ -39,27 +43,76 @@ EXAMPLES = [
     # "clang_tidy_example",
     "shared_library_example",
     "modules_draft_example",
-
-    # GPU tests.
-    # "cuda_example",
-    # "hip_example",
-    # "hip_rdc_example",
-]
-
-[
-    native_test(
-        name = "{}_test".format(name),
-        src = "//{}".format(name),
-        out = "{}_test".format(name),
-        data = ["//{}".format(name)],
-    )
-    for name in EXAMPLES
 ]
 
 test_suite(
-    name = "examples",
+    name = "cpp",
     tests = [
         "{}_test".format(name)
         for name in EXAMPLES
     ],
+)
+
+[
+    native_test(
+        name = "{}_test".format(name),
+        timeout = "short",
+        src = "//{}".format(name),
+        out = "{}_test".format(name),
+    )
+    for name in EXAMPLES
+]
+
+# NVPTX tests.
+
+test_suite(
+    name = "nvptx",
+    tags = ["nvptx"],
+)
+
+native_test(
+    name = "cuda_example_test",
+    timeout = "short",
+    src = "//cuda_example",
+    out = "cuda_example_test",
+    tags = ["nvptx"],
+)
+
+native_test(
+    name = "hip_example_nvptx_test",
+    timeout = "short",
+    src = "//hip_example:nvptx",
+    out = "hip_example_nvptx_test",
+    tags = ["nvptx"],
+)
+
+native_test(
+    name = "hip_rdc_example_nvptx_test",
+    timeout = "short",
+    src = "//hip_rdc_example:nvptx",
+    out = "hip_rdc_example_nvptx_test",
+    tags = ["nvptx"],
+)
+
+# AMDGPU tests.
+
+test_suite(
+    name = "amdgpu",
+    tags = ["amdgpu"],
+)
+
+native_test(
+    name = "hip_example_amdgpu_test",
+    timeout = "short",
+    src = "//hip_example:amdgpu",
+    out = "hip_example_amdgpu_test",
+    tags = ["amdgpu"],
+)
+
+native_test(
+    name = "hip_rdc_example_amdgpu_test",
+    timeout = "short",
+    src = "//hip_rdc_example:amdgpu",
+    out = "hip_rdc_example_amdgpu_test",
+    tags = ["amdgpu"],
 )

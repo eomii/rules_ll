@@ -41,13 +41,20 @@ This populates the `docs/reference/` directory with the updated markdown files.
 
 ## Tests
 
-The examples at `rules_ll/examples` also act as tests for the project. To test
-all examples:
+The examples at `rules_ll/examples` also act as tests for the project.
+Heterogeneous tests fail on machines without the corresponding GPU, but they
+should still produce executables:
 
 ```bash title="(from within the rules_ll/examples directory)"
-bazel test //:examples
-```
+# Should pass on all machines.
+bazel test cpp
 
-Since not everyone has a GPU compatible with `rules_ll`, heterogeneous examples
-don't run by default. Make sure to enable them in `examples/BUILD.bazel`
-when changing logic affecting heterogeneous code paths.
+# Should pass on machines with supported Nvidia GPUs.
+bazel test nvptx
+
+# Should pass on machines with supported AMD GPUs.
+bazel test amdgpu
+
+# Even if some of these tests fail, they should all build and run.
+bazel test all
+```
