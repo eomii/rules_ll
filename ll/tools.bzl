@@ -63,6 +63,7 @@ def linking_tools(ctx):
         toolchain.linker,
         toolchain.linker_executable,
         toolchain.linker_wrapper,
+        toolchain.objcopy,
     ] + (
         toolchain.address_sanitizer +
         toolchain.leak_sanitizer +
