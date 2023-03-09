@@ -42,15 +42,6 @@ def compile_object_tools(ctx):
             toolchain.offload_packager,
         ]
 
-    if config in ["sycl_cpu", "sycl_cuda"]:
-        return tools + [
-            toolchain.hipsycl_plugin,
-            toolchain.offload_bundler,
-            toolchain.offload_packager,
-            toolchain.hipsycl_omp_backend,
-            toolchain.hipsycl_cuda_backend,
-        ]
-
     fail("Unregognized toolchain toolchain configuration.")
 
 def linking_tools(ctx):

@@ -158,30 +158,6 @@ ll_toolchain(
         ":hip_amdgpu": "@hipamd//:libamdhip64",
         "//conditions:default": None,
     }),
-    hipsycl_cuda_backend = select({
-        ":sycl_cuda": "@hipsycl//:rt-backend-cuda",
-        "//conditions:default": None,
-    }),
-    hipsycl_hdrs = select({
-        ":sycl_cpu": ["@hipsycl//:sycl_headers"],
-        ":sycl_cuda": ["@hipsycl//:sycl_headers"],
-        "//conditions:default": [],
-    }),
-    hipsycl_omp_backend = select({
-        ":sycl_cpu": "@hipsycl//:rt-backend-omp",
-        ":sycl_cuda": "@hipsycl//:rt-backend-omp",
-        "//conditions:default": None,
-    }),
-    hipsycl_plugin = select({
-        ":sycl_cpu": "@hipsycl//:libhipSYCL_clang",
-        ":sycl_cuda": "@hipsycl//:libhipSYCL_clang",
-        "//conditions:default": None,
-    }),
-    hipsycl_runtime = select({
-        ":sycl_cpu": "@hipsycl//:hipSYCL-rt",
-        ":sycl_cuda": "@hipsycl//:hipSYCL-rt",
-        "//conditions:default": None,
-    }),
     leak_sanitizer = select({
         ":bootstrap": [],
         "//conditions:default": [

@@ -85,10 +85,6 @@ def compile_object_inputs(
             toolchain.rocm_device_libs +
             [toolchain.hip_runtime]
         )
-    elif config == "sycl_cpu":
-        direct += toolchain.hipsycl_hdrs
-    elif config == "sycl_cuda":
-        direct += toolchain.hipsycl_hdrs
     else:
         fail("Cannot compile with this toolchain config: {}.".format(config))
 
@@ -149,16 +145,6 @@ def link_executable_inputs(ctx, in_files):
         if config == "hip_amdgpu":
             direct.append(toolchain.hip_runtime)
         direct += toolchain.hip_libraries
-    elif config == "sycl_cpu":
-        direct += [
-            toolchain.hipsycl_runtime,
-            toolchain.hipsycl_omp_backend,
-        ]
-    elif config == "sycl_cuda":
-        direct.append(toolchain.hipsycl_runtime)
-        # toolchain.hipsycl_omp_backend,
-        # toolchain.hipsycl_cuda_backend,
-
     else:
         fail("Cannot link with this toolchain.")
 

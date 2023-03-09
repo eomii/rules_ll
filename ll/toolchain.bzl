@@ -14,40 +14,6 @@ def _ll_toolchain_impl(ctx):
         is_executable = True,
     )
 
-    if ctx.file.hipsycl_runtime != None:
-        hipsycl_runtime = ctx.actions.declare_file("hipSYCL-rt.so")
-        ctx.actions.symlink(
-            output = hipsycl_runtime,
-            target_file = ctx.file.hipsycl_runtime,
-            is_executable = False,
-        )
-    else:
-        hipsycl_runtime = ctx.file.hipsycl_runtime
-
-    if ctx.file.hipsycl_omp_backend != None:
-        hipsycl_omp_backend = ctx.actions.declare_file(
-            "hipSYCL/rt-backend-omp.so",
-        )
-        ctx.actions.symlink(
-            output = hipsycl_omp_backend,
-            target_file = ctx.file.hipsycl_omp_backend,
-            is_executable = False,
-        )
-    else:
-        hipsycl_omp_backend = ctx.file.hipsycl_omp_backend
-
-    if ctx.file.hipsycl_cuda_backend != None:
-        hipsycl_cuda_backend = ctx.actions.declare_file(
-            "hipSYCL/rt-backend-cuda.so",
-        )
-        ctx.actions.symlink(
-            output = hipsycl_cuda_backend,
-            target_file = ctx.file.hipsycl_cuda_backend,
-            is_executable = False,
-        )
-    else:
-        hipsycl_cuda_backend = ctx.file.hipsycl_cuda_backend
-
     llvm_project_sources = depset(transitive = [
         data[OutputGroupInfo].compilation_prerequisites_INTERNAL_
         for data in ctx.attr.llvm_project_deps
@@ -93,12 +59,6 @@ def _ll_toolchain_impl(ctx):
             machine_code_tool = ctx.executable.machine_code_tool,
             hip_libraries = ctx.files.hip_libraries,
             hip_runtime = ctx.file.hip_runtime,
-            hipsycl_plugin = ctx.file.hipsycl_plugin,
-            hipsycl_runtime = hipsycl_runtime,
-            hipsycl_omp_backend = hipsycl_omp_backend,
-            hipsycl_cuda_backend = hipsycl_cuda_backend,
-            hipsycl_hip_backend = ctx.files.hipsycl_hip_backend,
-            hipsycl_hdrs = ctx.files.hipsycl_hdrs,
         ),
     ]
 

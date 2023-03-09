@@ -20,7 +20,7 @@ def compile_object_environment(ctx):
     config = ctx.attr.toolchain_configuration[BuildSettingInfo].value
     toolchain = ctx.toolchains["//ll:toolchain_type"]
 
-    if config in ["cpp", "sycl_cpu", "omp_cpu"]:
+    if config in ["cpp", "omp_cpu"]:
         return {
             "LINK": toolchain.bitcode_linker.path,
             "LLD": toolchain.linker.path,
@@ -30,7 +30,7 @@ def compile_object_environment(ctx):
                 toolchain.linker_executable.dirname,
             ]),
         }
-    elif config in ["cuda_nvptx", "hip_amdgpu", "hip_nvptx", "sycl_cuda"]:
+    elif config in ["cuda_nvptx", "hip_amdgpu", "hip_nvptx"]:
         return {
             "CLANG_OFFLOAD_BUNDLER": toolchain.offload_bundler.path,
             "LINK": toolchain.bitcode_linker.path,

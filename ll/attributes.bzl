@@ -29,12 +29,6 @@ DEFAULT_ATTRS = {
 
         `"omp_cpu"` The OpenMP CPU toolchain.
 
-        `"sycl_cpu"` The SYCL CPU toolchain. Uses hipSYCL with the OpenMP
-        backend. Don't use this. Not fully implemented.
-
-        `"sycl_cuda"` The SYCL CUDA toolchain. Uses hipSYCL. Don't use this. Not
-        fully implemented.
-
         `"bootstrap"` The bootstrap toolchain used by internal dependencies of
         the `ll_toolchain`.
         """,
@@ -46,8 +40,6 @@ DEFAULT_ATTRS = {
             "cuda_nvptx",
             "hip_amdgpu",
             "hip_nvptx",
-            "sycl_cpu",
-            "sycl_cuda",
             "bootstrap",
         ],
     ),
@@ -429,34 +421,6 @@ LL_TOOLCHAIN_ATTRS = {
         # default = "@hipamd//:libamdhip64",
         allow_single_file = True,
         cfg = transition_to_cpp,
-    ),
-    "hipsycl_plugin": attr.label(
-        doc = """TODO""",
-        cfg = transition_to_cpp,
-        allow_single_file = True,
-        # default = ["@hipsycl//hipSYCL_clang"],
-    ),
-    "hipsycl_runtime": attr.label(
-        doc = """TODO""",
-        allow_single_file = True,
-        cfg = transition_to_cpp,
-    ),
-    "hipsycl_omp_backend": attr.label(
-        doc = """TODO""",
-        # default = ["@hipsycl//:rt-backend-omp"],
-        allow_single_file = True,
-    ),
-    "hipsycl_cuda_backend": attr.label(
-        doc = """TODO""",
-        # default = ["@hipsycl//:rt-backend-cuda"],
-        allow_single_file = True,
-    ),
-    "hipsycl_hip_backend": attr.label(
-        doc = """TODO""",
-        # default = ["@hipsycl//:rt-backend-hip"],
-    ),
-    "hipsycl_hdrs": attr.label_list(
-        doc = """TODO""",
     ),
     "leak_sanitizer": attr.label_list(
         doc = "LeakSanitizer libraries.",

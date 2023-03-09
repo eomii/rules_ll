@@ -120,7 +120,6 @@ def compile_object_args(
         if ctx.attr.compilation_mode in [
             "cuda_nvptx",
             "hip_nvptx",
-            "sycl_cuda",
         ]:
             args.add_all(["-Xarch_device", "-gdwarf-2"])
             args.add("--cuda-noopt-device-debug")
@@ -139,7 +138,6 @@ def compile_object_args(
         if ctx.attr.compilation_mode in [
             "cuda_nvptx",
             "hip_nvptx",
-            "sycl_cuda",
         ]:
             args.add_all(["-Xarch_device", "-gdwarf-2"])
             args.add("--cuda-noopt-device-debug")
@@ -168,7 +166,6 @@ def compile_object_args(
         "cuda_nvptx",
         "hip_amdgpu",
         "hip_nvptx",
-        "sycl_cuda",
     ] and ctx.var["COMPILATION_MODE"] != "dbg":
         args.add_all(["-Xarch_device", "-O3"])
 
@@ -209,14 +206,12 @@ def compile_object_args(
         "cuda_nvptx",
         "hip_amdgpu",
         "hip_nvptx",
-        "sycl_cuda",
     ]:
         args.add("--offload-new-driver")
 
     if ctx.attr.compilation_mode in [
         "cuda_nvptx",
         "hip_nvptx",
-        "sycl_cuda",
     ]:
         args.add("-Wno-unknown-cuda-version")  # Will always be unknown.
         args.add("-xcuda")
@@ -244,32 +239,6 @@ def compile_object_args(
             toolchain.rocm_device_libs[0].dirname,  # .../amdgcn/bitcode
             format = "--rocm-device-lib-path=%s",
         )
-
-    if ctx.attr.compilation_mode in ["sycl_cpu", "sycl_cuda"]:
-        args.add(
-            Label("@hipsycl//hipsycl_headers").workspace_root,
-            format = "-I%s/include",
-        )
-        args.add("-D__HIPSYCL__")
-        args.add("-D__HIPSYCL_CLANG__")
-        args.add("-D__HIPSYCL_ENABLE_OMPHOST_TARGET__")
-
-        if ctx.attr.compilation_mode == "sycl_cuda":
-            args.add("-D__HIPSYCL_ENABLE_CUDA_TARGET__")
-            args.add("-U__FLOAT128__")
-            args.add("-U__SIZEOF_FLOAT128__")
-
-        args.add(
-            toolchain.hipsycl_plugin,
-            format = "-fplugin=%s",
-        )
-
-        args.add(
-            toolchain.hipsycl_plugin,
-            format = "-fpass-plugin=%s",
-        )
-
-        args.add("-D_ENABLE_EXTENDED_ALIGNED_STORAGE")
 
     # Write compilation database.
     args.add("-Xarch_host")
@@ -497,7 +466,6 @@ def link_executable_args(ctx, in_files, out_file, mode):
     if ctx.attr.compilation_mode in [
         "cuda_nvptx",
         "hip_nvptx",
-        "sycl_cuda",
     ]:
         args.add("-lcuda")
         if ctx.configuration.default_shell_env.get("LL_CUDA_RPATH") != None:
@@ -525,36 +493,6 @@ def link_executable_args(ctx, in_files, out_file, mode):
     args.add("-ldl")  # Dynamic linking.
     args.add("-lpthread")  # Thread support.
     args.add("-lc")  # Glibc.
-
-    if ctx.attr.compilation_mode in ["sycl_cpu", "sycl_cuda"]:
-        args.add("-lomp")
-        sycl_shared_libraries = [
-            toolchain.hipsycl_runtime,
-        ]
-        args.add_all(
-            sycl_shared_libraries,
-            map_each = _get_dirname,
-            format_each = "-L%s",
-            uniquify = True,
-            omit_if_empty = True,
-        )
-        args.add_all(
-            sycl_shared_libraries,
-            map_each = _get_basename,
-            format_each = "-l:%s",
-            uniquify = True,
-            omit_if_empty = True,
-        )
-        args.add_all(
-            sycl_shared_libraries,
-            map_each = _get_rpath_appendix,
-            format_each = "-rpath=$ORIGIN/../..%s",
-            uniquify = True,
-            omit_if_empty = True,
-        )
-        if ctx.attr.compilation_mode in ["sycl_cpu", "sycl_cuda"]:
-            args.add("--rpath=$ORIGIN/../external/@rules_ll.override/ll")
-            args.add("--rpath=$ORIGIN/../external/@rules_ll.override/ll/hipSYCL")
 
     # Target-specific flags.
     if mode == "executable":
