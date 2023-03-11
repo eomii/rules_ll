@@ -1,4 +1,5 @@
 load("@rules_ll//ll:defs.bzl", "ll_binary", "ll_library")
+load("@rules_ll//third-party-overlays:defs.bzl", "opencl_pch")
 load("@bazel_skylib//rules:write_file.bzl", "write_file")
 load("@bazel_skylib//rules:expand_template.bzl", "expand_template")
 load("@bazel_skylib//rules:common_settings.bzl", "bool_flag")
@@ -168,38 +169,9 @@ EOF
     outs = ["comgr/internal/libraries_defs.inc"],
 )
 
-genrule(
+opencl_pch(
     name = "opencl_1_2_pch_gen",
-    # Unfortunately we are forced to build another clang in exec configuration,
-    # since the one used by rules_ll is in ll_exec configuration. Seems like
-    # changing this on the ll_toolchain side is the way to go.
-    tools = ["@llvm-project//clang:clang"],
-    srcs = ["@llvm-project//clang:builtin_headers_gen"],
-    cmd = """
-            # A very lazy way of finding this header, but all instances of it in
-            # the sandbox are the same and their order is reproducible.
-            cl_header=$$(find -name "opencl-c.h" -print -quit)
-
-            $(location @llvm-project//clang:clang) -cc1 -x cl-header -triple amdgcn-amd-amdhsa -Werror -O3 -Dcl_khr_fp64 -Dcl_khr_fp16 -DNDEBUG -cl-std=CL1.2 -emit-pch -o $(OUTS) $$cl_header
-    """,
-    outs = ["comgr/internal/opencl1.2-c.pch"],
-)
-
-genrule(
-    name = "opencl_2_0_pch_gen",
-    # Unfortunately we are forced to build another clang in exec configuration,
-    # since the one used by rules_ll is in ll_exec configuration. Seems like
-    # changing this on the ll_toolchain side is the way to go.
-    tools = ["@llvm-project//clang:clang"],
-    srcs = ["@llvm-project//clang:builtin_headers_gen"],
-    cmd = """
-            # A very lazy way of finding this header, but all instances of it in
-            # the sandbox are the same and their order is reproducible.
-            cl_header=$$(find -name "opencl-c.h" -print -quit)
-
-            $(location @llvm-project//clang:clang) -cc1 -x cl-header -triple amdgcn-amd-amdhsa -Werror -O3 -Dcl_khr_fp64 -Dcl_khr_fp16 -DNDEBUG -cl-std=CL2.0 -emit-pch -o $(OUTS) $$cl_header
-    """,
-    outs = ["comgr/internal/opencl2.0-c.pch"],
+    cl_std = "1.2",
 )
 
 genrule(
@@ -208,6 +180,11 @@ genrule(
     srcs = [":opencl_1_2_pch_gen"],
     cmd = "$(location :bc2h) $(SRCS) $(OUTS) opencl1_2_c",
     outs = ["comgr/internal/opencl1.2-c.inc"],
+)
+
+opencl_pch(
+    name = "opencl_2_0_pch_gen",
+    cl_std = "2.0",
 )
 
 genrule(

@@ -6,7 +6,7 @@ A custom `opencl_bitcode_library` target for the `rocm-device-libs`.
 load("@rules_ll//ll:environment.bzl", "compile_object_environment")
 load("@rules_ll//ll:args.bzl", "llvm_bindir_path")
 load("@bazel_skylib//lib:paths.bzl", "paths")
-load("@rules_ll//ll:transitions.bzl", "transition_to_bootstrap")
+load("@rules_ll//ll:transitions.bzl", "ll_transition", "transition_to_bootstrap")
 
 CLANG_OCL_FLAGS = [
     "-xcl",
@@ -155,6 +155,7 @@ def _opencl_bitcode_library_impl(ctx):
 opencl_bitcode_library = rule(
     implementation = _opencl_bitcode_library_impl,
     toolchains = ["@rules_ll//ll:toolchain_type"],
+    cfg = ll_transition,
     attrs = {
         "hdrs": attr.label_list(
             allow_files = True,
@@ -168,6 +169,7 @@ opencl_bitcode_library = rule(
         "toolchain_configuration": attr.label(
             default = "@rules_ll//ll:current_ll_toolchain_configuration",
         ),
+        "compilation_mode": attr.string(default = "cpp"),
         "irif": attr.label(
             allow_single_file = True,
             default = "@rocm-device-libs//:irif",
@@ -177,6 +179,83 @@ opencl_bitcode_library = rule(
             executable = True,
             cfg = transition_to_bootstrap,
             default = "@rocm-device-libs//:prepare-builtins",
+        ),
+        "_allowlist_function_transition": attr.label(
+            default = "@bazel_tools//tools/allowlists/function_transition_allowlist",
+        ),
+    },
+)
+
+def _opencl_pch_impl(ctx):
+    toolchain = ctx.toolchains["@rules_ll//ll:toolchain_type"]
+
+    pch = ctx.actions.declare_file("opencl{}-c.pch".format(ctx.attr.cl_std))
+
+    args = ctx.actions.args()
+    args.add_all([
+        "-cc1",
+        "-x",
+        "cl-header",
+        "-triple",
+        "amdgcn-amd-amdhsa",
+        "-Werror",
+        "-O3",
+        "-Dcl_khr_fp64",
+        "-Dcl_khr_fp16",
+        "-DNDEBUG",
+        "-cl-std=CL{}".format(ctx.attr.cl_std),
+        "-emit-pch",
+        "-o",
+        pch,
+        ctx.file.src,
+    ])
+
+    clang_resource_dir = paths.join(llvm_bindir_path(ctx), "clang/staging")
+    args.add(clang_resource_dir, format = "-idirafter%s/include")
+
+    ctx.actions.run(
+        outputs = [pch],
+        inputs = [ctx.file.src],
+        executable = toolchain.c_driver,
+        arguments = [args],
+        tools = toolchain.builtin_includes,
+        use_default_shell_env = False,
+        env = compile_object_environment(ctx),
+    )
+
+    return [
+        DefaultInfo(
+            files = depset([pch]),
+        ),
+    ]
+
+opencl_pch = rule(
+    doc = """Build a precompiled header from opencl-c.h.
+
+This header needs to be built with the same driver as the one used in `rules_ll`
+to avoid AST incompatibility.
+
+Using a `genrule` for this would cause building another instance of Clang, as
+`genrules` doesn't support transitions well. This rule hooks into `ll_toolchain`
+to avoid such a rebuild and instead reuse the Clang instance already available
+through the `ll_*` rules.
+    """,
+    implementation = _opencl_pch_impl,
+    toolchains = ["@rules_ll//ll:toolchain_type"],
+    cfg = ll_transition,
+    attrs = {
+        "src": attr.label(
+            default = "@llvm-project//clang:lib/Headers/opencl-c.h",
+            allow_single_file = True,
+        ),
+        "cl_std": attr.string(
+            values = ["1.2", "2.0"],
+        ),
+        "compilation_mode": attr.string(
+            default = "cpp",
+        ),
+        "toolchain_configuration": attr.label(
+            default = "//ll:current_ll_toolchain_configuration",
         ),
         "_allowlist_function_transition": attr.label(
             default = "@bazel_tools//tools/allowlists/function_transition_allowlist",
