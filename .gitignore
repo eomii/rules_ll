@@ -12,3 +12,6 @@ styles/Google/
 styles/Microsoft/
 styles/alex/
 styles/write-good/
+
+# Don't track the local user-side .bazelrc
+.bazelrc.user
