@@ -28,4 +28,5 @@ precompile
 precompiled
 precompiles
 sandboxed
+skylib
 unwinder

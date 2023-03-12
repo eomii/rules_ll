@@ -37,20 +37,6 @@ For a label `filename` return a file `filename.a`.
 | <a id="create_archive_library_outputs-ctx"></a>`ctx` |  |
 
 
-<a id="link_bitcode_library_outputs"></a>
-
-## `link_bitcode_library_outputs`
-
-<pre><code>link_bitcode_library_outputs(<a href="#link_bitcode_library_outputs-ctx">ctx</a>)</code></pre>
-For a label `filename` return a file `filename.bc`.
-
-`parameters`
-
-| Name  | Description |
-| :---- | :---------- |
-| <a id="link_bitcode_library_outputs-ctx"></a>`ctx` |  |
-
-
 <a id="link_executable_outputs"></a>
 
 ## `link_executable_outputs`

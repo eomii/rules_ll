@@ -21,7 +21,7 @@ Construct `Args` for compile actions.
 | <a id="compile_object_args-defines"></a>`defines` | A <code>depset</code> of defines for the target. Added with <code>-D</code>.  |
 | <a id="compile_object_args-includes"></a>`includes` | A <code>depset</code> of includes for the target. Added with <code>-iquote</code>.  |
 | <a id="compile_object_args-angled_includes"></a>`angled_includes` | A <code>depset</code> of angled includes for the target. Added with <code>-I</code>.  |
-| <a id="compile_object_args-bmis"></a>`bmis` | A tuple <code>(interface, name)</code>, consisting of a binary module interface <code>interface</code> and a module name <code>name</code>. Added in a scheme resembling <code>-fmodule-file=name=interface</code>.  |
+| <a id="compile_object_args-bmis"></a>`bmis` | A <code>depset</code> of tuples <code>(interface, name)</code>, each consisting of a binary module interface <code>interface</code> and a module name <code>name</code>. Added in a scheme resembling <code>-fmodule-file=name=interface</code>.  |
 
 `returns`
 
@@ -45,26 +45,6 @@ Uses `-cqL` for regular archiving and `-vqL` for debug builds.
 | <a id="create_archive_library_args-ctx"></a>`ctx` | The rule context.  |
 | <a id="create_archive_library_args-in_files"></a>`in_files` | A <code>depset</code> of input files.  |
 | <a id="create_archive_library_args-out_file"></a>`out_file` | The output file.  |
-
-`returns`
-
-An `Args` object.
-
-
-<a id="link_bitcode_library_args"></a>
-
-## `link_bitcode_library_args`
-
-<pre><code>link_bitcode_library_args(<a href="#link_bitcode_library_args-ctx">ctx</a>, <a href="#link_bitcode_library_args-in_files">in_files</a>, <a href="#link_bitcode_library_args-out_file">out_file</a>)</code></pre>
-Construct `Args` for bitcode link actions.
-
-`parameters`
-
-| Name  | Description |
-| :---- | :---------- |
-| <a id="link_bitcode_library_args-ctx"></a>`ctx` | The rule context.  |
-| <a id="link_bitcode_library_args-in_files"></a>`in_files` | A <code>depset</code> of input files.  |
-| <a id="link_bitcode_library_args-out_file"></a>`out_file` | The output file.  |
 
 `returns`
 

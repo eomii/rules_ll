@@ -57,21 +57,6 @@ A `depset` of files.
 | <a id="create_archive_library_inputs-in_files"></a>`in_files` |  |
 
 
-<a id="link_bitcode_library_inputs"></a>
-
-## `link_bitcode_library_inputs`
-
-<pre><code>link_bitcode_library_inputs(<a href="#link_bitcode_library_inputs-ctx">ctx</a>, <a href="#link_bitcode_library_inputs-in_files">in_files</a>)</code></pre>
-
-
-`parameters`
-
-| Name  | Description |
-| :---- | :---------- |
-| <a id="link_bitcode_library_inputs-ctx"></a>`ctx` |  |
-| <a id="link_bitcode_library_inputs-in_files"></a>`in_files` |  |
-
-
 <a id="link_executable_inputs"></a>
 
 ## `link_executable_inputs`

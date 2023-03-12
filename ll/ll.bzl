@@ -260,8 +260,8 @@ ll_test = rule(
     doc = """
 Testable wrapper around `ll_binary`.
 
-Consider using this rule over skylib's `native_test` targets to correctly
-propagate shared libraries to the test invocations.
+Consider using this rule over skylib's `native_test` targets to propagate shared
+libraries to the test invocations.
 
 Example:
 

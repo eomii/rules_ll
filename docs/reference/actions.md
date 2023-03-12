@@ -75,25 +75,6 @@ Create an archive action for an archive.
 An output file.
 
 
-<a id="link_bitcode_library"></a>
-
-## `link_bitcode_library`
-
-<pre><code>link_bitcode_library(<a href="#link_bitcode_library-ctx">ctx</a>, <a href="#link_bitcode_library-in_files">in_files</a>)</code></pre>
-Create a bitcode link action for a bitcode file.
-
-`parameters`
-
-| Name  | Description |
-| :---- | :---------- |
-| <a id="link_bitcode_library-ctx"></a>`ctx` | The rule context.  |
-| <a id="link_bitcode_library-in_files"></a>`in_files` | A <code>depset</code> of input files.  |
-
-`returns`
-
-An output file.
-
-
 <a id="link_executable"></a>
 
 ## `link_executable`
