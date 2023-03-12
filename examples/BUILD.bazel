@@ -28,7 +28,14 @@ ll_compilation_database(
 
 # Tests start below.
 
-test_suite(name = "all")
+test_suite(
+    name = "all",
+    tests = [
+        ":amdgpu",
+        ":cpp",
+        ":nvptx",
+    ],
+)
 
 # CPU tests.
 
@@ -68,30 +75,11 @@ test_suite(
 test_suite(
     name = "nvptx",
     tags = ["nvptx"],
-)
-
-native_test(
-    name = "cuda_example_test",
-    timeout = "short",
-    src = "//cuda_example",
-    out = "cuda_example_test",
-    tags = ["nvptx"],
-)
-
-native_test(
-    name = "hip_example_nvptx_test",
-    timeout = "short",
-    src = "//hip_example:nvptx",
-    out = "hip_example_nvptx_test",
-    tags = ["nvptx"],
-)
-
-native_test(
-    name = "hip_rdc_example_nvptx_test",
-    timeout = "short",
-    src = "//hip_rdc_example:nvptx",
-    out = "hip_rdc_example_nvptx_test",
-    tags = ["nvptx"],
+    tests = [
+        "//cuda_example:test",
+        "//hip_example:nvptx_test",
+        "//hip_rdc_example:nvptx_test",
+    ],
 )
 
 # AMDGPU tests.
@@ -99,20 +87,8 @@ native_test(
 test_suite(
     name = "amdgpu",
     tags = ["amdgpu"],
-)
-
-native_test(
-    name = "hip_example_amdgpu_test",
-    timeout = "short",
-    src = "//hip_example:amdgpu",
-    out = "hip_example_amdgpu_test",
-    tags = ["amdgpu"],
-)
-
-native_test(
-    name = "hip_rdc_example_amdgpu_test",
-    timeout = "short",
-    src = "//hip_rdc_example:amdgpu",
-    out = "hip_rdc_example_amdgpu_test",
-    tags = ["amdgpu"],
+    tests = [
+        "//hip_example:amdgpu_test",
+        "//hip_rdc_example:amdgpu_test",
+    ],
 )

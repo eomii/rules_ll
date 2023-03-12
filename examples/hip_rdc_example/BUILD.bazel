@@ -4,6 +4,7 @@ load(
     "OFFLOAD_ALL_NVPTX",
     "ll_binary",
     "ll_library",
+    "ll_test",
 )
 
 # AMDGPU.
@@ -46,7 +47,6 @@ ll_binary(
     ],
     compilation_mode = "hip_amdgpu",
     compile_flags = COMPILE_FLAGS_AMDGPU,
-    visibility = ["@//:__pkg__"],
     deps = [
         ":add_amdgpu",
         ":multiply_amdgpu",
@@ -93,6 +93,37 @@ ll_binary(
     ],
     compilation_mode = "hip_nvptx",
     compile_flags = COMPILE_FLAGS_NVPTX,
+    deps = [
+        ":add_nvptx",
+        ":multiply_nvptx",
+    ],
+)
+
+# Tests. Used to maintain shared object paths.
+
+ll_test(
+    name = "amdgpu_test",
+    srcs = [
+        "main.hip.cpp",
+    ],
+    compilation_mode = "hip_amdgpu",
+    compile_flags = COMPILE_FLAGS_AMDGPU,
+    tags = ["amdgpu"],
+    visibility = ["@//:__pkg__"],
+    deps = [
+        ":add_amdgpu",
+        ":multiply_amdgpu",
+    ],
+)
+
+ll_test(
+    name = "nvptx_test",
+    srcs = [
+        "main.hip.cpp",
+    ],
+    compilation_mode = "hip_nvptx",
+    compile_flags = COMPILE_FLAGS_NVPTX,
+    tags = ["nvptx"],
     visibility = ["@//:__pkg__"],
     deps = [
         ":add_nvptx",

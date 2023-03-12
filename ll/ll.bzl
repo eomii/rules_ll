@@ -248,3 +248,33 @@ Example:
   ```
 """,
 )
+
+ll_test = rule(
+    implementation = _ll_binary_impl,
+    test = True,
+    attrs = LL_BINARY_ATTRS,
+    cfg = ll_transition,
+    toolchains = [
+        "//ll:toolchain_type",
+    ],
+    doc = """
+Testable wrapper around `ll_binary`.
+
+Consider using this rule over skylib's `native_test` targets to correctly
+propagate shared libraries to the test invocations.
+
+Example:
+
+  ```python
+  ll_test(
+      name = "amdgpu_test",
+      srcs = ["my_executable.cpp"],
+      compilation_mode = "hip_amdgpu",
+      compile_flags = OFFLOAD_ALL_AMDGPU + [
+          "-std=c++20",
+      ],
+      tags = ["amdgpu"],  # Not required, but makes grouping tests easier.
+  )
+  ```
+""",
+)
