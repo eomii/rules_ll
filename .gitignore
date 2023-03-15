@@ -15,3 +15,6 @@ styles/write-good/
 
 # Don't track the local user-side .bazelrc
 .bazelrc.user
+
+# Generated locally by devenv.
+.devenv

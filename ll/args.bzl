@@ -46,6 +46,23 @@ def _construct_clang_include_path(file):
 
     return None
 
+def _construct_lld_include_path(file):
+    """Construct the paths to LLVM include directories.
+
+    This function looks at a file, and strips everything after "clang/include",
+    so that the returned path is "<some_leading_path>/clang/include". This lets
+    us handle outputs in transitioned output directories.
+
+    If the file is not in a `clang/include` directory, returns `None`.
+    """
+    filepath = file.path
+    if filepath.find("/lld/include/") != -1:
+        first_segment = filepath.partition("/lld/include/")[0]
+        out = paths.join(first_segment, "lld/include")
+        return out
+
+    return None
+
 def _create_module_import(interface):
     file, module_name = interface
     out = "{}={}".format(module_name, file.path)
@@ -215,9 +232,9 @@ def compile_object_args(
     ]:
         args.add("-Wno-unknown-cuda-version")  # Will always be unknown.
         args.add("-xcuda")
-        if ctx.configuration.default_shell_env.get("LL_CUDA") != None:
+        if ctx.configuration.default_shell_env.get("LL_CUDA_TOOLKIT") != "":
             args.add(
-                ctx.configuration.default_shell_env["LL_CUDA"],
+                ctx.configuration.default_shell_env["LL_CUDA_TOOLKIT"],
                 format = "--cuda-path=%s",
             )
     if ctx.attr.compilation_mode in ["hip_nvptx", "hip_amdgpu"]:
@@ -286,10 +303,11 @@ def compile_object_args(
             # become system includes.
             format_each = "-isystem%s",
         )
-        if ctx.configuration.default_shell_env.get("LL_CFLAGS") != None:
-            args.add_all(
-                ctx.configuration.default_shell_env["LL_CFLAGS"].split(":"),
-            )
+        for flags in ["LL_CFLAGS", "LL_AMD_INCLUDES"]:
+            if ctx.configuration.default_shell_env.get(flags) != "":
+                args.add_all(
+                    ctx.configuration.default_shell_env[flags].split(":"),
+                )
 
     # 4. Search directories specified via -idirafter for quoted and angled
     #    includes. Since most users will not need this flag, there is no
@@ -306,6 +324,13 @@ def compile_object_args(
         args.add_all(
             toolchain.llvm_project_sources,
             map_each = _construct_clang_include_path,
+            format_each = "-idirafter%s",
+            uniquify = True,
+            omit_if_empty = True,
+        )
+        args.add_all(
+            toolchain.llvm_project_sources,
+            map_each = _construct_lld_include_path,
             format_each = "-idirafter%s",
             uniquify = True,
             omit_if_empty = True,
@@ -373,10 +398,10 @@ def link_executable_args(ctx, in_files, out_file, mode):
     args = ctx.actions.args()
 
     # Provide host and device linker info to clang-linker-wrapper.
-    if ctx.configuration.default_shell_env.get("LL_CUDA") != None:
+    if ctx.configuration.default_shell_env.get("LL_CUDA_TOOLKIT") != "":
         # TODO: Incorrectly sets this even when the cuda path is empty.
         args.add(
-            ctx.configuration.default_shell_env["LL_CUDA"],
+            ctx.configuration.default_shell_env["LL_CUDA_TOOLKIT"],
             format = "--cuda-path=%s",
         )
 
@@ -394,10 +419,11 @@ def link_executable_args(ctx, in_files, out_file, mode):
     if ctx.var["COMPILATION_MODE"] == "dbg":
         args.add("--verbose")
 
-    if "LL_LDFLAGS" in ctx.configuration.default_shell_env.keys():
-        args.add_all(
-            ctx.configuration.default_shell_env["LL_LDFLAGS"].split(":"),
-        )
+    for flags in ["LL_LDFLAGS", "LL_AMD_LIBRARIES", "LL_AMD_RPATHS"]:
+        if flags in ctx.configuration.default_shell_env.keys():
+            args.add_all(
+                ctx.configuration.default_shell_env[flags].split(":"),
+            )
 
     # Startup files.
     if mode == "executable":
@@ -440,7 +466,7 @@ def link_executable_args(ctx, in_files, out_file, mode):
         args.add("--no-whole-archive")
 
     # Add dynamic linker. When in a nix env, make sure to use the nix variant.
-    if ctx.configuration.default_shell_env.get("LL_DYNAMIC_LINKER") != None:
+    if ctx.configuration.default_shell_env.get("LL_DYNAMIC_LINKER") != "":
         args.add(
             ctx.configuration.default_shell_env["LL_DYNAMIC_LINKER"],
             format = "--dynamic-linker=%s",
@@ -467,12 +493,18 @@ def link_executable_args(ctx, in_files, out_file, mode):
         "cuda_nvptx",
         "hip_nvptx",
     ]:
+        for location in ["LL_CUDA_TOOLKIT", "LL_CUDA_RUNTIME", "LL_CUDA_DRIVER"]:
+            if ctx.configuration.default_shell_env.get(location) != "":
+                args.add(
+                    ctx.configuration.default_shell_env[location],
+                    format = "-rpath=%s/lib",
+                )
+                args.add(
+                    ctx.configuration.default_shell_env[location],
+                    format = "-L%s/lib",
+                )
+
         args.add("-lcuda")
-        if ctx.configuration.default_shell_env.get("LL_CUDA_RPATH") != None:
-            args.add(
-                ctx.configuration.default_shell_env["LL_CUDA_RPATH"],
-                format = "-rpath=%s",
-            )
         args.add("-lcudart_static")
         args.add("-lcupti_static")
     if ctx.attr.compilation_mode == "hip_amdgpu":
