@@ -18,3 +18,6 @@ styles/write-good/
 
 # Generated locally by devenv.
 .devenv
+
+# Generated via nix.
+/.pre-commit-config.yaml
