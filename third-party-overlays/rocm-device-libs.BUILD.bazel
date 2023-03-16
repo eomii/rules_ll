@@ -1,3 +1,5 @@
+"Build file for the ROCm-Device-Libs."
+
 load("@rules_ll//ll:defs.bzl", "ll_binary")
 load("@rules_ll//third-party-overlays:defs.bzl", "opencl_bitcode_library")
 

@@ -1,3 +1,5 @@
+"Build file for the ROCR-Runtime."
+
 load("@rules_ll//ll:defs.bzl", "ll_library")
 load("@bazel_skylib//rules:copy_file.bzl", "copy_file")
 load("@bazel_skylib//rules:common_settings.bzl", "bool_flag")
@@ -85,7 +87,6 @@ ll_library(
     visibility = ["//visibility:public"],
 )
 
-
 ll_library(
     name = "libhsa-runtime64",
     srcs = [
@@ -139,7 +140,6 @@ ll_library(
 
         # TODO: Support the image runtime.
         "src/image/inc/hsa_ext_image_impl.h",
-
         "src/core/common/shared.h",
         "src/core/inc/*.h",
         "src/core/inc/*.hpp",
@@ -150,7 +150,6 @@ ll_library(
         # TODO: At the moment we generate trap_handler_v2.h offline and patch
         # the final header in. Recreate the logic to generate it properly.
         "src/core/runtime/amd_trap_handler_v2.h",
-
         "src/loader/executable.hpp",
         "src/loader/AMDHSAKernelDescriptor.h",
     ]),

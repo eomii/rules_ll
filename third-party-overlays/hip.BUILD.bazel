@@ -1,4 +1,6 @@
-load("@rules_ll//ll:defs.bzl", "ll_binary", "ll_library", "OFFLOAD_ALL_AMDGPU")
+"Build file for HIP."
+
+load("@rules_ll//ll:defs.bzl", "OFFLOAD_ALL_AMDGPU", "ll_binary", "ll_library")
 
 # Target for the toolchains.
 filegroup(

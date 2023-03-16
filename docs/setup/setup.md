@@ -2,6 +2,7 @@
 
 This guide explains how to set up `rules_ll`.
 
+<!-- markdownlint-disable code-block-style -->
 ??? "System requirements"
 
     `rules_ll` makes heavy use of upstream dependencies. Staying upstream
@@ -34,6 +35,7 @@ This guide explains how to set up `rules_ll`.
       `5.2`. This applies to 10xx series GPUs and up, and some `9xx` series
       GPUs. You can find a list of compute capabilities at
       <https://developer.nvidia.com/cuda-gpus>.
+<!-- markdownlint-enable code-block-style -->
 
 1. Install the [nix package manager](https://nixos.org/download.html) and enable
    [flakes](https://nixos.wiki/wiki/Flakes).
@@ -44,9 +46,9 @@ This guide explains how to set up `rules_ll`.
     nix develop github:eomii/rules_ll
     ```
 
-    To use CUDA packages and toolchains, make sure to read the [CUDA license](
-    https://docs.nvidia.com/cuda/eula/index.html) and use the unfree `rules_ll`
-    shell:
+    To use CUDA packages and toolchains, make sure to read the [CUDA
+    license](https://docs.nvidia.com/cuda/eula/index.html) and use the unfree
+    `rules_ll` shell:
 
     ```bash
     nix develop github:eomii/rules_ll#unfree

@@ -1,3 +1,5 @@
+"Build file for hipamd."
+
 load("@rules_ll//ll:defs.bzl", "ll_library")
 load("@bazel_skylib//rules:common_settings.bzl", "bool_flag")
 load("@rules_ll//third-party-overlays:rocclr_config.bzl", "ROCCLR_DEFINES")
@@ -69,7 +71,7 @@ ll_library(
         "@rocr//:libhsa-runtime64",
     ] + select({
         "@roct//:shared": ["@roct//:libhsakmt"],
-        "//conditions:default": []
+        "//conditions:default": [],
     }),
     defines = ROCCLR_DEFINES + [
         "HIP_VERSION_MAJOR=5",
@@ -79,7 +81,6 @@ ll_library(
         'HIP_VERSION_GITHASH="0000"',
         'HIP_VERSION_BUILD_NAME="rules_hip_custom_build_name_string"',
         "HIP_VERSION_BUILD_ID=0",
-
         "__HIP_PLATFORM_AMD__",
     ],
     compile_flags = [
@@ -109,5 +110,5 @@ ll_library(
         "//conditions:default": [
             "-lelf",
         ],
-    })
+    }),
 )

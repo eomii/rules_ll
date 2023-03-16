@@ -1,6 +1,7 @@
-load("@rules_ll//ll:defs.bzl", "ll_binary", "ll_library")
+"Build file for ROCm-CompilerSupport."
+
+load("@rules_ll//ll:defs.bzl", "ll_library")
 load("@rules_ll//third-party-overlays:defs.bzl", "opencl_pch")
-load("@bazel_skylib//rules:write_file.bzl", "write_file")
 load("@bazel_skylib//rules:expand_template.bzl", "expand_template")
 load("@bazel_skylib//rules:common_settings.bzl", "bool_flag")
 

@@ -5,6 +5,7 @@
     nixpkgs.url = "github:nixos/nixpkgs";
     flake-utils.url = "github:numtide/flake-utils";
     devenv.url = "github:cachix/devenv/latest";
+    pre-commit-hooks-nix.url = "github:cachix/pre-commit-hooks.nix";
   };
 
   nixConfig = {
@@ -13,7 +14,7 @@
     bash-prompt-suffix = " ";
   };
 
-  outputs = { self, nixpkgs, flake-utils, devenv, ... } @ inputs:
+  outputs = { self, nixpkgs, flake-utils, devenv, pre-commit-hooks-nix, ... } @ inputs:
     flake-utils.lib.eachSystem [
       "x86_64-linux"
     ]
@@ -54,6 +55,17 @@
             dev = devShells.dev;
           };
 
+          hooks = import ./pre-commit-hooks.nix {
+            inherit pkgs;
+          };
+
+          checks = {
+            pre-commit-check = pre-commit-hooks-nix.lib.${system}.run {
+              src = ./.;
+              hooks = hooks;
+            };
+          };
+
           devShells = {
             default = mkLlShell { };
             unfree = mkLlShell { unfree = true; };
@@ -75,6 +87,8 @@
             inherit inputs pkgs;
 
             modules = [{
+              pre-commit.hooks = hooks;
+
               scripts.bazel.exec = (''
                 # Add the nix cflags and ldflags to the Bazel action envs.
                 # This is safe to do since the Nix environment is reproducible.

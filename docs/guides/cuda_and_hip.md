@@ -7,9 +7,11 @@ At the moment `rules_ll` supports Nvidia and AMD GPUs.
 
 You can find examples at [`rules_ll/examples`](https://github.com/eomii/rules_ll/tree/main/examples).
 
+<!-- markdownlint-disable code-block-style -->
 !!! warning
 
     This feature is still under heavy development. APIs will frequently change.
+<!-- markdownlint-enable code-block-style -->
 
 ## Prerequisites
 

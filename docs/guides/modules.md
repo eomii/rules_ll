@@ -5,6 +5,7 @@ use them if you can.
 
 You can find full examples at [`rules_ll/examples`](https://github.com/eomii/rules_ll/tree/main/examples).
 
+<!-- markdownlint-disable code-block-style -->
 !!! note
 
     `rules_ll` has no builtin support for Clang modules. This feature precedes C++
@@ -15,6 +16,7 @@ You can find full examples at [`rules_ll/examples`](https://github.com/eomii/rul
 
     Due to a bug in `clang-tidy` you have to silence
     `readability-redundant-declaration` when using modules.
+<!-- markdownlint-enable code-block-style -->
 
 ## Basic usage
 
