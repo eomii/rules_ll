@@ -167,7 +167,16 @@
                 # Ensure that the ll command points to our ll binary.
                 [[ $(type -t ll) == "alias" ]] && unalias ll
 
+                # Ensure that the bazel command points to our custom wrapper.
+                [[ $(type -t bazel) == "alias" ]] && unalias bazel
+
+                # Prevent rules_cc from using anything other than clang.
+                export CC=clang
+
+                # Probably a bug in nix. Setting LD=ld.lld here doesn't work.
                 export LD=${pkgs.llvmPackages_15.lld}/bin/ld.lld
+
+                # Prettier color output for the ls command.
                 alias ls='ls --color=auto'
               '';
             }];
