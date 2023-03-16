@@ -1,3 +1,5 @@
+"Build file for ROCclr."
+
 load("@rules_ll//ll:defs.bzl", "ll_library")
 load("@rules_ll//third-party-overlays:rocclr_config.bzl", "ROCCLR_DEFINES")
 

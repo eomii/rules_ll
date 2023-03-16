@@ -1,3 +1,5 @@
+"Build file for the ROCm-OpenCL-Runtime."
+
 load("@rules_ll//ll:defs.bzl", "ll_library")
 
 ll_library(
@@ -16,7 +18,7 @@ ll_library(
     exposed_hdrs = glob([
         "khronos/headers/opencl2.1/CL/*.h",
         "khronos/headers/opencl2.1/CL/*.hpp",
-    ])
+    ]),
 )
 
 ll_library(
@@ -34,6 +36,7 @@ ll_library(
 # is not needed for hip but we probably want to support native OpenCL toolchains
 # in rules_ll at some point to ease transitioning from OCL to HIP.
 
+# buildifier: disable=no-effect
 '''
 load("@bazel_skylib//rules:common_settings.bzl", "bool_flag")
 

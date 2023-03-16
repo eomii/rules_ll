@@ -1,3 +1,5 @@
+"Central build file for the docs, platforms, toolchains and config settings."
+
 load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
 load("@bazel_skylib//rules:common_settings.bzl", "string_flag")
 load("@stardoc//stardoc:stardoc.bzl", "stardoc")

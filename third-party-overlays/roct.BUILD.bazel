@@ -1,3 +1,5 @@
+"Build file for the ROCT-Thunk-Interface."
+
 load("@rules_ll//ll:defs.bzl", "ll_binary", "ll_library")
 load("@bazel_skylib//rules:copy_file.bzl", "copy_file")
 load("@bazel_skylib//rules:native_binary.bzl", "native_binary")
