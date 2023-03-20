@@ -5,18 +5,26 @@ on:
     branches:
       - main
 jobs:
-  tests:
+  pre-commit-checks:
     runs-on: ubuntu-latest
-    environment: cachix
+    environment: pre-commit
     steps:
-      - uses: actions/checkout@v3
-      - uses: cachix/install-nix-action@v20
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Install Nix
+        uses: cachix/install-nix-action@v20
         with:
           nix_path: nixpkgs=channel:nixos-unstable
-      - uses: cachix/cachix-action@v12
+      - name: Cache Nix artifacts
+        uses: actions/cache@v3.3.1
         with:
-          name: eomii
-          authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
+          key: "${{ runner.os }}-nix-${{
+            hashfiles('flake.lock', 'flake.nix', 'pre-commit.nix') }}"
+          path: ~/nix
+          restore-keys: |
+            ${{ runner.os }}-nix-${{
+              hashfiles('flake.lock', 'flake.nix', 'pre-commit.nix') }}
+            ${{ runner.os }}-nix-
       - name: Run pre-commit hooks
         run: |
-          nix flake check -L
+          nix --store ~/nix flake check -L
