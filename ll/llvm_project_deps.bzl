@@ -90,6 +90,7 @@ LLVM_PROJECT_DEPS = [
     "@llvm-project//llvm:LibDriver",
     "@llvm-project//llvm:LineEditor",
     "@llvm-project//llvm:Linker",
+    "@llvm-project//llvm:LLVMTableGenGlobalISel",
     "@llvm-project//llvm:MC",
     "@llvm-project//llvm:MCA",
     "@llvm-project//llvm:MCDisassembler",
@@ -116,7 +117,6 @@ LLVM_PROJECT_DEPS = [
     "@llvm-project//llvm:common_transforms",
     "@llvm-project//llvm:config",
     "@llvm-project//llvm:remark_linker",
-    "@llvm-project//llvm:tblgen",
 
     # LLD
     "@llvm-project//lld:ELF",
