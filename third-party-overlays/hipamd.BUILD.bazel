@@ -26,7 +26,6 @@ ll_library(
     includes = ["src"],
     angled_includes = ["include"],
     srcs = [
-        "src/cl_gl.cpp",
         "src/fixme.cpp",
         "src/hip_activity.cpp",
         "src/hip_code_object.cpp",

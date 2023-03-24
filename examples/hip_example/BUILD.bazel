@@ -29,6 +29,7 @@ ll_binary(
 
 ll_test(
     name = "nvptx_test",
+    size = "small",
     srcs = ["example.cpp"],
     compilation_mode = "hip_nvptx",
     compile_flags = OFFLOAD_ALL_NVPTX + [
@@ -40,6 +41,7 @@ ll_test(
 
 ll_test(
     name = "amdgpu_test",
+    size = "small",
     srcs = ["example.cpp"],
     compilation_mode = "hip_amdgpu",
     compile_flags = OFFLOAD_ALL_AMDGPU + [

@@ -1,8 +1,8 @@
 diff --git a/src/hip_graph_internal.hpp b/src/hip_graph_internal.hpp
-index e2bee8a1..b4e986bc 100644
+index 0918f4fc..6db61da2 100644
 --- a/src/hip_graph_internal.hpp
 +++ b/src/hip_graph_internal.hpp
-@@ -1066,11 +1066,11 @@ class hipGraphMemcpyNode : public hipGraphNode {
+@@ -1093,11 +1093,11 @@ class hipGraphMemcpyNode : public hipGraphNode {
      pCopyParams_ = new hipMemcpy3DParms(*rhs.pCopyParams_);
    }
  
@@ -11,12 +11,12 @@ index e2bee8a1..b4e986bc 100644
      return new hipGraphMemcpyNode(static_cast<hipGraphMemcpyNode const&>(*this));
    }
  
--  hipError_t CreateCommand(amd::HostQueue* queue) {
-+  hipError_t CreateCommand(amd::HostQueue* queue) override {
+-  hipError_t CreateCommand(hip::Stream* stream) {
++  hipError_t CreateCommand(hip::Stream* stream) override {
      if (IsHtoHMemcpy(pCopyParams_->dstPtr.ptr, pCopyParams_->srcPtr.ptr, pCopyParams_->kind)) {
        return hipSuccess;
      }
-@@ -1106,14 +1106,14 @@ class hipGraphMemcpyNode : public hipGraphNode {
+@@ -1133,14 +1133,14 @@ class hipGraphMemcpyNode : public hipGraphNode {
      std::memcpy(pCopyParams_, params, sizeof(hipMemcpy3DParms));
      return hipSuccess;
    }
@@ -26,14 +26,14 @@ index e2bee8a1..b4e986bc 100644
      return SetParams(memcpyNode->pCopyParams_);
    }
    // ToDo: use this when commands are cloned and command params are to be updated
-   hipError_t SetCommandParams(const hipMemcpy3DParms* pNodeParams);
    hipError_t ValidateParams(const hipMemcpy3DParms* pNodeParams);
+ 
 -  std::string GetLabel(hipGraphDebugDotFlags flag) {
 +  std::string GetLabel(hipGraphDebugDotFlags flag) override {
+     size_t offset = 0;
      const HIP_MEMCPY3D pCopy = hip::getDrvMemcpy3DDesc(*pCopyParams_);
      hipMemoryType srcMemoryType = pCopy.srcMemoryType;
-     if (srcMemoryType == hipMemoryTypeUnified) {
-@@ -1185,7 +1185,7 @@ class hipGraphMemcpyNode : public hipGraphNode {
+@@ -1215,7 +1215,7 @@ class hipGraphMemcpyNode : public hipGraphNode {
      }
      return label;
    }
