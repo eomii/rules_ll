@@ -49,12 +49,6 @@
         in
         rec {
 
-          packages = {
-            default = devShells.default;
-            unfree = devShells.unfree;
-            dev = devShells.dev;
-          };
-
           hooks = import ./pre-commit-hooks.nix {
             inherit pkgs;
           };
