@@ -103,6 +103,7 @@ ll_binary(
 
 ll_test(
     name = "amdgpu_test",
+    size = "small",
     srcs = [
         "main.hip.cpp",
     ],
@@ -118,6 +119,7 @@ ll_test(
 
 ll_test(
     name = "nvptx_test",
+    size = "small",
     srcs = [
         "main.hip.cpp",
     ],

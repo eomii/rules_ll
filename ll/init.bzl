@@ -39,10 +39,10 @@ def _initialize_rules_ll_impl(_):
     http_archive(
         name = "hipamd",
         build_file = "@rules_ll//third-party-overlays:hipamd.BUILD.bazel",
-        sha256 = "1fbe0252cd545bd88cfbe195f7c068a4e83741cb581b3170e5bc8864cebdd6f2",
-        strip_prefix = "hipamd-312dff7b794337aa040be0691acc78e9f968a8d2",
+        sha256 = "f82a20574e47ef10d2cd9e4b3c5e0feed2fdc0a6142fec36ed6621b62f725d21",
+        strip_prefix = "hipamd-4209792929ddf54ba9530813b7879cfdee42df14",
         urls = [
-            "https://github.com/ROCm-Developer-Tools/hipamd/archive/312dff7b794337aa040be0691acc78e9f968a8d2.zip",
+            "https://github.com/ROCm-Developer-Tools/hipamd/archive/4209792929ddf54ba9530813b7879cfdee42df14.zip",
         ],
         patches = [
             "@rules_ll//patches:hipamd_deprecate_fix.diff",
@@ -99,20 +99,20 @@ def _initialize_rules_ll_impl(_):
     http_archive(
         name = "rocclr",
         build_file = "@rules_ll//third-party-overlays:rocclr.BUILD.bazel",
-        sha256 = "7f49ffc6fd4183284e8ff2cf8b0e4897732979803ce3d1aec3780fae6ff0d482",
-        strip_prefix = "ROCclr-20dfaee8767f7bc9df722fdbc397d77eed267607",
+        sha256 = "44b654d86a5459c783c0bfe663e257da110844f878e8dab67691c114d4d4655f",
+        strip_prefix = "ROCclr-63540e0b08c508c440e5d50431cc3d80647a45c4",
         urls = [
-            "https://github.com/ROCm-Developer-Tools/ROCclr/archive/20dfaee8767f7bc9df722fdbc397d77eed267607.zip",
+            "https://github.com/ROCm-Developer-Tools/ROCclr/archive/63540e0b08c508c440e5d50431cc3d80647a45c4.zip",
         ],
     )
 
     http_archive(
         name = "rocm-opencl-runtime",
         build_file = "@rules_ll//third-party-overlays:rocm-opencl-runtime.BUILD.bazel",
-        sha256 = "6094046eb40a05b05075278c262a6c6f332f2a98a132eee969aab8e44d6154c5",
-        strip_prefix = "ROCm-OpenCL-Runtime-f0c977ffb687e861a30d4de8082a1a468c3ce49f",
+        sha256 = "515c666be19fe6fc101b4bfb135c20d022a29cc6e6f55fe5453d949e39c27d3e",
+        strip_prefix = "ROCm-OpenCL-Runtime-a919c67b5a581852ea1773b21e1e2109ba208274",
         urls = [
-            "https://github.com/RadeonOpenCompute/ROCm-OpenCL-Runtime/archive/f0c977ffb687e861a30d4de8082a1a468c3ce49f.zip",
+            "https://github.com/RadeonOpenCompute/ROCm-OpenCL-Runtime/archive/a919c67b5a581852ea1773b21e1e2109ba208274.zip",
         ],
     )
 

@@ -64,6 +64,7 @@ ll_library(
         "platform/ndrange.cpp",
         "platform/program.cpp",
         "platform/runtime.cpp",
+        "platform/interop_gl.cpp",
         "thread/monitor.cpp",
         "thread/semaphore.cpp",
         "thread/thread.cpp",
