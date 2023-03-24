@@ -85,13 +85,14 @@ def _initialize_rules_ll_impl(_):
     http_archive(
         name = "comgr",
         build_file = "@rules_ll//third-party-overlays:comgr.BUILD.bazel",
-        sha256 = "e76989539fb2454cddb54221bcc81b37c0b429195142a106e592b3e812adc3d8",
-        strip_prefix = "ROCm-CompilerSupport-5650602bbd8df037c0095d46f526e481b262c02c",
+        sha256 = "30f1507ba22debe9293b91536a03026ee3476638379d521ff5fa22bf4701cd56",
+        strip_prefix = "ROCm-CompilerSupport-641da67d59941b8bdf48fc7bed24ec88ce35b103",
         urls = [
-            "https://github.com/RadeonOpenCompute/ROCm-CompilerSupport/archive/5650602bbd8df037c0095d46f526e481b262c02c.zip",
+            "https://github.com/RadeonOpenCompute/ROCm-CompilerSupport/archive/641da67d59941b8bdf48fc7bed24ec88ce35b103.zip",
         ],
         patches = [
             "@rules_ll//patches:comgr_bc2h.diff",
+            "@rules_ll//patches:comgr_fix_version_check.diff",
         ],
         patch_args = ["-p1"],
     )
