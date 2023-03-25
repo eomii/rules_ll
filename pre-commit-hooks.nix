@@ -60,7 +60,10 @@
   };
 
   # YAML
-  yamllint.enable = true;
+  yamllint = {
+    enable = true;
+    excludes = [ "^styles/" ];
+  };
 
   # Bash/Shell
   shellcheck = {
@@ -83,7 +86,16 @@
   # Markdown
   markdownlint = {
     enable = true;
-    excludes = [ "^(docs/reference/|docs/rules/)" ];
+    excludes = [ "^(docs/reference/|docs/rules/|styles/)" ];
+    types = [ "markdown" ];
+  };
+
+  # Vale
+  vale = {
+    enable = true;
+    name = "vale";
+    entry = "${pkgs.vale}/bin/vale";
+    excludes = [ "^styles/" ];
     types = [ "markdown" ];
   };
 }

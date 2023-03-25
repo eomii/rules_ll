@@ -68,8 +68,10 @@
               deps = [
                 pkgs.shellcheck
                 pkgs.git
-                pkgs.python3
-                pkgs.python310Packages.mkdocs-material
+                (pkgs.python3.withPackages (pylib: [
+                  pylib.mkdocs-material
+                ]))
+                pkgs.mkdocs
                 pkgs.pre-commit
                 pkgs.which
                 pkgs.vale
@@ -169,7 +171,7 @@
               ] ++ (if unfree then [
                 pkgsUnfree.linuxPackages_6_1.nvidia_x11
                 pkgsUnfree.cudaPackages_12.cudatoolkit
-              ] else [ ]);
+              ] else [ ]) ++ deps;
 
               enterShell = ''
                 # Ensure that the ll command points to our ll binary.
