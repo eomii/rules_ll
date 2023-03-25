@@ -7,12 +7,6 @@ bazel-*
 # rules_ll developers may have a clone of the LLVM project in this repo.
 llvm-project/
 
-# These styles are dynamically fetched by vale and shouldn't be tracked.
-styles/Google/
-styles/Microsoft/
-styles/alex/
-styles/write-good/
-
 # Don't track the local user-side .bazelrc
 .bazelrc.user
 
