@@ -1,0 +1,42 @@
+load(
+    "@rules_ll//ll:defs.bzl",
+    # "OFFLOAD_ALL_AMDGPU",
+    "OFFLOAD_ALL_NVPTX",
+    "ll_binary",
+    "ll_library",
+)
+
+ll_library(
+    name = "hip",
+    srcs = ["hip_dependent.cpp"],
+    compilation_mode = "hip_nvptx",
+    compile_flags = OFFLOAD_ALL_NVPTX + [
+        "--std=c++20",
+        "-Wno-deprecated",
+    ],
+    exposed_hdrs = ["hip_dependent.hpp"],
+    visibility = ["@//:__pkg__"],
+)
+
+ll_library(
+    name = "module_wrapper",
+    srcs = ["module_wrapper.cpp"],
+    compile_flags = ["--std=c++20"],
+    exposed_hdrs = ["module_wrapper.hpp"],
+    exposed_interfaces = {"a.cppm": "a"},
+)
+
+ll_binary(
+    name = "hip_modules_example",
+    srcs = ["main.cpp"],
+    compilation_mode = "hip_nvptx",
+    compile_flags = OFFLOAD_ALL_NVPTX + [
+        "--std=c++20",
+        "-Wno-deprecated",
+    ],
+    visibility = ["@//:__pkg__"],
+    deps = [
+        ":hip",
+        ":module_wrapper",
+    ],
+)

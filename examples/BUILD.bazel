@@ -80,6 +80,7 @@ test_suite(
     tests = [
         "//cuda_example:test",
         "//hip_example:nvptx_test",
+        "//hip_module_example",
         "//hip_rdc_example:nvptx_test",
     ],
 )
