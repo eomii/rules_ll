@@ -1,0 +1,30 @@
+diff --git a/include/hip/amd_detail/amd_hip_runtime.h b/include/hip/amd_detail/amd_hip_runtime.h
+index f3df0473..dc7e3b98 100644
+--- a/include/hip/amd_detail/amd_hip_runtime.h
++++ b/include/hip/amd_detail/amd_hip_runtime.h
+@@ -227,9 +227,7 @@ void hipLaunchKernelGGL(F kernel, const dim3& numBlocks, const dim3& dimBlocks,
+ }
+ #else
+ #define hipLaunchKernelGGLInternal(kernelName, numBlocks, numThreads, memPerBlock, streamId, ...)  \
+-    do {                                                                                           \
+-        kernelName<<<(numBlocks), (numThreads), (memPerBlock), (streamId)>>>(__VA_ARGS__);         \
+-    } while (0)
++        kernelName<<<(numBlocks), (numThreads), (memPerBlock), (streamId)>>>(__VA_ARGS__)          \
+ 
+ #define hipLaunchKernelGGL(kernelName, ...)  hipLaunchKernelGGLInternal((kernelName), __VA_ARGS__)
+ #endif
+diff --git a/include/hip/nvidia_detail/nvidia_hip_runtime.h b/include/hip/nvidia_detail/nvidia_hip_runtime.h
+index c63e3570..06b111c8 100644
+--- a/include/hip/nvidia_detail/nvidia_hip_runtime.h
++++ b/include/hip/nvidia_detail/nvidia_hip_runtime.h
+@@ -32,9 +32,7 @@ THE SOFTWARE.
+ typedef int hipLaunchParm;
+ 
+ #define hipLaunchKernelGGLInternal(kernelName, numBlocks, numThreads, memPerBlock, streamId, ...)  \
+-    do {                                                                                           \
+-        kernelName<<<numBlocks, numThreads, memPerBlock, streamId>>>(__VA_ARGS__);                 \
+-    } while (0)
++        kernelName<<<numBlocks, numThreads, memPerBlock, streamId>>>(__VA_ARGS__)                  \
+ 
+ #define hipLaunchKernelGGL(kernelName, ...)  hipLaunchKernelGGLInternal((kernelName), __VA_ARGS__)
+ 
