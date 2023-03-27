@@ -35,6 +35,8 @@ markdown_extensions:
   - pymdownx.snippets
   - pymdownx.superfences
   - pymdownx.details
+  - pymdownx.tabbed:
+      alternate_style: true
 nav:
   - Home:
       - index.md
@@ -48,6 +50,7 @@ nav:
       - Clang-tidy: guides/clang_tidy.md
       - C++ Modules: guides/modules.md
       - CUDA and HIP: guides/cuda_and_hip.md
+      - External dependencies: guides/external_dependencies.md
       - Sanitizers: guides/sanitizers.md
   - Reference:
       - reference/index.md
