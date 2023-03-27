@@ -21,6 +21,7 @@ backend
 buildable
 bundler
 eomii
+hermeticity
 multithreading
 namespace
 precompilation

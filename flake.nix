@@ -79,11 +79,13 @@
             };
           };
 
-          mkLlShell = ({ unfree ? false, deps ? [ ] }: devenv.lib.mkShell {
+          mkLlShell = ({ unfree ? false, deps ? [ ], env ? { } }: devenv.lib.mkShell {
             inherit inputs pkgs;
 
             modules = [{
               pre-commit.hooks = hooks;
+
+              inherit env;
 
               scripts.bazel.exec = (''
                 # Add the nix cflags and ldflags to the Bazel action envs.

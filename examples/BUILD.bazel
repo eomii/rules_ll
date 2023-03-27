@@ -15,6 +15,7 @@ ll_compilation_database(
         "//cuda_example",
         "//format_example",
         "//frontend_action_example",
+        "//external_dependency_example",
         "//hip_example",
         "//hip_rdc_example",
         "//module_partition_example",
@@ -42,6 +43,7 @@ test_suite(
 EXAMPLES = [
     "format_example",
     "frontend_action_example",
+    "external_dependency_example",
     "modules_example",
     "module_partition_example",
     "openmp_example",
