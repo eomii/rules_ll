@@ -19,22 +19,16 @@ ll_library(
 )
 
 ll_library(
-    name = "a",
-    compile_flags = ["-std=c++20"],
-    exposed_interfaces = {"a.cppm": "a"},
-)
-
-ll_library(
-    name = "a_interface",
-    srcs = ["a_module_interface.cpp"],
+    name = "module_wrapper",
+    srcs = ["module_wrapper.cpp"],
     compile_flags = ["--std=c++20"],
-    exposed_hdrs = ["a_module_interface.hpp"],
-    deps = [":a"],
+    exposed_hdrs = ["module_wrapper.hpp"],
+    exposed_interfaces = {"a.cppm": "a"},
 )
 
 ll_binary(
     name = "hip_modules_example",
-    srcs = ["hip_module_example.cpp"],
+    srcs = ["main.cpp"],
     compilation_mode = "hip_nvptx",
     compile_flags = OFFLOAD_ALL_NVPTX + [
         "--std=c++20",
@@ -42,7 +36,7 @@ ll_binary(
     ],
     visibility = ["@//:__pkg__"],
     deps = [
-        ":a_interface",
         ":hip",
+        ":module_wrapper",
     ],
 )

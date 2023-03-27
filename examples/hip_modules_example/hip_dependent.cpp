@@ -1,7 +1,9 @@
 #include <array>
+#include <format>
 #include <iostream>
 #include <vector>
 
+#include "hip_dependent.hpp"
 #include "hip/hip_runtime.h"
 
 constexpr float kInputA = 1.0F;
@@ -62,7 +64,7 @@ auto count_errors(const float *result) -> int {
   return errors;
 }
 
-auto hip_func() -> int {
+auto gpu_calculation() -> int {
   print_device_info();
 
   float *host_input_a = nullptr;
@@ -113,6 +115,6 @@ auto hip_func() -> int {
   return errors;
 }
 
-auto hip_interface() -> void {
-  std::cout << hip_func() << std::endl;
+auto gpu_hello() -> void {
+  std::cout << std::format("Hello from the gpu with result {}.", gpu_calculation()) << std::endl;
 }
