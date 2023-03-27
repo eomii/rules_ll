@@ -8,7 +8,7 @@
 constexpr float kInputA = 1.0F;
 constexpr float kInputB = 2.0F;
 constexpr float kExpectedOutput = 3.0F;
-int kDimension = 1 << 20;
+constexpr int kDimension = 1 << 20;
 constexpr auto kThreadsPerBlockX = 128;
 constexpr auto kThreadsPerBlockY = 1;
 constexpr auto kThreadsPerBlockZ = 1;
@@ -20,7 +20,7 @@ constexpr void cuda_assert(const T value) {
 
 __global__ void add_vector(float *input_a, const float *input_b,
                            const int dimension) {
-  int index = blockIdx.x * blockDim.x + threadIdx.x;
+  const uint32_t index = blockIdx.x * blockDim.x + threadIdx.x;
   if (index < dimension) {
     // NOLINTNEXTLINE cppcoreguidelines-pro-bounds-pointer-arithmetic
     input_a[index] += input_b[index];
@@ -29,13 +29,13 @@ __global__ void add_vector(float *input_a, const float *input_b,
 
 void print_device_info() {
   int count = 0;
-  cudaError_t err = cudaGetDeviceCount(&count);
+  const cudaError_t err = cudaGetDeviceCount(&count);
   if (err == cudaErrorInvalidDevice) {
     std::cout << "FAIL: invalid device" << std::endl;
   }
   std::cout << "Number of devices is " << count << std::endl;
 
-  cudaDeviceProp device_prop;
+  cudaDeviceProp device_prop{};
   cuda_assert(cudaGetDeviceProperties(&device_prop, 0));
   std::cout << "System major: " << device_prop.major << std::endl;
   std::cout << "System minor: " << device_prop.minor << std::endl;
@@ -93,18 +93,24 @@ auto main() -> int {
   cuda_assert(cudaMemcpy(device_input_b, host_input_b,
                          kDimension * sizeof(float), cudaMemcpyHostToDevice));
 
-  dim3 grid_dim = dim3(kDimension / kThreadsPerBlockX);
-  dim3 block_dim = dim3(kThreadsPerBlockX);
+  const dim3 grid_dim = dim3(kDimension / kThreadsPerBlockX);
+  const dim3 block_dim = dim3(kThreadsPerBlockX);
 
   // This is not pretty, but it is close to the HIP implementation.
-  std::array<void *, 3> args = {&device_input_a, &device_input_b, &kDimension};
+  // NOLINTBEGIN cppcoreguidelines-pro-type-reinterpret-cast
+  // NOLINTBEGIN cppcoreguidelines-pro-type-const-cast
+  std::array<void *, 3> args = {
+      &device_input_a, &device_input_b,
+      reinterpret_cast<void *>(const_cast<int *>(&kDimension))};
   cudaLaunchKernel(reinterpret_cast<void *>(add_vector), grid_dim, block_dim,
                    args.data(), 0, nullptr);
+  // NOLINTEND cppcoreguidelines-pro-type-reinterpret-cast
+  // NOLINTEND cppcoreguidelines-pro-type-const-cast
 
   cuda_assert(cudaMemcpy(host_input_a, device_input_a,
                          kDimension * sizeof(float), cudaMemcpyDeviceToHost));
 
-  int errors = count_errors(host_input_a);
+  const int errors = count_errors(host_input_a);
 
   cuda_assert(cudaFree(device_input_a));
   cuda_assert(cudaFree(device_input_b));
