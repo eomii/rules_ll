@@ -19,7 +19,7 @@ constexpr void hip_assert(const T value) {
 
 __global__ auto add_vector(float *input_a, const float *input_b,
                            const int dimension) -> void {
-  int index = hipBlockIdx_x * hipBlockDim_x + hipThreadIdx_x;
+  const uint32_t index = hipBlockIdx_x * hipBlockDim_x + hipThreadIdx_x;
   if (index < dimension) {
     // NOLINTNEXTLINE cppcoreguidelines-pro-bounds-pointer-arithmetic
     input_a[index] += input_b[index];
@@ -28,7 +28,7 @@ __global__ auto add_vector(float *input_a, const float *input_b,
 
 void print_device_info() {
   int count = 0;
-  hipError_t err = hipGetDeviceCount(&count);
+  const hipError_t err = hipGetDeviceCount(&count);
   if (err == hipErrorInvalidDevice) {
     std::cout << "FAIL: invalid device" << std::endl;
   }
@@ -93,8 +93,8 @@ auto main() -> int {
   hip_assert(hipMemcpy(device_input_b, host_input_b, kDimension * sizeof(float),
                        hipMemcpyHostToDevice));
 
-  dim3 grid_dim = dim3(kDimension / kThreadsPerBlockX);
-  dim3 block_dim = dim3(kThreadsPerBlockX);
+  const dim3 grid_dim = dim3(kDimension / kThreadsPerBlockX);
+  const dim3 block_dim = dim3(kThreadsPerBlockX);
 
   hipLaunchKernelGGL(add_vector, grid_dim, block_dim, 0, nullptr,
                      device_input_a, device_input_b, kDimension);

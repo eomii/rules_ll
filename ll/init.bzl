@@ -50,6 +50,7 @@ def _initialize_rules_ll_impl(_):
             "@rules_ll//patches:hipamd_inconsistent_overrides.diff",
             "@rules_ll//patches:hipamd_fix_extraneous_parentheses.diff",
             "@rules_ll//patches:hipamd_default_visibility.diff",
+            "@rules_ll//patches:hipamd_enforce_semicolon.diff",
         ],
         patch_args = ["-p1"],
     )

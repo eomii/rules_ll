@@ -91,7 +91,7 @@ with open(sys.argv[1], 'r') as in_file, open(sys.argv[2], 'w') as out_file:
 
         # Workaround for https://github.com/llvm/llvm-project/issues/59291.
         for arg in fragment['arguments']:
-            if arg == '-xcuda':
+            if arg in ['-xcuda', '-xhip']:
                 fragment['arguments'] += ['--offload-host-only']
             if arg.startswith('--offload-arch'):
                 fragment['arguments'].remove(arg)

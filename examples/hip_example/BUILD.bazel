@@ -13,6 +13,7 @@ ll_binary(
     compile_flags = OFFLOAD_ALL_NVPTX + [
         "--std=c++20",
     ],
+    visibility = ["@//:__pkg__"],
 )
 
 ll_binary(
@@ -22,6 +23,7 @@ ll_binary(
     compile_flags = OFFLOAD_ALL_AMDGPU + [
         "--std=c++20",
     ],
+    visibility = ["@//:__pkg__"],
 )
 
 # We usually prefer native_test over ll_test, but that won't work here as the

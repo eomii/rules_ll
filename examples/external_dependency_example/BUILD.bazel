@@ -1,0 +1,15 @@
+load("@rules_ll//ll:defs.bzl", "ll_binary")
+
+ll_binary(
+    name = "external_dependency_example",
+    srcs = ["main.cpp"],
+    compile_flags = ["-std=c++2b"],
+    # The include path, library search path and rpath are already set in
+    # flake.nix and added to all targets in the workspace. This way we still
+    # have a reproducible openssl despite it not being tracked by Bazel.
+    #
+    # If possible, try to avoid this pattern and write custom BUILD files for
+    # external dependencies that are not too complicated to port to Bazel.
+    link_flags = ["-lcrypto"],
+    visibility = ["@//:__pkg__"],
+)

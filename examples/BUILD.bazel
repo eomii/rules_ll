@@ -16,9 +16,9 @@ ll_compilation_database(
         "//format_example",
         "//frontend_action_example",
         "//external_dependency_example",
-        "//hip_example",
-        "//hip_rdc_example",
-        "//module_partition_example",
+        "//hip_example:amdgpu",
+        "//hip_rdc_example:amdgpu",
+        # "//module_partition_example",  # Bugged. Need to report upstream.
         "//modules_example",
         # "//modules_draft_example",  # Not clang-tidy conform.
         "//openmp_example",

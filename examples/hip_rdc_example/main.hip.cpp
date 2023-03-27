@@ -78,8 +78,8 @@ auto main() -> int {
   hip_assert(hipMemcpy(device_input_c, host_input_c, kDimension * sizeof(float),
                        hipMemcpyHostToDevice));
 
-  dim3 grid_dim = dim3(kDimension / kThreadsPerBlockX);
-  dim3 block_dim = dim3(kThreadsPerBlockX);
+  const dim3 grid_dim = dim3(kDimension / kThreadsPerBlockX);
+  const dim3 block_dim = dim3(kThreadsPerBlockX);
 
   hipLaunchKernelGGL(multiply_add, grid_dim, block_dim, 0, nullptr,
                      device_input_a, device_input_b, device_input_c,
