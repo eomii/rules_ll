@@ -7,20 +7,16 @@
 Use the `rules_ll` development shell to get the various tools you need to work
 on the project:
 
-```bash
-nix develop github:eomii/rules_ll#dev
+```bash title="(from within the rules_ll root directory)"
+nix develop .#dev
 ```
 
-From within the `rules_ll` development shell, setup vale and the pre-commit
-hooks and verify that all checks pass:
+The flake automatically sets up pre-commit in the shell which run on every local
+commit. You can also run the hooks manually:
 
 ```bash title="(from within the rules_ll root directory)"
-vale sync
-pre-commit install
-pre-commit run --all-files
+nix flake check -L
 ```
-
-After this, they run automatically on every local commit.
 
 ## Building the docs
 
@@ -41,7 +37,14 @@ This populates the `docs/reference/` directory with the updated markdown files.
 
 ## Tests
 
-The examples at `rules_ll/examples` also act as tests for the project.
+The examples at `rules_ll/examples` also act as tests for the project. If you
+don't use `devenv` make sure to run the examples from the flake in the
+`examples` directory:
+
+```bash title="(from within the rules_ll/examples directory)"
+nix develop
+```
+
 Heterogeneous tests fail on machines without the corresponding GPU, but they
 should still produce executables:
 
