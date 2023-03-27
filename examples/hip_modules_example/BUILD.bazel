@@ -1,0 +1,66 @@
+load(
+    "@rules_ll//ll:defs.bzl",
+    "ll_binary",
+    "ll_library",
+)
+
+cc_binary(
+    name = "cc",
+    srcs = ["main.cpp"],
+    copts = [
+        "-v",
+    ],
+    linkopts =
+        [
+            "--verbose",
+        ],
+)
+
+ll_library(
+    name = "hip",
+    srcs = ["hip.cpp"],
+    compilation_mode = "hip_nvptx",
+    compile_flags = [
+        "--std=c++20",
+        "--offload-arch=sm_61",
+        "-Wno-deprecated",
+    ],
+    exposed_hdrs = ["hip.hpp"],
+    visibility = ["@//:__pkg__"],
+)
+
+ll_library(
+    name = "a",
+    compile_flags = ["-std=c++20"],
+    exposed_interfaces = {"a.cppm": "a"},
+)
+
+ll_library(
+    name = "a_wrapper",
+    srcs = ["a_wrapper.cpp"],
+    compile_flags = ["--std=c++20"],
+    exposed_hdrs = ["a_wrapper.hpp"],
+    deps = [":a"],
+)
+
+ll_binary(
+    name = "hip_modules_example",
+    srcs = ["main.cpp"],
+    compilation_mode = "hip_nvptx",
+    compile_flags = [
+        "--std=c++20",
+        "--offload-arch=sm_61",
+        "-Wno-deprecated",
+        "-v",
+        # "--offload-arch=sm_70",
+        # "-Wno-deprecated",
+    ],
+    link_flags = [
+        "-rpath=/usr/lib/wsl/lib",
+    ],
+    visibility = ["@//:__pkg__"],
+    deps = [
+        ":a_wrapper",
+        ":hip",
+    ],
+)
