@@ -69,6 +69,7 @@
   shellcheck = {
     enable = true;
     excludes = [ "png" ];
+    types_or = [ "shell" ];
   };
 
   # Nix
