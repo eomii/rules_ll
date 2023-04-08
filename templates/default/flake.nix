@@ -1,5 +1,5 @@
 {
-  description = "rules_ll examples";
+  description = "your_project";
 
   nixConfig = {
     bash-prompt-prefix = "(rules_ll) ";
@@ -10,11 +10,7 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs";
     flake-utils.url = "github:numtide/flake-utils";
-    # If you use this file as template, substitute the line below with this,
-    # where `<version>` is the version of rules_ll you want to use:
-    #
-    #   rules_ll.url = "github:eomii/rules_ll/<version>";
-    rules_ll.url = path:../;
+    rules_ll.url = "github:eomii/rules_ll/20230218.0";
   };
 
   outputs =
@@ -30,18 +26,17 @@
       (system:
       let
         pkgs = import nixpkgs { inherit system; };
-        openssl_static = (pkgs.openssl.override { static = true; });
         llShell = rules_ll.lib.${system}.llShell;
       in
       {
         devShells = {
           default = llShell {
-            unfree = true; # Enable CUDA toolchains.
+            # Set to true for NVPTX support, make sure to read the CUDA license.
+            unfree = false;
             packages = [ ];
-            env = {
-              LL_CFLAGS = "-I${openssl_static.dev}/include";
-              LL_LDFLAGS = "-L${openssl_static.out}/lib";
-            };
+            # See https://ll.eomii.org/guides/external_dependencies/#example for
+            # external dependencies.
+            env = { };
           };
         };
       });

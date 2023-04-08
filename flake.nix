@@ -41,18 +41,6 @@
           config.allowUnfree = true;
         };
 
-        ll = pkgs.writeShellScriptBin "ll" ''
-          if [[ "$1" == "init" ]]; then
-            # Only appending for now to be nondestructive.
-            echo "# Empty." >> WORKSPACE.bazel
-            head -1 ${./.bazelversion} >> .bazelversion
-            head -1 ${./examples/MODULE.bazel} >> MODULE.bazel
-            cat ${./examples/.bazelrc} >> .bazelrc
-          else
-            echo "Command not understood."
-          fi
-        '';
-
         hooks = import ./pre-commit-hooks.nix {
           inherit pkgs;
         };
@@ -151,8 +139,6 @@
                 pkgs.xorg.libX11
                 pkgs.xorg.xorgproto
 
-                # Custom wrappers for rules_ll.
-                ll
               ] ++ (if unfree then [
                 pkgsUnfree.linuxPackages_6_1.nvidia_x11
                 pkgsUnfree.cudaPackages_12.cudatoolkit
@@ -207,5 +193,14 @@
 
         lib = { inherit llShell; };
 
-      });
+      })
+    //
+    {
+      templates = {
+        default = {
+          path = "${./templates/default}";
+          description = "A basic rules_ll workspace";
+        };
+      };
+    };
 }
