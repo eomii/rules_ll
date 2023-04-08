@@ -133,9 +133,9 @@ ll_library(
         "runtime/src/thirdparty/ittnotify/*.h",
         "runtime/src/thirdparty/ittnotify/legacy/*.h",
     ]) + [
+        ":kmp_config_h",
         ":omp_header",
         ":omp_tools_h",
-        ":kmp_config_h",
     ],
     compile_flags = [
         "-std=c++17",

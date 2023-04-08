@@ -52,8 +52,8 @@ expand_template(
 filegroup(
     name = "libcxx_headers",
     srcs = glob(["include/**/*"]) + [
-        ":module_modulemap_gen",
         ":__config_site_gen",
+        ":module_modulemap_gen",
     ],
     visibility = ["//visibility:public"],
 )
