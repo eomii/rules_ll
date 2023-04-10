@@ -14,76 +14,59 @@
     bash-prompt-suffix = " ";
   };
 
-  outputs = { self, nixpkgs, flake-utils, devenv, pre-commit-hooks-nix, ... } @ inputs:
+  outputs =
+    { self
+    , nixpkgs
+    , flake-utils
+    , devenv
+    , pre-commit-hooks-nix
+    , ...
+    } @ inputs:
     flake-utils.lib.eachSystem [
       "x86_64-linux"
     ]
       (system:
-        let
+      let
 
-          nixpkgs-patched = (import nixpkgs { inherit system; }).applyPatches {
-            name = "nixpkgs-patched";
-            src = nixpkgs;
-            patches = [ ./patches/nix_fix_linkerscript.diff ];
-          };
+        nixpkgs-patched = (import nixpkgs { inherit system; }).applyPatches {
+          name = "nixpkgs-patched";
+          src = nixpkgs;
+          patches = [ ./patches/nix_fix_linkerscript.diff ];
+        };
 
-          pkgs = import nixpkgs-patched { inherit system; };
+        pkgs = import nixpkgs-patched { inherit system; };
 
-          pkgsUnfree = import nixpkgs-patched {
-            inherit system;
-            config.allowUnfree = true;
-          };
+        pkgsUnfree = import nixpkgs-patched {
+          inherit system;
+          config.allowUnfree = true;
+        };
 
-          ll = pkgs.writeShellScriptBin "ll" ''
-            if [[ "$1" == "init" ]]; then
-              # Only appending for now to be nondestructive.
-              echo "# Empty." >> WORKSPACE.bazel
-              head -1 ${./.bazelversion} >> .bazelversion
-              head -1 ${./examples/MODULE.bazel} >> MODULE.bazel
-              cat ${./examples/.bazelrc} >> .bazelrc
-            else
-              echo "Command not understood."
-            fi
-          '';
+        ll = pkgs.writeShellScriptBin "ll" ''
+          if [[ "$1" == "init" ]]; then
+            # Only appending for now to be nondestructive.
+            echo "# Empty." >> WORKSPACE.bazel
+            head -1 ${./.bazelversion} >> .bazelversion
+            head -1 ${./examples/MODULE.bazel} >> MODULE.bazel
+            cat ${./examples/.bazelrc} >> .bazelrc
+          else
+            echo "Command not understood."
+          fi
+        '';
 
-        in
-        rec {
+        hooks = import ./pre-commit-hooks.nix {
+          inherit pkgs;
+        };
 
-          hooks = import ./pre-commit-hooks.nix {
-            inherit pkgs;
-          };
-
-          checks = {
-            pre-commit-check = pre-commit-hooks-nix.lib.${system}.run {
-              src = ./.;
-              hooks = hooks;
-            };
-          };
-
-          devShells = {
-            default = mkLlShell { };
-            unfree = mkLlShell { unfree = true; };
-            dev = mkLlShell {
-              unfree = true;
-              deps = [
-                pkgs.shellcheck
-                pkgs.git
-                (pkgs.python3.withPackages (pylib: [
-                  pylib.mkdocs-material
-                ]))
-                pkgs.mkdocs
-                pkgs.pre-commit
-                pkgs.which
-                pkgs.vale
-              ];
-            };
-          };
-
-          mkLlShell = ({ unfree ? false, deps ? [ ], env ? { } }: devenv.lib.mkShell {
+        llShell = (
+          { unfree ? false
+          , packages ? [ ]
+          , env ? { }
+          }:
+          devenv.lib.mkShell {
             inherit inputs pkgs;
 
             modules = [{
-              pre-commit.hooks = hooks;
+              pre-commit = { inherit hooks; };
 
               inherit env;
 
@@ -173,7 +156,7 @@
               ] ++ (if unfree then [
                 pkgsUnfree.linuxPackages_6_1.nvidia_x11
                 pkgsUnfree.cudaPackages_12.cudatoolkit
-              ] else [ ]) ++ deps;
+              ] else [ ]) ++ packages;
 
               enterShell = ''
                 # Ensure that the ll command points to our ll binary.
@@ -192,6 +175,37 @@
                 alias ls='ls --color=auto'
               '';
             }];
-          });
-        });
+          }
+        );
+
+      in
+      {
+
+        checks = {
+          pre-commit-check = pre-commit-hooks-nix.lib.${system}.run {
+            src = ./.;
+            inherit hooks;
+          };
+        };
+
+        devShells = {
+          default = llShell { };
+          unfree = llShell { unfree = true; };
+          dev = llShell {
+            unfree = true;
+            packages = [
+              pkgs.git
+              (pkgs.python3.withPackages (pylib: [
+                pylib.mkdocs-material
+              ]))
+              pkgs.mkdocs
+              pkgs.which
+              pkgs.vale
+            ];
+          };
+        };
+
+        lib = { inherit llShell; };
+
+      });
 }

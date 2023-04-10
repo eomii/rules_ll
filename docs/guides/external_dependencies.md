@@ -13,7 +13,7 @@ rebuild of all toolchains.
 
 ## Example
 
-The `mkLlShell` wrapper exposes an `env` attribute that you can use to set the
+The `llShell` wrapper exposes an `env` attribute that you can use to set the
 `LL_CFLAGS` and `LL_LDFLAGS` environment variables. Since `rules_ll` uses the
 `clang-linker-wrapper` as its linking tool you don't need to add `-Wl,...` to
 flags in `LL_LDFLAGS`. Don't use spaces in these flags and separate different
@@ -39,13 +39,13 @@ flags with colons.
             let
               pkgs = import nixpkgs { inherit system; };
               openssl_static = (pkgs.openssl.override { static = true; });
-              ll_shell = rules_ll.mkLlShell.${system};
+              ll_shell = rules_ll.lib.${system}.llShell;
             in
             {
               devShells = {
                 default = ll_shell {
                   unfree = true;  # Optionally enable CUDA toolchains.
-                  deps = [ ];
+                  packages = [ ];
                   env = {
                     LL_CFLAGS = "-I${openssl_static.dev}/include";
                     LL_LDFLAGS = "-L${openssl_static.out}/lib";
@@ -75,13 +75,13 @@ flags with colons.
             let
               pkgs = import nixpkgs { inherit system; };
               openssl_dynamic = pkgs.openssl;
-              ll_shell = rules_ll.mkLlShell.${system};
+              ll_shell = rules_ll.lib.${system}.llShell.${system};
             in
             {
               devShells = {
                 default = ll_shell {
                   unfree = true;  # Optionally enable CUDA toolchains.
-                  deps = [ ];
+                  packages = [ ];
                   env = {
                     LL_CFLAGS = "-I${openssl_dynamic.dev}/include";
                     LL_LDFLAGS = "-L${openssl_dynamic.out}/lib:-rpath=${openssl_dynamic.out}/lib";

@@ -15,3 +15,4 @@ llvm-project/
 
 # Generated via nix.
 /.pre-commit-config.yaml
+examples/.pre-commit-config.yaml
