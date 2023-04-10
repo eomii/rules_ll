@@ -22,7 +22,7 @@ flags with colons.
 <!-- markdownlint-disable code-block-style -->
 === "Static linkage"
 
-    ```nix title="flake.nix" hl_lines="16 25 26"
+    ```nix title="flake.nix" hl_lines="22 31 32"
     {
       inputs = {
         nixpkgs.url = "github:nixos/nixpkgs";
@@ -31,34 +31,40 @@ flags with colons.
         rules_ll.url = "github:eomii/rules_ll/<version>";
       };
 
-      outputs = { self, nixpkgs, flake-utils, rules_ll, ... } @ inputs:
+      outputs =
+        { self
+        , nixpkgs
+        , flake-utils
+        , rules_ll
+        , ...
+        } @ inputs:
         flake-utils.lib.eachSystem [
           "x86_64-linux"
         ]
           (system:
-            let
-              pkgs = import nixpkgs { inherit system; };
-              openssl_static = (pkgs.openssl.override { static = true; });
-              ll_shell = rules_ll.lib.${system}.llShell;
-            in
-            {
-              devShells = {
-                default = ll_shell {
-                  unfree = true;  # Optionally enable CUDA toolchains.
-                  packages = [ ];
-                  env = {
-                    LL_CFLAGS = "-I${openssl_static.dev}/include";
-                    LL_LDFLAGS = "-L${openssl_static.out}/lib";
-                  };
+          let
+            pkgs = import nixpkgs { inherit system; };
+            openssl_static = (pkgs.openssl.override { static = true; });
+            llShell = rules_ll.lib.${system}.llShell;
+          in
+          {
+            devShells = {
+              default = llShell {
+                unfree = true;  # Optionally enable CUDA toolchains.
+                packages = [ ];
+                env = {
+                  LL_CFLAGS = "-I${openssl_static.dev}/include";
+                  LL_LDFLAGS = "-L${openssl_static.out}/lib";
                 };
               };
-            });
+            };
+          });
     }
     ```
 
 === "Dynamic linkage"
 
-    ```nix title="flake.nix" hl_lines="16 25 26"
+    ```nix title="flake.nix" hl_lines="22 31 32"
     {
       inputs = {
         nixpkgs.url = "github:nixos/nixpkgs";
@@ -67,28 +73,34 @@ flags with colons.
         rules_ll.url = "github:eomii/rules_ll/<version>";
       };
 
-      outputs = { self, nixpkgs, flake-utils, rules_ll, ... } @ inputs:
+      outputs =
+        { self
+        , nixpkgs
+        , flake-utils
+        , rules_ll
+        , ...
+        } @ inputs:
         flake-utils.lib.eachSystem [
           "x86_64-linux"
         ]
           (system:
-            let
-              pkgs = import nixpkgs { inherit system; };
-              openssl_dynamic = pkgs.openssl;
-              ll_shell = rules_ll.lib.${system}.llShell.${system};
-            in
-            {
-              devShells = {
-                default = ll_shell {
-                  unfree = true;  # Optionally enable CUDA toolchains.
-                  packages = [ ];
-                  env = {
-                    LL_CFLAGS = "-I${openssl_dynamic.dev}/include";
-                    LL_LDFLAGS = "-L${openssl_dynamic.out}/lib:-rpath=${openssl_dynamic.out}/lib";
-                  };
+          let
+            pkgs = import nixpkgs { inherit system; };
+            openssl_static = (pkgs.openssl.override { static = true; });
+            llShell = rules_ll.lib.${system}.llShell;
+          in
+          {
+            devShells = {
+              default = llShell {
+                unfree = true;  # Optionally enable CUDA toolchains.
+                packages = [ ];
+                env = {
+                  LL_CFLAGS = "-I${openssl_dynamic.dev}/include";
+                  LL_LDFLAGS = "-L${openssl_dynamic.out}/lib:-rpath=${openssl_dynamic.out}/lib";
                 };
               };
-            });
+            };
+          });
     }
     ```
 <!-- markdownlint-enable code-block-style -->

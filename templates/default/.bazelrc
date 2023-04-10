@@ -1,0 +1,29 @@
+# Don't inherit PATH and LD_LIBRARY_PATH.
+build --incompatible_strict_action_env
+
+# Forbid network access unless explicitly enabled.
+build --sandbox_default_allow_network=false
+
+# Use correct runfile locations.
+build --nolegacy_external_runfiles
+
+# Attempt sandbox reuse.
+build --experimental_reuse_sandbox_directories
+
+# Enable sandboxing for exclusive tests like GPU performance tests.
+test --incompatible_exclusive_test_sandboxed
+
+# Potentially improve cache hit rate for transitioned toolchains.
+common --experimental_output_directory_naming_scheme=diff_against_baseline
+common --experimental_exec_configuration_distinguisher=off
+
+# Make sure rules_cc uses the correct transition mechanism.
+common --incompatible_enable_cc_toolchain_resolution
+
+# Bzlmod configuration.
+common --enable_bzlmod
+common --registry=https://raw.githubusercontent.com/bazelbuild/bazel-central-registry/main/
+common --registry=https://raw.githubusercontent.com/eomii/bazel-eomii-registry/main/
+
+# Allow user-side customization.
+try-import %workspace%/.bazelrc.user

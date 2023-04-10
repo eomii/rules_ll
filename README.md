@@ -10,30 +10,25 @@ programming.
 1. Install the [nix package manager](https://nixos.org/download.html) and enable
    [flakes](https://nixos.wiki/wiki/Flakes).
 
-2. Enter a `rules_ll` development shell. This project moves fast and often
+2. Create a `rules_ll` compatible workspace. This project moves fast and often
    introduces breaking changes. To keep the development shell in sync with the
-   `rules_ll` module in `bzlmod`, pin the flake to a specific version. The
-   default toolchains include C++ and HIP for AMDGPU:
+   `rules_ll` module in `bzlmod`, pin the flake to a specific version:
 
     ```bash
-    nix develop github:eomii/rules_ll/<version>
+    nix flake init -t github:eomii/rules_ll/<version>
     ```
 
-    If you also want to target NVPTX devices (Nvidia GPUs), make sure to read
-    the [CUDA license]( https://docs.nvidia.com/cuda/eula/index.html) and use
-    the unfree `rules_ll` shell instead:
-
-    ```bash
-    nix develop github:eomii/rules_ll/<version>#unfree
-    ```
+    The default toolchains include C++ and HIP for AMDGPU. If you also want to
+    target NVPTX devices (Nvidia GPUs), make sure to read the [CUDA license](https://docs.nvidia.com/cuda/eula/index.html)
+    and set `unfree = true` in `flake.nix`.
 
     See [tags](https://github.com/eomii/rules_ll/tags) to find the most recent
     version.
 
-3. Create a `rules_ll` compatible workspace:
+3. Enter a `rules_ll` development shell:
 
     ```bash
-    ll init
+    nix develop
     ```
 
 ## 🔗 Links
