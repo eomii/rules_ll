@@ -22,6 +22,7 @@ buildable
 bundler
 eomii
 hermeticity
+lockfile
 multithreading
 namespace
 precompilation
