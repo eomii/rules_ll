@@ -782,10 +782,10 @@ index 000000000000..8731b402fb28
 +)
 diff --git a/utils/bazel/llvm-project-overlay/compiler-rt/lib/sanitizer_common/BUILD.bazel b/utils/bazel/llvm-project-overlay/compiler-rt/lib/sanitizer_common/BUILD.bazel
 new file mode 100644
-index 000000000000..c02dd38470c2
+index 000000000000..880495262c8a
 --- /dev/null
 +++ b/utils/bazel/llvm-project-overlay/compiler-rt/lib/sanitizer_common/BUILD.bazel
-@@ -0,0 +1,246 @@
+@@ -0,0 +1,247 @@
 +load("@rules_ll//ll:defs.bzl", "ll_library")
 +
 +filegroup(
@@ -863,6 +863,7 @@ index 000000000000..c02dd38470c2
 +        "sanitizer_local_address_space_view.h",
 +        "sanitizer_lzw.h",
 +        "sanitizer_mac.h",
++        "sanitizer_mallinfo.h",
 +        "sanitizer_malloc_mac.inc",
 +        "sanitizer_mutex.h",
 +        "sanitizer_placement_new.h",
@@ -1269,7 +1270,7 @@ index 000000000000..8ad56ad46df6
 +)
 diff --git a/utils/bazel/llvm-project-overlay/libcxx/BUILD.bazel b/utils/bazel/llvm-project-overlay/libcxx/BUILD.bazel
 new file mode 100644
-index 000000000000..c94797364c0f
+index 000000000000..0b89f41b95fa
 --- /dev/null
 +++ b/utils/bazel/llvm-project-overlay/libcxx/BUILD.bazel
 @@ -0,0 +1,185 @@
@@ -1327,8 +1328,8 @@ index 000000000000..c94797364c0f
 +filegroup(
 +    name = "libcxx_headers",
 +    srcs = glob(["include/**/*"]) + [
-+        ":module_modulemap_gen",
 +        ":__config_site_gen",
++        ":module_modulemap_gen",
 +    ],
 +    visibility = ["//visibility:public"],
 +)
@@ -1619,7 +1620,7 @@ index f8448fb0e726..7540cd9f8495 100644
 +)
 diff --git a/utils/bazel/llvm-project-overlay/openmp/BUILD.bazel b/utils/bazel/llvm-project-overlay/openmp/BUILD.bazel
 new file mode 100644
-index 000000000000..957dccbc7a1f
+index 000000000000..9a45fba9fdc0
 --- /dev/null
 +++ b/utils/bazel/llvm-project-overlay/openmp/BUILD.bazel
 @@ -0,0 +1,157 @@
@@ -1758,9 +1759,9 @@ index 000000000000..957dccbc7a1f
 +        "runtime/src/thirdparty/ittnotify/*.h",
 +        "runtime/src/thirdparty/ittnotify/legacy/*.h",
 +    ]) + [
++        ":kmp_config_h",
 +        ":omp_header",
 +        ":omp_tools_h",
-+        ":kmp_config_h",
 +    ],
 +    compile_flags = [
 +        "-std=c++17",

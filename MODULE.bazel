@@ -16,11 +16,8 @@ bazel_dep(name = "bazel_skylib", version = "1.4.1")
 # Documentation.
 bazel_dep(name = "stardoc", version = "0.5.3")
 
-# Build Clang/LLVM with zlib support.
-bazel_dep(name = "zlib", version = "1.2.13")
-
 # The LLVM project. We override the specific commit below.
-bazel_dep(name = "llvm-project-overlay", version = "17-init-bcr.0")
+bazel_dep(name = "llvm-project-overlay", version = "17-init-bcr.1")
 
 # Configure the llvm-project Bazel overlay.
 llvm_project_overlay = use_extension(
@@ -28,18 +25,17 @@ llvm_project_overlay = use_extension(
     "llvm_project_overlay",
 )
 llvm_project_overlay.configure(
-    commit = "2bc4c3e920ee078ef2879b00c40440e0867f0b9e",
-    sha256 = "214133de6277f446b7d85c74fd09a41135cd79970904433bb6f229840a0c7f61",
+    commit = "5e57f1bf52834cd5133011624c9bbc8cbf58c272",
+    sha256 = "9f9b4d5fb5b587dfb54d6e06ced8acca18cc3b29b005ffc2a745acb8aca8943d",
     targets = ["AMDGPU", "NVPTX", "X86", "WebAssembly"],
     patches = [
         "@rules_ll//patches:back_inserter_patch.diff",
-        "@rules_ll//patches:synth_three_way_patch.diff",
         "@rules_ll//patches:compiler-rt_float128_patch.diff",
         "@rules_ll//patches:mallinfo2_patch.diff",
         "@rules_ll//patches:rules_ll_compatibility_patch.diff",
         "@rules_ll//patches:rules_ll_overlay_patch.diff",
         "@rules_ll//patches:clang_new_offload_driver.diff",
-        "@rules_ll//patches:rework_zlib.diff",
+        "@rules_ll//patches:llvm_use_zlib-ng.diff",
     ],
 )
 
@@ -57,6 +53,8 @@ rules_ll_dependencies = use_extension(
 
 use_repo(
     rules_ll_dependencies,
+    "zstd",
+    "zlib-ng",
     "comgr",
     "hip",
     "hipamd",

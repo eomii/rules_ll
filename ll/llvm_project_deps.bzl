@@ -123,7 +123,8 @@ LLVM_PROJECT_DEPS = [
     "@llvm-project//lld:Common",
 
     # External dependencies.
-    "@zlib",
+    "@zlib-ng//:zlib",
+    "@zstd//:zstd",
 
     # TODO: Ideally we'd only need to explicitly specify the AllTargets*
     # equivalents of these targets, but then we can't build new compilers
