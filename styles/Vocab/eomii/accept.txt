@@ -11,6 +11,7 @@ NVPTX
 Nvidia
 ROCm
 Stardoc
+Starlark
 SYCL
 Qogecoin
 [Bb]itcode
