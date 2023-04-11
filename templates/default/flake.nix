@@ -11,7 +11,7 @@
     nixpkgs.url = "github:nixos/nixpkgs";
     flake-utils.url = "github:numtide/flake-utils";
     pre-commit-hooks-nix.url = "github:cachix/pre-commit-hooks.nix";
-    rules_ll.url = "github:eomii/rules_ll/20230218.0";
+    rules_ll.url = "github:eomii/rules_ll/20230411.0";
   };
 
   outputs =
