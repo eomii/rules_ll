@@ -17,7 +17,7 @@ bazel_dep(name = "bazel_skylib", version = "1.4.1")
 bazel_dep(name = "stardoc", version = "0.5.3")
 
 # The LLVM project. We override the specific commit below.
-bazel_dep(name = "llvm-project-overlay", version = "17-init-bcr.1")
+bazel_dep(name = "llvm-project-overlay", version = "17-init-bcr.2")
 
 # Configure the llvm-project Bazel overlay.
 llvm_project_overlay = use_extension(
