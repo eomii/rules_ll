@@ -2,17 +2,20 @@
 
 [![OpenSSF Best Practices](https://bestpractices.coreinfrastructure.org/projects/6822/badge)](https://bestpractices.coreinfrastructure.org/projects/6822)
 
-An upstream Clang/LLVM-based Bazel toolchain for modern C++ and heterogeneous
+An upstream Clang/LLVM-based toolchain for contemporary C++ and heterogeneous
 programming.
+
+This project interleaves Nix and Bazel with opinionated Starlark rules for C++.
+Purpose-built for the bleeding edge. Reproducible and hermetic beyond Bazel's
+dependency graph.
 
 ## ✨ Setup
 
 1. Install the [nix package manager](https://nixos.org/download.html) and enable
    [flakes](https://nixos.wiki/wiki/Flakes).
 
-2. Create a `rules_ll` compatible workspace. This project moves fast and often
-   introduces breaking changes. To keep the development shell in sync with the
-   `rules_ll` module in `bzlmod`, pin the flake to a specific version:
+2. Create a `rules_ll` compatible workspace. To keep the development shell in
+   sync with the `rules_ll` Bazel module, pin the flake to a specific version:
 
     ```bash
     nix flake init -t github:eomii/rules_ll/<version>
@@ -25,7 +28,7 @@ programming.
     See [tags](https://github.com/eomii/rules_ll/tags) to find the most recent
     version.
 
-3. Enter a `rules_ll` development shell:
+3. Enter the `rules_ll` development shell:
 
     ```bash
     nix develop
@@ -93,7 +96,7 @@ ll_compilation_database(
 
 ## 😷 Sanitizers
 
-Integrate sanitizers in your builds with the `sanitizer` attribute.
+Integrate sanitizers in your builds with the `sanitize` attribute.
 [Sanitizers guide](https://ll.eomii.org/guides/sanitizers).
 
 ```python
@@ -122,7 +125,7 @@ load(
 ll_binary(
     name = "cuda_example",
     srcs = ["look_mum_no_cuda_setup.cu"],
-    compilation_mode = "cuda_nvptx",  # Or "hip_nvptx".
+    compilation_mode = "cuda_nvptx",  # Or "hip_nvptx". Or "hip_amdgpu".
     compile_flags = [
         "--std=c++20",
         "--offload-arch=sm_70",  # Your GPU model.
