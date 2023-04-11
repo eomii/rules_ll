@@ -49,6 +49,7 @@
           { unfree ? false
           , packages ? [ ]
           , env ? { }
+          , hooks ? { }
           }:
           devenv.lib.mkShell {
             inherit inputs pkgs;
@@ -175,9 +176,7 @@
         };
 
         devShells = {
-          default = llShell { };
-          unfree = llShell { unfree = true; };
-          dev = llShell {
+          default = llShell {
             unfree = true;
             packages = [
               pkgs.git
@@ -185,9 +184,9 @@
                 pylib.mkdocs-material
               ]))
               pkgs.mkdocs
-              pkgs.which
               pkgs.vale
             ];
+            inherit hooks;
           };
         };
 
