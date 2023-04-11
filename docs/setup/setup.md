@@ -45,6 +45,7 @@ This guide explains how to set up `rules_ll`.
    `rules_ll` module in `bzlmod`, pin the flake to a specific version:
 
     ```bash
+    git init
     nix flake init -t github:eomii/rules_ll/<version>
     ```
 
