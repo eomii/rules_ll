@@ -258,8 +258,8 @@ def compile_object_args(
         )
 
     if ctx.attr.compilation_mode == "wasm":
-        args.add("--target=wasm32")
-        args.add("-emit-llvm-bc")
+        args.add("--target=wasm32-unknown-unknown")
+        # args.add("-emit-llvm-bc")
 
     # Write compilation database.
     args.add("-Xarch_host")
@@ -525,8 +525,9 @@ def link_executable_args(ctx, in_files, out_file, mode):
         )
 
     if ctx.attr.compilation_mode == "wasm":
-        args.add("--no-entry")
-        args.add("--export-all")  # This must be changed (similar to cppm)
+        pass
+        # args.add("--no-entry")
+        # args.add("--export-all")  # This must be changed (similar to cppm)
 
     # Additional system libraries.
     args.add("-lm")  # Math.
