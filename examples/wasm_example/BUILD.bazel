@@ -1,0 +1,9 @@
+load("@rules_ll//ll:defs.bzl", "ll_binary")
+
+ll_binary(
+    name = "wasm_example",
+    srcs = ["wasm_example.cpp"],
+    compilation_mode = "wasm",
+    compile_flags = ["-std=c++20"],
+    visibility = ["@//:__pkg__"],
+)

@@ -257,6 +257,9 @@ def compile_object_args(
             format = "--rocm-device-lib-path=%s",
         )
 
+    if ctx.attr.compilation_mode == "wasm":
+        args.add("--target=wasm32")
+
     # Write compilation database.
     args.add("-Xarch_host")
     args.add(cdf, format = "-MJ%s")
@@ -519,6 +522,10 @@ def link_executable_args(ctx, in_files, out_file, mode):
             hip_runtime_rpath,
             format = "-rpath=$ORIGIN/%s",
         )
+
+    if ctx.attr.compilation_mode == "wasm":
+        args.add("--no-entry")
+        args.add("--export-all")  # This must be changed (similar to cppm)
 
     # Additional system libraries.
     args.add("-lm")  # Math.

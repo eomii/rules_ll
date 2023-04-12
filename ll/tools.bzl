@@ -33,7 +33,7 @@ def compile_object_tools(ctx):
         toolchain.opt,
     ]
 
-    if config in ["cpp", "omp_cpu"]:
+    if config in ["cpp", "omp_cpu", "wasm"]:
         return tools
 
     if config in ["cuda_nvptx", "hip_nvptx", "hip_amdgpu"]:

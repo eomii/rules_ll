@@ -71,7 +71,7 @@ def compile_object_inputs(
         toolchain.compiler_runtime
     )
 
-    if config == "cpp":
+    if config in ["cpp", "wasm"]:
         pass
     elif config == "omp_cpu":
         direct += toolchain.omp_header
@@ -135,7 +135,7 @@ def link_executable_inputs(ctx, in_files):
     if ctx.attr.depends_on_llvm:
         direct += toolchain.llvm_project_artifacts
 
-    if config == "cpp":
+    if config in ["cpp", "wasm"]:
         pass
     elif config == "omp_cpu":
         direct += toolchain.libomp
@@ -185,7 +185,7 @@ def link_shared_object_inputs(ctx, in_files):
         toolchain.compiler_runtime
     )
 
-    if config == "cpp":
+    if config == ["cpp", "wasm"]:
         pass
     elif config == "cuda_nvptx":
         pass
