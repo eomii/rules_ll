@@ -259,6 +259,7 @@ def compile_object_args(
 
     if ctx.attr.compilation_mode == "wasm":
         args.add("--target=wasm32")
+        args.add("-emit-llvm-bc")
 
     # Write compilation database.
     args.add("-Xarch_host")

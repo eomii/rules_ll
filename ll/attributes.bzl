@@ -313,8 +313,9 @@ LL_TOOLCHAIN_ATTRS = {
     "wasm_linker": attr.label(
         doc = "The linker for WebAssembly",
         executable = True,
+        allow_single_file = True,
         cfg = transition_to_bootstrap,
-        default = "@llvm-project//llvm:wasm-ld",
+        default = "@llvm-project//lld:wasm-ld",
     ),
     "builtin_includes": attr.label(
         doc = "Clang's built-in header files.",
