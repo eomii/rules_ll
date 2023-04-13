@@ -4,11 +4,16 @@ module(
     compatibility_level = 0,
 )
 
-register_execution_platforms("@rules_ll//ll:ll_linux_exec_platform")
-register_toolchains("@rules_ll//ll:ll_toolchain")
+register_execution_platforms("@rules_ll//rbe/default/config:platform")
+register_toolchains(
+    "@rules_ll//ll:ll_toolchain",
+    "@rules_ll//rbe/default/config:cc-toolchain",
+    "@rules_ll//rbe/default/java:all",
+)
 
 # Platform support.
 bazel_dep(name = "platforms", version = "0.0.6")
+bazel_dep(name = "rules_cc", version = "0.0.6")
 
 # Various utility functions such as path manipulations and templating.
 bazel_dep(name = "bazel_skylib", version = "1.4.1")
