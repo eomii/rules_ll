@@ -45,6 +45,8 @@
           inherit pkgs;
         };
 
+        bazel = pkgs.bazel;
+
         llShell = (
           { unfree ? false
           , packages ? [ ]
@@ -96,7 +98,7 @@
                     "$1" == "run" ||
                     "$1" == "test"
                 ]]; then
-                    bazelisk $1 \
+                    ${bazel}/bin/bazel $1 \
                         --action_env=LL_CFLAGS=$LL_CFLAGS \
                         --action_env=LL_LDFLAGS=$LL_LDFLAGS \
                         --action_env=LL_DYNAMIC_LINKER=$LL_DYNAMIC_LINKER \
@@ -110,13 +112,13 @@
                         --action_env=BAZEL_LINKOPTS=$BAZEL_LINKOPTS \
                         ''${@:2}
                 else
-                    bazelisk $@
+                    ${bazel}/bin/bazel $@
                 fi
               '');
 
               packages = [
                 # Host toolchain.
-                pkgs.bazelisk
+                bazel
                 pkgs.llvmPackages_15.clang
                 pkgs.llvmPackages_15.compiler-rt
                 pkgs.llvmPackages_15.libcxx
