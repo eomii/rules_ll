@@ -61,60 +61,9 @@
 
               inherit env;
 
-              scripts.bazel.exec = (''
-                # Add the nix cflags and ldflags to the Bazel action envs.
-                # This is safe to do since the Nix environment is reproducible.
-                LL_NIX_CFLAGS_COMPILE=-isystem${pkgs.glibc.dev}/include:-isystem${pkgs.libxcrypt}/include
-                LL_NIX_LDFLAGS=-L${pkgs.glibc}/lib:-L${pkgs.libxcrypt}/lib
-
-                # These environment variables may be modified from outside of
-                # the bazel invocation.
-                LL_CFLAGS=''${LL_CFLAGS+$LL_CFLAGS:}$LL_NIX_CFLAGS_COMPILE
-                LL_LDFLAGS=''${LL_LDFLAGS+$LL_LDFLAGS:}$LL_NIX_LDFLAGS
-
-                # This must always be the linker from the glibc we compile
-                # and link against.
-                LL_DYNAMIC_LINKER=${pkgs.glibc}/lib/ld-linux-x86-64.so.2
-
-                # Flags for AMD dependencies.
-                LL_AMD_INCLUDES=-isystem${pkgs.libdrm.dev}/include:-isystem${pkgs.libdrm.dev}/include/libdrm:-isystem${pkgs.elfutils.dev}/include:-isystem${pkgs.numactl}/include:-isystem${pkgs.libglvnd.dev}/include:-isystem${pkgs.xorg.libX11.dev}/include:-isystem${pkgs.xorg.xorgproto}/include
-                LL_AMD_LIBRARIES=-L${pkgs.libdrm}/lib:-L${pkgs.numactl}/lib:-L=${pkgs.libglvnd}/lib:-L${pkgs.elfutils.out}/lib:-L${pkgs.libglvnd}/lib:-L${pkgs.xorg.libX11}/lib
-                LL_AMD_RPATHS=-rpath=${pkgs.libdrm}/lib:-rpath=${pkgs.numactl}/lib:-rpath=${pkgs.libglvnd}/lib:-rpath=${pkgs.elfutils.out}/lib:-rpath=${pkgs.libglvnd}/lib:-rpath=${pkgs.xorg.libX11}/lib
-
-              '' + (if unfree then ''
-                # Flags for CUDA dependencies.
-                LL_CUDA_TOOLKIT=${pkgsUnfree.cudaPackages_12.cudatoolkit}
-                LL_CUDA_RUNTIME=${pkgsUnfree.cudaPackages_12.cudatoolkit.lib}
-                LL_CUDA_DRIVER=${pkgsUnfree.linuxPackages_6_1.nvidia_x11}
-              '' else "") + ''
-
-                # Only used by rules_cc
-                BAZEL_CXXOPTS="-std=c++17:-O3:-nostdinc++:-nostdlib++:-isystem${pkgs.llvmPackages_15.libcxx.dev}/include/c++/v1"
-                BAZEL_LINKOPTS="-L${pkgs.llvmPackages_15.libcxx}/lib:-L${pkgs.llvmPackages_15.libcxxabi}/lib:-lc++:-Wl,-rpath,${pkgs.llvmPackages_15.libcxx}/lib,-rpath,${pkgs.llvmPackages_15.libcxxabi}/lib"
-
-                if [[
-                    "$1" == "build" ||
-                    "$1" == "coverage" ||
-                    "$1" == "run" ||
-                    "$1" == "test"
-                ]]; then
-                    ${bazel}/bin/bazel $1 \
-                        --action_env=LL_CFLAGS=$LL_CFLAGS \
-                        --action_env=LL_LDFLAGS=$LL_LDFLAGS \
-                        --action_env=LL_DYNAMIC_LINKER=$LL_DYNAMIC_LINKER \
-                        --action_env=LL_AMD_INCLUDES=$LL_AMD_INCLUDES \
-                        --action_env=LL_AMD_LIBRARIES=$LL_AMD_LIBRARIES \
-                        --action_env=LL_AMD_RPATHS=$LL_AMD_RPATHS \
-                        --action_env=LL_CUDA_TOOLKIT=$LL_CUDA_TOOLKIT \
-                        --action_env=LL_CUDA_RUNTIME=$LL_CUDA_RUNTIME \
-                        --action_env=LL_CUDA_DRIVER=$LL_CUDA_DRIVER \
-                        --action_env=BAZEL_CXXOPTS=$BAZEL_CXXOPTS \
-                        --action_env=BAZEL_LINKOPTS=$BAZEL_LINKOPTS \
-                        ''${@:2}
-                else
-                    ${bazel}/bin/bazel $@
-                fi
-              '');
+              scripts.bazel.exec = import ./bazel.nix {
+                inherit pkgs pkgsUnfree bazel unfree;
+              };
 
               packages = [
                 # Host toolchain.
