@@ -66,37 +66,3 @@ See [`rules_ll/examples`](https://github.com/eomii/rules_ll/tree/main/examples)
 for examples. The [Guides](https://ll.eomii.org/guides) explain more advanced
 features of `rules_ll` such as Clang-Tidy, C++ modules, and heterogeneous
 programming.
-
-## Legacy setup
-
-1. Install [bazelisk](https://bazel.build/install/bazelisk).
-
-2. Create the following files:
-
-```python title="WORKSPACE.bazel"
-# Empty.
-```
-
-```title=".bazelversion"
---8<-- ".bazelversion"
-```
-
-```python title="MODULE.bazel"
---8<-- "examples/MODULE.bazel::1"
-```
-
-```python title=".bazelrc"
---8<-- ".bazelrc"
-```
-
-You can now load the `ll_library` and `ll_binary` rule definitions in your
-`BUILD.bazel` files like this:
-
-```python
-load("@rules_ll//ll:defs.bzl", "ll_library", "ll_binary")
-```
-
-See [`rules_ll/examples`](https://github.com/eomii/rules_ll/tree/main/examples)
-for examples. The [Guides](https://ll.eomii.org/guides) explain more advanced
-features of `rules_ll` such as Clang-Tidy, C++ modules, and heterogeneous
-programming.
