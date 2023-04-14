@@ -45,7 +45,28 @@
           inherit pkgs;
         };
 
-        bazel = pkgs.bazel;
+        wrappedBazel = (import ./bazel-wrapper/default.nix {
+          inherit pkgs pkgsUnfree;
+          unfree = false;
+          cc = pkgs.llvmPackages_15.clang;
+          bazel = pkgs.bazel;
+          ll_env = let openssl = (pkgs.openssl.override { static = true; }); in [
+            "LL_CFLAGS=-I${openssl.dev}/include"
+            "LL_LDFLAGS=-L${openssl.out}/lib"
+          ];
+        });
+
+        # TODO: This is not pretty, but let's clean it up later.
+        wrappedBazelUnfree = (import ./bazel-wrapper/default.nix {
+          inherit pkgs pkgsUnfree;
+          unfree = true;
+          cc = pkgs.llvmPackages_15.clang;
+          bazel = pkgs.bazel;
+          ll_env = let openssl = (pkgs.openssl.override { static = true; }); in [
+            "LL_CFLAGS=-I${openssl.dev}/include"
+            "LL_LDFLAGS=-L${openssl.out}/lib"
+          ];
+        });
 
         llShell = (
           { unfree ? false
@@ -61,40 +82,13 @@
 
               inherit env;
 
-              scripts.bazel.exec = import ./bazel.nix {
-                inherit pkgs pkgsUnfree bazel unfree;
-              };
-
               packages = [
-                # Host toolchain.
-                bazel
-                pkgs.llvmPackages_15.clang
-                pkgs.llvmPackages_15.compiler-rt
-                pkgs.llvmPackages_15.libcxx
-                pkgs.llvmPackages_15.libcxxabi
-                pkgs.llvmPackages_15.libunwind
-                pkgs.llvmPackages_15.lld
-                pkgs.llvmPackages_15.stdenv
-                pkgs.libxcrypt
-
-                # Heterogeneous programming.
-
-                # Required by the ROCT-Thunk-Interface.
-                pkgs.libdrm
-                pkgs.numactl
-
-                # Required by the ROCR-Runtime.
-                pkgs.elfutils
-
-                # Required by the AMD-OpenCL-Runtime.
-                pkgs.libglvnd
-                pkgs.xorg.libX11
-                pkgs.xorg.xorgproto
-
-              ] ++ (if unfree then [
-                pkgsUnfree.linuxPackages_6_1.nvidia_x11
-                pkgsUnfree.cudaPackages_12.cudatoolkit
-              ] else [ ]) ++ packages;
+                (
+                  if !unfree
+                  then wrappedBazel.baze_ll
+                  else wrappedBazelUnfree.baze_ll
+                )
+              ] ++ packages;
 
               enterShell = ''
                 # Ensure that the ll command points to our ll binary.
