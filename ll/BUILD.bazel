@@ -66,26 +66,6 @@ filegroup(
     ],
 )
 
-# Constraints.
-
-constraint_setting(name = "ll_exec")
-
-constraint_value(
-    name = "ll_exec_linux",
-    constraint_setting = ":ll_exec",
-)
-
-# Platforms.
-
-platform(
-    name = "ll_linux_exec_platform",
-    constraint_values = [
-        "@platforms//os:linux",
-        "@platforms//cpu:x86_64",
-        ":ll_exec_linux",
-    ],
-)
-
 # Configurations.
 
 string_flag(
@@ -144,7 +124,11 @@ ll_toolchain(
         ":bootstrap": None,
         "//conditions:default": "@llvm-project//libcxx:libll_cxx",
     }),
-    exec_compatible_with = [":ll_exec_linux"],
+    exec_compatible_with = [
+        "@platforms//os:linux",
+        "@platforms//cpu:x86_64",
+        "@bazel_tools//tools/cpp:clang",
+    ],
     hip_libraries = select({
         ":hip_amdgpu": [
             "@hip//:headers",
@@ -212,7 +196,11 @@ ll_toolchain(
 
 toolchain(
     name = "ll_toolchain",
-    exec_compatible_with = [":ll_exec_linux"],
+    exec_compatible_with = [
+        "@platforms//os:linux",
+        "@platforms//cpu:x86_64",
+        "@bazel_tools//tools/cpp:clang",
+    ],
     toolchain = ":ll_toolchain_x86_64-unknown-linux-gnu",
     toolchain_type = ":toolchain_type",
     visibility = ["//visibility:public"],

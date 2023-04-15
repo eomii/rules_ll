@@ -3,6 +3,7 @@
 {
 
   env = ll_env;
+  version = bazel.version;
   baze_ll = pkgs.writeShellScriptBin "bazel" ''
 
 # The default compilation environment.
