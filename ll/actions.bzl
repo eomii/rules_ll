@@ -253,6 +253,7 @@ def precompile_interface(
             # Required so that module paths do not depend on the specific
             # sandbox instance used during precompilation.
             "no-sandbox": "1",
+            "no-remote": "1",
         },
         use_default_shell_env = False,
         env = compile_object_environment(ctx),

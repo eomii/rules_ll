@@ -20,6 +20,9 @@ common --experimental_exec_configuration_distinguisher=off
 # Make sure rules_cc uses the correct transition mechanism.
 common --incompatible_enable_cc_toolchain_resolution
 
+# Propagate tags such as no-remote for precompilations to downstream actions.
+common --incompatible_allow_tags_propagation
+
 # Bzlmod configuration.
 common --enable_bzlmod
 common --registry=https://raw.githubusercontent.com/bazelbuild/bazel-central-registry/main/
@@ -39,10 +42,10 @@ build --experimental_remote_build_event_upload=minimal
 build --remote_download_minimal
 build --nolegacy_important_outputs
 
-# Better profiling.
+# Smaller profiling. Careful. Disabling this might explode remote cache usage.
 build --slim_profile
-build --experimental_profile_include_primary_output
 build --experimental_profile_include_target_label
+build --noexperimental_profile_include_primary_output
 
 # This config should only be used to test remote execution locally.
 build:rbe_local --experimental_docker_image=localhost:5000/rules_ll_remote:latest
