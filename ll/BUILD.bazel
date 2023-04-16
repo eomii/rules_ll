@@ -37,8 +37,6 @@ bzl_library(
         "@bazel_skylib//lib:dicts",
         "@bazel_skylib//lib:paths",
         "@bazel_skylib//rules:common_settings",
-        "@bazel_tools//tools/build_defs/repo:http.bzl",
-        "@bazel_tools//tools/build_defs/repo:utils.bzl",
     ],
 )
 
@@ -51,9 +49,7 @@ bzl_library(
         input = "{}.bzl".format(name),
         provider_template = "templates/provider_template.vm",
         rule_template = "templates/rule_template.vm",
-        deps = [
-            ":ll_bzl",
-        ],
+        deps = [":ll_bzl"],
     )
     for name in LL_MODULES
 ]
