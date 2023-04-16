@@ -13,5 +13,5 @@ TODO
 
 | Name  | Description |
 | :---- | :---------- |
-| <a id="ll_coverage_test-name"></a>`name` | <code><a href="https://bazel.build/docs/build-ref.html#name">Name</a></code>, required.<br><br> A unique name for this target.   |
-| <a id="ll_coverage_test-target"></a>`target` | <code><a href="https://bazel.build/docs/build-ref.html#labels">Label</a></code>, required.<br><br> The executable to run and collect coverage data from.   |
+| <a id="ll_coverage_test-name"></a>`name` | <code><a href="https://bazel.build/concepts/labels#target-names">Name</a></code>, required.<br><br> A unique name for this target.   |
+| <a id="ll_coverage_test-target"></a>`target` | <code><a href="https://bazel.build/concepts/labels">Label</a></code>, required.<br><br> The executable to run and collect coverage data from.   |

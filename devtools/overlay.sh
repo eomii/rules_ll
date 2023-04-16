@@ -1,4 +1,5 @@
 #!/bin/bash
+
 # Using this file requires cloning the LLVM project into this repo.
 # git clone --depth 1 git@github.com:llvm/llvm-project.git
 
