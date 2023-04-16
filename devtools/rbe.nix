@@ -1,4 +1,4 @@
-{ pkgs, wrappedBazel }:
+{ pkgs, wrappedBazel, tag }:
 
 let bazelToolchains = import ../rbe/default.nix { inherit pkgs; }; in
 
@@ -14,15 +14,33 @@ pkgs.writeShellScriptBin "rbe" ''
 
   nix build .#ci-image
 
+  if [[ $# == 0 ]]; then
+
+    echo "Using local registry."
+
+    REGISTRY="localhost:5000"
+
+  elif [[ $1 == "release" ]]; then
+
+    echo "Using release registry. Requires local authentication."
+
+    REGISTRY="docker.io/eomii"
+
+  else
+    echo 1>&2 "$0: Error: Invalid arguments."
+    exit 2
+  fi
+
   ${pkgs.skopeo}/bin/skopeo \
       --insecure-policy \
       copy \
       --dest-tls-verify=false \
       "docker-archive://$(realpath result)" \
-      "docker://localhost:5000/rules_ll_remote"
+      "docker://$REGISTRY/rules_ll:${tag}"
+
 
   ${bazelToolchains}/bin/rbe_configs_gen \
-      --toolchain_container=localhost:5000/rules_ll_remote \
+      --toolchain_container=$REGISTRY/rules_ll:${tag} \
       --exec_os=linux \
       --target_os=linux \
       --bazel_version=${wrappedBazel.version} \

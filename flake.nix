@@ -111,13 +111,14 @@
         );
 
         # Development tooling for rules_ll.
-        ll = import ./devtools/ll.nix { inherit pkgs wrappedBazel; };
+        tag = "latest";
+        ll = import ./devtools/ll.nix { inherit pkgs wrappedBazel tag; };
 
       in
       {
 
         packages = {
-          ci-image = import ./rbe/image.nix { inherit pkgs wrappedBazel; };
+          ci-image = import ./rbe/image.nix { inherit pkgs wrappedBazel tag; };
         };
 
         checks = {
