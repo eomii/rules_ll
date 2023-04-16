@@ -1,4 +1,4 @@
-{ pkgs, wrappedBazel }:
+{ pkgs, wrappedBazel, tag }:
 
 let
 
@@ -18,7 +18,7 @@ let
   ll_docs = llScript "docs" ./docs.sh;
   ll_patch = llScript "overlay" ./overlay.sh;
   ll_release = llScript "module" ./module.sh;
-  ll_rbe = import ./rbe.nix { inherit pkgs wrappedBazel; };
+  ll_rbe = import ./rbe.nix { inherit pkgs wrappedBazel tag; };
 
 in
 
@@ -31,7 +31,7 @@ ${ll_patch}/bin/overlay
 elif [[ "$1" == "module" ]]; then
 ${ll_release}/bin/module $2
 elif [[ "$1" == "rbe" ]]; then
-${ll_rbe}/bin/rbe
+${ll_rbe}/bin/rbe $2
 else
 
 printf '

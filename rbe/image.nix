@@ -1,11 +1,12 @@
 { pkgs
 , wrappedBazel
 , env ? wrappedBazel.env
+, tag
 }:
 
 pkgs.dockerTools.buildLayeredImage {
-  name = "rules_ll_remote";
-  tag = "latest";
+  inherit tag;
+  name = "rules_ll";
 
   contents = [
     # Wrapped Bazel, including the build environment.
