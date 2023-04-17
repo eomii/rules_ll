@@ -20,23 +20,29 @@ pkgs.writeShellScriptBin "rbe" ''
 
     REGISTRY="localhost:5000"
 
+    ${pkgs.skopeo}/bin/skopeo \
+        --insecure-policy \
+        copy \
+        --dest-tls-verify=false \
+        "docker-archive://$(realpath result)" \
+        "docker://$REGISTRY/rules_ll:${tag}"
+
   elif [[ $1 == "release" ]]; then
 
     echo "Using release registry. Requires local authentication."
 
     REGISTRY="docker.io/eomii"
 
+    ${pkgs.skopeo}/bin/skopeo \
+        --insecure-policy \
+        copy \
+        "docker-archive://$(realpath result)" \
+        "docker://$REGISTRY/rules_ll:${tag}"
+
   else
     echo 1>&2 "$0: Error: Invalid arguments."
     exit 2
   fi
-
-  ${pkgs.skopeo}/bin/skopeo \
-      --insecure-policy \
-      copy \
-      --dest-tls-verify=false \
-      "docker-archive://$(realpath result)" \
-      "docker://$REGISTRY/rules_ll:${tag}"
 
 
   ${bazelToolchains}/bin/rbe_configs_gen \
