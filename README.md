@@ -6,8 +6,16 @@ An upstream Clang/LLVM-based toolchain for contemporary C++ and heterogeneous
 programming.
 
 This project interleaves Nix and Bazel with opinionated Starlark rules for C++.
-Purpose-built for the bleeding edge. Reproducible and hermetic beyond Bazel's
-dependency graph.
+
+<!-- vale alex.ProfanityUnlikely = NO -->
+Builds running within `rules_ll`-compatible workspaces achieve virtually perfect
+cache hit rates across machines, using C++ toolchains often several major
+versions ahead of most other remote execution setups.
+
+The `ll_*` rules use a toolchain purpose-built around Clang/LLVM. You can't
+combine `ll_*` and `cc_*` targets at the moment, but you can still build `cc_*`
+projects in `rules_ll`-workspaces to leverage the remote execution setup and
+share caches.
 
 ## ✨ Setup
 
@@ -35,12 +43,16 @@ dependency graph.
     nix develop
     ```
 
+4. Consider setting up at least a local remote cache as described in the [remote
+   execution guide](https://ll.eomii.org/setup/remote_execution).
+<!-- vale alex.ProfanityUnlikely = YES -->
+
 ## 🔗 Links
 
 - [Docs](https://ll.eomii.org)
 - [Guides](https://ll.eomii.org/guides)
 - [Examples](https://github.com/eomii/rules_ll/tree/main/examples)
-- [Discord](https://discord.gg/Ax67899n4y)
+- [Discussions](https://github.com/eomii/rules_ll/discussions)
 
 ## 🚀 C++ modules
 
