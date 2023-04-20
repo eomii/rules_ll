@@ -57,7 +57,10 @@ def compile_object_inputs(
             toolchain.omp_header +
             toolchain.rocm_device_libs +
             toolchain.unwind_library
-        ),
+        ) + [
+            module.bmi
+            for module in toolchain.cpp_stdmodules
+        ],
         transitive = [
             headers,
             depset([interface.bmi for interface in interfaces.to_list()]),
@@ -104,7 +107,11 @@ def link_executable_inputs(ctx, in_files):
         toolchain.unwind_library +
         (
             toolchain.llvm_project_artifacts if ctx.attr.depends_on_llvm else []
-        ),
+        ) +
+        [
+            module.bmi
+            for module in toolchain.cpp_stdmodules
+        ],
     )
 
 def link_shared_object_inputs(ctx, in_files):

@@ -1,0 +1,17 @@
+diff --git a/libcxx/include/tuple b/libcxx/include/tuple
+--- a/libcxx/include/tuple
++++ b/libcxx/include/tuple
+@@ -1508,9 +1508,10 @@
+     const __ignore_t& operator=(_Tp&&) const {return *this;}
+ };
+ 
+-namespace {
+-  constexpr __ignore_t<unsigned char> ignore = __ignore_t<unsigned char>();
+-} // namespace
++// SEPARATE REVIEW NEEDS TO USE NEW INLINE CONSTEXPR MACRO
++//namespace {
++  inline constexpr __ignore_t<unsigned char> ignore = __ignore_t<unsigned char>();
++//} // namespace
+ 
+ template <class... _Tp>
+ inline _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_SINCE_CXX14
