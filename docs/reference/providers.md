@@ -49,4 +49,20 @@ The default provider returned by an `ll_*` target.
 | <a id="LlInfo-exposed_defines"></a>`exposed_defines` |  A <code>depset</code> of defines.    |
 | <a id="LlInfo-exposed_hdrs"></a>`exposed_hdrs` |  A <code>depset</code> of header files.    |
 | <a id="LlInfo-exposed_includes"></a>`exposed_includes` |  A <code>depset</code> of includes.    |
-| <a id="LlInfo-exposed_bmis"></a>`exposed_bmis` |  A <code>depset</code> of BMIs.    |
+| <a id="LlInfo-exposed_bmis"></a>`exposed_bmis` |  A <code>depset</code> of <code>LlModuleInfo</code> providers.    |
+
+
+<a id="LlModuleInfo"></a>
+
+## `LlModuleInfo`
+
+<pre><code>LlModuleInfo(<a href="#LlModuleInfo-module_name">module_name</a>, <a href="#LlModuleInfo-bmi">bmi</a>)</code></pre>
+Provider for a module.
+
+`fields`
+
+
+| Name  | Description |
+| :------------- | :------------- |
+| <a id="LlModuleInfo-module_name"></a>`module_name` |  The name of the module.    |
+| <a id="LlModuleInfo-bmi"></a>`bmi` |  The precompiled module interface.    |

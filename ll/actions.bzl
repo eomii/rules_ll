@@ -36,6 +36,7 @@ load(
     "link_shared_object_outputs",
     "precompile_interface_outputs",
 )
+load("//ll:providers.bzl", "LlModuleInfo")
 load(
     "//ll:tools.bzl",
     "compile_object_tools",
@@ -67,7 +68,7 @@ def compile_objects(
         A tuple `(out_files, cdfs)`, of output files and compilation database
         fragments.
     """
-    internal_bmi_files = [bmi for bmi, _ in internal_bmis]
+    internal_bmi_files = [interface.bmi for interface in internal_bmis]
     out_files = []
     cdfs = []
 
@@ -191,7 +192,9 @@ def precompile_interfaces(
             angled_includes,
             bmis,
         )
-        internal_bmis.append((file_out, module_name))
+        internal_bmis.append(
+            LlModuleInfo(bmi = file_out, module_name = module_name),
+        )
         cdfs.append(cdf_out)
 
     # Exposed BMIs are available to direct dependents of the target. Internal
@@ -211,7 +214,9 @@ def precompile_interfaces(
                     transitive = [bmis],
                 ),
             )
-            exposed_bmis.append((file_out, module_name))
+            exposed_bmis.append(
+                LlModuleInfo(bmi = file_out, module_name = module_name),
+            )
             cdfs.append(cdf_out)
 
     return internal_bmis, exposed_bmis, cdfs
