@@ -103,6 +103,9 @@
                 # Probably a bug in nix. Setting LD=ld.lld here doesn't work.
                 export LD=${pkgs.llvmPackages_15.lld}/bin/ld.lld
 
+                # Java needs to be the same version as in the Bazel wrapper.
+                export JAVA_HOME=${pkgs.jdk11_headless}/lib/openjdk
+
                 # Prettier color output for the ls command.
                 alias ls='ls --color=auto'
               '';
