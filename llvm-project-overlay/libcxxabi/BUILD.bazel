@@ -1,7 +1,7 @@
 load("@rules_ll//ll:defs.bzl", "ll_library")
 
 filegroup(
-    name = "libcxxabi_headers",
+    name = "headers",
     srcs = [
         "include/__cxxabi_config.h",
         "include/cxxabi.h",
@@ -10,7 +10,7 @@ filegroup(
 )
 
 ll_library(
-    name = "libll_cxxabi",
+    name = "libcxxabi",
     srcs = [
         # C++ABI files
         "src/cxa_aux_runtime.cpp",
@@ -74,8 +74,8 @@ ll_library(
         "-fvisibility-inlines-hidden",
     ],
     data = [
-        "//libcxx:libcxx_headers",
-        "//libcxx:libcxx_sources",
+        "//libcxx:headers",
+        "//libcxx:sources",
     ],
     defines = [
         "LIBCXX_BUILDING_LIBCXXABI",
@@ -86,7 +86,7 @@ ll_library(
         "_LIBCXXABI_LINK_PTHREAD_LIB",
     ],
     exposed_angled_includes = ["libcxxabi/include"],
-    exposed_hdrs = [":libcxxabi_headers"],
+    exposed_hdrs = [":headers"],
     includes = [
         "libcxx/src",
     ],

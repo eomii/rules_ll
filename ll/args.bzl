@@ -344,6 +344,9 @@ def compile_object_args(
     # Always use experimental libcxx features.
     args.add("-D_LIBCPP_ENABLE_EXPERIMENTAL")
 
+    # Always disable transitive includes for libcxx headers.
+    args.add("-D_LIBCPP_REMOVE_TRANSITIVE_INCLUDES")
+
     # TODO: Module precompilations embed absolute paths in precompiled binaries.
     # We use this workaround to prevent abi_tag attribute redeclaration errors
     # in libcxx/include/__bit_reference. We need to figure out how we can

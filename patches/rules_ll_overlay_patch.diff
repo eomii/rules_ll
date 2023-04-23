@@ -1270,10 +1270,10 @@ index 000000000000..8ad56ad46df6
 +)
 diff --git a/utils/bazel/llvm-project-overlay/libcxx/BUILD.bazel b/utils/bazel/llvm-project-overlay/libcxx/BUILD.bazel
 new file mode 100644
-index 000000000000..0b89f41b95fa
+index 000000000000..c1b167e454c6
 --- /dev/null
 +++ b/utils/bazel/llvm-project-overlay/libcxx/BUILD.bazel
-@@ -0,0 +1,185 @@
+@@ -0,0 +1,186 @@
 +load("@rules_ll//ll:defs.bzl", "ll_library")
 +load("@bazel_skylib//rules:expand_template.bzl", "expand_template")
 +
@@ -1326,7 +1326,7 @@ index 000000000000..0b89f41b95fa
 +)
 +
 +filegroup(
-+    name = "libcxx_headers",
++    name = "headers",
 +    srcs = glob(["include/**/*"]) + [
 +        ":__config_site_gen",
 +        ":module_modulemap_gen",
@@ -1335,13 +1335,13 @@ index 000000000000..0b89f41b95fa
 +)
 +
 +filegroup(
-+    name = "libcxx_sources",
++    name = "sources",
 +    srcs = glob(["src/**/*"]),
 +    visibility = ["//visibility:public"],
 +)
 +
 +ll_library(
-+    name = "libll_cxx",
++    name = "libcxx",
 +    srcs = [
 +        "src/algorithm.cpp",
 +        "src/any.cpp",
@@ -1443,6 +1443,7 @@ index 000000000000..0b89f41b95fa
 +        "_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER",
 +        "_LIBCPP_LINK_PTHREAD_LIB",
 +        "_LIBCPP_LINK_RT_LIB",
++        "_LIBCPP_REMOVE_TRANSITIVE_INCLUDES",
 +        "_LIBCXXABI_BUILDING_LIBRARY",
 +        "LIBCXX_BUILDING_LIBCXXABI",
 +    ],
@@ -1451,24 +1452,24 @@ index 000000000000..0b89f41b95fa
 +        "$(GENERATED)/libcxx/include",
 +    ],
 +    exposed_hdrs = [
-+        "//libcxx:libcxx_headers",
++        "//libcxx:headers",
 +    ],
 +    includes = [
 +        "libcxx/src",
 +    ],
 +    visibility = ["//visibility:public"],
-+    deps = ["//libcxxabi:libll_cxxabi"],
++    deps = ["//libcxxabi"],
 +)
 diff --git a/utils/bazel/llvm-project-overlay/libcxxabi/BUILD.bazel b/utils/bazel/llvm-project-overlay/libcxxabi/BUILD.bazel
 new file mode 100644
-index 000000000000..ca55184b2de5
+index 000000000000..6cbc3f815b89
 --- /dev/null
 +++ b/utils/bazel/llvm-project-overlay/libcxxabi/BUILD.bazel
 @@ -0,0 +1,94 @@
 +load("@rules_ll//ll:defs.bzl", "ll_library")
 +
 +filegroup(
-+    name = "libcxxabi_headers",
++    name = "headers",
 +    srcs = [
 +        "include/__cxxabi_config.h",
 +        "include/cxxabi.h",
@@ -1477,7 +1478,7 @@ index 000000000000..ca55184b2de5
 +)
 +
 +ll_library(
-+    name = "libll_cxxabi",
++    name = "libcxxabi",
 +    srcs = [
 +        # C++ABI files
 +        "src/cxa_aux_runtime.cpp",
@@ -1541,8 +1542,8 @@ index 000000000000..ca55184b2de5
 +        "-fvisibility-inlines-hidden",
 +    ],
 +    data = [
-+        "//libcxx:libcxx_headers",
-+        "//libcxx:libcxx_sources",
++        "//libcxx:headers",
++        "//libcxx:sources",
 +    ],
 +    defines = [
 +        "LIBCXX_BUILDING_LIBCXXABI",
@@ -1553,7 +1554,7 @@ index 000000000000..ca55184b2de5
 +        "_LIBCXXABI_LINK_PTHREAD_LIB",
 +    ],
 +    exposed_angled_includes = ["libcxxabi/include"],
-+    exposed_hdrs = [":libcxxabi_headers"],
++    exposed_hdrs = [":headers"],
 +    includes = [
 +        "libcxx/src",
 +    ],
