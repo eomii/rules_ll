@@ -10,7 +10,7 @@ LlInfo = provider(
         "exposed_defines": "A `depset` of defines.",
         "exposed_hdrs": "A `depset` of header files.",
         "exposed_includes": "A `depset` of includes.",
-        "exposed_bmis": "A `depset` of BMIs.",
+        "exposed_bmis": "A `depset` of `LlModuleInfo` providers.",
     },
 )
 
@@ -28,5 +28,13 @@ LlCompilationDatabaseInfo = provider(
 
         This file stores the compilation database.
         """,
+    },
+)
+
+LlModuleInfo = provider(
+    doc = "Provider for a module.",
+    fields = {
+        "module_name": "The name of the module.",
+        "bmi": "The precompiled module interface.",
     },
 )

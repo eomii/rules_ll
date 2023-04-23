@@ -48,7 +48,7 @@ def compile_object_inputs(
     toolchain = ctx.toolchains["//ll:toolchain_type"]
 
     # TODO: This variable name is misleading.
-    interfaces = depset([file for file, _ in interfaces.to_list()])
+    interfaces = depset([interface.bmi for interface in interfaces.to_list()])
 
     direct = (
         [in_file] +

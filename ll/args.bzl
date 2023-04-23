@@ -64,9 +64,7 @@ def _construct_lld_include_path(file):
     return None
 
 def _create_module_import(interface):
-    file, module_name = interface
-    out = "{}={}".format(module_name, file.path)
-    return out
+    return "{}={}".format(interface.module_name, interface.bmi.path)
 
 def _get_dirname(file):
     """Returns file.dirname."""
@@ -271,21 +269,20 @@ def compile_object_args(
         args.add(clang_resource_dir, format = "-idirafter%s/include")
 
     # Includes. This reflects the order in which clang will search for included
-    # files.
-
-    # 0. Search the directory of the including source file for quoted includes.
-
-    # 1. Search directories specified via -iquote for quoted includes.
-    args.add_all(includes, format_each = "-iquote%s", uniquify = True)
-
-    # 2. Search directories specified via -I for quoted and angled includes.
-    args.add_all(angled_includes, format_each = "-I%s", uniquify = True)
-
-    # 3. Search directories specified via -isystem for quoted and angled
-    #    includes. This is not exposed via target attributes.
+    # files. Objects compiled from BMIs already contain these from the
+    # precompilation step.
     if in_file.extension != "pcm":
-        # Objects compiled from modules already contain these from the
-        # precompilation step.
+        # 0. Search the directory of the including source file for quoted
+        #    includes.
+
+        # 1. Search directories specified via -iquote for quoted includes.
+        args.add_all(includes, format_each = "-iquote%s", uniquify = True)
+
+        # 2. Search directories specified via -I for quoted and angled includes.
+        args.add_all(angled_includes, format_each = "-I%s", uniquify = True)
+
+        # 3. Search directories specified via -isystem for quoted and angled
+        #    includes. This is not exposed via target attributes.
         llvm_workspace_root = Label("@llvm-project").workspace_root
         args.add_all(
             [
@@ -309,32 +306,32 @@ def compile_object_args(
                     ctx.configuration.default_shell_env[flags].split(":"),
                 )
 
-    # 4. Search directories specified via -idirafter for quoted and angled
-    #    includes. Since most users will not need this flag, there is no
-    #    attribute for it. For non-LLVM related include paths, users should
-    #    specify these in the compile_flags attribute.
-    if ctx.attr.depends_on_llvm:
-        args.add_all(
-            toolchain.llvm_project_sources,
-            map_each = _construct_llvm_include_path,
-            format_each = "-idirafter%s",
-            uniquify = True,
-            omit_if_empty = True,
-        )
-        args.add_all(
-            toolchain.llvm_project_sources,
-            map_each = _construct_clang_include_path,
-            format_each = "-idirafter%s",
-            uniquify = True,
-            omit_if_empty = True,
-        )
-        args.add_all(
-            toolchain.llvm_project_sources,
-            map_each = _construct_lld_include_path,
-            format_each = "-idirafter%s",
-            uniquify = True,
-            omit_if_empty = True,
-        )
+        # 4. Search directories specified via -idirafter for quoted and angled
+        #    includes. Since most users will not need this flag, there is no
+        #    attribute for it. For non-LLVM related include paths, users should
+        #    specify these in the compile_flags attribute.
+        if ctx.attr.depends_on_llvm:
+            args.add_all(
+                toolchain.llvm_project_sources,
+                map_each = _construct_llvm_include_path,
+                format_each = "-idirafter%s",
+                uniquify = True,
+                omit_if_empty = True,
+            )
+            args.add_all(
+                toolchain.llvm_project_sources,
+                map_each = _construct_clang_include_path,
+                format_each = "-idirafter%s",
+                uniquify = True,
+                omit_if_empty = True,
+            )
+            args.add_all(
+                toolchain.llvm_project_sources,
+                map_each = _construct_lld_include_path,
+                format_each = "-idirafter%s",
+                uniquify = True,
+                omit_if_empty = True,
+            )
 
     # Defines.
     args.add_all(defines, format_each = "-D%s")
