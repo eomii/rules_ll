@@ -1,5 +1,5 @@
 diff --git a/include/hip/nvidia_detail/nvidia_hip_runtime_api.h b/include/hip/nvidia_detail/nvidia_hip_runtime_api.h
-index 0c492b7c..ad9964ee 100644
+index 0522cc8e..8678403b 100644
 --- a/include/hip/nvidia_detail/nvidia_hip_runtime_api.h
 +++ b/include/hip/nvidia_detail/nvidia_hip_runtime_api.h
 @@ -39,6 +39,7 @@ THE SOFTWARE.
@@ -10,7 +10,7 @@ index 0c492b7c..ad9964ee 100644
  
  #ifdef __cplusplus
  extern "C" {
-@@ -2649,17 +2650,21 @@ inline static hipError_t hipCtxGetFlags(unsigned int* flags) {
+@@ -2668,17 +2669,21 @@ inline static hipError_t hipCtxGetFlags(unsigned int* flags) {
      return hipCUResultTohipError(cuCtxGetFlags(flags));
  }
  
@@ -32,7 +32,7 @@ index 0c492b7c..ad9964ee 100644
  
  inline static hipError_t hipDeviceGetName(char* name, int len, hipDevice_t device) {
      return hipCUResultTohipError(cuDeviceGetName(name, len, device));
-@@ -2723,9 +2728,11 @@ inline static hipError_t hipModuleGetFunction(hipFunction_t* function, hipModule
+@@ -2742,9 +2747,11 @@ inline static hipError_t hipModuleGetFunction(hipFunction_t* function, hipModule
      return hipCUResultTohipError(cuModuleGetFunction(function, module, kname));
  }
  
@@ -44,7 +44,7 @@ index 0c492b7c..ad9964ee 100644
  
  inline static hipError_t hipFuncGetAttributes(hipFuncAttributes* attr, const void* func) {
      return hipCUDAErrorTohipError(cudaFuncGetAttributes(attr, func));
-@@ -2773,6 +2780,7 @@ inline static hipError_t hipFuncSetCacheConfig(const void* func, hipFuncCache_t
+@@ -2792,6 +2799,7 @@ inline static hipError_t hipFuncSetCacheConfig(const void* func, hipFuncCache_t
      return hipCUDAErrorTohipError(cudaFuncSetCacheConfig(func, cacheConfig));
  }
  
@@ -52,7 +52,7 @@ index 0c492b7c..ad9964ee 100644
  __HIP_DEPRECATED inline static hipError_t hipBindTexture(size_t* offset,
                                                           struct textureReference* tex,
                                                           const void* devPtr,
-@@ -2786,6 +2794,7 @@ __HIP_DEPRECATED inline static hipError_t hipBindTexture2D(
+@@ -2805,6 +2813,7 @@ __HIP_DEPRECATED inline static hipError_t hipBindTexture2D(
      const hipChannelFormatDesc* desc, size_t width, size_t height, size_t pitch) {
      return hipCUDAErrorTohipError(cudaBindTexture2D(offset, tex, devPtr, desc, width, height, pitch));
  }
@@ -60,7 +60,7 @@ index 0c492b7c..ad9964ee 100644
  
  inline static hipChannelFormatDesc hipCreateChannelDesc(int x, int y, int z, int w,
                                                          hipChannelFormatKind f) {
-@@ -2818,10 +2827,12 @@ inline static hipError_t hipGetTextureObjectResourceDesc(hipResourceDesc* pResDe
+@@ -2837,10 +2846,12 @@ inline static hipError_t hipGetTextureObjectResourceDesc(hipResourceDesc* pResDe
      return hipCUDAErrorTohipError(cudaGetTextureObjectResourceDesc( pResDesc, textureObject));
  }
  
@@ -73,7 +73,7 @@ index 0c492b7c..ad9964ee 100644
  
  inline static hipError_t hipGetChannelDesc(hipChannelFormatDesc* desc, hipArray_const_t array)
  {
-@@ -2845,10 +2856,12 @@ inline static hipError_t hipModuleLaunchCooperativeKernel(hipFunction_t f, unsig
+@@ -2864,6 +2875,7 @@ inline static hipError_t hipModuleLaunchCooperativeKernel(hipFunction_t f, unsig
                                                             sharedMemBytes, stream,kernelParams));
  }
  
@@ -81,12 +81,15 @@ index 0c492b7c..ad9964ee 100644
  inline static hipError_t hipLaunchCooperativeKernelMultiDevice(hipLaunchParams* launchParamsList,
                                                   int  numDevices, unsigned int  flags) {
      return hipCUDAErrorTohipError(cudaLaunchCooperativeKernelMultiDevice(launchParamsList, numDevices, flags));
+@@ -2876,6 +2888,7 @@ inline static hipError_t hipModuleLaunchCooperativeKernelMultiDevice(
+     return hipCUResultTohipError(cuLaunchCooperativeKernelMultiDevice(launchParamsList,
+                                                                       numDevices, flags));
  }
 +#endif
  
- inline static hipError_t hipModuleLaunchCooperativeKernelMultiDevice(
-                                                        hipFunctionLaunchParams* launchParamsList,
-@@ -3067,6 +3080,7 @@ inline static hipError_t hipOccupancyMaxActiveBlocksPerMultiprocessorWithFlags(
+ inline static hipError_t hipImportExternalSemaphore(hipExternalSemaphore_t* extSem_out,
+                                       const hipExternalSemaphoreHandleDesc* semHandleDesc) {
+@@ -3086,6 +3099,7 @@ inline static hipError_t hipOccupancyMaxActiveBlocksPerMultiprocessorWithFlags(
                                                                   blockSize, dynamicSMemSize, flags));
  }
  
@@ -94,7 +97,7 @@ index 0c492b7c..ad9964ee 100644
  template <class T, int dim, enum cudaTextureReadMode readMode>
  inline static hipError_t hipBindTexture(size_t* offset, const struct texture<T, dim, readMode>& tex,
                                          const void* devPtr, size_t size = UINT_MAX) {
-@@ -3109,6 +3123,7 @@ __HIP_DEPRECATED inline static hipError_t hipBindTextureToArray(
+@@ -3128,6 +3142,7 @@ __HIP_DEPRECATED inline static hipError_t hipBindTextureToArray(
      struct texture<T, dim, readMode>& tex, hipArray_const_t array) {
      return hipCUDAErrorTohipError(cudaBindTextureToArray(tex, array));
  }
@@ -102,7 +105,7 @@ index 0c492b7c..ad9964ee 100644
  
  template <class T>
  inline static hipChannelFormatDesc hipCreateChannelDesc() {
-@@ -3145,6 +3160,7 @@ inline static hipError_t hipTexObjectGetTextureDesc(HIP_TEXTURE_DESC* pTexDesc,
+@@ -3164,6 +3179,7 @@ inline static hipError_t hipTexObjectGetTextureDesc(HIP_TEXTURE_DESC* pTexDesc,
      return hipCUResultTohipError(cuTexObjectGetTextureDesc(pTexDesc, (CUtexObject)texObject));
  }
  
@@ -110,7 +113,7 @@ index 0c492b7c..ad9964ee 100644
  __HIP_DEPRECATED inline static hipError_t hipTexRefSetAddressMode(hipTexRef hTexRef, int dim, hipAddress_mode am){
      return hipCUResultTohipError(cuTexRefSetAddressMode(hTexRef,dim,am));
  }
-@@ -3172,6 +3188,7 @@ __HIP_DEPRECATED inline static hipError_t hipTexRefSetFlags(hipTexRef hTexRef, u
+@@ -3191,6 +3207,7 @@ __HIP_DEPRECATED inline static hipError_t hipTexRefSetFlags(hipTexRef hTexRef, u
  __HIP_DEPRECATED inline static hipError_t hipTexRefSetArray(hipTexRef hTexRef, hiparray hArray, unsigned int Flags){
      return hipCUResultTohipError(cuTexRefSetArray(hTexRef,hArray,Flags));
  }

@@ -7,130 +7,75 @@ load(
     "ll_test",
 )
 
-# AMDGPU.
-
 # Without the -fgpu-rdc flag this build would fail. The device code needs to be
 # relocatable so that the kernel symbols can be resolved.
-COMPILE_FLAGS_AMDGPU = OFFLOAD_ALL_AMDGPU + [
-    "-std=c++20",
-    "-fgpu-rdc",
+[
+    (
+        ll_library(
+            name = "add_{}".format(name),
+            srcs = [
+                "add.hip.cpp",
+            ],
+            compilation_mode = "hip_{}".format(name),
+            compile_flags = flags,
+            exposed_hdrs = [
+                "add.hip.hpp",
+            ],
+        ),
+        ll_library(
+            name = "multiply_{}".format(name),
+            srcs = [
+                "multiply.hip.cpp",
+            ],
+            compilation_mode = "hip_{}".format(name),
+            compile_flags = flags,
+            exposed_hdrs = [
+                "multiply.hip.hpp",
+            ],
+        ),
+        ll_binary(
+            name = name,
+            srcs = [
+                "main.hip.cpp",
+            ],
+            compilation_mode = "hip_{}".format(name),
+            compile_flags = flags,
+            visibility = ["@//:__pkg__"],
+            deps = [
+                ":add_{}".format(name),
+                ":multiply_{}".format(name),
+            ],
+        ),
+        ll_test(
+            name = "{}_test".format(name),
+            size = "small",
+            srcs = [
+                "main.hip.cpp",
+            ],
+            compilation_mode = "hip_{}".format(name),
+            compile_flags = flags,
+            tags = [name],
+            visibility = ["@//:__pkg__"],
+            deps = [
+                ":add_{}".format(name),
+                ":multiply_{}".format(name),
+            ],
+        ),
+    )
+    for (name, flags) in [
+        (
+            "nvptx",
+            OFFLOAD_ALL_NVPTX + [
+                "-std=c++20",
+                "-fgpu-rdc",
+            ],
+        ),
+        (
+            "amdgpu",
+            OFFLOAD_ALL_AMDGPU + [
+                "-std=c++20",
+                "-fgpu-rdc",
+            ],
+        ),
+    ]
 ]
-
-ll_library(
-    name = "add_amdgpu",
-    srcs = [
-        "add.hip.cpp",
-    ],
-    compilation_mode = "hip_amdgpu",
-    compile_flags = COMPILE_FLAGS_AMDGPU,
-    exposed_hdrs = [
-        "add.hip.hpp",
-    ],
-)
-
-ll_library(
-    name = "multiply_amdgpu",
-    srcs = [
-        "multiply.hip.cpp",
-    ],
-    compilation_mode = "hip_amdgpu",
-    compile_flags = COMPILE_FLAGS_AMDGPU,
-    exposed_hdrs = [
-        "multiply.hip.hpp",
-    ],
-)
-
-ll_binary(
-    name = "amdgpu",
-    srcs = [
-        "main.hip.cpp",
-    ],
-    compilation_mode = "hip_amdgpu",
-    compile_flags = COMPILE_FLAGS_AMDGPU,
-    visibility = ["@//:__pkg__"],
-    deps = [
-        ":add_amdgpu",
-        ":multiply_amdgpu",
-    ],
-)
-
-# NVPTX.
-
-# Without the -fgpu-rdc flag this build would fail. The device code needs to be
-# relocatable so that the kernel symbols can be resolved.
-COMPILE_FLAGS_NVPTX = OFFLOAD_ALL_NVPTX + [
-    "-std=c++20",
-    "-fgpu-rdc",
-]
-
-ll_library(
-    name = "add_nvptx",
-    srcs = [
-        "add.hip.cpp",
-    ],
-    compilation_mode = "hip_nvptx",
-    compile_flags = COMPILE_FLAGS_NVPTX,
-    exposed_hdrs = [
-        "add.hip.hpp",
-    ],
-)
-
-ll_library(
-    name = "multiply_nvptx",
-    srcs = [
-        "multiply.hip.cpp",
-    ],
-    compilation_mode = "hip_nvptx",
-    compile_flags = COMPILE_FLAGS_NVPTX,
-    exposed_hdrs = [
-        "multiply.hip.hpp",
-    ],
-)
-
-ll_binary(
-    name = "nvptx",
-    srcs = [
-        "main.hip.cpp",
-    ],
-    compilation_mode = "hip_nvptx",
-    compile_flags = COMPILE_FLAGS_NVPTX,
-    visibility = ["@//:__pkg__"],
-    deps = [
-        ":add_nvptx",
-        ":multiply_nvptx",
-    ],
-)
-
-# Tests. Used to maintain shared object paths.
-
-ll_test(
-    name = "amdgpu_test",
-    size = "small",
-    srcs = [
-        "main.hip.cpp",
-    ],
-    compilation_mode = "hip_amdgpu",
-    compile_flags = COMPILE_FLAGS_AMDGPU,
-    tags = ["amdgpu"],
-    visibility = ["@//:__pkg__"],
-    deps = [
-        ":add_amdgpu",
-        ":multiply_amdgpu",
-    ],
-)
-
-ll_test(
-    name = "nvptx_test",
-    size = "small",
-    srcs = [
-        "main.hip.cpp",
-    ],
-    compilation_mode = "hip_nvptx",
-    compile_flags = COMPILE_FLAGS_NVPTX,
-    tags = ["nvptx"],
-    visibility = ["@//:__pkg__"],
-    deps = [
-        ":add_nvptx",
-        ":multiply_nvptx",
-    ],
-)

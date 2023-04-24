@@ -1,21 +1,10 @@
 load(
     "@rules_ll//ll:defs.bzl",
-    # "OFFLOAD_ALL_AMDGPU",
+    "OFFLOAD_ALL_AMDGPU",
     "OFFLOAD_ALL_NVPTX",
     "ll_binary",
     "ll_library",
-)
-
-ll_library(
-    name = "hip",
-    srcs = ["hip_dependent.cpp"],
-    compilation_mode = "hip_nvptx",
-    compile_flags = OFFLOAD_ALL_NVPTX + [
-        "--std=c++20",
-        "-Wno-deprecated",
-    ],
-    exposed_hdrs = ["hip_dependent.hpp"],
-    visibility = ["@//:__pkg__"],
+    "ll_test",
 )
 
 ll_library(
@@ -26,17 +15,47 @@ ll_library(
     exposed_interfaces = {"a.cppm": "a"},
 )
 
-ll_binary(
-    name = "hip_modules_example",
-    srcs = ["main.cpp"],
-    compilation_mode = "hip_nvptx",
-    compile_flags = OFFLOAD_ALL_NVPTX + [
-        "--std=c++20",
-        "-Wno-deprecated",
-    ],
-    visibility = ["@//:__pkg__"],
-    deps = [
-        ":hip",
-        ":module_wrapper",
-    ],
-)
+[
+    (
+        ll_library(
+            name = "device_code_{}".format(name),
+            srcs = ["hip_dependent.cpp"],
+            compilation_mode = "hip_{}".format(name),
+            compile_flags = flags,
+            exposed_hdrs = ["hip_dependent.hpp"],
+        ),
+        ll_binary(
+            name = name,
+            srcs = ["main.cpp"],
+            compilation_mode = "hip_{}".format(name),
+            compile_flags = flags,
+            visibility = ["@//:__pkg__"],
+            deps = [
+                ":device_code_{}".format(name),
+                ":module_wrapper",
+            ],
+        ),
+        ll_test(
+            name = "{}_test".format(name),
+            srcs = ["main.cpp"],
+            compilation_mode = "hip_{}".format(name),
+            compile_flags = flags,
+            tags = [name],
+            visibility = ["@//:__pkg__"],
+            deps = [
+                ":device_code_{}".format(name),
+                ":module_wrapper",
+            ],
+        ),
+    )
+    for (name, flags) in [
+        (
+            "nvptx",
+            OFFLOAD_ALL_NVPTX + ["-std=c++20"],
+        ),
+        (
+            "amdgpu",
+            OFFLOAD_ALL_AMDGPU + ["-std=c++20"],
+        ),
+    ]
+]

@@ -80,7 +80,7 @@ test_suite(
     tests = [
         "//cuda_example:test",
         "//hip_example:nvptx_test",
-        "//hip_modules_example",
+        "//hip_modules_example:nvptx_test",
         "//hip_rdc_example:nvptx_test",
     ],
 )
@@ -92,6 +92,7 @@ test_suite(
     tags = ["amdgpu"],
     tests = [
         "//hip_example:amdgpu_test",
+        "//hip_modules_example:amdgpu_test",
         "//hip_rdc_example:amdgpu_test",
     ],
 )

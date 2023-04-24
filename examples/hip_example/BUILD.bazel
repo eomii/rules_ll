@@ -6,49 +6,33 @@ load(
     "ll_test",
 )
 
-ll_binary(
-    name = "nvptx",
-    srcs = ["example.cpp"],
-    compilation_mode = "hip_nvptx",
-    compile_flags = OFFLOAD_ALL_NVPTX + [
-        "--std=c++20",
-    ],
-    visibility = ["@//:__pkg__"],
-)
-
-ll_binary(
-    name = "amdgpu",
-    srcs = ["example.cpp"],
-    compilation_mode = "hip_amdgpu",
-    compile_flags = OFFLOAD_ALL_AMDGPU + [
-        "--std=c++20",
-    ],
-    visibility = ["@//:__pkg__"],
-)
-
-# We usually prefer native_test over ll_test, but that won't work here as the
-# native rules make it hard to depend on shared libraries.
-
-ll_test(
-    name = "nvptx_test",
-    size = "small",
-    srcs = ["example.cpp"],
-    compilation_mode = "hip_nvptx",
-    compile_flags = OFFLOAD_ALL_NVPTX + [
-        "--std=c++20",
-    ],
-    tags = ["nvptx"],
-    visibility = ["@//:__pkg__"],
-)
-
-ll_test(
-    name = "amdgpu_test",
-    size = "small",
-    srcs = ["example.cpp"],
-    compilation_mode = "hip_amdgpu",
-    compile_flags = OFFLOAD_ALL_AMDGPU + [
-        "--std=c++20",
-    ],
-    tags = ["amdgpu"],
-    visibility = ["@//:__pkg__"],
-)
+[
+    (
+        ll_binary(
+            name = name,
+            srcs = ["example.cpp"],
+            compilation_mode = "hip_{}".format(name),
+            compile_flags = flags,
+            visibility = ["@//:__pkg__"],
+        ),
+        ll_test(
+            name = "{}_test".format(name),
+            size = "small",
+            srcs = ["example.cpp"],
+            compilation_mode = "hip_{}".format(name),
+            compile_flags = flags,
+            tags = [name],
+            visibility = ["@//:__pkg__"],
+        ),
+    )
+    for (name, flags) in [
+        (
+            "nvptx",
+            OFFLOAD_ALL_NVPTX + ["-std=c++20"],
+        ),
+        (
+            "amdgpu",
+            OFFLOAD_ALL_AMDGPU + ["-std=c++20"],
+        ),
+    ]
+]
