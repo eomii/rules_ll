@@ -106,19 +106,19 @@ ll_toolchain(
     }),
     cpp_abihdrs = select({
         ":bootstrap": None,
-        "//conditions:default": "@llvm-project//libcxxabi:libcxxabi_headers",
+        "//conditions:default": "@llvm-project//libcxxabi:headers",
     }),
     cpp_abilib = select({
         ":bootstrap": None,
-        "//conditions:default": "@llvm-project//libcxxabi:libll_cxxabi",
+        "//conditions:default": "@llvm-project//libcxxabi",
     }),
     cpp_stdhdrs = select({
         ":bootstrap": None,
-        "//conditions:default": "@llvm-project//libcxx:libcxx_headers",
+        "//conditions:default": "@llvm-project//libcxx:headers",
     }),
     cpp_stdlib = select({
         ":bootstrap": None,
-        "//conditions:default": "@llvm-project//libcxx:libll_cxx",
+        "//conditions:default": "@llvm-project//libcxx",
     }),
     exec_compatible_with = [
         "@platforms//os:linux",
