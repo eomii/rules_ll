@@ -50,7 +50,7 @@ expand_template(
 )
 
 filegroup(
-    name = "libcxx_headers",
+    name = "headers",
     srcs = glob(["include/**/*"]) + [
         ":__config_site_gen",
         ":module_modulemap_gen",
@@ -59,13 +59,13 @@ filegroup(
 )
 
 filegroup(
-    name = "libcxx_sources",
+    name = "sources",
     srcs = glob(["src/**/*"]),
     visibility = ["//visibility:public"],
 )
 
 ll_library(
-    name = "libll_cxx",
+    name = "libcxx",
     srcs = [
         "src/algorithm.cpp",
         "src/any.cpp",
@@ -176,11 +176,11 @@ ll_library(
         "$(GENERATED)/libcxx/include",
     ],
     exposed_hdrs = [
-        "//libcxx:libcxx_headers",
+        "//libcxx:headers",
     ],
     includes = [
         "libcxx/src",
     ],
     visibility = ["//visibility:public"],
-    deps = ["//libcxxabi:libll_cxxabi"],
+    deps = ["//libcxxabi"],
 )
