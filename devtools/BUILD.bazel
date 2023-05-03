@@ -1,0 +1,20 @@
+load("@rules_go//go:def.bzl", "go_binary")
+
+go_binary(
+    name = "cluster",
+    srcs = ["cluster.go"],
+    importpath = "github.com/eomii/rules_ll/devtools",
+    visibility = ["//visibility:public"],
+    deps = [
+        "@com_github_pulumi_pulumi_kubernetes_sdk_v3//go/kubernetes/helm/v3:helm",
+        "@com_github_pulumi_pulumi_kubernetes_sdk_v3//go/kubernetes/yaml",
+        "@com_github_pulumi_pulumi_sdk_v3//go/auto",
+        "@com_github_pulumi_pulumi_sdk_v3//go/auto/optdestroy",
+        "@com_github_pulumi_pulumi_sdk_v3//go/auto/optup",
+        "@com_github_pulumi_pulumi_sdk_v3//go/common/tokens",
+        "@com_github_pulumi_pulumi_sdk_v3//go/common/workspace",
+        "@com_github_pulumi_pulumi_sdk_v3//go/pulumi",
+        "@io_k8s_sigs_kind//pkg/cluster",
+        "@io_k8s_sigs_kind//pkg/cmd",
+    ],
+)

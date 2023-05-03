@@ -13,12 +13,8 @@ build --experimental_reuse_sandbox_directories
 # Enable sandboxing for exclusive tests like GPU performance tests.
 test --incompatible_exclusive_test_sandboxed
 
-# Potentially improve cache hit rate for transitioned toolchains.
-common --experimental_output_directory_naming_scheme=diff_against_baseline
-common --experimental_exec_configuration_distinguisher=off
-
 # Make sure rules_cc uses the correct transition mechanism.
-common --incompatible_enable_cc_toolchain_resolution
+build --incompatible_enable_cc_toolchain_resolution
 
 # Propagate tags such as no-remote for precompilations to downstream actions.
 common --incompatible_allow_tags_propagation

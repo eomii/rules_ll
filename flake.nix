@@ -142,6 +142,14 @@
               ]))
               pkgs.mkdocs
               pkgs.vale
+              pkgs.go
+
+              # Cloud tooling
+              pkgs.cilium-cli
+              pkgs.kubectl
+              pkgs.pulumi
+              pkgs.skopeo
+              pkgs.tektoncd-cli
             ];
             inherit hooks;
           };
