@@ -1,0 +1,17 @@
+linters:
+  enable-all: true
+  disable:
+    # These are deprecated.
+    - structcheck
+    - golint
+    - exhaustivestruct
+    - ifshort
+    - scopelint
+    - nosnakecase
+    - deadcode
+    - interfacer
+    - maligned
+    - varcheck
+
+    # This is generally a useful check, but it doesn't play well with Pulumi.
+    - exhaustruct

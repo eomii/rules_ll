@@ -30,6 +30,12 @@ elif [[ "$1" == "overlay" ]]; then
 ${ll_patch}/bin/overlay
 elif [[ "$1" == "module" ]]; then
 ${ll_release}/bin/module $2
+elif [[ "$1" == "up" ]]; then
+PATH=''${PATH+$PATH:}${pkgs.pulumi}/bin \
+  ${wrappedBazel.baze_ll}/bin/bazel run @rules_ll//devtools:cluster -- up
+elif [[ "$1" == "down" ]]; then
+PATH=''${PATH+$PATH:}${pkgs.pulumi}/bin \
+  ${wrappedBazel.baze_ll}/bin/bazel run @rules_ll//devtools:cluster -- down
 elif [[ "$1" == "rbe" ]]; then
 ${ll_rbe}/bin/rbe $2
 else
@@ -41,6 +47,10 @@ ll ${cmd "docs"}:\tBuild the documentation in ${dir "docs/"}.
 
 ll ${cmd "overlay"}:\tBuild the overlay patch at ${dir "patches/"}${cmd "rules_ll_overlay_patch.diff"}.
 \t\tRequires a copy of the llvm-project in the rules_ll project root.
+
+ll ${cmd "up"}:\tStart the development cluster. If a cluster is already running, refresh it.
+
+ll ${cmd "down"}:\tStop and delete the development cluster.
 
 ll ${cmd "module"} ${opt "tag"}:\tGiven a git tag, create a directory ${dir "<tag>"} for copy-pasting into a
 \t\tbazel registry.

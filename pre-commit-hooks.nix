@@ -99,4 +99,46 @@
     excludes = [ "^styles/" ];
     types = [ "markdown" ];
   };
+
+  # Go
+  gci = {
+    enable = true;
+    name = "gci";
+    entry = "${pkgs.gci}/bin/gci write";
+    description = "Fix go imports.";
+    types = [ "go" ];
+  };
+  gofumpt = {
+    enable = true;
+    name = "gofumpt";
+    entry = "${pkgs.gofumpt}/bin/gofumpt -w -l";
+    description = "Format Go.";
+    types = [ "go" ];
+  };
+  golines = {
+    enable = true;
+    name = "golines";
+    entry = "${pkgs.golines}/bin/golines --max-len=80 -w";
+    description = "Shorten Go lines.";
+    types = [ "go" ];
+  };
+  golangci-lint =
+    let
+      wrapper = pkgs.symlinkJoin {
+        name = "golangci-lint-wrapped";
+        paths = [ pkgs.golangci-lint ];
+        nativeBuildInputs = [ pkgs.makeWrapper ];
+        postBuild = ''
+          wrapProgram $out/bin/golangci-lint \
+            --prefix PATH : ${pkgs.lib.makeBinPath [ pkgs.go ]}
+        '';
+      };
+    in
+    {
+      enable = true;
+      name = "golangci-lint";
+      entry = "${wrapper}/bin/golangci-lint run";
+      description = "Lint Go.";
+      types = [ "go" ];
+    };
 }

@@ -18,6 +18,13 @@ pkgs.writeShellScriptBin "rbe" ''
 
     echo "Using local registry."
 
+    kubectl port-forward service/zot -n kube-system 5000:5000 > /dev/null 2>&1 &
+    forward_pid=$!
+    trap '{
+      kill $forward_pid
+    }' EXIT
+    sleep 2  # Not good, but will have to do for now.
+
     REGISTRY="localhost:5000"
 
     ${pkgs.skopeo}/bin/skopeo \
