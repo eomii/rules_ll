@@ -4,7 +4,7 @@ go 1.20
 
 require (
 	github.com/pulumi/pulumi-kubernetes/sdk/v3 v3.26.0
-	github.com/pulumi/pulumi/sdk/v3 v3.65.1
+	github.com/pulumi/pulumi/sdk/v3 v3.66.0
 	sigs.k8s.io/kind v0.18.0
 )
 
@@ -60,7 +60,7 @@ require (
 	github.com/uber/jaeger-client-go v2.30.0+incompatible // indirect
 	github.com/uber/jaeger-lib v2.4.1+incompatible // indirect
 	github.com/xanzy/ssh-agent v0.3.3 // indirect
-	go.uber.org/atomic v1.10.0 // indirect
+	go.uber.org/atomic v1.11.0 // indirect
 	golang.org/x/crypto v0.8.0 // indirect
 	golang.org/x/mod v0.10.0 // indirect
 	golang.org/x/net v0.9.0 // indirect
