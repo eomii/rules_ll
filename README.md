@@ -1,6 +1,7 @@
 # `rules_ll`
 
 [![OpenSSF Best Practices](https://bestpractices.coreinfrastructure.org/projects/6822/badge)](https://bestpractices.coreinfrastructure.org/projects/6822)
+[![OSSF-Scorecard Score](https://img.shields.io/ossf-scorecard/github.com/eomii/rules_ll?label=openssf%20scorecard)](https://api.securityscorecards.dev/projects/github.com/eomii/rules_ll)
 
 An upstream Clang/LLVM-based toolchain for contemporary C++ and heterogeneous
 programming.
