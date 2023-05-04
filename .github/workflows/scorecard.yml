@@ -15,28 +15,31 @@ jobs:
     permissions:
       security-events: write
       id-token: write
-
     steps:
       - name: "Checkout code"
-        uses: actions/checkout@v3
+        uses: >- # v3.5.2
+          actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab
         with:
           persist-credentials: false
 
       - name: "Run analysis"
-        uses: ossf/scorecard-action@v2.1.3
+        uses: >- # v2.1.3
+          ossf/scorecard-action@80e868c13c90f172d68d1f4501dee99e2479f7af
         with:
           results_file: results.sarif
           results_format: sarif
           publish_results: true
 
       - name: "Upload artifact"
-        uses: actions/upload-artifact@v3
+        uses: >- # v3.1.2
+          actions/upload-artifact@0b7f8abb1508181956e8e162db84b466c27e18ce
         with:
           name: SARIF file
           path: results.sarif
           retention-days: 5
 
       - name: "Upload to code-scanning"
-        uses: github/codeql-action/upload-sarif@v2
+        uses: >- # v2.3.2
+          github/codeql-action/upload-sarif@f3feb00acb00f31a6f60280e6ace9ca31d91c76a
         with:
           sarif_file: results.sarif
