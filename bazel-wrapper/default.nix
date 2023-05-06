@@ -73,19 +73,19 @@ BAZEL_CXXOPTS=${pkgs.lib.concatStringsSep ":" [
   "-O3"
   "-nostdinc++"
   "-nostdlib++"
-  "-isystem${pkgs.llvmPackages_15.libcxx.dev}/include/c++/v1"
+  "-isystem${pkgs.llvmPackages_16.libcxx.dev}/include/c++/v1"
 ]}
 
 # TODO: This somehow works without explicitly adding glibc to the library search
 #       path. That shouldn't be the case. Maybe it's the clang wrapper, but
 #       apparently that doesn't add the rpath. Find a better solution.
 BAZEL_LINKOPTS=${pkgs.lib.concatStringsSep ":" [
-  "-L${pkgs.llvmPackages_15.libcxx}/lib"
-  "-L${pkgs.llvmPackages_15.libcxxabi}/lib"
+  "-L${pkgs.llvmPackages_16.libcxx}/lib"
+  "-L${pkgs.llvmPackages_16.libcxxabi}/lib"
   "-lc++"
   ("-Wl," +
-  "-rpath,${pkgs.llvmPackages_15.libcxx}/lib," +
-  "-rpath,${pkgs.llvmPackages_15.libcxxabi}/lib," +
+  "-rpath,${pkgs.llvmPackages_16.libcxx}/lib," +
+  "-rpath,${pkgs.llvmPackages_16.libcxxabi}/lib," +
   "-rpath,${pkgs.glibc}/lib"
   )
 ]}

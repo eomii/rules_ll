@@ -42,8 +42,8 @@ pkgs.dockerTools.buildLayeredImage {
       # toolchains. Instead we manually set all C++ tools here so that they are
       # all referenced via their /nix/store path.
       ("PATH=" + (pkgs.lib.strings.concatStringsSep ":" [
-        "${pkgs.llvmPackages_15.clang}/bin"
-        "${pkgs.llvmPackages_15.llvm}/bin"
+        "${pkgs.llvmPackages_16.clang}/bin"
+        "${pkgs.llvmPackages_16.llvm}/bin"
         "${pkgs.coreutils}/bin"
         "${pkgs.findutils}/bin"
         "${pkgs.gnutar}/bin"
@@ -53,7 +53,7 @@ pkgs.dockerTools.buildLayeredImage {
       # The rbe_configs_gen seems to only care about the CC variable, but not
       # about other make variables like LD, AR or NM. This is unfortunate as it
       # forces us to rely on autodetection via the PATH.
-      "CC=${pkgs.llvmPackages_15.clang}/bin/clang"
+      "CC=${pkgs.llvmPackages_16.clang}/bin/clang"
     ] ++ env;
   };
 }

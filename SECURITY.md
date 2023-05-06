@@ -16,8 +16,8 @@ unsupported and deprecated.
 Please prefer reporting vulnerabilities via
 [GitHub](https://github.com/eomii/rules_ll/security).
 
-If you prefer communication via email please contact aaron@eomii.org and
-jannis@eomii.org.
+If you prefer communication via email please contact <aaron@eomii.org> and
+<jannis@eomii.org>.
 
 ## Vulnerability disclosure and advisories
 
