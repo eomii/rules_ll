@@ -72,10 +72,10 @@
   nixpkgs-fmt.enable = true;
 
   # C++
-  clang-format15 = {
+  clang-format16 = {
     enable = true;
     name = "clang-format";
     types_or = [ "c" "c++" ];
-    entry = "${pkgs.llvmPackages_15.libclang}/bin/clang-format";
+    entry = "${pkgs.llvmPackages_16.libclang}/bin/clang-format";
   };
 }

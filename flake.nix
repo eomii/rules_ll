@@ -48,7 +48,7 @@
         wrappedBazel = (import ./bazel-wrapper/default.nix {
           inherit pkgs pkgsUnfree;
           unfree = false;
-          cc = pkgs.llvmPackages_15.clang;
+          cc = pkgs.llvmPackages_16.clang;
           bazel = pkgs.bazel;
           ll_env = let openssl = (pkgs.openssl.override { static = true; }); in [
             "LL_CFLAGS=-I${openssl.dev}/include"
@@ -60,7 +60,7 @@
         wrappedBazelUnfree = (import ./bazel-wrapper/default.nix {
           inherit pkgs pkgsUnfree;
           unfree = true;
-          cc = pkgs.llvmPackages_15.clang;
+          cc = pkgs.llvmPackages_16.clang;
           bazel = pkgs.bazel;
           ll_env = let openssl = (pkgs.openssl.override { static = true; }); in [
             "LL_CFLAGS=-I${openssl.dev}/include"
@@ -101,7 +101,7 @@
                 export CC=clang
 
                 # Probably a bug in nix. Setting LD=ld.lld here doesn't work.
-                export LD=${pkgs.llvmPackages_15.lld}/bin/ld.lld
+                export LD=${pkgs.llvmPackages_16.lld}/bin/ld.lld
 
                 # Java needs to be the same version as in the Bazel wrapper.
                 export JAVA_HOME=${pkgs.jdk11_headless}/lib/openjdk
