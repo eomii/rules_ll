@@ -1270,7 +1270,7 @@ index 000000000000..8ad56ad46df6
 +)
 diff --git a/utils/bazel/llvm-project-overlay/libcxx/BUILD.bazel b/utils/bazel/llvm-project-overlay/libcxx/BUILD.bazel
 new file mode 100644
-index 000000000000..c1b167e454c6
+index 000000000000..e7afda6113b8
 --- /dev/null
 +++ b/utils/bazel/llvm-project-overlay/libcxx/BUILD.bazel
 @@ -0,0 +1,186 @@
@@ -1382,7 +1382,6 @@ index 000000000000..c1b167e454c6
 +        "src/system_error.cpp",
 +        "src/thread.cpp",
 +        "src/typeinfo.cpp",
-+        "src/utility.cpp",
 +        "src/valarray.cpp",
 +        "src/variant.cpp",
 +        "src/vector.cpp",
@@ -1425,6 +1424,7 @@ index 000000000000..c1b167e454c6
 +        # Headers for building iostream.
 +        "src/include/sso_allocator.h",
 +        "src/iostream_init.h",
++        "src/std_stream.h",
 +    ],
 +    compilation_mode = "bootstrap",
 +    compile_flags = [

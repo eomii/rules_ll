@@ -22,7 +22,7 @@ bazel_dep(name = "bazel_skylib", version = "1.4.1")
 bazel_dep(name = "stardoc", version = "0.5.3")
 
 # The LLVM project. We override the specific commit below.
-bazel_dep(name = "llvm-project-overlay", version = "17-init-bcr.2")
+bazel_dep(name = "llvm-project-overlay", version = "17-init-bcr.3")
 
 # Configure the llvm-project Bazel overlay.
 llvm_project_overlay = use_extension(
@@ -30,14 +30,13 @@ llvm_project_overlay = use_extension(
     "llvm_project_overlay",
 )
 llvm_project_overlay.configure(
-    commit = "5e57f1bf52834cd5133011624c9bbc8cbf58c272",
-    sha256 = "9f9b4d5fb5b587dfb54d6e06ced8acca18cc3b29b005ffc2a745acb8aca8943d",
+    commit = "762c709911d3f4a9086239f226a6439a6bc8911c",
+    sha256 = "cac09bb765371ebea6b41bb5e6c57f5dc9ff905d53e077dbec5851e39d36a273",
     targets = ["AMDGPU", "NVPTX", "X86", "WebAssembly"],
     patches = [
         "@rules_ll//patches:back_inserter_patch.diff",
         "@rules_ll//patches:compiler-rt_float128_patch.diff",
         "@rules_ll//patches:mallinfo2_patch.diff",
-        "@rules_ll//patches:rules_ll_compatibility_patch.diff",
         "@rules_ll//patches:rules_ll_overlay_patch.diff",
         "@rules_ll//patches:clang_new_offload_driver.diff",
         "@rules_ll//patches:llvm_use_zlib-ng.diff",

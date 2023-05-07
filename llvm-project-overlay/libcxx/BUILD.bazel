@@ -106,7 +106,6 @@ ll_library(
         "src/system_error.cpp",
         "src/thread.cpp",
         "src/typeinfo.cpp",
-        "src/utility.cpp",
         "src/valarray.cpp",
         "src/variant.cpp",
         "src/vector.cpp",
@@ -149,6 +148,7 @@ ll_library(
         # Headers for building iostream.
         "src/include/sso_allocator.h",
         "src/iostream_init.h",
+        "src/std_stream.h",
     ],
     compilation_mode = "bootstrap",
     compile_flags = [
