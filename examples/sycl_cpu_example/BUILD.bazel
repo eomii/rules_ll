@@ -1,0 +1,18 @@
+load("@rules_ll//ll:defs.bzl", "ll_binary")
+
+ll_binary(
+    name = "amdgpu",
+    srcs = ["main.cpp"],
+    compilation_mode = "sycl_amdgpu",
+    compile_flags = [
+        "-std=c++20",
+        "--offload-arch=gfx1100",
+    ],
+)
+
+ll_binary(
+    name = "cpu",
+    srcs = ["main.cpp"],
+    compilation_mode = "sycl_cpu",
+    compile_flags = ["-std=c++20"],
+)

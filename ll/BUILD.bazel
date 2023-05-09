@@ -134,10 +134,15 @@ ll_toolchain(
             "@hip//:headers",
             "@hipamd//:headers",
         ],
+        ":sycl_amdgpu": [
+            "@hip//:headers",
+            "@hipamd//:headers",
+        ],
         "//conditions:default": [],
     }),
     hip_runtime = select({
         ":hip_amdgpu": "@hipamd//:libamdhip64",
+        ":sycl_amdgpu": "@hipamd//:libamdhip64",
         "//conditions:default": None,
     }),
     leak_sanitizer = select({
@@ -148,6 +153,7 @@ ll_toolchain(
     }),
     libomp = select({
         "omp_cpu": "@llvm-project//openmp:libomp",
+        "sycl_cpu": "@llvm-project//openmp:libomp",
         "//conditions:default": None,
     }),
     memory_sanitizer = select({
@@ -159,6 +165,7 @@ ll_toolchain(
     }),
     omp_header = select({
         "omp_cpu": "@llvm-project//openmp:omp_header",
+        "sycl_cpu": "@llvm-project//openmp:omp_header",
         "//conditions:default": None,
     }),
     profile = select({
@@ -167,6 +174,31 @@ ll_toolchain(
     }),
     rocm_device_libs = select({
         ":hip_amdgpu": "@rocm-device-libs//:rocm-device-libs",
+        ":sycl_amdgpu": "@rocm-device-libs//:rocm-device-libs",
+        "//conditions:default": None,
+    }),
+    sycl_headers = select({
+        ":sycl_amdgpu": "@opensycl//:sycl_headers",
+        ":sycl_cpu": "@opensycl//:sycl_headers",
+        "//conditions:default": None,
+    }),
+    sycl_hip_backend = select({
+        ":sycl_amdgpu": "@opensycl//:librt-backend-hip",
+        "//conditions:default": None,
+    }),
+    sycl_omp_backend = select({
+        ":sycl_cpu": "@opensycl//:librt-backend-omp",
+        ":sycl_amdgpu": "@opensycl//:librt-backend-omp",
+        "//conditions:default": None,
+    }),
+    sycl_plugin = select({
+        ":sycl_amdgpu": "@opensycl//:opensycl-clang",
+        ":sycl_cpu": "@opensycl//:opensycl-clang",
+        "//conditions:default": None,
+    }),
+    sycl_runtime = select({
+        ":sycl_amdgpu": "@opensycl//:libhipSYCL-rt",
+        ":sycl_cpu": "@opensycl//:libhipSYCL-rt",
         "//conditions:default": None,
     }),
     thread_sanitizer = select({

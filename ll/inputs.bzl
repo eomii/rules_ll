@@ -85,6 +85,24 @@ def compile_object_inputs(
             toolchain.rocm_device_libs +
             [toolchain.hip_runtime]
         )
+    elif config == "sycl_amdgpu":
+        direct += (
+            toolchain.hip_libraries +
+            toolchain.rocm_device_libs +
+            toolchain.sycl_headers +
+            [
+                toolchain.hip_runtime,
+                # toolchain.sycl_runtime,
+                # toolchain.sycl_hip_backend,
+            ]
+        )
+    elif config == "sycl_cpu":
+        direct += toolchain.sycl_headers + toolchain.omp_header + (
+            [
+                toolchain.sycl_runtime,
+                toolchain.sycl_omp_backend,
+            ]
+        )
     else:
         fail("Cannot compile with this toolchain config: {}.".format(config))
 
@@ -137,16 +155,19 @@ def link_executable_inputs(ctx, in_files):
 
     if config == "cpp":
         pass
-    elif config == "omp_cpu":
+    elif config in ["omp_cpu", "sycl_cpu"]:
         direct += toolchain.libomp
     elif config == "cuda_nvptx":
         pass
-    elif config in ["hip_nvptx", "hip_amdgpu"]:
-        if config == "hip_amdgpu":
+    elif config in ["hip_nvptx", "hip_amdgpu", "sycl_amdgpu"]:
+        if config in ["hip_amdgpu", "sycl_amdgpu"]:
             direct.append(toolchain.hip_runtime)
         direct += toolchain.hip_libraries
     else:
         fail("Cannot link with this toolchain.")
+
+    if config in ["sycl_amdgpu", "sycl_cpu"]:
+        direct.append(toolchain.sycl_runtime)
 
     return depset(direct)
 
@@ -187,9 +208,11 @@ def link_shared_object_inputs(ctx, in_files):
 
     if config == "cpp":
         pass
+    elif config == "omp_cpu":
+        direct += toolchain.libomp
     elif config == "cuda_nvptx":
         pass
-    elif config in ["hip_nvptx", "hip_amdgpu"]:
+    elif config in ["hip_nvptx", "hip_amdgpu", "sycl_amdgpu"]:
         direct += (
             toolchain.hip_libraries
         )

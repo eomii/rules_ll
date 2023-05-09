@@ -181,6 +181,7 @@ def compile_object_args(
         "cuda_nvptx",
         "hip_amdgpu",
         "hip_nvptx",
+        "sycl_amdgpu",
     ] and ctx.var["COMPILATION_MODE"] != "dbg":
         args.add_all(["-Xarch_device", "-O3"])
 
@@ -207,7 +208,7 @@ def compile_object_args(
     args.add("-fPIC")
 
     # Maybe enable OpenMP.
-    if ctx.attr.compilation_mode == "omp_cpu":
+    if ctx.attr.compilation_mode in ["omp_cpu", "sycl_cpu"]:
         args.add("-fopenmp")
 
         # TODO: This is obviously not the way lol.
@@ -221,6 +222,7 @@ def compile_object_args(
         "cuda_nvptx",
         "hip_amdgpu",
         "hip_nvptx",
+        "sycl_amdgpu",
     ]:
         args.add("--offload-new-driver")
 
@@ -235,7 +237,7 @@ def compile_object_args(
                 ctx.configuration.default_shell_env["LL_CUDA_TOOLKIT"],
                 format = "--cuda-path=%s",
             )
-    if ctx.attr.compilation_mode in ["hip_nvptx", "hip_amdgpu"]:
+    if ctx.attr.compilation_mode in ["hip_nvptx", "hip_amdgpu", "sycl_amdgpu"]:
         args.add_all(
             [
                 Label("@hip").workspace_root,
@@ -244,9 +246,22 @@ def compile_object_args(
             format_each = "-I%s/include",
         )
 
+    if ctx.attr.compilation_mode in ["sycl_amdgpu", "sycl_cpu"]:
+        args.add_all(
+            [
+                Label("@opensycl").workspace_root,
+                paths.join(
+                    ctx.var["GENDIR"],  # For hipSYCL/common/config.hpp
+                    Label("@opensycl").workspace_root,
+                    "opensycl",
+                ),
+            ],
+            format_each = "-I%s/include",
+        )
+
     clang_resource_dir = paths.join(llvm_bindir_path(ctx), "clang/staging")
 
-    if ctx.attr.compilation_mode == "hip_amdgpu":
+    if ctx.attr.compilation_mode in ["hip_amdgpu", "sycl_amdgpu"]:
         args.add("-xhip")
         args.add(toolchain.hip_runtime.path, format = "--rocm-path=%s")
         args.add(clang_resource_dir, format = "-isystem%s")
@@ -300,7 +315,7 @@ def compile_object_args(
             # become system includes.
             format_each = "-isystem%s",
         )
-        for flags in ["LL_CFLAGS", "LL_AMD_INCLUDES"]:
+        for flags in ["LL_CFLAGS", "LL_AMD_INCLUDES", "LL_SYCL_INCLUDES"]:
             if ctx.configuration.default_shell_env.get(flags) != "":
                 args.add_all(
                     ctx.configuration.default_shell_env[flags].split(":"),
@@ -352,6 +367,16 @@ def compile_object_args(
     # in libcxx/include/__bit_reference. We need to figure out how we can
     # re-enable abi-tagging.
     args.add("-D_LIBCPP_NO_ABI_TAG")
+
+    if ctx.attr.compilation_mode == "sycl_amdgpu":
+        args.add(
+            "-D__HIPSYCL_ENABLE_HIP_TARGET__",
+            "-D__HIPSYCL_CLANG__",
+        )
+    if ctx.attr.compilation_mode == "sycl_cpu":
+        args.add(
+            "-D__HIPSYCL_ENABLE_OMPHOST_TARGET__",
+        )
 
     # Additional compile flags.
     args.add_all(ctx.attr.compile_flags)
@@ -419,7 +444,12 @@ def link_executable_args(ctx, in_files, out_file, mode):
     if ctx.var["COMPILATION_MODE"] == "dbg":
         args.add("--verbose")
 
-    for flags in ["LL_LDFLAGS", "LL_AMD_LIBRARIES", "LL_AMD_RPATHS"]:
+    for flags in [
+        "LL_LDFLAGS",
+        "LL_AMD_LIBRARIES",
+        "LL_AMD_RPATHS",
+        "LL_SYCL_LIBRARIES",
+    ]:
         if flags in ctx.configuration.default_shell_env.keys():
             args.add_all(
                 ctx.configuration.default_shell_env[flags].split(":"),
@@ -507,7 +537,7 @@ def link_executable_args(ctx, in_files, out_file, mode):
         args.add("-lcuda")
         args.add("-lcudart_static")
         args.add("-lcupti_static")
-    if ctx.attr.compilation_mode == "hip_amdgpu":
+    if ctx.attr.compilation_mode in ["hip_amdgpu", "sycl_amdgpu"]:
         args.add(toolchain.hip_runtime.dirname, format = "-L%s")
         args.add(toolchain.hip_runtime.basename, format = "-l:%s")
         hip_runtime_rpath = paths.join(
@@ -517,6 +547,18 @@ def link_executable_args(ctx, in_files, out_file, mode):
         )
         args.add(
             hip_runtime_rpath,
+            format = "-rpath=$ORIGIN/%s",
+        )
+    if ctx.attr.compilation_mode in ["sycl_amdgpu", "sycl_cpu"]:
+        args.add(toolchain.sycl_runtime.dirname, format = "-L%s")
+        args.add(toolchain.sycl_runtime.basename, format = "-l:%s")
+        sycl_runtime_rpath = paths.join(
+            "{}.runfiles".format(ctx.label.name),
+            ctx.workspace_name,
+            paths.dirname(toolchain.sycl_runtime.short_path),
+        )
+        args.add(
+            sycl_runtime_rpath,
             format = "-rpath=$ORIGIN/%s",
         )
 
