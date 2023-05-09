@@ -40,6 +40,7 @@ llvm_project_overlay.configure(
         "@rules_ll//patches:rules_ll_overlay_patch.diff",
         "@rules_ll//patches:clang_new_offload_driver.diff",
         "@rules_ll//patches:llvm_use_zlib-ng.diff",
+        "@rules_ll//patches:libcxx_combined_init_patch.diff",
     ],
 )
 
@@ -62,6 +63,7 @@ use_repo(
     "comgr",
     "hip",
     "hipamd",
+    "opensycl",
     "rocclr",
     "rocm-device-libs",
     "rocm-opencl-runtime",

@@ -35,12 +35,14 @@ DEFAULT_ATTRS = {
         default = "cpp",
         # TODO: hip_amd, sycl_amd
         values = [
+            "bootstrap",
             "cpp",
-            "omp_cpu",
             "cuda_nvptx",
             "hip_amdgpu",
             "hip_nvptx",
-            "bootstrap",
+            "omp_cpu",
+            "sycl_cpu",
+            "sycl_amdgpu",
         ],
     ),
     "compile_flags": attr.string_list(
@@ -496,8 +498,32 @@ LL_TOOLCHAIN_ATTRS = {
     ),
     "rocm_device_libs": attr.label(
         doc = "The ROCm-Device-Libs.",
-        # default "@rocm-device-libs//:rocm-device-libs",
+        # default = "@rocm-device-libs//:rocm-device-libs",
         cfg = transition_to_cpp,
+    ),
+    "sycl_headers": attr.label(
+        doc = "The SYCL headers.",
+        # default = "@opensycl//:sycl_headers"
+    ),
+    "sycl_hip_backend": attr.label(
+        doc = "The AMDGPU backend SYCL.",
+        # default = "@opensycl//:librt-backend-hip",
+        allow_single_file = True,
+    ),
+    "sycl_omp_backend": attr.label(
+        doc = "The AMDGPU backend OpenMP/CPU.",
+        # default = "@opensycl//:librt-backend-omp",
+        allow_single_file = True,
+    ),
+    "sycl_plugin": attr.label(
+        doc = "The compiler plugin for OpenSYCL.",
+        # default = "@opensycl//:opensycl-clang",
+        allow_single_file = True,
+    ),
+    "sycl_runtime": attr.label(
+        doc = "The SYCL runtime.",
+        # default = "@opensycl//:libhipSYCL-rt",
+        allow_single_file = True,
     ),
     "symbolizer": attr.label(
         doc = "The `llvm-symbolizer`.",

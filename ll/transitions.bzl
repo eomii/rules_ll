@@ -10,6 +10,9 @@ COMPILATION_MODES = [
     "cuda_nvptx",
     "hip_amdgpu",
     "hip_nvptx",
+    "sycl_cpu",
+    "sycl_amdgpu",
+    # "sycl_nvptx"
 ]
 
 def _ll_transition_impl(

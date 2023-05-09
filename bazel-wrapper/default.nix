@@ -60,6 +60,16 @@ LL_AMD_RPATHS=${(pkgs.lib.concatStringsSep ":" [
   "-rpath=${pkgs.libglvnd}/lib"
   "-rpath=${pkgs.xorg.libX11}/lib"
 ])}
+
+LL_SYCL_INCLUDES=-isystem${(pkgs.boost182.override {
+  enableStatic = true;
+  enableShared = false;
+}).dev}/include
+
+LL_SYCL_LIBRARIES=-L${(pkgs.boost182.override {
+  enableStatic = true;
+  enableShared = false;
+})}/lib
 ${pkgs.lib.strings.optionalString unfree ''
 
 # Flags for CUDA dependencies.
@@ -103,6 +113,8 @@ if [[
         --action_env=LL_AMD_INCLUDES=$LL_AMD_INCLUDES \
         --action_env=LL_AMD_LIBRARIES=$LL_AMD_LIBRARIES \
         --action_env=LL_AMD_RPATHS=$LL_AMD_RPATHS \
+        --action_env=LL_SYCL_INCLUDES=$LL_SYCL_INCLUDES \
+        --action_env=LL_SYCL_LIBRARIES=$LL_SYCL_LIBRARIES \
         --action_env=LL_CUDA_TOOLKIT=$LL_CUDA_TOOLKIT \
         --action_env=LL_CUDA_RUNTIME=$LL_CUDA_RUNTIME \
         --action_env=LL_CUDA_DRIVER=$LL_CUDA_DRIVER \

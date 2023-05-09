@@ -119,6 +119,16 @@ def _initialize_rules_ll_impl(_):
     )
 
     http_archive(
+        name = "opensycl",
+        build_file = "@rules_ll//third-party-overlays:opensycl.BUILD.bazel",
+        sha256 = "a01f5633ca62664b163f504495855fd009d340eb38bbf05f69bc71bd9a208afc",
+        strip_prefix = "OpenSYCL-12fdcaedfa990ab58ddf8bce304fa8cf917e6182",
+        urls = [
+            "https://github.com/OpenSYCL/OpenSYCL/archive/12fdcaedfa990ab58ddf8bce304fa8cf917e6182.zip",
+        ],
+    )
+
+    http_archive(
         name = "rocclr",
         build_file = "@rules_ll//third-party-overlays:rocclr.BUILD.bazel",
         sha256 = "44b654d86a5459c783c0bfe663e257da110844f878e8dab67691c114d4d4655f",

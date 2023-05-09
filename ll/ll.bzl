@@ -206,6 +206,17 @@ def _ll_binary_impl(ctx):
         toolchain = ctx.toolchains["//ll:toolchain_type"]
         runfiles = ctx.runfiles(files = [toolchain.hip_runtime])
 
+    if ctx.attr.compilation_mode == "sycl_amdgpu":
+        toolchain = ctx.toolchains["//ll:toolchain_type"]
+        runfiles = ctx.runfiles(
+            files = [
+                toolchain.hip_runtime,
+                toolchain.sycl_runtime,
+                toolchain.sycl_omp_backend,
+                toolchain.sycl_hip_backend,
+            ],
+        )
+
     return [
         DefaultInfo(
             files = depset([out_file]),

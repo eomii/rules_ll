@@ -21,6 +21,14 @@ filegroup(
     visibility = ["//visibility:public"],
 )
 
+# Target for OpenSYCL.
+ll_library(
+    name = "hipamd_headers",
+    exposed_hdrs = [":headers"],
+    exposed_angled_includes = ["include"],
+    visibility = ["//visibility:public"],
+)
+
 ll_library(
     name = "libamdhip64",
     includes = ["src"],

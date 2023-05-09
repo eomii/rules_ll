@@ -1,0 +1,203 @@
+"Build file for OpenSYCL."
+
+load("@bazel_skylib//rules:expand_template.bzl", "expand_template")
+load("@rules_ll//ll:defs.bzl", "ll_library")
+
+HIPSYCL_DEFINES = [
+    "WITH_ROCM_BACKEND",
+
+    # "WITH_ACCELERATED_CPU",
+    # "BUILD_CLANG_PLUGIN",
+]
+
+ROCM_CXX_FLAGS = [
+    "-U__FLOAT128__",
+    "-U__SIZEOF_FLOAT128__",
+    "-fhip-new-launch-api",
+    "-mllvm",
+    "-amdgpu-early-inline-all=true",
+    "-mllvm",
+    "-amdgpu-function-calls=false",
+    "-D__HIP_ROCclr__",
+]
+
+OMP_CXX_FLAGS = ["-D_ENABLE_EXTENDED_ALIGNED_STORAGE"]
+
+expand_template(
+    name = "hipsycl_config",
+    out = "opensycl/include/hipSYCL/common/config.hpp",
+    substitutions = {
+        "@HIPSYCL_VERSION_MAJOR@": "0",
+        "@HIPSYCL_VERSION_MINOR@": "9",
+        "@HIPSYCL_VERSION_PATCH@": "4",
+        "@CMAKE_INSTALL_PREFIX@": "",
+        "@HIPSYCL_RT_LIBRARY_OUTPUT_NAME@": "libhipSYCL-rt",
+        "@HIPSYCL_COMMON_LIBRARY_OUTPUT_NAME@": "libhipSYCL-rt",
+        "@CXX_FILESYSTEM_HEADER@": "filesystem",
+        "@CXX_FILESYSTEM_NAMESPACE@": "std::filesystem",
+    },
+    template = "include/hipSYCL/common/config.hpp.in",
+)
+
+# Target for the toolchains.
+filegroup(
+    name = "sycl_headers",
+    srcs = glob(["include/**"]) + [":hipsycl_config"],
+    visibility = ["//visibility:public"],
+)
+
+ll_library(
+    name = "libhipSYCL-rt",
+    srcs = [
+        "src/runtime/application.cpp",
+        "src/runtime/runtime.cpp",
+        "src/runtime/error.cpp",
+        "src/runtime/backend.cpp",
+        "src/runtime/backend_loader.cpp",
+        "src/runtime/hints.cpp",
+        "src/runtime/device_id.cpp",
+        "src/runtime/operations.cpp",
+        "src/runtime/data.cpp",
+        "src/runtime/inorder_executor.cpp",
+        "src/runtime/kernel_cache.cpp",
+        "src/runtime/multi_queue_executor.cpp",
+        "src/runtime/dag.cpp",
+        "src/runtime/dag_node.cpp",
+        "src/runtime/dag_builder.cpp",
+        "src/runtime/dag_direct_scheduler.cpp",
+        "src/runtime/dag_unbound_scheduler.cpp",
+        "src/runtime/dag_manager.cpp",
+        "src/runtime/dag_submitted_ops.cpp",
+        "src/runtime/settings.cpp",
+        "src/runtime/generic/async_worker.cpp",
+        "src/runtime/hw_model/memcpy.cpp",
+        "src/runtime/serialization/serialization.cpp",
+    ],
+    hdrs = glob([
+        "include/hipSYCL/**/*.hpp",
+    ]) + [
+        ":hipsycl_config",
+    ],
+    exposed_hdrs = [":hipsycl_config"],
+    compile_flags = [
+        "-std=c++17",
+        "-Wall",
+    ],
+    defines = ["_ENABLE_EXTENDED_ALIGNED_STORAGE"],
+    includes = [
+        "$(GENERATED)/opensycl/include",
+        "include",
+    ],
+    emit = ["shared_object"],
+    shared_object_link_flags = ["--no-undefined"],
+    visibility = ["//visibility:public"],
+)
+
+ll_library(
+    name = "librt-backend-hip",
+    srcs = [
+        "src/runtime/hip/hip_event.cpp",
+        "src/runtime/hip/hip_event_pool.cpp",
+        "src/runtime/hip/hip_queue.cpp",
+        "src/runtime/hip/hip_instrumentation.cpp",
+        "src/runtime/hip/hip_allocator.cpp",
+        "src/runtime/hip/hip_device_manager.cpp",
+        "src/runtime/hip/hip_hardware_manager.cpp",
+        "src/runtime/hip/hip_backend.cpp",
+        "src/runtime/hip/hip_code_object.cpp",
+    ],
+    hdrs = glob([
+        "include/hipSYCL/**/*.hpp",
+    ]),
+    includes = [
+        "include",
+    ],
+    defines = [
+        "HIPSYCL_RT_HIP_TARGET_ROCM=1",
+        "HIPSYCL_RT_HIP_SUPPORTS_UNIFIED_MEMORY=1",
+    ],
+    deps = [
+        "@hip//:hip_headers",
+        "@hipamd//:hipamd_headers",
+        "@hipamd//:libamdhip64",
+        ":libhipSYCL-rt",
+    ],
+    emit = ["shared_object"],
+    shared_object_link_flags = ["--no-undefined", "--rpath=$ORIGIN/.."],
+    visibility = ["//visibility:public"],
+)
+
+ll_library(
+    name = "librt-backend-omp",
+    srcs = [
+        "src/runtime/omp/omp_allocator.cpp",
+        "src/runtime/omp/omp_backend.cpp",
+        "src/runtime/omp/omp_event.cpp",
+        "src/runtime/omp/omp_hardware_manager.cpp",
+        "src/runtime/omp/omp_queue.cpp",
+    ],
+    compile_flags = ["-std=c++17", "-Wall"],
+    hdrs = glob([
+        "include/hipSYCL/**/*.hpp",
+    ]),
+    includes = [
+        "include",
+    ],
+    defines = ["_ENABLE_EXTENDED_ALIGNED_STORAGE"],
+    compilation_mode = "omp_cpu",
+    deps = [
+        "@llvm-project//openmp:libomp",
+        ":libhipSYCL-rt",
+    ],
+    emit = ["shared_object"],
+    shared_object_link_flags = ["--no-undefined"],
+    visibility = ["//visibility:public"],
+)
+
+ll_library(
+    name = "opensycl-clang",
+    srcs = [
+        "src/compiler/cbs/LoopSplitterInlining.cpp",
+        "src/compiler/cbs/SplitterAnnotationAnalysis.cpp",
+        "src/compiler/cbs/IRUtils.cpp",
+        "src/compiler/cbs/KernelFlattening.cpp",
+        "src/compiler/cbs/LoopsParallelMarker.cpp",
+        "src/compiler/cbs/PHIsToAllocas.cpp",
+        "src/compiler/cbs/RemoveBarrierCalls.cpp",
+        "src/compiler/cbs/CanonicalizeBarriers.cpp",
+        "src/compiler/cbs/SimplifyKernel.cpp",
+        "src/compiler/cbs/LoopSimplify.cpp",
+        "src/compiler/cbs/PipelineBuilder.cpp",
+        "src/compiler/cbs/SubCfgFormation.cpp",
+        "src/compiler/cbs/UniformityAnalysis.cpp",
+        "src/compiler/cbs/VectorShape.cpp",
+        "src/compiler/cbs/VectorizationInfo.cpp",
+        "src/compiler/cbs/AllocaSSA.cpp",
+        "src/compiler/cbs/VectorShapeTransformer.cpp",
+        "src/compiler/cbs/Region.cpp",
+        "src/compiler/cbs/SyncDependenceAnalysis.cpp",
+
+        # Plugin.
+        "src/compiler/OpenSYCLClangPlugin.cpp",
+        "src/compiler/GlobalsPruningPass.cpp",
+    ],
+    compile_flags = ["-std=c++17"],
+    hdrs = glob([
+        "include/hipSYCL/**/*.hpp",
+    ]) + [
+        ":hipsycl_config",
+    ],
+    angled_includes = ["include"],
+    includes = [
+        "$(GENERATED)/opensycl/include",
+    ],
+    depends_on_llvm = 1,
+    defines = [
+        "HIPSYCL_WITH_ACCELERATED_CPU",
+        "HIPSYCL_COMPILER_COMPONENT",
+        "__HIPSYCL_USE_ACCELERATED_CPU__",
+    ],
+    emit = ["shared_object"],
+    shared_object_link_flags = ["--no-undefined"],
+    visibility = ["//visibility:public"],
+)

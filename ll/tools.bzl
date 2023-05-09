@@ -5,6 +5,10 @@ Tools used by actions.
 
 load("@bazel_skylib//rules:common_settings.bzl", "BuildSettingInfo")
 
+# TODO: Would it be a bad idea to add *all* tools to *every* action?
+#       The ll_toolchain target already decides whether the toolchain symbols
+#       are actually populated, so this wouldn't lead to unnecessary builds.
+
 def compile_object_tools(ctx):
     """Tools for use in compile actions.
 
@@ -36,11 +40,14 @@ def compile_object_tools(ctx):
     if config in ["cpp", "omp_cpu"]:
         return tools
 
-    if config in ["cuda_nvptx", "hip_nvptx", "hip_amdgpu"]:
+    if config in ["cuda_nvptx", "hip_nvptx", "hip_amdgpu", "sycl_amdgpu"]:
         return tools + [
             toolchain.offload_bundler,
             toolchain.offload_packager,
         ]
+
+    if config in ["sycl_cpu", "sycl_amdgpu"]:
+        return tools + [toolchain.sycl_plugin]
 
     fail("Unregognized toolchain toolchain configuration.")
 
