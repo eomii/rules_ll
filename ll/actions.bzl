@@ -253,7 +253,7 @@ def precompile_interface(
             angled_includes,
             bmis,
         ),
-        mnemonic = "LlPrecomileModuleInterfaceUnit",
+        mnemonic = "LlPrecompileModuleInterfaceUnit",
         execution_requirements = {
             # Required so that module paths do not depend on the specific
             # sandbox instance used during precompilation.
