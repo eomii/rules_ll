@@ -112,7 +112,7 @@ func deployZot(ctx *pulumi.Context) error {
 
 func deployTektonPipelines(ctx *pulumi.Context) error {
 	fileArgs := &yaml.ConfigFileArgs{
-		File: "https://storage.googleapis.com/tekton-releases/pipeline/latest/release.yaml",
+		File: "https://storage.googleapis.com/tekton-releases/pipeline/previous/v0.47.0/release.yaml",
 	}
 	if _, err := yaml.NewConfigFile(ctx, "tekton-pipelines", fileArgs); err != nil {
 		return fmt.Errorf("%w: %w", errPulumi, err)
@@ -123,9 +123,20 @@ func deployTektonPipelines(ctx *pulumi.Context) error {
 
 func deployTektonTriggers(ctx *pulumi.Context) error {
 	fileArgs := &yaml.ConfigFileArgs{
-		File: "https://storage.googleapis.com/tekton-releases/pipeline/triggers/release.yaml",
+		File: "https://storage.googleapis.com/tekton-releases/pipeline/triggers/previous/v0.24.0/release.yaml",
 	}
 	if _, err := yaml.NewConfigFile(ctx, "tekton-triggers", fileArgs); err != nil {
+		return fmt.Errorf("%w: %w", errPulumi, err)
+	}
+
+	return nil
+}
+
+func deployTektonDashboard(ctx *pulumi.Context) error {
+	fileArgs := &yaml.ConfigFileArgs{
+		File: "https://storage.googleapis.com/tekton-releases/dashboard/previous/v0.35.0/release-full.yaml",
+	}
+	if _, err := yaml.NewConfigFile(ctx, "tekton-dashboard", fileArgs); err != nil {
 		return fmt.Errorf("%w: %w", errPulumi, err)
 	}
 
@@ -145,7 +156,11 @@ func program(ctx *pulumi.Context) error {
 		return err
 	}
 
-	return deployTektonTriggers(ctx)
+	if err := deployTektonTriggers(ctx); err != nil {
+		return err
+	}
+
+	return deployTektonDashboard(ctx)
 }
 
 func createLocalCluster(provider *cluster.Provider) error {
