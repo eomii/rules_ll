@@ -30,6 +30,7 @@ def _ll_toolchain_impl(ctx):
             linker = lld_alias,
             linker_executable = ctx.executable.linker,
             linker_wrapper = ctx.executable.linker_wrapper,
+            wasm_linker = ctx.executable.wasm_linker,
             address_sanitizer = ctx.files.address_sanitizer,
             leak_sanitizer = ctx.files.leak_sanitizer,
             memory_sanitizer = ctx.files.memory_sanitizer,

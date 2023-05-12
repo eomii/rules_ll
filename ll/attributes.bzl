@@ -40,6 +40,7 @@ DEFAULT_ATTRS = {
             "cuda_nvptx",
             "hip_amdgpu",
             "hip_nvptx",
+            "wasm",
             "bootstrap",
         ],
     ),
@@ -308,6 +309,13 @@ LL_TOOLCHAIN_ATTRS = {
         executable = True,
         cfg = transition_to_bootstrap,
         default = "@llvm-project//llvm:llvm-link",
+    ),
+    "wasm_linker": attr.label(
+        doc = "The linker for WebAssembly",
+        executable = True,
+        allow_single_file = True,
+        cfg = transition_to_bootstrap,
+        default = "@llvm-project//lld:wasm-ld",
     ),
     "builtin_includes": attr.label(
         doc = "Clang's built-in header files.",

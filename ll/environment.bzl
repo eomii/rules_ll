@@ -30,6 +30,16 @@ def compile_object_environment(ctx):
                 toolchain.linker_executable.dirname,
             ]),
         }
+    elif config in ["wasm"]:
+        return {
+            "LINK": toolchain.bitcode_linker.path,
+            "LLD": toolchain.wasm_linker.path,
+            "LLVM_SYMBOLIZER_PATH": toolchain.symbolizer.path,
+            "PATH": ":".join([
+                toolchain.linker.dirname,
+                toolchain.linker_executable.dirname,
+            ]),
+        }
     elif config in ["cuda_nvptx", "hip_amdgpu", "hip_nvptx"]:
         return {
             "CLANG_OFFLOAD_BUNDLER": toolchain.offload_bundler.path,
