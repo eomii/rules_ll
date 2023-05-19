@@ -37,7 +37,7 @@ LL_AMD_INCLUDES=${pkgs.lib.concatStringsSep ":" [
   "-isystem${pkgs.libdrm.dev}/include"
   "-isystem${pkgs.libdrm.dev}/include/libdrm"
   "-isystem${pkgs.elfutils.dev}/include"
-  "-isystem${pkgs.numactl}/include"
+  "-isystem${pkgs.numactl.dev}/include"
   "-isystem${pkgs.libglvnd.dev}/include"
   "-isystem${pkgs.xorg.libX11.dev}/include"
   "-isystem${pkgs.xorg.xorgproto}/include"

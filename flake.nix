@@ -104,7 +104,7 @@
                 export LD=${pkgs.llvmPackages_16.lld}/bin/ld.lld
 
                 # Java needs to be the same version as in the Bazel wrapper.
-                export JAVA_HOME=${pkgs.jdk11_headless}/lib/openjdk
+                export JAVA_HOME=${pkgs.jdk17_headless}/lib/openjdk
 
                 # Prettier color output for the ls command.
                 alias ls='ls --color=auto'

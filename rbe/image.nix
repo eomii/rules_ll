@@ -48,7 +48,7 @@ pkgs.dockerTools.buildLayeredImage {
         "${pkgs.findutils}/bin"
         "${pkgs.gnutar}/bin"
       ]))
-      "JAVA_HOME=${pkgs.jdk11_headless}/lib/openjdk"
+      "JAVA_HOME=${pkgs.jdk17_headless}/lib/openjdk"
 
       # The rbe_configs_gen seems to only care about the CC variable, but not
       # about other make variables like LD, AR or NM. This is unfortunate as it
