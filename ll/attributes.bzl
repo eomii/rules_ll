@@ -412,10 +412,9 @@ LL_TOOLCHAIN_ATTRS = {
         # ],
         cfg = transition_to_cpp,
     ),
-    "hip_runtime": attr.label(
+    "hip_runtime": attr.label_list(
         doc = "The libamdhip64 runtime.",
         # default = "@hipamd//:libamdhip64",
-        allow_single_file = True,
         cfg = transition_to_cpp,
     ),
     "leak_sanitizer": attr.label_list(

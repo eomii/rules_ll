@@ -204,7 +204,7 @@ def _ll_binary_impl(ctx):
 
     if ctx.attr.compilation_mode == "hip_amdgpu":
         toolchain = ctx.toolchains["//ll:toolchain_type"]
-        runfiles = ctx.runfiles(files = [toolchain.hip_runtime])
+        runfiles = ctx.runfiles(files = toolchain.hip_runtime)
 
     return [
         DefaultInfo(

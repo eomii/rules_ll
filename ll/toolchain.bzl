@@ -58,7 +58,7 @@ def _ll_toolchain_impl(ctx):
             symbolizer = ctx.executable.symbolizer,
             machine_code_tool = ctx.executable.machine_code_tool,
             hip_libraries = ctx.files.hip_libraries,
-            hip_runtime = ctx.file.hip_runtime,
+            hip_runtime = ctx.files.hip_runtime,
         ),
     ]
 
