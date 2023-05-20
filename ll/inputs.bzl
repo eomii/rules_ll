@@ -3,8 +3,6 @@
 Action inputs for rules.
 """
 
-load("@bazel_skylib//rules:common_settings.bzl", "BuildSettingInfo")
-
 COMPILABLE_EXTENSIONS = [
     "c",
     "cl",
@@ -44,51 +42,29 @@ def compile_object_inputs(
     Returns:
         A `depset` of files.
     """
-    config = ctx.attr.toolchain_configuration[BuildSettingInfo].value
     toolchain = ctx.toolchains["//ll:toolchain_type"]
 
-    # TODO: This variable name is misleading.
-    interfaces = depset([interface.bmi for interface in interfaces.to_list()])
-
-    direct = (
-        [in_file] +
-        ctx.files.srcs +
-        ctx.files.data +
-        toolchain.builtin_includes
-    )
-    transitive = [headers, interfaces]
-
-    if ctx.attr.depends_on_llvm:
-        transitive.append(toolchain.llvm_project_sources)
-
-    if config == "bootstrap":
-        return depset(direct, transitive = transitive)
-
-    direct += (
-        toolchain.cpp_stdhdrs +
-        toolchain.unwind_library +
-        toolchain.cpp_abihdrs +
-        toolchain.compiler_runtime
-    )
-
-    if config == "cpp":
-        pass
-    elif config == "omp_cpu":
-        direct += toolchain.omp_header
-    elif config == "cuda_nvptx":
-        pass
-    elif config == "hip_nvptx":
-        direct += toolchain.hip_libraries
-    elif config == "hip_amdgpu":
-        direct += (
+    return depset(
+        [in_file] + (
+            ctx.files.data +
+            ctx.files.srcs +
+            toolchain.builtin_includes +
+            toolchain.compiler_runtime +
+            toolchain.cpp_abihdrs +
+            toolchain.cpp_stdhdrs +
             toolchain.hip_libraries +
+            toolchain.hip_runtime +
+            toolchain.omp_header +
             toolchain.rocm_device_libs +
-            [toolchain.hip_runtime]
-        )
-    else:
-        fail("Cannot compile with this toolchain config: {}.".format(config))
-
-    return depset(direct, transitive = transitive)
+            toolchain.unwind_library
+        ),
+        transitive = [
+            headers,
+            depset([interface.bmi for interface in interfaces.to_list()]),
+        ] + (
+            [toolchain.llvm_project_sources] if ctx.attr.depends_on_llvm else []
+        ),
+    )
 
 def create_archive_library_inputs(ctx, in_files):
     return depset(
@@ -112,43 +88,24 @@ def link_executable_inputs(ctx, in_files):
     Returns:
         A `depset` of files.
     """
-    config = ctx.attr.toolchain_configuration[BuildSettingInfo].value
     toolchain = ctx.toolchains["//ll:toolchain_type"]
 
-    direct = (
+    return depset(
         in_files +
+        ctx.files.data +
         ctx.files.deps +
         ctx.files.libraries +
-        ctx.files.data
-    )
-
-    if config == "bootstrap":
-        return depset(direct)
-
-    direct += (
-        toolchain.cpp_stdlib +
-        toolchain.unwind_library +
+        toolchain.compiler_runtime +
         toolchain.cpp_abilib +
-        toolchain.compiler_runtime
+        toolchain.cpp_stdlib +
+        toolchain.hip_libraries +
+        toolchain.hip_runtime +
+        toolchain.libomp +
+        toolchain.unwind_library +
+        (
+            toolchain.llvm_project_artifacts if ctx.attr.depends_on_llvm else []
+        ),
     )
-
-    if ctx.attr.depends_on_llvm:
-        direct += toolchain.llvm_project_artifacts
-
-    if config == "cpp":
-        pass
-    elif config == "omp_cpu":
-        direct += toolchain.libomp
-    elif config == "cuda_nvptx":
-        pass
-    elif config in ["hip_nvptx", "hip_amdgpu"]:
-        if config == "hip_amdgpu":
-            direct.append(toolchain.hip_runtime)
-        direct += toolchain.hip_libraries
-    else:
-        fail("Cannot link with this toolchain.")
-
-    return depset(direct)
 
 def link_shared_object_inputs(ctx, in_files):
     """Collect input files for link actions.
@@ -163,37 +120,18 @@ def link_shared_object_inputs(ctx, in_files):
     Returns:
         A `depset` of files.
     """
-    config = ctx.attr.toolchain_configuration[BuildSettingInfo].value
     toolchain = ctx.toolchains["//ll:toolchain_type"]
 
-    direct = (
+    return depset(
         in_files +
+        ctx.files.data +
         ctx.files.deps +
-        ctx.files.data
-    )
-
-    if ctx.attr.depends_on_llvm:
-        direct += toolchain.llvm_project_artifacts
-
-    if config == "bootstrap":
-        return depset(direct)
-
-    direct += (
-        toolchain.cpp_stdlib +
+        toolchain.compiler_runtime +
         toolchain.cpp_abilib +
+        toolchain.cpp_stdlib +
+        toolchain.hip_libraries +
         toolchain.unwind_library +
-        toolchain.compiler_runtime
+        (
+            toolchain.llvm_project_artifacts if ctx.attr.depends_on_llvm else []
+        ),
     )
-
-    if config == "cpp":
-        pass
-    elif config == "cuda_nvptx":
-        pass
-    elif config in ["hip_nvptx", "hip_amdgpu"]:
-        direct += (
-            toolchain.hip_libraries
-        )
-    else:
-        fail("Cannot link shared objects with this toolchain.")
-
-    return depset(direct)

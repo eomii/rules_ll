@@ -137,8 +137,8 @@ ll_toolchain(
         "//conditions:default": [],
     }),
     hip_runtime = select({
-        ":hip_amdgpu": "@hipamd//:libamdhip64",
-        "//conditions:default": None,
+        ":hip_amdgpu": ["@hipamd//:libamdhip64"],
+        "//conditions:default": [],
     }),
     leak_sanitizer = select({
         ":bootstrap": [],

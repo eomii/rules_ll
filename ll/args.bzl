@@ -248,7 +248,7 @@ def compile_object_args(
 
     if ctx.attr.compilation_mode == "hip_amdgpu":
         args.add("-xhip")
-        args.add(toolchain.hip_runtime.path, format = "--rocm-path=%s")
+        args.add(toolchain.hip_runtime[0].path, format = "--rocm-path=%s")
         args.add(clang_resource_dir, format = "-isystem%s")
         args.add(
             toolchain.rocm_device_libs[0].dirname,  # .../amdgcn/bitcode
@@ -508,12 +508,12 @@ def link_executable_args(ctx, in_files, out_file, mode):
         args.add("-lcudart_static")
         args.add("-lcupti_static")
     if ctx.attr.compilation_mode == "hip_amdgpu":
-        args.add(toolchain.hip_runtime.dirname, format = "-L%s")
-        args.add(toolchain.hip_runtime.basename, format = "-l:%s")
+        args.add(toolchain.hip_runtime[0].dirname, format = "-L%s")
+        args.add(toolchain.hip_runtime[0].basename, format = "-l:%s")
         hip_runtime_rpath = paths.join(
             "{}.runfiles".format(ctx.label.name),
             ctx.workspace_name,
-            paths.dirname(toolchain.hip_runtime.short_path),
+            paths.dirname(toolchain.hip_runtime[0].short_path),
         )
         args.add(
             hip_runtime_rpath,
