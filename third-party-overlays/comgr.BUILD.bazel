@@ -243,6 +243,7 @@ ll_library(
         "lib/comgr/src/time-stat/time-stat.cpp",
     ],
     depends_on_llvm = 1,
+    defines = ["AMD_COMGR_BUILD"],
     visibility = ["//visibility:public"],
     emit = select({
         ":shared": ["shared_object"],

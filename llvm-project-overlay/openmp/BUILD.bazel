@@ -88,6 +88,7 @@ expand_template(
         "#cmakedefine01 LIBOMP_OMPT_DEBUG": "#define LIBOMP_OMPT_DEBUG 0",
         "#cmakedefine01 LIBOMP_OMPT_SUPPORT": "#define LIBOMP_OMPT_SUPPORT 1",
         "#cmakedefine01 LIBOMP_OMPD_SUPPORT": "#define LIBOMP_OMPD_SUPPORT 1",
+        "#cmakedefine01 LIBOMP_OMPX_TASKGRAPH": "#define LIBOMP_OMPX_TASKGRAPH 1",
         "#cmakedefine01 LIBOMP_PROFILING_SUPPORT": "#define LIBOMP_PROFILING_SUPPORT 0",
         "#cmakedefine01 LIBOMP_OMPT_OPTIONAL": "#define LIBOMP_OMPT_OPTIONAL 1",
         "#cmakedefine01 LIBOMP_USE_ADAPTIVE_LOCKS": "#define LIBOMP_USE_ADAPTIVE_LOCKS 1",
