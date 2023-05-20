@@ -79,7 +79,6 @@ ll_library(
         "src/exception.cpp",
         "src/filesystem/directory_iterator.cpp",
         "src/filesystem/operations.cpp",
-        "src/format.cpp",
         "src/functional.cpp",
         "src/future.cpp",
         "src/hash.cpp",

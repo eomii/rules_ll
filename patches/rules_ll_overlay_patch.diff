@@ -782,10 +782,10 @@ index 000000000000..8731b402fb28
 +)
 diff --git a/utils/bazel/llvm-project-overlay/compiler-rt/lib/sanitizer_common/BUILD.bazel b/utils/bazel/llvm-project-overlay/compiler-rt/lib/sanitizer_common/BUILD.bazel
 new file mode 100644
-index 000000000000..880495262c8a
+index 000000000000..2d6c3514c049
 --- /dev/null
 +++ b/utils/bazel/llvm-project-overlay/compiler-rt/lib/sanitizer_common/BUILD.bazel
-@@ -0,0 +1,247 @@
+@@ -0,0 +1,249 @@
 +load("@rules_ll//ll:defs.bzl", "ll_library")
 +
 +filegroup(
@@ -899,6 +899,7 @@ index 000000000000..880495262c8a
 +        "sanitizer_syscall_linux_riscv64.inc",
 +        "sanitizer_syscall_linux_x86_64.inc",
 +        "sanitizer_syscalls_netbsd.inc",
++        "sanitizer_thread_arg_retval.h",
 +        "sanitizer_thread_registry.h",
 +        "sanitizer_thread_safety.h",
 +        "sanitizer_tls_get_addr.h",
@@ -951,6 +952,7 @@ index 000000000000..880495262c8a
 +        "sanitizer_stoptheworld_win.cpp",
 +        "sanitizer_suppressions.cpp",
 +        "sanitizer_tls_get_addr.cpp",
++        "sanitizer_thread_arg_retval.cpp",
 +        "sanitizer_thread_registry.cpp",
 +        "sanitizer_type_traits.cpp",
 +        "sanitizer_win.cpp",
@@ -1270,10 +1272,10 @@ index 000000000000..8ad56ad46df6
 +)
 diff --git a/utils/bazel/llvm-project-overlay/libcxx/BUILD.bazel b/utils/bazel/llvm-project-overlay/libcxx/BUILD.bazel
 new file mode 100644
-index 000000000000..e7afda6113b8
+index 000000000000..515662537ebf
 --- /dev/null
 +++ b/utils/bazel/llvm-project-overlay/libcxx/BUILD.bazel
-@@ -0,0 +1,186 @@
+@@ -0,0 +1,185 @@
 +load("@rules_ll//ll:defs.bzl", "ll_library")
 +load("@bazel_skylib//rules:expand_template.bzl", "expand_template")
 +
@@ -1355,7 +1357,6 @@ index 000000000000..e7afda6113b8
 +        "src/exception.cpp",
 +        "src/filesystem/directory_iterator.cpp",
 +        "src/filesystem/operations.cpp",
-+        "src/format.cpp",
 +        "src/functional.cpp",
 +        "src/future.cpp",
 +        "src/hash.cpp",
@@ -1621,10 +1622,10 @@ index f8448fb0e726..7540cd9f8495 100644
 +)
 diff --git a/utils/bazel/llvm-project-overlay/openmp/BUILD.bazel b/utils/bazel/llvm-project-overlay/openmp/BUILD.bazel
 new file mode 100644
-index 000000000000..9a45fba9fdc0
+index 000000000000..d098b00e9027
 --- /dev/null
 +++ b/utils/bazel/llvm-project-overlay/openmp/BUILD.bazel
-@@ -0,0 +1,157 @@
+@@ -0,0 +1,158 @@
 +load("@bazel_skylib//rules:expand_template.bzl", "expand_template")
 +load("@rules_ll//ll:defs.bzl", "ll_library")
 +
@@ -1715,6 +1716,7 @@ index 000000000000..9a45fba9fdc0
 +        "#cmakedefine01 LIBOMP_OMPT_DEBUG": "#define LIBOMP_OMPT_DEBUG 0",
 +        "#cmakedefine01 LIBOMP_OMPT_SUPPORT": "#define LIBOMP_OMPT_SUPPORT 1",
 +        "#cmakedefine01 LIBOMP_OMPD_SUPPORT": "#define LIBOMP_OMPD_SUPPORT 1",
++        "#cmakedefine01 LIBOMP_OMPX_TASKGRAPH": "#define LIBOMP_OMPX_TASKGRAPH 1",
 +        "#cmakedefine01 LIBOMP_PROFILING_SUPPORT": "#define LIBOMP_PROFILING_SUPPORT 0",
 +        "#cmakedefine01 LIBOMP_OMPT_OPTIONAL": "#define LIBOMP_OMPT_OPTIONAL 1",
 +        "#cmakedefine01 LIBOMP_USE_ADAPTIVE_LOCKS": "#define LIBOMP_USE_ADAPTIVE_LOCKS 1",
