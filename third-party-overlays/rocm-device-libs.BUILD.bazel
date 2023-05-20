@@ -81,6 +81,8 @@ OCLC_NAMES = [
     "isa_version_90a",
     "isa_version_90c",
     "isa_version_940",
+    "isa_version_941",
+    "isa_version_942",
     "unsafe_math_off",
     "unsafe_math_on",
     "wavefrontsize64_off",

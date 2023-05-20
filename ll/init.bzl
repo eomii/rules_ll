@@ -141,11 +141,15 @@ def _initialize_rules_ll_impl(_):
     http_archive(
         name = "rocm-device-libs",
         build_file = "@rules_ll//third-party-overlays:rocm-device-libs.BUILD.bazel",
-        sha256 = "3a4682bc23a65707a52ec9945e6a4df1a24490756315106349793238ce691b7e",
-        strip_prefix = "ROCm-Device-Libs-3e652abd2d3e63df1c92366a6c39af48e76f79b3",
+        sha256 = "8b654897ac050b8f402b510b0dbf183e4e926f6d52c76b50957b8bdf6fcd265f",
+        strip_prefix = "ROCm-Device-Libs-936a78464491c95c7cfffde08491bfe1a48c7177",
         urls = [
-            "https://github.com/RadeonOpenCompute/ROCm-Device-Libs/archive/3e652abd2d3e63df1c92366a6c39af48e76f79b3.zip",
+            "https://github.com/RadeonOpenCompute/ROCm-Device-Libs/archive/936a78464491c95c7cfffde08491bfe1a48c7177.zip",
         ],
+        patches = [
+            "@rules_ll//patches:rocm_device_libs_fix_data_layout.diff",
+        ],
+        patch_args = ["-p1"],
     )
 
 rules_ll_dependencies = module_extension(
