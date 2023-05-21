@@ -16,6 +16,10 @@ You can find full examples at [`rules_ll/examples`](https://github.com/eomii/rul
 
     Due to a bug in `clang-tidy` you have to silence
     `readability-redundant-declaration` when using modules.
+
+!!! warning
+
+    As modules stabilize upstream, expect this API to change in the future.
 <!-- markdownlint-enable code-block-style -->
 
 ## Basic usage
@@ -76,7 +80,7 @@ module hello;
 namespace hello {
 
 auto say_hello_from_implementaion() -> void {
-   std::cout << "Hello from hello interface implementation!" << std::endl;
+   std::cout << "Hello from implementation!" << std::endl;
 }
 
 } // namespace hello
@@ -93,7 +97,7 @@ export namespace hello {
 
 auto say_hello_from_implementation() -> void;
 auto say_hello_from_interface() -> void {
-    std::cout << "Hello from hello interface implementation!" << std::endl;
+    std::cout << "Hello from interface!" << std::endl;
 }
 
 }
@@ -128,8 +132,8 @@ ll_binary(
 )
 ```
 
-Use `exposed_interfaces` instead of `interfaces`. This way the `main` target can
-see the interface for the `hello` module.
+Use `exposed_interfaces` in `ll_library`. This way the `main` target can see the
+interface for the `hello` module.
 
 ## Under the hood
 
@@ -153,6 +157,18 @@ For the `ll_binary` target:
 - The compiler compiles `main.cpp` to `main.o` using `hello.pcm`. This step
   doesn't depend on `hello.o`.
 - The linker links `hello.a` and `main.o` to the final executable `main`.
+
+## Pitfalls
+
+All interfaces in `ll_library` are `exposed`, even those in the `interfaces`
+attribute. `rules_ll` builds `interfaces` first and then makes them visible to
+`exposed_interfaces`. This way you can declare more complex modules in a single
+target.
+
+If you have a dependency chain `a -> b -> c` and you `import c` in a target, you
+need to add `deps = [":a", ":b", ":c"]` to that target. The build still requires
+the interfaces for `a` and `b`, even though you didn't explicitly specify those
+in your code.
 
 ## Suggestions
 
