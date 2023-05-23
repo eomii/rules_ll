@@ -39,6 +39,7 @@ ll_binary(
     visibility = ["@//:__pkg__"],
     deps = [
         ":a",
+        ":b",
         ":c",
         ":module_d",
     ],

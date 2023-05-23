@@ -73,5 +73,8 @@ ll_binary(
     srcs = ["main.cpp"],
     compile_flags = ["-std=c++20"],
     visibility = ["@//:__pkg__"],
-    deps = [":A"],
+    deps = [
+        ":A",
+        ":Internals",
+    ],
 )

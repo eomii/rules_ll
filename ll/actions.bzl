@@ -72,20 +72,7 @@ def compile_objects(
     out_files = []
     cdfs = []
 
-    for in_file in internal_bmi_files:
-        file_out, cdf_out = compile_object(
-            ctx,
-            in_file,
-            headers,
-            defines,
-            includes,
-            angled_includes,
-            bmis,
-        )
-        out_files.append(file_out)
-        cdfs.append(cdf_out)
-
-    for in_file in compilable_sources(ctx):
+    for in_file in internal_bmi_files + compilable_sources(ctx):
         file_out, cdf_out = compile_object(
             ctx,
             in_file,
@@ -180,7 +167,7 @@ def precompile_interfaces(
     """
     cdfs = []
 
-    # Internal BMIs. Not exposed to downstream targets.
+    # Internal BMIs. Exposed to downstream targets and to `exposed_interfaces`.
     internal_bmis = []
     for in_file, module_name in ctx.attr.interfaces.items():
         file_out, cdf_out = precompile_interface(

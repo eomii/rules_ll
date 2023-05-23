@@ -115,7 +115,7 @@ def _ll_library_impl(ctx):
                     for suffix in ctx.attr.exposed_angled_includes
                 ],
             ),
-            exposed_bmis = depset(exposed_bmis),
+            exposed_bmis = depset(exposed_bmis + internal_bmis),
         ),
         LlCompilationDatabaseFragmentsInfo(
             cdfs = depset(out_cdfs, transitive = transitive_cdfs),

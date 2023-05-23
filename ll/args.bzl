@@ -356,13 +356,6 @@ def compile_object_args(
     # Additional compile flags.
     args.add_all(ctx.attr.compile_flags)
 
-    # To keep precompilations sandboxed, embed used headers in the pcm.
-    # TODO: This does not work yet. For some reason we are still required to
-    #       disable sandboxing in precompilations.
-    if out_file.extension == "pcm":
-        args.add("-Xclang")
-        args.add("-fmodules-embed-all-files")
-
     # Load modules conditionally by declaring the module name.
     args.add_all(
         bmis,

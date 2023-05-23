@@ -108,9 +108,13 @@ DEFAULT_ATTRS = {
     "exposed_interfaces": attr.label_keyed_string_dict(
         doc = """Transitive interfaces for this target.
 
+        See [C++ modules](../guides/modules.md) for a guide.
+
         Makes precompiled modules and compiled objects visible to direct
         dependents. Files in this attribute can see BMIs from modules in
-        `interfaces`. Primary module interfaces go here.
+        `interfaces`.
+
+        Primary module interfaces go here.
         """,
         allow_files = [".cppm", ".cpp", ".cc"],
     ),
@@ -150,18 +154,13 @@ DEFAULT_ATTRS = {
 
         See [C++ modules](../guides/modules.md) for a guide.
 
-        Internally, precompiles interfaces and compiles them to objects named
-        `<filename>.interface.o`. This way object files for modules implemented
-        with separate interfaces and implementations, for instance `A.cpp` in
-        `srcs` and `A.cppm` in `interfaces` don't clash.
+        Makes precompiled modules and compiled objects visible to direct
+        dependents and to `exposed_interfaces`.
 
-        Since files in the same `interfaces` attribute can't see each other's
-        BMIs, split interfaces into different targets if they depend on each
-        other.
+        For instance, you can put module partitions in `interfaces` and the
+        primary module interface in `exposed_interfaces`.
 
-        Makes the BMIs in `interfaces` visible to `exposed_interfaces`. This way
-        you can put all module partitions in `interfaces` and the primary module
-        interface in `exposed_interfaces`.
+        Files in the same `interfaces` attribute can't see each other's BMIs.
         """,
         allow_files = [".cppm"],
     ),
