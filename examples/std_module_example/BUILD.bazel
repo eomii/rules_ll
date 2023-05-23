@@ -1,0 +1,8 @@
+load("@rules_ll//ll:defs.bzl", "ll_binary")
+
+ll_binary(
+    name = "std_module_example",
+    srcs = ["main.cpp"],
+    compile_flags = ["-std=c++2b"],
+    visibility = ["@//:__pkg__"],
+)

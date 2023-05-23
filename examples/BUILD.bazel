@@ -51,6 +51,7 @@ EXAMPLES = [
     # "sanitizers",
     # "clang_tidy_example",
     "shared_library_example",
+    "std_module_example",
     "modules_draft_example",
 ]
 

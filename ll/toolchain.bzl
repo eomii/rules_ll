@@ -4,6 +4,7 @@ This file declares the `ll_toolchain` rule.
 """
 
 load("//ll:attributes.bzl", "LL_TOOLCHAIN_ATTRS")
+load("//ll:providers.bzl", "LlInfo")
 
 def _ll_toolchain_impl(ctx):
     # We always need to invoke lld via an ld.lld -> lld symlink.
@@ -19,6 +20,10 @@ def _ll_toolchain_impl(ctx):
         for data in ctx.attr.llvm_project_deps
     ])
     llvm_project_artifacts = ctx.files.llvm_project_deps
+
+    std_modules = []
+    for target in ctx.attr.cpp_stdlib:
+        std_modules += target[LlInfo].exposed_bmis.to_list()
 
     return [
         platform_common.ToolchainInfo(
@@ -42,6 +47,7 @@ def _ll_toolchain_impl(ctx):
             builtin_includes = ctx.files.builtin_includes,
             cpp_stdlib = ctx.files.cpp_stdlib,
             cpp_stdhdrs = ctx.files.cpp_stdhdrs,
+            cpp_stdmodules = std_modules,
             cpp_abilib = ctx.files.cpp_abilib,
             cpp_abihdrs = ctx.files.cpp_abihdrs,
             compiler_runtime = ctx.files.compiler_runtime,

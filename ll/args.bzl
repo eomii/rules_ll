@@ -365,6 +365,13 @@ def compile_object_args(
         omit_if_empty = True,
     )
 
+    if ctx.attr.compilation_mode != "bootstrap":
+        args.add_all(
+            toolchain.cpp_stdmodules,
+            map_each = _create_module_import,
+            format_each = "-fmodule-file=%s",
+        )
+
     # Input file.
     args.add(in_file)
 
