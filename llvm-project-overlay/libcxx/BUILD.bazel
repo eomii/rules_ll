@@ -269,6 +269,10 @@ ll_library(
         "-fvisibility-inlines-hidden",
         "-Wno-user-defined-literals",
         "-Wno-reserved-module-identifier",
+
+        # TODO: Remove this after resolve of
+        # https://github.com/llvm/llvm-project/issues/62844
+        "-Wno-deprecated-declarations",
     ],
     defines = [
         "_LIBCPP_BUILDING_LIBRARY",
