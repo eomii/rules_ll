@@ -1,8 +1,6 @@
-module;
-
-#include <iostream>
-
 export module hello_world;
+
+import std;
 
 import :hello;
 import :world;
@@ -20,4 +18,4 @@ auto hello_from_interface() -> void {
   std::cout << hello() << " " << world() << std::endl;
 }
 
-} // namespace hello_world
+}  // namespace hello_world

@@ -1,5 +1,4 @@
-#include <iostream>
-
+import std;
 import a;
 import c;
 import d;

@@ -1,8 +1,6 @@
-module;
-
-#include <iostream>
-
 module d;
+
+import std;
 
 namespace d {
 
