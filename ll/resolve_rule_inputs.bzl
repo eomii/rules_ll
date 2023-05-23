@@ -34,11 +34,13 @@ def resolve_rule_inputs(ctx):
     hdrs = depset(
         ctx.files.hdrs + ctx.files.exposed_hdrs,
         transitive = [dep[LlInfo].exposed_hdrs for dep in ctx.attr.deps],
+        order = "preorder",
     )
 
     defines = depset(
         ctx.attr.defines + ctx.attr.exposed_defines,
         transitive = [dep[LlInfo].exposed_defines for dep in ctx.attr.deps],
+        order = "preorder",
     )
 
     includes = depset(
@@ -47,6 +49,7 @@ def resolve_rule_inputs(ctx):
             for suffix in ctx.attr.includes + ctx.attr.exposed_includes
         ],
         transitive = [dep[LlInfo].exposed_includes for dep in ctx.attr.deps],
+        order = "preorder",
     )
 
     angled_includes = depset(
@@ -61,6 +64,7 @@ def resolve_rule_inputs(ctx):
             dep[LlInfo].exposed_angled_includes
             for dep in ctx.attr.deps
         ],
+        order = "preorder",
     )
 
     bmis = depset(
