@@ -1,8 +1,6 @@
-module;
-
-#include <iostream>
-
 module c;
+
+import std;
 
 namespace c {
 

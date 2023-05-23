@@ -1,5 +1,4 @@
-#include <format>
-#include <iostream>
+import std;
 
 auto main() -> int {
   constexpr std::string_view kExplanation =

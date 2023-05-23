@@ -1,8 +1,6 @@
-module;
-
-#include <iostream>
-
 export module c;
+
+import std;
 
 export namespace c {
 
@@ -11,4 +9,4 @@ auto c_interface() -> void {
   std::cout << "Hello from module C interface!" << std::endl;
 }
 
-} // namespace c
+}  // namespace c

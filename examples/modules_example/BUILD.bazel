@@ -8,26 +8,26 @@ load(
 ll_library(
     name = "module_d",
     srcs = ["d_implementation.cpp"],
-    compile_flags = ["-std=c++20"],
+    compile_flags = ["-std=c++2b"],
     exposed_interfaces = {"d_interface.cppm": "d"},
 )
 
 ll_library(
     name = "c",
     srcs = ["c.cpp"],
-    compile_flags = ["-std=c++20"],
+    compile_flags = ["-std=c++2b"],
     exposed_interfaces = {"c.cppm": "c"},
 )
 
 ll_library(
     name = "b",
-    compile_flags = ["-std=c++20"],
+    compile_flags = ["-std=c++2b"],
     exposed_interfaces = {"b.cppm": "b"},
 )
 
 ll_library(
     name = "a",
-    compile_flags = ["-std=c++20"],
+    compile_flags = ["-std=c++2b"],
     exposed_interfaces = {"a.cppm": "a"},
     deps = [":b"],
 )
@@ -35,7 +35,7 @@ ll_library(
 ll_binary(
     name = "modules_example",
     srcs = ["main.cpp"],
-    compile_flags = ["-std=c++20"],
+    compile_flags = ["-std=c++2b"],
     visibility = ["@//:__pkg__"],
     deps = [
         ":a",

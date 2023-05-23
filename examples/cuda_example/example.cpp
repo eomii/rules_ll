@@ -31,19 +31,19 @@ void print_device_info() {
   int count = 0;
   const cudaError_t err = cudaGetDeviceCount(&count);
   if (err == cudaErrorInvalidDevice) {
-    std::cout << "FAIL: invalid device" << std::endl;
+    std::cout << "FAIL: invalid device" << '\n';
   }
-  std::cout << "Number of devices is " << count << std::endl;
+  std::cout << "Number of devices is " << count << '\n';
 
   cudaDeviceProp device_prop{};
   cuda_assert(cudaGetDeviceProperties(&device_prop, 0));
-  std::cout << "System major: " << device_prop.major << std::endl;
-  std::cout << "System minor: " << device_prop.minor << std::endl;
+  std::cout << "System major: " << device_prop.major << '\n';
+  std::cout << "System minor: " << device_prop.minor << '\n';
   std::cout << "Device name : ";
   for (auto character : device_prop.name) {
     std::cout << character;
   }
-  std::cout << std::endl;
+  std::cout << '\n';
 }
 
 auto count_errors(const float *result) -> int {

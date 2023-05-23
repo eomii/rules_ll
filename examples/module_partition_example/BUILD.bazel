@@ -7,7 +7,7 @@ load(
 ll_library(
     name = "hello_world",
     srcs = ["hello_world_impl.cpp"],
-    compile_flags = ["-std=c++20"],
+    compile_flags = ["-std=c++2b"],
     exposed_interfaces = {"hello_world.cppm": "hello_world"},
     interfaces = {
         "hello_world-hello.cppm": "hello_world:hello",
@@ -19,7 +19,7 @@ ll_library(
 ll_binary(
     name = "module_partition_example",
     srcs = ["main.cpp"],
-    compile_flags = ["-std=c++20"],
+    compile_flags = ["-std=c++2b"],
     visibility = ["@//:__pkg__"],
     deps = [":hello_world"],
 )

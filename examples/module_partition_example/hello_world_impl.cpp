@@ -1,8 +1,6 @@
-module;
-
-#include <iostream>
-
 module hello_world;
+
+import std;
 
 namespace hello_world {
 
