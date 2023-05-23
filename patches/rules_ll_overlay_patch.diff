@@ -1272,10 +1272,10 @@ index 000000000000..8ad56ad46df6
 +)
 diff --git a/utils/bazel/llvm-project-overlay/libcxx/BUILD.bazel b/utils/bazel/llvm-project-overlay/libcxx/BUILD.bazel
 new file mode 100644
-index 000000000000..9b72daf50b6e
+index 000000000000..9afcc34a766f
 --- /dev/null
 +++ b/utils/bazel/llvm-project-overlay/libcxx/BUILD.bazel
-@@ -0,0 +1,305 @@
+@@ -0,0 +1,309 @@
 +load("@rules_ll//ll:defs.bzl", "ll_library")
 +load("@bazel_skylib//rules:expand_template.bzl", "expand_template")
 +
@@ -1547,6 +1547,10 @@ index 000000000000..9b72daf50b6e
 +        "-fvisibility-inlines-hidden",
 +        "-Wno-user-defined-literals",
 +        "-Wno-reserved-module-identifier",
++
++        # TODO: Remove this after resolve of
++        # https://github.com/llvm/llvm-project/issues/62844
++        "-Wno-deprecated-declarations",
 +    ],
 +    defines = [
 +        "_LIBCPP_BUILDING_LIBRARY",
