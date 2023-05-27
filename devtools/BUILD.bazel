@@ -1,15 +1,34 @@
-load("@rules_go//go:def.bzl", "go_binary")
+load("@rules_go//go:def.bzl", "go_binary", "go_library")
 
-go_binary(
-    name = "cluster",
-    srcs = ["cluster.go"],
-    importpath = "github.com/eomii/rules_ll/devtools",
-    visibility = ["//visibility:public"],
+go_library(
+    name = "deployments",
+    srcs = ["deployments/deployments.go"],
+    importpath = "github.com/eomii/rules_ll/devtools/deployments",
     deps = [
         "@com_github_pulumi_pulumi_kubernetes_sdk_v3//go/kubernetes/helm/v3:helm",
         "@com_github_pulumi_pulumi_kubernetes_sdk_v3//go/kubernetes/yaml",
+        "@com_github_pulumi_pulumi_sdk_v3//go/pulumi",
+    ],
+)
+
+go_library(
+    name = "clusters",
+    srcs = ["clusters/local.go"],
+    importpath = "github.com/eomii/rules_ll/devtools/clusters",
+    deps = [
+        "@io_k8s_sigs_kind//pkg/cluster",
+    ],
+)
+
+go_binary(
+    name = "cluster",
+    srcs = ["main.go"],
+    importpath = "github.com/eomii/rules_ll/devtools",
+    visibility = ["//visibility:public"],
+    deps = [
+        ":clusters",
+        ":deployments",
         "@com_github_pulumi_pulumi_sdk_v3//go/auto",
-        "@com_github_pulumi_pulumi_sdk_v3//go/auto/optdestroy",
         "@com_github_pulumi_pulumi_sdk_v3//go/auto/optup",
         "@com_github_pulumi_pulumi_sdk_v3//go/common/tokens",
         "@com_github_pulumi_pulumi_sdk_v3//go/common/workspace",

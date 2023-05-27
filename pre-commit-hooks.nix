@@ -140,5 +140,6 @@
       entry = "${wrapper}/bin/golangci-lint run";
       description = "Lint Go.";
       types = [ "go" ];
+      pass_filenames = false;
     };
 }
