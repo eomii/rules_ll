@@ -1,9 +1,14 @@
 load("@rules_go//go:def.bzl", "go_binary", "go_library")
 
 go_library(
-    name = "deployments",
-    srcs = ["deployments/deployments.go"],
-    importpath = "github.com/eomii/rules_ll/devtools/deployments",
+    name = "components",
+    srcs = [
+        "components/cilium.go",
+        "components/components.go",
+        "components/tekton.go",
+        "components/zot.go",
+    ],
+    importpath = "github.com/eomii/rules_ll/devtools/components",
     deps = [
         "@com_github_pulumi_pulumi_kubernetes_sdk_v3//go/kubernetes/helm/v3:helm",
         "@com_github_pulumi_pulumi_kubernetes_sdk_v3//go/kubernetes/yaml",
@@ -27,7 +32,7 @@ go_binary(
     visibility = ["//visibility:public"],
     deps = [
         ":clusters",
-        ":deployments",
+        ":components",
         "@com_github_pulumi_pulumi_sdk_v3//go/auto",
         "@com_github_pulumi_pulumi_sdk_v3//go/auto/optup",
         "@com_github_pulumi_pulumi_sdk_v3//go/common/tokens",
