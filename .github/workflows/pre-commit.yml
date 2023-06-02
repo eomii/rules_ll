@@ -18,8 +18,8 @@ jobs:
         uses: >- # v3.5.2
           actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab
       - name: Install Nix
-        uses: >- # v20
-          cachix/install-nix-action@29bd9290ef037a3ecbdafe83cbd2185e9dd0fa0a
+        uses: >- # v21
+          cachix/install-nix-action@4b933aa7ebcc94a6174cf1364864e957b4910265
         with:
           nix_path: nixpkgs=channel:nixos-unstable
       - name: Cache Nix artifacts
