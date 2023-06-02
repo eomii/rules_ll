@@ -6,7 +6,7 @@ import (
 	"os"
 
 	"github.com/eomii/rules_ll/devtools/clusters"
-	"github.com/eomii/rules_ll/devtools/deployments"
+	"github.com/eomii/rules_ll/devtools/components"
 	"github.com/pulumi/pulumi/sdk/v3/go/auto"
 	"github.com/pulumi/pulumi/sdk/v3/go/auto/optup"
 	"github.com/pulumi/pulumi/sdk/v3/go/common/tokens"
@@ -24,11 +24,31 @@ func genericErrorCheck(err error) {
 }
 
 func program(ctx *pulumi.Context) error {
-	genericErrorCheck(deployments.DeployCilium(ctx))
-	genericErrorCheck(deployments.DeployZot(ctx))
-	genericErrorCheck(deployments.DeployTektonPipelines(ctx))
-	genericErrorCheck(deployments.DeployTektonTriggers(ctx))
-	genericErrorCheck(deployments.DeployTektonDashboard(ctx))
+	components.Check(components.AddComponent(
+		ctx,
+		"cilium",
+		&components.Cilium{Version: "1.14.0-snapshot.2"},
+	))
+	components.Check(components.AddComponent(
+		ctx,
+		"zot",
+		&components.Zot{Version: "0.1.21"},
+	))
+	components.Check(components.AddComponent(
+		ctx,
+		"tekton-pipelines",
+		&components.TektonPipelines{Version: "0.47.0"},
+	))
+	components.Check(components.AddComponent(
+		ctx,
+		"tekton-triggers",
+		&components.TektonTriggers{Version: "0.24.0"},
+	))
+	components.Check(components.AddComponent(
+		ctx,
+		"tekton-dashboard",
+		&components.TektonDashboard{Version: "0.35.0"},
+	))
 
 	return nil
 }
