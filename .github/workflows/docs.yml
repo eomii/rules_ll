@@ -15,9 +15,9 @@ jobs:
     steps:
       - uses: >- # v3.5.2
           actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab
-      - uses: >- # v4.6.0
-          actions/setup-python@57ded4d7d5e986d7296eab16560982c6dd7c923b
+      - uses: >- # v4.6.1
+          actions/setup-python@bd6b4b6205c4dbad673328db7b31b7fab9e241c0
         with:
           python-version: 3.x
-      - run: pip install mkdocs-material==9.0.13
+      - run: pip install mkdocs-material==9.1.15
       - run: mkdocs gh-deploy --force
