@@ -7,7 +7,7 @@ Report violations to:
 
 <!-- vale Vale.Spelling = NO -->
 
-- Aaron Siddhartha Mondal, aaron@eomii.org
-- Jannis Marcel Fengler, jannis@eomii.org
+- Aaron Siddhartha Mondal, `aaron@eomii.org`
+- Jannis Marcel Fengler, `jannis@eomii.org`
 
 <!-- vale Vale.Spelling = YES -->
