@@ -40,7 +40,7 @@ def _initialize_rules_ll_impl(_):
         patch_cmds = [
             """echo "
             #define HIP_VERSION_MAJOR 5
-            #define HIP_VERSION_MINOR 5
+            #define HIP_VERSION_MINOR 7
             #define HIP_VERSION_PATCH 0
             #define HIP_VERSION 50500000
             #define HIP_VERSION_GITHASH "0000"
@@ -49,10 +49,10 @@ def _initialize_rules_ll_impl(_):
             "
             >> include/hip/hip_version.h""",
         ],
-        sha256 = "744f823de589b02b0260f21a08b35b676e97defc25602e7bdf189f380bae020d",
-        strip_prefix = "HIP-856d4b5075a3042f57c928992aca8a23f1cc736e",
+        sha256 = "52de62fca8c29fcfafa97f673bd1321533f161db63a2a7de132518ca29a62746",
+        strip_prefix = "HIP-d4762f69efd0d35f2ccfa4ecf14bcbf898bf1fc4",
         urls = [
-            "https://github.com/ROCm-Developer-Tools/HIP/archive/856d4b5075a3042f57c928992aca8a23f1cc736e.zip",
+            "https://github.com/ROCm-Developer-Tools/HIP/archive/d4762f69efd0d35f2ccfa4ecf14bcbf898bf1fc4.zip",
         ],
     )
 
