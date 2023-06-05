@@ -20,6 +20,8 @@ CLANG_OCL_FLAGS = [
     "-finclude-default-header",
     "-Xclang",
     "-fexperimental-strict-floating-point",
+    "-Xclang",
+    "-fdenormal-fp-math=dynamic",
     "-nogpulib",
     "-cl-no-stdinc",
 ]
