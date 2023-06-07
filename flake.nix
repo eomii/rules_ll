@@ -28,15 +28,9 @@
       (system:
       let
 
-        nixpkgs-patched = (import nixpkgs { inherit system; }).applyPatches {
-          name = "nixpkgs-patched";
-          src = nixpkgs;
-          patches = [ ./patches/nix_fix_linkerscript.diff ];
-        };
+        pkgs = import nixpkgs { inherit system; };
 
-        pkgs = import nixpkgs-patched { inherit system; };
-
-        pkgsUnfree = import nixpkgs-patched {
+        pkgsUnfree = import nixpkgs {
           inherit system;
           config.allowUnfree = true;
         };
