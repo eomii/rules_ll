@@ -15,3 +15,6 @@ linters:
 
     # This is generally a useful check, but it doesn't play well with Pulumi.
     - exhaustruct
+
+    # We don't have any "disallowed" packages at the moment.
+    - depguard
