@@ -26,6 +26,11 @@ func genericErrorCheck(err error) {
 func program(ctx *pulumi.Context) error {
 	components.Check(components.AddComponent(
 		ctx,
+		"local-volumes",
+		&components.LocalVolumes{},
+	))
+	components.Check(components.AddComponent(
+		ctx,
 		"cilium",
 		&components.Cilium{Version: "1.14.0-snapshot.2"},
 	))

@@ -5,12 +5,15 @@ go_library(
     srcs = [
         "components/cilium.go",
         "components/components.go",
+        "components/local-volumes.go",
         "components/tekton.go",
         "components/zot.go",
     ],
     importpath = "github.com/eomii/rules_ll/devtools/components",
     deps = [
+        "@com_github_pulumi_pulumi_kubernetes_sdk_v3//go/kubernetes/core/v1:core",
         "@com_github_pulumi_pulumi_kubernetes_sdk_v3//go/kubernetes/helm/v3:helm",
+        "@com_github_pulumi_pulumi_kubernetes_sdk_v3//go/kubernetes/meta/v1:meta",
         "@com_github_pulumi_pulumi_kubernetes_sdk_v3//go/kubernetes/yaml",
         "@com_github_pulumi_pulumi_sdk_v3//go/pulumi",
     ],
