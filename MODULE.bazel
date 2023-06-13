@@ -19,7 +19,8 @@ bazel_dep(name = "rules_cc", version = "0.0.6")
 bazel_dep(name = "bazel_skylib", version = "1.4.1")
 
 # Documentation.
-bazel_dep(name = "stardoc", version = "0.5.3")
+bazel_dep(name = "rules_java", version = "6.1.0", dev_dependency = True)
+bazel_dep(name = "stardoc", version = "0.5.6", dev_dependency = True)
 
 # The LLVM project. We override the specific commit below.
 bazel_dep(name = "llvm-project-overlay", version = "17-init-bcr.3")
