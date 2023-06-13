@@ -51,5 +51,4 @@ build:rbe_local --experimental_docker_verbose
 try-import %workspace%/.bazelrc.user
 
 # Workaround to build docs. Only required in rules_ll project root.
-build:docs --noexperimental_enable_bzlmod
 build:docs --noremote_accept_cached

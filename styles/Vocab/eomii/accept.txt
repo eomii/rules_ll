@@ -9,6 +9,7 @@ HIP
 LLVM
 NVPTX
 Nvidia
+OSSF
 ROCm
 Stardoc
 Starlark
