@@ -58,6 +58,11 @@ def _opencl_bitcode_library_impl(ctx):
         args.add(clang_resource_dir, format = "-resource-dir=%s")
         args.add(clang_resource_dir, format = "-idirafter%s/include")
 
+        # This is somewhat hacky but the original build files are even more
+        # hacky. Not really a way around this at the moment.
+        if file.basename in ["native_rcpH.cl", "native_rsqrtH.cl"]:
+            args.add_all(["-freciprocal-math", "-fapprox-func"])
+
         args.add_all(
             CLANG_OCL_FLAGS + [
                 "-c",
