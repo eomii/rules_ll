@@ -107,10 +107,10 @@ def _initialize_rules_ll_impl(_):
     http_archive(
         name = "comgr",
         build_file = "@rules_ll//third-party-overlays:comgr.BUILD.bazel",
-        sha256 = "a125ee0a037f717139946ef531519e12a73b9dbc217f76ad1b640f9e4221d307",
-        strip_prefix = "ROCm-CompilerSupport-9417620c9802331c4abf0cf4c57f40ec4b38a5e7",
+        sha256 = "50f87b928a12241b56b2eecede5dec6c87758b9e64958f78023097d9aff4d839",
+        strip_prefix = "ROCm-CompilerSupport-65abd4d61e2c15ecdf2c5ec802d98987f1dd427a",
         urls = [
-            "https://github.com/RadeonOpenCompute/ROCm-CompilerSupport/archive/9417620c9802331c4abf0cf4c57f40ec4b38a5e7.zip",
+            "https://github.com/RadeonOpenCompute/ROCm-CompilerSupport/archive/65abd4d61e2c15ecdf2c5ec802d98987f1dd427a.zip",
         ],
         patches = [
             "@rules_ll//patches:comgr_bc2h.diff",

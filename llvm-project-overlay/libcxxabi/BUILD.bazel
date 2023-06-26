@@ -57,7 +57,7 @@ ll_library(
         "src/demangle/DemangleConfig.h",
         "src/demangle/ItaniumDemangle.h",
         "src/demangle/ItaniumNodes.def",
-        "src/demangle/StringView.h",
+        "src/demangle/StringViewExtras.h",
         "src/demangle/Utility.h",
     ],
     angled_includes = [
