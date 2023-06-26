@@ -782,10 +782,10 @@ index 000000000000..8731b402fb28
 +)
 diff --git a/utils/bazel/llvm-project-overlay/compiler-rt/lib/sanitizer_common/BUILD.bazel b/utils/bazel/llvm-project-overlay/compiler-rt/lib/sanitizer_common/BUILD.bazel
 new file mode 100644
-index 000000000000..2d6c3514c049
+index 000000000000..d25c9c9728be
 --- /dev/null
 +++ b/utils/bazel/llvm-project-overlay/compiler-rt/lib/sanitizer_common/BUILD.bazel
-@@ -0,0 +1,249 @@
+@@ -0,0 +1,254 @@
 +load("@rules_ll//ll:defs.bzl", "ll_library")
 +
 +filegroup(
@@ -807,6 +807,7 @@ index 000000000000..2d6c3514c049
 +        "sanitizer_allocator_secondary.h",
 +        "sanitizer_allocator_size_class_map.h",
 +        "sanitizer_allocator_stats.h",
++        "sanitizer_array_ref.h",
 +        "sanitizer_asm.h",
 +        "sanitizer_atomic.h",
 +        "sanitizer_atomic_clang.h",
@@ -821,6 +822,7 @@ index 000000000000..2d6c3514c049
 +        "sanitizer_common_interceptors.inc",
 +        "sanitizer_common_interceptors_format.inc",
 +        "sanitizer_common_interceptors_ioctl.inc",
++        "sanitizer_common_interceptors_memintrinsics.inc",
 +        "sanitizer_common_interceptors_netbsd_compat.inc",  # Missing in CMake.
 +
 +        # Always linux. Missing in CMake.
@@ -877,6 +879,8 @@ index 000000000000..2d6c3514c049
 +        "sanitizer_procmaps.h",
 +        "sanitizer_ptrauth.h",
 +        "sanitizer_quarantine.h",
++        "sanitizer_range.h",
++        "sanitizer_redefine_builtins.h",
 +        "sanitizer_report_decorator.h",
 +        "sanitizer_ring_buffer.h",
 +        "sanitizer_signal_interceptors.inc",
@@ -946,6 +950,7 @@ index 000000000000..2d6c3514c049
 +        "sanitizer_procmaps_linux.cpp",
 +        "sanitizer_procmaps_mac.cpp",
 +        "sanitizer_procmaps_solaris.cpp",
++        "sanitizer_range.cpp",
 +        "sanitizer_solaris.cpp",
 +        "sanitizer_stoptheworld_fuchsia.cpp",
 +        "sanitizer_stoptheworld_mac.cpp",
@@ -1037,10 +1042,10 @@ index 000000000000..2d6c3514c049
 +)
 diff --git a/utils/bazel/llvm-project-overlay/compiler-rt/lib/tsan/BUILD.bazel b/utils/bazel/llvm-project-overlay/compiler-rt/lib/tsan/BUILD.bazel
 new file mode 100644
-index 000000000000..9e034f28cc23
+index 000000000000..c475c8bc53bc
 --- /dev/null
 +++ b/utils/bazel/llvm-project-overlay/compiler-rt/lib/tsan/BUILD.bazel
-@@ -0,0 +1,114 @@
+@@ -0,0 +1,115 @@
 +load("@rules_ll//ll:defs.bzl", "ll_library")
 +
 +filegroup(
@@ -1083,6 +1088,7 @@ index 000000000000..9e034f28cc23
 +        "rtl/tsan_fd.cpp",
 +        "rtl/tsan_flags.cpp",
 +        "rtl/tsan_ignoreset.cpp",
++        "rtl/tsan_interceptors_memintrinsics.cpp",
 +        "rtl/tsan_interceptors_posix.cpp",
 +        "rtl/tsan_interface.cpp",
 +        "rtl/tsan_interface_ann.cpp",
@@ -1272,10 +1278,10 @@ index 000000000000..8ad56ad46df6
 +)
 diff --git a/utils/bazel/llvm-project-overlay/libcxx/BUILD.bazel b/utils/bazel/llvm-project-overlay/libcxx/BUILD.bazel
 new file mode 100644
-index 000000000000..9afcc34a766f
+index 000000000000..65f5467f3bd3
 --- /dev/null
 +++ b/utils/bazel/llvm-project-overlay/libcxx/BUILD.bazel
-@@ -0,0 +1,309 @@
+@@ -0,0 +1,320 @@
 +load("@rules_ll//ll:defs.bzl", "ll_library")
 +load("@bazel_skylib//rules:expand_template.bzl", "expand_template")
 +
@@ -1329,6 +1335,7 @@ index 000000000000..9afcc34a766f
 +    "functional",
 +    "future",
 +    "generator",
++    "hazard_pointer",
 +    "initializer_list",
 +    "iomanip",
 +    "ios",
@@ -1355,6 +1362,7 @@ index 000000000000..9afcc34a766f
 +    "random",
 +    "ranges",
 +    "ratio",
++    "rcu",
 +    "regex",
 +    "scoped_allocator",
 +    "semaphore",
@@ -1375,6 +1383,7 @@ index 000000000000..9afcc34a766f
 +    "strstream",
 +    "syncstream",
 +    "system_error",
++    "text_encoding",
 +    "thread",
 +    "tuple",
 +    "typeindex",
@@ -1395,7 +1404,6 @@ index 000000000000..9afcc34a766f
 +    substitutions = {
 +        "@requires_LIBCXX_ENABLE_LOCALIZATION@": "",
 +        "@requires_LIBCXX_ENABLE_FILESYSTEM@": "",
-+        "@requires_LIBCXX_ENABLE_FSTREAM@": "",
 +        "@requires_LIBCXX_ENABLE_THREADS@": "",
 +        "@requires_LIBCXX_ENABLE_WIDE_CHARACTERS@": "",
 +    },
@@ -1423,14 +1431,15 @@ index 000000000000..9afcc34a766f
 +        "#cmakedefine _LIBCPP_HAS_NO_VENDOR_AVAILABILITY_ANNOTATIONS": "#define _LIBCPP_HAS_NO_VENDOR_AVAILABILITY_ANNOTATIONS",
 +        "#cmakedefine _LIBCPP_NO_VCRUNTIME": NO,
 +        "#cmakedefine _LIBCPP_TYPEINFO_COMPARISON_IMPLEMENTATION @_LIBCPP_TYPEINFO_COMPARISON_IMPLEMENTATION@": NO,
-+        "#cmakedefine _LIBCPP_HAS_NO_FILESYSTEM_LIBRARY": NO,
++        "#cmakedefine _LIBCPP_HAS_NO_FILESYSTEM": NO,
 +        "#cmakedefine _LIBCPP_HAS_PARALLEL_ALGORITHMS": NO,
 +        "#cmakedefine _LIBCPP_HAS_NO_RANDOM_DEVICE": NO,
 +        "#cmakedefine _LIBCPP_HAS_NO_LOCALIZATION": NO,
-+        "#cmakedefine _LIBCPP_HAS_NO_FSTREAM": NO,
 +        "#cmakedefine _LIBCPP_HAS_NO_WIDE_CHARACTERS": NO,
 +        "#cmakedefine01 _LIBCPP_ENABLE_ASSERTIONS_DEFAULT": "#define _LIBCPP_ENABLE_ASSERTIONS_DEFAULT 0",
 +        "#cmakedefine _LIBCPP_ENABLE_DEBUG_MODE": NO,
++        "#cmakedefine _LIBCPP_PSTL_CPU_BACKEND_SERIAL": "#define _LIBCPP_PSTL_CPU_BACKEND_SERIAL",
++        "#cmakedefine _LIBCPP_PSTL_CPU_BACKEND_THREAD": NO,
 +        "@_LIBCPP_ABI_DEFINES@": NO,
 +        "@_LIBCPP_EXTRA_SITE_DEFINES@": NO,
 +    },
@@ -1465,8 +1474,12 @@ index 000000000000..9afcc34a766f
 +        "src/condition_variable.cpp",
 +        "src/condition_variable_destructor.cpp",
 +        "src/exception.cpp",
++        "src/filesystem/directory_entry.cpp",
 +        "src/filesystem/directory_iterator.cpp",
++        "src/filesystem/filesystem_clock.cpp",
++        "src/filesystem/filesystem_error.cpp",
 +        "src/filesystem/operations.cpp",
++        "src/filesystem/path.cpp",
 +        "src/functional.cpp",
 +        "src/future.cpp",
 +        "src/hash.cpp",
@@ -1478,7 +1491,9 @@ index 000000000000..9afcc34a766f
 +        "src/memory.cpp",
 +        "src/mutex.cpp",
 +        "src/mutex_destructor.cpp",
-+        "src/new.cpp",
++        # "src/new.cpp",  # We pull this from libcxxabi for now.
++        "src/new_handler.cpp",
++        "src/new_helpers.cpp",
 +        "src/optional.cpp",
 +        "src/random.cpp",
 +        "src/random_shuffle.cpp",
@@ -1515,8 +1530,12 @@ index 000000000000..9afcc34a766f
 +        "src/include/to_chars_floating_point.h",
 +
 +        # Filesystem files.
-+        "src/filesystem/filesystem_common.h",
++        "src/filesystem/error.h",  # Not in CMake.
++        "src/filesystem/file_descriptor.h",
++        "src/filesystem/format_string.h",  # Not in CMake.
++        "src/filesystem/path_parser.h",
 +        "src/filesystem/posix_compat.h",
++        "src/filesystem/time_utils.h",
 +
 +        # Support ipp files.
 +        "src/support/runtime/exception_fallback.ipp",
@@ -1528,7 +1547,6 @@ index 000000000000..9afcc34a766f
 +        "src/support/runtime/exception_pointer_glibcxx.ipp",
 +        "src/support/runtime/exception_pointer_msvc.ipp",
 +        "src/support/runtime/exception_pointer_unimplemented.ipp",
-+        "src/support/runtime/new_handler_fallback.ipp",
 +        "src/support/runtime/stdexcept_default.ipp",
 +        "src/support/runtime/stdexcept_vcruntime.ipp",
 +
@@ -1554,7 +1572,6 @@ index 000000000000..9afcc34a766f
 +    ],
 +    defines = [
 +        "_LIBCPP_BUILDING_LIBRARY",
-+        "_LIBCPP_DISABLE_NEW_DELETE_DEFINITIONS",
 +        "_LIBCPP_ENABLE_EXPERIMENTAL",
 +        "_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER",
 +        "_LIBCPP_LINK_PTHREAD_LIB",
@@ -1587,7 +1604,7 @@ index 000000000000..9afcc34a766f
 +)
 diff --git a/utils/bazel/llvm-project-overlay/libcxxabi/BUILD.bazel b/utils/bazel/llvm-project-overlay/libcxxabi/BUILD.bazel
 new file mode 100644
-index 000000000000..6cbc3f815b89
+index 000000000000..3a08053ef87f
 --- /dev/null
 +++ b/utils/bazel/llvm-project-overlay/libcxxabi/BUILD.bazel
 @@ -0,0 +1,94 @@
@@ -1650,7 +1667,7 @@ index 000000000000..6cbc3f815b89
 +        "src/demangle/DemangleConfig.h",
 +        "src/demangle/ItaniumDemangle.h",
 +        "src/demangle/ItaniumNodes.def",
-+        "src/demangle/StringView.h",
++        "src/demangle/StringViewExtras.h",
 +        "src/demangle/Utility.h",
 +    ],
 +    angled_includes = [

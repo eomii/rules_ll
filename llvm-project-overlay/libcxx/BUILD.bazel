@@ -51,6 +51,7 @@ STD_PARTITIONS = [
     "functional",
     "future",
     "generator",
+    "hazard_pointer",
     "initializer_list",
     "iomanip",
     "ios",
@@ -77,6 +78,7 @@ STD_PARTITIONS = [
     "random",
     "ranges",
     "ratio",
+    "rcu",
     "regex",
     "scoped_allocator",
     "semaphore",
@@ -97,6 +99,7 @@ STD_PARTITIONS = [
     "strstream",
     "syncstream",
     "system_error",
+    "text_encoding",
     "thread",
     "tuple",
     "typeindex",
@@ -117,7 +120,6 @@ expand_template(
     substitutions = {
         "@requires_LIBCXX_ENABLE_LOCALIZATION@": "",
         "@requires_LIBCXX_ENABLE_FILESYSTEM@": "",
-        "@requires_LIBCXX_ENABLE_FSTREAM@": "",
         "@requires_LIBCXX_ENABLE_THREADS@": "",
         "@requires_LIBCXX_ENABLE_WIDE_CHARACTERS@": "",
     },
@@ -145,14 +147,15 @@ expand_template(
         "#cmakedefine _LIBCPP_HAS_NO_VENDOR_AVAILABILITY_ANNOTATIONS": "#define _LIBCPP_HAS_NO_VENDOR_AVAILABILITY_ANNOTATIONS",
         "#cmakedefine _LIBCPP_NO_VCRUNTIME": NO,
         "#cmakedefine _LIBCPP_TYPEINFO_COMPARISON_IMPLEMENTATION @_LIBCPP_TYPEINFO_COMPARISON_IMPLEMENTATION@": NO,
-        "#cmakedefine _LIBCPP_HAS_NO_FILESYSTEM_LIBRARY": NO,
+        "#cmakedefine _LIBCPP_HAS_NO_FILESYSTEM": NO,
         "#cmakedefine _LIBCPP_HAS_PARALLEL_ALGORITHMS": NO,
         "#cmakedefine _LIBCPP_HAS_NO_RANDOM_DEVICE": NO,
         "#cmakedefine _LIBCPP_HAS_NO_LOCALIZATION": NO,
-        "#cmakedefine _LIBCPP_HAS_NO_FSTREAM": NO,
         "#cmakedefine _LIBCPP_HAS_NO_WIDE_CHARACTERS": NO,
         "#cmakedefine01 _LIBCPP_ENABLE_ASSERTIONS_DEFAULT": "#define _LIBCPP_ENABLE_ASSERTIONS_DEFAULT 0",
         "#cmakedefine _LIBCPP_ENABLE_DEBUG_MODE": NO,
+        "#cmakedefine _LIBCPP_PSTL_CPU_BACKEND_SERIAL": "#define _LIBCPP_PSTL_CPU_BACKEND_SERIAL",
+        "#cmakedefine _LIBCPP_PSTL_CPU_BACKEND_THREAD": NO,
         "@_LIBCPP_ABI_DEFINES@": NO,
         "@_LIBCPP_EXTRA_SITE_DEFINES@": NO,
     },
@@ -187,8 +190,12 @@ ll_library(
         "src/condition_variable.cpp",
         "src/condition_variable_destructor.cpp",
         "src/exception.cpp",
+        "src/filesystem/directory_entry.cpp",
         "src/filesystem/directory_iterator.cpp",
+        "src/filesystem/filesystem_clock.cpp",
+        "src/filesystem/filesystem_error.cpp",
         "src/filesystem/operations.cpp",
+        "src/filesystem/path.cpp",
         "src/functional.cpp",
         "src/future.cpp",
         "src/hash.cpp",
@@ -200,7 +207,9 @@ ll_library(
         "src/memory.cpp",
         "src/mutex.cpp",
         "src/mutex_destructor.cpp",
-        "src/new.cpp",
+        # "src/new.cpp",  # We pull this from libcxxabi for now.
+        "src/new_handler.cpp",
+        "src/new_helpers.cpp",
         "src/optional.cpp",
         "src/random.cpp",
         "src/random_shuffle.cpp",
@@ -237,8 +246,12 @@ ll_library(
         "src/include/to_chars_floating_point.h",
 
         # Filesystem files.
-        "src/filesystem/filesystem_common.h",
+        "src/filesystem/error.h",  # Not in CMake.
+        "src/filesystem/file_descriptor.h",
+        "src/filesystem/format_string.h",  # Not in CMake.
+        "src/filesystem/path_parser.h",
         "src/filesystem/posix_compat.h",
+        "src/filesystem/time_utils.h",
 
         # Support ipp files.
         "src/support/runtime/exception_fallback.ipp",
@@ -250,7 +263,6 @@ ll_library(
         "src/support/runtime/exception_pointer_glibcxx.ipp",
         "src/support/runtime/exception_pointer_msvc.ipp",
         "src/support/runtime/exception_pointer_unimplemented.ipp",
-        "src/support/runtime/new_handler_fallback.ipp",
         "src/support/runtime/stdexcept_default.ipp",
         "src/support/runtime/stdexcept_vcruntime.ipp",
 
@@ -276,7 +288,6 @@ ll_library(
     ],
     defines = [
         "_LIBCPP_BUILDING_LIBRARY",
-        "_LIBCPP_DISABLE_NEW_DELETE_DEFINITIONS",
         "_LIBCPP_ENABLE_EXPERIMENTAL",
         "_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER",
         "_LIBCPP_LINK_PTHREAD_LIB",
