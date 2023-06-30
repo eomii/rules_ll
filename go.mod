@@ -4,7 +4,7 @@ go 1.20
 
 require (
 	github.com/pulumi/pulumi-kubernetes/sdk/v3 v3.29.1
-	github.com/pulumi/pulumi/sdk/v3 v3.73.0
+	github.com/pulumi/pulumi/sdk/v3 v3.74.0
 	sigs.k8s.io/kind v0.20.0
 )
 
