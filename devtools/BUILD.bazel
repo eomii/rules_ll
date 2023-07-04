@@ -5,7 +5,7 @@ go_library(
     srcs = [
         "components/cilium.go",
         "components/components.go",
-        "components/local-volumes.go",
+        "components/cubefs.go",
         "components/tekton.go",
         "components/zot.go",
     ],
@@ -24,6 +24,7 @@ go_library(
     srcs = ["clusters/local.go"],
     importpath = "github.com/eomii/rules_ll/devtools/clusters",
     deps = [
+        "@com_github_go_git_go_git_v5//:go-git",
         "@io_k8s_sigs_kind//pkg/cluster",
     ],
 )

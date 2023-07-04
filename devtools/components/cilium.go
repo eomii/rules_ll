@@ -3,7 +3,7 @@ package components
 import (
 	"fmt"
 
-	"github.com/pulumi/pulumi-kubernetes/sdk/v3/go/kubernetes/helm/v3"
+	helmv3 "github.com/pulumi/pulumi-kubernetes/sdk/v3/go/kubernetes/helm/v3"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 )
 
@@ -11,16 +11,15 @@ type Cilium struct {
 	Version string
 }
 
-//nolint:nolintlint,typecheck // The helm type is broken.
 func (component *Cilium) Install(
 	ctx *pulumi.Context,
 	name string,
 ) ([]pulumi.Resource, error) {
-	cilium, err := helm.NewChart(ctx, name, helm.ChartArgs{
+	cilium, err := helmv3.NewChart(ctx, name, helmv3.ChartArgs{
 		Chart:     pulumi.String("cilium"),
 		Version:   pulumi.String(component.Version),
 		Namespace: pulumi.String("kube-system"),
-		FetchArgs: helm.FetchArgs{
+		FetchArgs: helmv3.FetchArgs{
 			Repo: pulumi.String("https://helm.cilium.io/"),
 		},
 		Values: pulumi.Map{
