@@ -81,6 +81,7 @@ go_deps = use_extension("@gazelle//:extensions.bzl", "go_deps")
 go_deps.from_file(go_mod = "//:go.mod")
 use_repo(
     go_deps,
+    "com_github_go_git_go_git_v5",
     "com_github_pulumi_pulumi_kubernetes_sdk_v3",
     "com_github_pulumi_pulumi_sdk_v3",
     "io_k8s_sigs_kind",

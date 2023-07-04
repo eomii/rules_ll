@@ -9,72 +9,86 @@ import (
 	"path"
 	"text/template"
 
+	"github.com/go-git/go-git/v5"
 	"sigs.k8s.io/kind/pkg/cluster"
 )
 
 var errKind = errors.New("kind error")
 
-type LocalVolumePaths struct {
-	Home       string
-	Cache      string
-	NixCache   string
-	BazelCache string
+type LocalDiskDirs struct {
+	Disks     []string
+	MountPath string
 }
 
-func CreateLocalVolumes() (LocalVolumePaths, error) {
-	log.Println("Preparing local directories for rules_ll caches")
-
-	dirname, err := os.UserHomeDir()
+func createDirectory(absolutePath string) {
+	_, err := os.Stat(absolutePath)
 	if err != nil {
-		log.Fatal(err)
-	}
+		if os.IsNotExist(err) {
+			log.Printf("Creating directory: %s", absolutePath)
 
-	eomiidir := path.Join(dirname, ".eomii")
-	cachedir := path.Join(eomiidir, "cache")
-	nixcache := path.Join(cachedir, "ll-nix")
-	bazelcache := path.Join(cachedir, "ll-bazel")
-
-	for _, dir := range []string{eomiidir, cachedir, nixcache, bazelcache} {
-		_, err = os.Stat(dir)
-
-		if err != nil {
-			if os.IsNotExist(err) {
-				log.Printf("Creating directory: %s", dir)
-
-				if err := os.Mkdir(dir, os.ModePerm); err != nil {
-					log.Println("Couldn't create directory. Aborting.")
-					log.Fatal(err)
-				}
-			} else {
-				log.Println(
-					"Something unexpected happened. Please raise an issue.",
-				)
-				log.Fatal(err)
+			if err := os.Mkdir(absolutePath, os.ModePerm); err != nil {
+				log.Fatal("Couldn't create directory. Aborting.")
 			}
-		}
-
-		if !os.IsNotExist(err) {
-			log.Printf("Directory already exists: %s", dir)
+		} else {
+			log.Fatal(
+				"Something unexpected happened. Please raise an issue.",
+			)
 		}
 	}
 
-	return LocalVolumePaths{
-		eomiidir,
-		cachedir,
-		nixcache,
-		bazelcache,
-	}, nil
+	if !os.IsNotExist(err) {
+		log.Printf("Directory already exists: %s", absolutePath)
+	}
 }
 
-func CreateLocalCluster(provider *cluster.Provider) error {
-	localVolumePaths, err := CreateLocalVolumes()
+func CreateLocalDiskDirs(basedir string) LocalDiskDirs {
+	log.Println("Preparing local disk directories for CubeFS deployment.")
+
+	disks := []string{
+		path.Join(basedir, "kind-worker-disk"),
+		path.Join(basedir, "kind-worker2-disk"),
+		path.Join(basedir, "kind-worker3-disk"),
+	}
+
+	for _, dir := range disks {
+		createDirectory(dir)
+	}
+
+	return LocalDiskDirs{disks, "/data0"}
+}
+
+func EomiiDir() string {
+	homedir, err := os.UserHomeDir()
 	if err != nil {
-		log.Println("Failed to set up local directories.")
 		log.Fatal(err)
 	}
 
-	log.Printf("Creating kind cluster.")
+	eomiidir := path.Join(homedir, ".eomii")
+	createDirectory(eomiidir)
 
+	return eomiidir
+}
+
+//nolint:nolintlint,typecheck  // The git type is broken.
+func CubeFSHelmRepo(basedir string) string {
+	cubefsdir := path.Join(basedir, "cubefs-helm")
+	_, err := git.PlainClone(cubefsdir, false, &git.CloneOptions{
+		URL:      "https://github.com/cubefs/cubefs-helm",
+		Progress: os.Stdout,
+	})
+
+	if errors.Is(err, git.ErrRepositoryAlreadyExists) {
+		log.Println("CubeFS repo already cloned previously.")
+
+		return cubefsdir
+	} else if err != nil {
+		log.Fatal(err)
+	}
+
+	return cubefsdir
+}
+
+func CreateLocalKindConfig(localDiskDirs LocalDiskDirs) bytes.Buffer {
 	kindConfigTemplate, err := template.New("kind-config.yaml").Parse(`
 ---
 kind: Cluster
@@ -83,38 +97,62 @@ nodes:
 - role: control-plane
 - role: worker
   extraMounts:
-    - hostPath: {{ .NixCache }}
-      containerPath: /nix-cache
-    - hostPath: {{ .BazelCache }}
-      containerPath: /bazel-cache
+    - hostPath: {{ index .Disks 0 }}
+      containerPath: {{ .MountPath }}
+  labels:
+    component.cubefs.io/master: enabled
+    component.cubefs.io/metanode: enabled
+    component.cubefs.io/datanode: enabled
+    component.cubefs.io/objectnode: enabled
+    component.cubefs.io/csi: enabled
 - role: worker
   extraMounts:
-    - hostPath: {{ .NixCache }}
-      containerPath: /nix-cache
-    - hostPath: {{ .BazelCache }}
-      containerPath: /bazel-cache
+    - hostPath: {{ index .Disks 1 }}
+      containerPath: {{ .MountPath }}
+  labels:
+    component.cubefs.io/master: enabled
+    component.cubefs.io/metanode: enabled
+    component.cubefs.io/datanode: enabled
+- role: worker
+  extraMounts:
+    - hostPath: {{ index .Disks 2 }}
+      containerPath: {{ .MountPath }}
+  labels:
+    component.cubefs.io/master: enabled
+    component.cubefs.io/metanode: enabled
+    component.cubefs.io/datanode: enabled
 networking:
   disableDefaultCNI: true
   kubeProxyMode: none
 `)
 	if err != nil {
-		log.Println("Failed to create template")
 		log.Fatal(err)
 	}
 
 	var kindConfig bytes.Buffer
 	if err = kindConfigTemplate.Execute(
 		&kindConfig,
-		localVolumePaths,
+		localDiskDirs,
 	); err != nil {
-		log.Println("Failed to instantiate template")
 		log.Fatal(err)
 	}
+
+	return kindConfig
+}
+
+func CreateLocalCluster(provider *cluster.Provider) error {
+	log.Printf("Setting up base directories.")
+
+	localDiskDirs := CreateLocalDiskDirs(EomiiDir())
+
+	log.Printf("Creating kind cluster.")
+
+	kindConfig := CreateLocalKindConfig(localDiskDirs)
 
 	log.Println("Instantiating Kind Cluster with the following config:")
 	log.Print(kindConfig.String())
 
-	if err = provider.Create(
+	if err := provider.Create(
 		"kind",
 		cluster.CreateWithRawConfig(kindConfig.Bytes()),
 	); err != nil {

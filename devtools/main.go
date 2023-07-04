@@ -26,11 +26,6 @@ func genericErrorCheck(err error) {
 func program(ctx *pulumi.Context) error {
 	components.Check(components.AddComponent(
 		ctx,
-		"local-volumes",
-		&components.LocalVolumes{},
-	))
-	components.Check(components.AddComponent(
-		ctx,
 		"cilium",
 		&components.Cilium{Version: "1.14.0-snapshot.2"},
 	))
@@ -53,6 +48,19 @@ func program(ctx *pulumi.Context) error {
 		ctx,
 		"tekton-dashboard",
 		&components.TektonDashboard{Version: "0.35.0"},
+	))
+	components.Check(components.AddComponent(
+		ctx,
+		"cubefs",
+		// This is known to be vulnerable. For our use cases nothing dramatic,
+		// but we should update as soon as an updated version is available.
+		&components.CubeFS{
+			Version:  "3.2.0",
+			ChartDir: clusters.CubeFSHelmRepo(clusters.EomiiDir()),
+			MountPath: clusters.CreateLocalDiskDirs(
+				clusters.EomiiDir(),
+			).MountPath,
+		},
 	))
 
 	return nil
