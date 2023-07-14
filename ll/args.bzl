@@ -504,6 +504,17 @@ def link_executable_args(ctx, in_files, out_file, mode):
                     format = "-L%s/lib",
                 )
 
+                # TODO: Not pretty. With the right nix packages we can probably
+                #       do this more elegantly.
+                args.add(
+                    ctx.configuration.default_shell_env[location],
+                    format = "-rpath=%s/lib/stubs",
+                )
+                args.add(
+                    ctx.configuration.default_shell_env[location],
+                    format = "-L%s/lib/stubs",
+                )
+
         args.add("-lcuda")
         args.add("-lcudart_static")
         args.add("-lcupti_static")

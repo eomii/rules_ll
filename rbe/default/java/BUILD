@@ -26,6 +26,6 @@ alias(
 
 local_java_runtime(
     name = "rbe_jdk",
-    java_home = "/nix/store/d0a5wnmr9cp3jfh9s2d6gzr1h7jmjqwi-openjdk-headless-17.0.6+10/lib/openjdk",
-    version = "17.0.6",
+    java_home = "/nix/store/vaf718h17yjj9h6cbccq8n28v5kppkm8-openjdk-headless-17.0.7+7/lib/openjdk",
+    version = "17.0.7",
 )

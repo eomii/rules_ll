@@ -63,9 +63,9 @@ LL_AMD_RPATHS=${(pkgs.lib.concatStringsSep ":" [
 ${pkgs.lib.strings.optionalString unfree ''
 
 # Flags for CUDA dependencies.
-LL_CUDA_TOOLKIT=${pkgsUnfree.cudaPackages_12.cudatoolkit}
-LL_CUDA_RUNTIME=${pkgsUnfree.cudaPackages_12.cudatoolkit.lib}
-LL_CUDA_DRIVER=${pkgsUnfree.linuxPackages_6_1.nvidia_x11}
+LL_CUDA_TOOLKIT=${pkgsUnfree.cudaPackages_12_2.cudatoolkit}
+LL_CUDA_RUNTIME=${pkgsUnfree.cudaPackages_12_2.cudatoolkit.lib}
+# LL_CUDA_DRIVER=${pkgsUnfree.linuxPackages_6_1.nvidia_x11}
 ''}
 # Only used by rules_cc
 BAZEL_CXXOPTS=${pkgs.lib.concatStringsSep ":" [
