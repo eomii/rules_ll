@@ -4,7 +4,7 @@ go 1.20
 
 require (
 	github.com/go-git/go-git/v5 v5.7.0
-	github.com/pulumi/pulumi-kubernetes/sdk/v3 v3.30.1
+	github.com/pulumi/pulumi-kubernetes/sdk/v3 v3.30.2
 	github.com/pulumi/pulumi/sdk/v3 v3.74.0
 	sigs.k8s.io/kind v0.20.0
 )
