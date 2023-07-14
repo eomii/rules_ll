@@ -35,4 +35,4 @@ jobs:
             ${{ runner.os }}-nix-
       - name: Run pre-commit hooks
         run: |
-          nix --store ~/nix flake check -L
+          nix --store ~/nix flake check --impure -L
