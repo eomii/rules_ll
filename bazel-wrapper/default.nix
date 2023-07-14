@@ -74,6 +74,7 @@ BAZEL_CXXOPTS=${pkgs.lib.concatStringsSep ":" [
   "-nostdinc++"
   "-nostdlib++"
   "-isystem${pkgs.llvmPackages_16.libcxx.dev}/include/c++/v1"
+  "-isystem${pkgs.llvmPackages_16.libcxxabi.dev}/include/c++/v1"
 ]}
 
 # TODO: This somehow works without explicitly adding glibc to the library search

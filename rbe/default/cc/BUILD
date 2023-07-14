@@ -96,6 +96,7 @@ cc_toolchain_config(
         "/nix/store/9bldnbh7kcxyq8y0g1bifd5ywz7m3bq9-glibc-2.37-8-dev/include",
         "/nix/store/whzffqb6y92zwfdvxzplyh9z4ry0hjc5-clang-wrapper-16.0.6/resource-root/share",
         "/nix/store/qp7k02y44y1rfp7c79vp6rgilmh65687-libcxx-16.0.6-dev/include/c++/v1",
+        "/nix/store/sr1nvxp5q5qsj0njxgy0p1j5r7rair9d-libcxxabi-16.0.6-dev/include/c++/v1",
     ],
     cxx_flags = [
         "-std=c++17",
@@ -103,6 +104,7 @@ cc_toolchain_config(
         "-nostdinc++",
         "-nostdlib++",
         "-isystem/nix/store/qp7k02y44y1rfp7c79vp6rgilmh65687-libcxx-16.0.6-dev/include/c++/v1",
+        "-isystem/nix/store/sr1nvxp5q5qsj0njxgy0p1j5r7rair9d-libcxxabi-16.0.6-dev/include/c++/v1",
     ],
     dbg_compile_flags = ["-g"],
     host_system_name = "x86_64-unknown-linux-gnu",

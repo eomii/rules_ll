@@ -2499,4 +2499,6 @@ module "crosstool" [system] {
   textual header "/nix/store/qp7k02y44y1rfp7c79vp6rgilmh65687-libcxx-16.0.6-dev/include/c++/v1/version"
   textual header "/nix/store/qp7k02y44y1rfp7c79vp6rgilmh65687-libcxx-16.0.6-dev/include/c++/v1/wchar.h"
   textual header "/nix/store/qp7k02y44y1rfp7c79vp6rgilmh65687-libcxx-16.0.6-dev/include/c++/v1/wctype.h"
+  textual header "/nix/store/sr1nvxp5q5qsj0njxgy0p1j5r7rair9d-libcxxabi-16.0.6-dev/include/c++/v1/__cxxabi_config.h"
+  textual header "/nix/store/sr1nvxp5q5qsj0njxgy0p1j5r7rair9d-libcxxabi-16.0.6-dev/include/c++/v1/cxxabi.h"
 }
