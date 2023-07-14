@@ -20,7 +20,7 @@ bazel_dep(name = "bazel_skylib", version = "1.4.2")
 
 # Documentation. These should be dev_dependencies, but that doesn't work at the
 # moment. This is a bug.
-bazel_dep(name = "rules_java", version = "6.1.1", dev_dependency = False)
+bazel_dep(name = "rules_java", version = "6.2.2", dev_dependency = False)
 bazel_dep(name = "stardoc", version = "0.5.6", dev_dependency = False)
 
 # The LLVM project. We override the specific commit below.
