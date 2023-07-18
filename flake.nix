@@ -35,14 +35,14 @@
           config.allowUnfree = true;
         };
 
-        hooks = import ./pre-commit-hooks.nix {
-          inherit pkgs;
-        };
+        hooks = import ./pre-commit-hooks.nix { inherit pkgs; };
+
+        llvmPackages = pkgs.llvmPackages_16;
+
+        cudaPackages = pkgsUnfree.cudaPackages_12_2;
 
         wrappedBazel = (import ./bazel-wrapper/default.nix {
-          inherit pkgs pkgsUnfree;
-          unfree = false;
-          cc = pkgs.llvmPackages_16.clang;
+          inherit pkgs pkgsUnfree llvmPackages;
           bazel = pkgs.bazel;
           ll_env = let openssl = (pkgs.openssl.override { static = true; }); in [
             "LL_CFLAGS=-I${openssl.dev}/include"
@@ -51,16 +51,19 @@
         });
 
         # TODO: This is not pretty, but let's clean it up later.
-        wrappedBazelUnfree = (import ./bazel-wrapper/default.nix {
-          inherit pkgs pkgsUnfree;
-          unfree = true;
-          cc = pkgs.llvmPackages_16.clang;
+        wrappedBazelCUDA = (import ./bazel-wrapper/default.nix {
+          inherit pkgs pkgsUnfree llvmPackages cudaPackages;
+          cudaSupport = true;
           bazel = pkgs.bazel;
           ll_env = let openssl = (pkgs.openssl.override { static = true; }); in [
             "LL_CFLAGS=-I${openssl.dev}/include"
             "LL_LDFLAGS=-L${openssl.out}/lib"
           ];
         });
+
+        # Development tooling for rules_ll.
+        tag = "latest";
+        ll = import ./devtools/ll.nix { inherit pkgs wrappedBazel tag; };
 
         llShell = (
           { unfree ? false
@@ -80,8 +83,9 @@
                 (
                   if !unfree
                   then wrappedBazel.baze_ll
-                  else wrappedBazelUnfree.baze_ll
+                  else wrappedBazelCUDA.baze_ll
                 )
+                ll
               ] ++ packages;
 
               enterShell = ''
@@ -95,7 +99,7 @@
                 export CC=clang
 
                 # Probably a bug in nix. Setting LD=ld.lld here doesn't work.
-                export LD=${pkgs.llvmPackages_16.lld}/bin/ld.lld
+                export LD=${llvmPackages.lld}/bin/ld.lld
 
                 # Java needs to be the same version as in the Bazel wrapper.
                 export JAVA_HOME=${pkgs.jdk17_headless}/lib/openjdk
@@ -106,16 +110,11 @@
             }];
           }
         );
-
-        # Development tooling for rules_ll.
-        tag = "latest";
-        ll = import ./devtools/ll.nix { inherit pkgs wrappedBazel tag; };
-
       in
       {
 
         packages = {
-          ci-image = import ./rbe/image.nix { inherit pkgs wrappedBazel tag; };
+          ci-image = import ./rbe/image.nix { inherit pkgs llvmPackages wrappedBazel tag; };
         };
 
         checks = {
