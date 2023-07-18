@@ -1,13 +1,19 @@
-{ pkgs, pkgsUnfree, bazel, unfree, ll_env, cc }:
+{ pkgs
+, pkgsUnfree
+, bazel
+, cudaSupport ? false
+, cudaPackages ? { }
+, ll_env
+, llvmPackages
+}:
 
 {
-
   env = ll_env;
   version = bazel.version;
   baze_ll = pkgs.writeShellScriptBin "bazel" ''
 
 # The default compilation environment.
-CC=${cc}/bin/clang
+CC=${llvmPackages.clang}/bin/clang
 
 # Add the nix cflags and ldflags to the Bazel action envs. This is safe to do
 # since the Nix environment is reproducible.
@@ -60,12 +66,12 @@ LL_AMD_RPATHS=${(pkgs.lib.concatStringsSep ":" [
   "-rpath=${pkgs.libglvnd}/lib"
   "-rpath=${pkgs.xorg.libX11}/lib"
 ])}
-${pkgs.lib.strings.optionalString unfree ''
+${pkgs.lib.strings.optionalString cudaSupport ''
 
 # Flags for CUDA dependencies.
-LL_CUDA_TOOLKIT=${pkgsUnfree.cudaPackages_12_2.cudatoolkit}
-LL_CUDA_RUNTIME=${pkgsUnfree.cudaPackages_12_2.cudatoolkit.lib}
-# LL_CUDA_DRIVER=${pkgsUnfree.linuxPackages_6_1.nvidia_x11}
+LL_CUDA_TOOLKIT=${cudaPackages.cudatoolkit}
+LL_CUDA_RUNTIME=${cudaPackages.cudatoolkit.lib}
+LL_CUDA_DRIVER=${pkgsUnfree.linuxPackages_6_4.nvidia_x11}
 ''}
 # Only used by rules_cc
 BAZEL_CXXOPTS=${pkgs.lib.concatStringsSep ":" [
@@ -73,20 +79,20 @@ BAZEL_CXXOPTS=${pkgs.lib.concatStringsSep ":" [
   "-O3"
   "-nostdinc++"
   "-nostdlib++"
-  "-isystem${pkgs.llvmPackages_16.libcxx.dev}/include/c++/v1"
-  "-isystem${pkgs.llvmPackages_16.libcxxabi.dev}/include/c++/v1"
+  "-isystem${llvmPackages.libcxx.dev}/include/c++/v1"
+  "-isystem${llvmPackages.libcxxabi.dev}/include/c++/v1"
 ]}
 
 # TODO: This somehow works without explicitly adding glibc to the library search
 #       path. That shouldn't be the case. Maybe it's the clang wrapper, but
 #       apparently that doesn't add the rpath. Find a better solution.
 BAZEL_LINKOPTS=${pkgs.lib.concatStringsSep ":" [
-  "-L${pkgs.llvmPackages_16.libcxx}/lib"
-  "-L${pkgs.llvmPackages_16.libcxxabi}/lib"
+  "-L${llvmPackages.libcxx}/lib"
+  "-L${llvmPackages.libcxxabi}/lib"
   "-lc++"
   ("-Wl," +
-  "-rpath,${pkgs.llvmPackages_16.libcxx}/lib," +
-  "-rpath,${pkgs.llvmPackages_16.libcxxabi}/lib," +
+  "-rpath,${llvmPackages.libcxx}/lib," +
+  "-rpath,${llvmPackages.libcxxabi}/lib," +
   "-rpath,${pkgs.glibc}/lib"
   )
 ]}
