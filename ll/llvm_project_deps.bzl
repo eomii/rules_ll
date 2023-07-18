@@ -66,6 +66,7 @@ LLVM_PROJECT_DEPS = [
     "@llvm-project//llvm:Coverage",
     "@llvm-project//llvm:DWP",
     "@llvm-project//llvm:DebugInfo",
+    "@llvm-project//llvm:DebugInfoBTF",
     "@llvm-project//llvm:DebugInfoCodeView",
     "@llvm-project//llvm:DebugInfoDWARF",
     "@llvm-project//llvm:DebugInfoGSYM",

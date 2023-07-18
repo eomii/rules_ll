@@ -20,7 +20,7 @@ expand_template(
     out = "comgr/amd_comgr/amd_comgr.h",
     substitutions = {
         "@amd_comgr_VERSION_MAJOR@": "2",
-        "@amd_comgr_VERSION_MINOR@": "5",
+        "@amd_comgr_VERSION_MINOR@": "6",
         "@amd_comgr_NAME@": "amd_comgr",
     },
     template = "lib/comgr/include/amd_comgr.h.in",

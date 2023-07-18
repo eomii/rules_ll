@@ -101,7 +101,7 @@ ll_toolchain(
         ":bootstrap": [],
         "//conditions:default": [
             "@llvm-project//compiler-rt:libll_compiler-rt",
-            "@llvm-project//compiler-rt/lib/crt:crt",
+            "@llvm-project//compiler-rt/lib/builtins:crt",
         ],
     }),
     cpp_abihdrs = select({

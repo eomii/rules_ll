@@ -223,3 +223,30 @@ ll_library(
     compilation_mode = "bootstrap",
     visibility = ["//visibility:public"],
 )
+
+ll_library(
+    name = "crtbegin",
+    srcs = ["crtbegin.c"],
+    compilation_mode = "bootstrap",
+    defines = ["EH_USE_FRAME_REGISTRY"],
+    emit = ["objects"],
+    visibility = ["//visibility:public"],
+)
+
+ll_library(
+    name = "crtend",
+    srcs = ["crtend.c"],
+    compilation_mode = "bootstrap",
+    emit = ["objects"],
+    visibility = ["//visibility:public"],
+)
+
+ll_library(
+    name = "crt",
+    compilation_mode = "bootstrap",
+    visibility = ["//visibility:public"],
+    deps = [
+        ":crtbegin",
+        ":crtend",
+    ],
+)
