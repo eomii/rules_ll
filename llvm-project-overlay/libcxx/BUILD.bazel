@@ -126,7 +126,7 @@ expand_template(
     template = "include/module.modulemap.in",
 )
 
-NO = "/* undefined by Bazel. */"
+NO = "/* Undefined by Bazel. */"
 
 expand_template(
     name = "__config_site_gen",
@@ -142,20 +142,23 @@ expand_template(
         "#cmakedefine _LIBCPP_HAS_THREAD_API_PTHREAD": NO,
         "#cmakedefine _LIBCPP_HAS_THREAD_API_EXTERNAL": NO,
         "#cmakedefine _LIBCPP_HAS_THREAD_API_WIN32": NO,
-        "#cmakedefine _LIBCPP_HAS_THREAD_LIBRARY_EXTERNAL": NO,
         "#cmakedefine _LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS": NO,
         "#cmakedefine _LIBCPP_HAS_NO_VENDOR_AVAILABILITY_ANNOTATIONS": "#define _LIBCPP_HAS_NO_VENDOR_AVAILABILITY_ANNOTATIONS",
         "#cmakedefine _LIBCPP_NO_VCRUNTIME": NO,
         "#cmakedefine _LIBCPP_TYPEINFO_COMPARISON_IMPLEMENTATION @_LIBCPP_TYPEINFO_COMPARISON_IMPLEMENTATION@": NO,
         "#cmakedefine _LIBCPP_HAS_NO_FILESYSTEM": NO,
-        "#cmakedefine _LIBCPP_HAS_PARALLEL_ALGORITHMS": NO,
         "#cmakedefine _LIBCPP_HAS_NO_RANDOM_DEVICE": NO,
         "#cmakedefine _LIBCPP_HAS_NO_LOCALIZATION": NO,
         "#cmakedefine _LIBCPP_HAS_NO_WIDE_CHARACTERS": NO,
-        "#cmakedefine01 _LIBCPP_ENABLE_ASSERTIONS_DEFAULT": "#define _LIBCPP_ENABLE_ASSERTIONS_DEFAULT 0",
-        "#cmakedefine _LIBCPP_ENABLE_DEBUG_MODE": NO,
+        # PSTL backends.
         "#cmakedefine _LIBCPP_PSTL_CPU_BACKEND_SERIAL": "#define _LIBCPP_PSTL_CPU_BACKEND_SERIAL",
         "#cmakedefine _LIBCPP_PSTL_CPU_BACKEND_THREAD": NO,
+        "#cmakedefine _LIBCPP_PSTL_CPU_BACKEND_LIBDISPATCH": NO,
+        # Hardening.
+        # TODO: Evaluate performance impact of this. If it isn't noticeable for
+        #       most use-cases, enable it.
+        "#cmakedefine01 _LIBCPP_ENABLE_HARDENED_MODE_DEFAULT": "#define _LIBCPP_ENABLE_HARDENED_MODE_DEFAULT 0",
+        "#cmakedefine01 _LIBCPP_ENABLE_DEBUG_MODE_DEFAULT": "#define _LIBCPP_ENABLE_DEBUG_MODE_DEFAULT 0",
         "@_LIBCPP_ABI_DEFINES@": NO,
         "@_LIBCPP_EXTRA_SITE_DEFINES@": NO,
     },

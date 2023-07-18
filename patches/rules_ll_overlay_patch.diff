@@ -1,6 +1,6 @@
 diff --git a/utils/bazel/llvm-project-overlay/compiler-rt/BUILD.bazel b/utils/bazel/llvm-project-overlay/compiler-rt/BUILD.bazel
 new file mode 100644
-index 000000000000..52dd36d41181
+index 000000000000..635ef6e8947b
 --- /dev/null
 +++ b/utils/bazel/llvm-project-overlay/compiler-rt/BUILD.bazel
 @@ -0,0 +1,19 @@
@@ -20,7 +20,7 @@ index 000000000000..52dd36d41181
 +    visibility = ["//visibility:public"],
 +    deps = [
 +        "//compiler-rt/lib/builtins",
-+        "//compiler-rt/lib/crt",
++        "//compiler-rt/lib/builtins:crt",
 +    ],
 +)
 diff --git a/utils/bazel/llvm-project-overlay/compiler-rt/lib/BUILD.bazel b/utils/bazel/llvm-project-overlay/compiler-rt/lib/BUILD.bazel
@@ -283,10 +283,10 @@ index 000000000000..79b4371039c9
 +)
 diff --git a/utils/bazel/llvm-project-overlay/compiler-rt/lib/builtins/BUILD.bazel b/utils/bazel/llvm-project-overlay/compiler-rt/lib/builtins/BUILD.bazel
 new file mode 100644
-index 000000000000..68e031bef550
+index 000000000000..5e874e8f0bfe
 --- /dev/null
 +++ b/utils/bazel/llvm-project-overlay/compiler-rt/lib/builtins/BUILD.bazel
-@@ -0,0 +1,225 @@
+@@ -0,0 +1,252 @@
 +load("@rules_ll//ll:defs.bzl", "ll_library")
 +
 +GENERIC_SOURCES = [
@@ -512,13 +512,6 @@ index 000000000000..68e031bef550
 +    compilation_mode = "bootstrap",
 +    visibility = ["//visibility:public"],
 +)
-diff --git a/utils/bazel/llvm-project-overlay/compiler-rt/lib/crt/BUILD.bazel b/utils/bazel/llvm-project-overlay/compiler-rt/lib/crt/BUILD.bazel
-new file mode 100644
-index 000000000000..fc768e047e7e
---- /dev/null
-+++ b/utils/bazel/llvm-project-overlay/compiler-rt/lib/crt/BUILD.bazel
-@@ -0,0 +1,28 @@
-+load("@rules_ll//ll:defs.bzl", "ll_library")
 +
 +ll_library(
 +    name = "crtbegin",
@@ -652,10 +645,10 @@ index 000000000000..2a3ebd4fa2e9
 +)
 diff --git a/utils/bazel/llvm-project-overlay/compiler-rt/lib/msan/BUILD.bazel b/utils/bazel/llvm-project-overlay/compiler-rt/lib/msan/BUILD.bazel
 new file mode 100644
-index 000000000000..706fa4d92273
+index 000000000000..55b96afc1839
 --- /dev/null
 +++ b/utils/bazel/llvm-project-overlay/compiler-rt/lib/msan/BUILD.bazel
-@@ -0,0 +1,74 @@
+@@ -0,0 +1,76 @@
 +load("@rules_ll//ll:defs.bzl", "ll_library")
 +
 +filegroup(
@@ -664,6 +657,7 @@ index 000000000000..706fa4d92273
 +        "msan.h",
 +        "msan_allocator.h",
 +        "msan_chained_origin_depot.h",
++        "msan_dl.h",
 +        "msan_flags.h",
 +        "msan_flags.inc",
 +        "msan_interface_internal.h",
@@ -681,6 +675,7 @@ index 000000000000..706fa4d92273
 +        "msan.cpp",
 +        "msan_allocator.cpp",
 +        "msan_chained_origin_depot.cpp",
++        "msan_dl.cpp",
 +        "msan_interceptors.cpp",
 +        "msan_linux.cpp",
 +        "msan_poisoning.cpp",
@@ -1278,10 +1273,10 @@ index 000000000000..8ad56ad46df6
 +)
 diff --git a/utils/bazel/llvm-project-overlay/libcxx/BUILD.bazel b/utils/bazel/llvm-project-overlay/libcxx/BUILD.bazel
 new file mode 100644
-index 000000000000..65f5467f3bd3
+index 000000000000..2c738c01e931
 --- /dev/null
 +++ b/utils/bazel/llvm-project-overlay/libcxx/BUILD.bazel
-@@ -0,0 +1,320 @@
+@@ -0,0 +1,323 @@
 +load("@rules_ll//ll:defs.bzl", "ll_library")
 +load("@bazel_skylib//rules:expand_template.bzl", "expand_template")
 +
@@ -1410,7 +1405,7 @@ index 000000000000..65f5467f3bd3
 +    template = "include/module.modulemap.in",
 +)
 +
-+NO = "/* undefined by Bazel. */"
++NO = "/* Undefined by Bazel. */"
 +
 +expand_template(
 +    name = "__config_site_gen",
@@ -1426,20 +1421,23 @@ index 000000000000..65f5467f3bd3
 +        "#cmakedefine _LIBCPP_HAS_THREAD_API_PTHREAD": NO,
 +        "#cmakedefine _LIBCPP_HAS_THREAD_API_EXTERNAL": NO,
 +        "#cmakedefine _LIBCPP_HAS_THREAD_API_WIN32": NO,
-+        "#cmakedefine _LIBCPP_HAS_THREAD_LIBRARY_EXTERNAL": NO,
 +        "#cmakedefine _LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS": NO,
 +        "#cmakedefine _LIBCPP_HAS_NO_VENDOR_AVAILABILITY_ANNOTATIONS": "#define _LIBCPP_HAS_NO_VENDOR_AVAILABILITY_ANNOTATIONS",
 +        "#cmakedefine _LIBCPP_NO_VCRUNTIME": NO,
 +        "#cmakedefine _LIBCPP_TYPEINFO_COMPARISON_IMPLEMENTATION @_LIBCPP_TYPEINFO_COMPARISON_IMPLEMENTATION@": NO,
 +        "#cmakedefine _LIBCPP_HAS_NO_FILESYSTEM": NO,
-+        "#cmakedefine _LIBCPP_HAS_PARALLEL_ALGORITHMS": NO,
 +        "#cmakedefine _LIBCPP_HAS_NO_RANDOM_DEVICE": NO,
 +        "#cmakedefine _LIBCPP_HAS_NO_LOCALIZATION": NO,
 +        "#cmakedefine _LIBCPP_HAS_NO_WIDE_CHARACTERS": NO,
-+        "#cmakedefine01 _LIBCPP_ENABLE_ASSERTIONS_DEFAULT": "#define _LIBCPP_ENABLE_ASSERTIONS_DEFAULT 0",
-+        "#cmakedefine _LIBCPP_ENABLE_DEBUG_MODE": NO,
++        # PSTL backends.
 +        "#cmakedefine _LIBCPP_PSTL_CPU_BACKEND_SERIAL": "#define _LIBCPP_PSTL_CPU_BACKEND_SERIAL",
 +        "#cmakedefine _LIBCPP_PSTL_CPU_BACKEND_THREAD": NO,
++        "#cmakedefine _LIBCPP_PSTL_CPU_BACKEND_LIBDISPATCH": NO,
++        # Hardening.
++        # TODO: Evaluate performance impact of this. If it isn't noticeable for
++        #       most use-cases, enable it.
++        "#cmakedefine01 _LIBCPP_ENABLE_HARDENED_MODE_DEFAULT": "#define _LIBCPP_ENABLE_HARDENED_MODE_DEFAULT 0",
++        "#cmakedefine01 _LIBCPP_ENABLE_DEBUG_MODE_DEFAULT": "#define _LIBCPP_ENABLE_DEBUG_MODE_DEFAULT 0",
 +        "@_LIBCPP_ABI_DEFINES@": NO,
 +        "@_LIBCPP_EXTRA_SITE_DEFINES@": NO,
 +    },

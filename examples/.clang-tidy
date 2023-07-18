@@ -2,16 +2,54 @@
 Checks: |
   -*
   bugprone-*
-  google-*
   cppcoreguidelines-*
+  google-*
   misc-*
   modernize-*
   performance-*
   portability-*
   readability-*
+  -bugprone-dangling-handle
+  -bugprone-fold-init-type
+  -bugprone-implicit-widening-of-multiplication-result
+  -bugprone-move-forwarding-reference
+  -bugprone-narrowing-conversions
+  -bugprone-shared-ptr-array-mismatch
+  -bugprone-string-integer-assignment
+  -bugprone-stringview-nullptr
+  -bugprone-swapped-arguments
+  -bugprone-unique-ptr-array-mismatch
+  -bugprone-use-after-move
+  -cppcoreguidelines-missing-std-forward
+  -cppcoreguidelines-narrowing-conversions
+  -cppcoreguidelines-pro-bounds-array-to-pointer-decay
+  -cppcoreguidelines-rvalue-reference-param-not-moved
+  -google-build-explicit-make-pair
+  -misc-const-correctness
+  -misc-include-cleaner
+  -misc-uniqueptr-reset-release
+  -modernize-make-shared
+  -modernize-make-unique
+  -modernize-use-nullptr
+  -modernize-use-transparent-functors
+  -performance-avoid-endl
+  -performance-inefficient-algorithm
+  -performance-inefficient-string-concatenation
+  -performance-move-const-arg
+  -performance-unnecessary-value-param
+  -portability-std-allocator-const
   -readability-redundant-declaration
+  -readability-redundant-smartptr-get
+  -readability-redundant-string-cstr
+  -readability-redundant-string-init
+  -readability-uppercase-literal-suffix
 
-# Note: readability-redundant-declaration is broken when working with modules.
+# Note: misc-include-cleaner is pointless with modules and doesn't work well
+#       with headers like hip_runtime.h and cuda_runtime.h. Since includes in
+#       rules_ll are already fairly strict, we'll disable this.
+
+# TODO: All other warnings should be re-enabled after module compatibility is
+#       fixed. Progress at https://github.com/llvm/llvm-project/issues/63939.
 
 WarningsAsErrors: "*"
 

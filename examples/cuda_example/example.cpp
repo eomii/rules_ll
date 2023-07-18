@@ -1,7 +1,6 @@
 #include <array>
 #include <cassert>
 #include <iostream>
-#include <vector>
 
 #include "cuda_runtime.h"
 

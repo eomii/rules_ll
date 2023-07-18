@@ -7,17 +7,15 @@ auto main() -> int {
   int an_unitinialized_variable;  // Triggers clang-tidy.
 
 #ifndef A_LOCAL_DEFINE
-  std::cout << "PASS: A_LOCAL_DEFINE was not defined in executable."
-            << std::endl;
+  std::cout << "PASS: A_LOCAL_DEFINE was not defined in executable." << '\n';
 #else
-  std::cout << "FAIL: A_LOCAL_DEFINE was defined in executable." << std::endl;
+  std::cout << "FAIL: A_LOCAL_DEFINE was defined in executable." << '\n';
 #endif
 
 #ifdef A_PUBLIC_DEFINE
-  std::cout << "PASS: A_PUBLIC_DEFINE was defined in executable." << std::endl;
+  std::cout << "PASS: A_PUBLIC_DEFINE was defined in executable." << '\n';
 #else
-  std::cout << "FAIL: A PUBLIC_DEFINE was not defined in executable."
-            << std::endl;
+  std::cout << "FAIL: A PUBLIC_DEFINE was not defined in executable." << '\n';
 #endif
 
   print_lib_1_string();

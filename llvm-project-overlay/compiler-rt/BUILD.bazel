@@ -14,6 +14,6 @@ ll_library(
     visibility = ["//visibility:public"],
     deps = [
         "//compiler-rt/lib/builtins",
-        "//compiler-rt/lib/crt",
+        "//compiler-rt/lib/builtins:crt",
     ],
 )

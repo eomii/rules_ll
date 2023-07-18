@@ -8,6 +8,6 @@ auto main() -> int {
       "to ll_library and ll_binary to enable this feature.";
 
   std::cout << std::format("{}, {}!\n{}", "Hello", "world", kExplanation)
-            << std::endl;
+            << '\n';
   return 0;
 }
