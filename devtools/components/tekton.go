@@ -3,7 +3,7 @@ package components
 import (
 	"fmt"
 
-	"github.com/pulumi/pulumi-kubernetes/sdk/v3/go/kubernetes/yaml"
+	"github.com/pulumi/pulumi-kubernetes/sdk/v4/go/kubernetes/yaml"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 )
 
