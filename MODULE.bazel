@@ -12,7 +12,7 @@ register_toolchains(
 )
 
 # Platform support.
-bazel_dep(name = "platforms", version = "0.0.6")
+bazel_dep(name = "platforms", version = "0.0.8")
 bazel_dep(name = "rules_cc", version = "0.0.6")
 
 # Various utility functions such as path manipulations and templating.
