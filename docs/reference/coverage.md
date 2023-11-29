@@ -2,7 +2,6 @@
 
 Implements the `ll_coverage_test` rule.
 
-
 <a id="ll_coverage_test"></a>
 
 ## `ll_coverage_test`

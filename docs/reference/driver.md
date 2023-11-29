@@ -2,7 +2,6 @@
 
 Select the C or C++ driver for compile actions.
 
-
 <a id="compiler_driver"></a>
 
 ## `compiler_driver`

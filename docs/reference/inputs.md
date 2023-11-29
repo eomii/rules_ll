@@ -2,7 +2,6 @@
 
 Action inputs for rules.
 
-
 <a id="compilable_sources"></a>
 
 ## `compilable_sources`
@@ -34,8 +33,8 @@ fields and various toolchain dependencies.
 | :---- | :---------- |
 | <a id="compile_object_inputs-ctx"></a>`ctx` | The rule context.  |
 | <a id="compile_object_inputs-in_file"></a>`in_file` | The input file.  |
-| <a id="compile_object_inputs-headers"></a>`headers` | A <code>depset</code> of headers.  |
-| <a id="compile_object_inputs-interfaces"></a>`interfaces` | A <code>depset</code> of <code>(interface, name)</code> tuples.  |
+| <a id="compile_object_inputs-headers"></a>`headers` | A `depset` of headers.  |
+| <a id="compile_object_inputs-interfaces"></a>`interfaces` | A `depset` of `(interface, name)` tuples.  |
 
 `returns`
 

@@ -2,7 +2,6 @@
 
 Tools used by actions.
 
-
 <a id="compile_object_tools"></a>
 
 ## `compile_object_tools`

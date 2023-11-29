@@ -2,7 +2,6 @@
 
 Resolve the inputs to `ll_library` and `ll_binary` rules.
 
-
 <a id="expand_includes"></a>
 
 ## `expand_includes`

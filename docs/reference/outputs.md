@@ -2,7 +2,6 @@
 
 Action outputs.
 
-
 <a id="compile_object_outputs"></a>
 
 ## `compile_object_outputs`
@@ -15,7 +14,7 @@ Given a compilable file, return an output name for the compiled object.
 | Name  | Description |
 | :---- | :---------- |
 | <a id="compile_object_outputs-ctx"></a>`ctx` | The rule context.  |
-| <a id="compile_object_outputs-in_file"></a>`in_file` | A <code>file</code>.  |
+| <a id="compile_object_outputs-in_file"></a>`in_file` | A `file`.  |
 
 `returns`
 
@@ -81,7 +80,7 @@ the same name built by targets in the same build invocation.
 | Name  | Description |
 | :---- | :---------- |
 | <a id="ll_artifact-ctx"></a>`ctx` | The build context.  |
-| <a id="ll_artifact-filename"></a>`filename` |  defaults to `None`.<br><br>An optional string representing a filename. If omitted, creates a path of the form <code>"{ctx.label.name}"</code>.  |
+| <a id="ll_artifact-filename"></a>`filename` |  defaults to `None`.<br><br>An optional string representing a filename. If omitted, creates a path of the form `"{ctx.label.name}"`.  |
 
 
 <a id="precompile_interface_outputs"></a>
@@ -96,7 +95,7 @@ Given a file `f.cppm` return files `f.pcm` and `f.pcm.cdf`.
 | Name  | Description |
 | :---- | :---------- |
 | <a id="precompile_interface_outputs-ctx"></a>`ctx` | The rule context.  |
-| <a id="precompile_interface_outputs-in_file"></a>`in_file` | A <code>file</code>.  |
+| <a id="precompile_interface_outputs-in_file"></a>`in_file` | A `file`.  |
 
 `returns`
 
