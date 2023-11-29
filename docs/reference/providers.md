@@ -2,7 +2,6 @@
 
 Providers for the `ll_binary`, `ll_library` and `ll_compilation_database` rules.
 
-
 <a id="LlCompilationDatabaseFragmentsInfo"></a>
 
 ## `LlCompilationDatabaseFragmentsInfo`
@@ -15,7 +14,7 @@ Stores compilation database fragments.
 
 | Name  | Description |
 | :------------- | :------------- |
-| <a id="LlCompilationDatabaseFragmentsInfo-cdfs"></a>`cdfs` |  A <code>depset</code> of compilation database fragments.    |
+| <a id="LlCompilationDatabaseFragmentsInfo-cdfs"></a>`cdfs` |  A `depset` of compilation database fragments.    |
 
 
 <a id="LlCompilationDatabaseInfo"></a>
@@ -30,7 +29,7 @@ Provider for a compilation database.
 
 | Name  | Description |
 | :------------- | :------------- |
-| <a id="LlCompilationDatabaseInfo-compilation_database"></a>`compilation_database` |  A <code>compile_commands.json</code> file.<br><br>        This file stores the compilation database.    |
+| <a id="LlCompilationDatabaseInfo-compilation_database"></a>`compilation_database` |  A `compile_commands.json` file.<br><br>        This file stores the compilation database.    |
 
 
 <a id="LlInfo"></a>
@@ -45,11 +44,11 @@ The default provider returned by an `ll_*` target.
 
 | Name  | Description |
 | :------------- | :------------- |
-| <a id="LlInfo-exposed_angled_includes"></a>`exposed_angled_includes` |  A <code>depset</code> of angled includes.    |
-| <a id="LlInfo-exposed_defines"></a>`exposed_defines` |  A <code>depset</code> of defines.    |
-| <a id="LlInfo-exposed_hdrs"></a>`exposed_hdrs` |  A <code>depset</code> of header files.    |
-| <a id="LlInfo-exposed_includes"></a>`exposed_includes` |  A <code>depset</code> of includes.    |
-| <a id="LlInfo-exposed_bmis"></a>`exposed_bmis` |  A <code>depset</code> of <code>LlModuleInfo</code> providers.    |
+| <a id="LlInfo-exposed_angled_includes"></a>`exposed_angled_includes` |  A `depset` of angled includes.    |
+| <a id="LlInfo-exposed_defines"></a>`exposed_defines` |  A `depset` of defines.    |
+| <a id="LlInfo-exposed_hdrs"></a>`exposed_hdrs` |  A `depset` of header files.    |
+| <a id="LlInfo-exposed_includes"></a>`exposed_includes` |  A `depset` of includes.    |
+| <a id="LlInfo-exposed_bmis"></a>`exposed_bmis` |  A `depset` of `LlModuleInfo` providers.    |
 
 
 <a id="LlModuleInfo"></a>

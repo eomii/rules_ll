@@ -2,7 +2,6 @@
 
 Environment variables for use in compile and link actions.
 
-
 <a id="compile_object_environment"></a>
 
 ## `compile_object_environment`

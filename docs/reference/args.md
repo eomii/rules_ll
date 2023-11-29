@@ -2,7 +2,6 @@
 
 The functions that create `Args` for use in rule actions.
 
-
 <a id="compile_object_args"></a>
 
 ## `compile_object_args`
@@ -18,10 +17,10 @@ Construct `Args` for compile actions.
 | <a id="compile_object_args-in_file"></a>`in_file` | The input file to compile.  |
 | <a id="compile_object_args-out_file"></a>`out_file` | The output file.  |
 | <a id="compile_object_args-cdf"></a>`cdf` | A file to store the compilation database fragment.  |
-| <a id="compile_object_args-defines"></a>`defines` | A <code>depset</code> of defines for the target. Added with <code>-D</code>.  |
-| <a id="compile_object_args-includes"></a>`includes` | A <code>depset</code> of includes for the target. Added with <code>-iquote</code>.  |
-| <a id="compile_object_args-angled_includes"></a>`angled_includes` | A <code>depset</code> of angled includes for the target. Added with <code>-I</code>.  |
-| <a id="compile_object_args-bmis"></a>`bmis` | A <code>depset</code> of tuples <code>(interface, name)</code>, each consisting of a binary module interface <code>interface</code> and a module name <code>name</code>. Added in a scheme resembling <code>-fmodule-file=name=interface</code>.  |
+| <a id="compile_object_args-defines"></a>`defines` | A `depset` of defines for the target. Added with `-D`.  |
+| <a id="compile_object_args-includes"></a>`includes` | A `depset` of includes for the target. Added with `-iquote`.  |
+| <a id="compile_object_args-angled_includes"></a>`angled_includes` | A `depset` of angled includes for the target. Added with `-I`.  |
+| <a id="compile_object_args-bmis"></a>`bmis` | A `depset` of tuples `(interface, name)`, each consisting of a binary module interface `interface` and a module name `name`. Added in a scheme resembling `-fmodule-file=name=interface`.  |
 
 `returns`
 
@@ -43,7 +42,7 @@ Uses `-cqL` for regular archiving and `-vqL` for debug builds.
 | Name  | Description |
 | :---- | :---------- |
 | <a id="create_archive_library_args-ctx"></a>`ctx` | The rule context.  |
-| <a id="create_archive_library_args-in_files"></a>`in_files` | A <code>depset</code> of input files.  |
+| <a id="create_archive_library_args-in_files"></a>`in_files` | A `depset` of input files.  |
 | <a id="create_archive_library_args-out_file"></a>`out_file` | The output file.  |
 
 `returns`
@@ -63,9 +62,9 @@ Construct `Args` for link actions.
 | Name  | Description |
 | :---- | :---------- |
 | <a id="link_executable_args-ctx"></a>`ctx` | The rule context.  |
-| <a id="link_executable_args-in_files"></a>`in_files` | A <code>depset</code> of input files.  |
+| <a id="link_executable_args-in_files"></a>`in_files` | A `depset` of input files.  |
 | <a id="link_executable_args-out_file"></a>`out_file` | The output file.  |
-| <a id="link_executable_args-mode"></a>`mode` | Either <code>"executable"</code> or <code>"shared_object"</code>, depending on the desired output type.  |
+| <a id="link_executable_args-mode"></a>`mode` | Either `"executable"` or `"shared_object"`, depending on the desired output type.  |
 
 `returns`
 
