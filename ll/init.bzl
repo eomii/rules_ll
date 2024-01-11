@@ -27,10 +27,10 @@ def _initialize_rules_ll_impl(_):
     http_archive(
         name = "zlib-ng",
         build_file = "@llvm-raw//utils/bazel/third_party_build:zlib-ng.BUILD",
-        sha256 = "e36bb346c00472a1f9ff2a0a4643e590a254be6379da7cddd9daeb9a7f296731",
-        strip_prefix = "zlib-ng-2.0.7",
+        sha256 = "d4458f21c756544a2dd44fa8bbe79fca88862a5f3f824d218c95b3e8fe7d8d01",
+        strip_prefix = "zlib-ng-2.1.6",
         urls = [
-            "https://github.com/zlib-ng/zlib-ng/archive/refs/tags/2.0.7.zip",
+            "https://github.com/zlib-ng/zlib-ng/archive/refs/tags/2.1.6.zip",
         ],
     )
 
