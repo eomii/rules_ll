@@ -4,8 +4,15 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs";
     flake-utils.url = "github:numtide/flake-utils";
-    devenv.url = "github:cachix/devenv/latest";
-    pre-commit-hooks-nix.url = "github:cachix/pre-commit-hooks.nix";
+    devenv = {
+      url = "github:cachix/devenv/latest";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    pre-commit-hooks-nix = {
+      url = "github:cachix/pre-commit-hooks.nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.flake-utils.follows = "flake-utils";
+    };
   };
 
   nixConfig = {
@@ -37,7 +44,7 @@
 
         hooks = import ./pre-commit-hooks.nix { inherit pkgs; };
 
-        llvmPackages = pkgs.llvmPackages_16;
+        llvmPackages = pkgs.llvmPackages_17;
 
         cudaPackages = pkgsUnfree.cudaPackages_12_2;
 

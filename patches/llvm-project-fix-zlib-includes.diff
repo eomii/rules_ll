@@ -1,0 +1,40 @@
+diff --git a/lld/ELF/OutputSections.cpp b/lld/ELF/OutputSections.cpp
+index 0b9b76e5b832..22cb971dd795 100644
+--- a/lld/ELF/OutputSections.cpp
++++ b/lld/ELF/OutputSections.cpp
+@@ -22,7 +22,7 @@
+ #include "llvm/Support/Path.h"
+ #include "llvm/Support/TimeProfiler.h"
+ #if LLVM_ENABLE_ZLIB
+-#include <zlib.h>
++#include "zlib.h"
+ #endif
+ #if LLVM_ENABLE_ZSTD
+ #include <zstd.h>
+diff --git a/llvm/lib/Support/CRC.cpp b/llvm/lib/Support/CRC.cpp
+index 2bc668beed32..3091ab675fc0 100644
+--- a/llvm/lib/Support/CRC.cpp
++++ b/llvm/lib/Support/CRC.cpp
+@@ -83,7 +83,7 @@ uint32_t llvm::crc32(uint32_t CRC, ArrayRef<uint8_t> Data) {
+ 
+ #else
+ 
+-#include <zlib.h>
++#include "zlib.h"
+ uint32_t llvm::crc32(uint32_t CRC, ArrayRef<uint8_t> Data) {
+   // Zlib's crc32() only takes a 32-bit length, so we have to iterate for larger
+   // sizes. One could use crc32_z() instead, but that's a recent (2017) addition
+diff --git a/llvm/lib/Support/Compression.cpp b/llvm/lib/Support/Compression.cpp
+index 8e57ba798f52..9c460108d5bc 100644
+--- a/llvm/lib/Support/Compression.cpp
++++ b/llvm/lib/Support/Compression.cpp
+@@ -18,7 +18,7 @@
+ #include "llvm/Support/Error.h"
+ #include "llvm/Support/ErrorHandling.h"
+ #if LLVM_ENABLE_ZLIB
+-#include <zlib.h>
++#include "zlib.h"
+ #endif
+ #if LLVM_ENABLE_ZSTD
+ #include <zstd.h>
+

@@ -32,7 +32,7 @@ func program(ctx *pulumi.Context) error {
 	components.Check(components.AddComponent(
 		ctx,
 		"zot",
-		&components.Zot{Version: "0.1.21"},
+		&components.Zot{Version: "0.1.53"},
 	))
 	components.Check(components.AddComponent(
 		ctx,

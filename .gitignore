@@ -22,3 +22,9 @@ llvm-project/
 # Generated via nix.
 /.pre-commit-config.yaml
 examples/.pre-commit-config.yaml
+
+# TODO(aaronmondal): At the moment It's unclear whether this file is
+# reproducible across runs with different configurations. Double-check and add
+# it to the repository when we're certain it's safe to do so.
+MODULE.bazel.lock
+examples/MODULE.bazel.lock

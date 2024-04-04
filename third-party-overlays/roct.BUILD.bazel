@@ -1,9 +1,9 @@
 "Build file for the ROCT-Thunk-Interface."
 
-load("@rules_ll//ll:defs.bzl", "ll_binary", "ll_library")
+load("@bazel_skylib//rules:common_settings.bzl", "bool_flag")
 load("@bazel_skylib//rules:copy_file.bzl", "copy_file")
 load("@bazel_skylib//rules:native_binary.bzl", "native_binary")
-load("@bazel_skylib//rules:common_settings.bzl", "bool_flag")
+load("@rules_ll//ll:defs.bzl", "ll_binary", "ll_library")
 
 bool_flag(
     name = "shared_libhsakmt",

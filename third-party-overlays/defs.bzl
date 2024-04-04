@@ -3,9 +3,9 @@
 A custom `opencl_bitcode_library` target for the `rocm-device-libs`.
 """
 
-load("@rules_ll//ll:environment.bzl", "compile_object_environment")
-load("@rules_ll//ll:args.bzl", "llvm_bindir_path")
 load("@bazel_skylib//lib:paths.bzl", "paths")
+load("@rules_ll//ll:args.bzl", "llvm_bindir_path")
+load("@rules_ll//ll:environment.bzl", "compile_object_environment")
 load("@rules_ll//ll:transitions.bzl", "ll_transition", "transition_to_bootstrap")
 
 CLANG_OCL_FLAGS = [

@@ -4,8 +4,8 @@ Attributes used by the `ll_toolchain`, `ll_library` and `ll_binary` rules.
 """
 
 load("@bazel_skylib//lib:dicts.bzl", "dicts")
-load("//ll:providers.bzl", "LlInfo")
 load("//ll:llvm_project_deps.bzl", "LLVM_PROJECT_DEPS")
+load("//ll:providers.bzl", "LlInfo")
 load(
     "//ll:transitions.bzl",
     "transition_to_bootstrap",

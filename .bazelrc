@@ -1,6 +1,15 @@
 # Don't inherit PATH and LD_LIBRARY_PATH.
 build --incompatible_strict_action_env
 
+# TODO(aaronmondal): Remove this once we get the build working without it.
+common --noincompatible_sandbox_hermetic_tmp
+
+# Enforce C++20 as the default for rules_cc, regardless of toolchain config.
+build --cxxopt=-std=c++20 --host_cxxopt=-std=c++20
+
+# Since expect rules_cc targets to be mainly exec_tools, use O3.
+build --cxxopt=-O3 --host_cxxopt=-O3
+
 # Forbid network access unless explicitly enabled.
 build --sandbox_default_allow_network=false
 

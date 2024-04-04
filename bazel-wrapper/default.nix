@@ -71,7 +71,7 @@ ${pkgs.lib.strings.optionalString cudaSupport ''
 # Flags for CUDA dependencies.
 LL_CUDA_TOOLKIT=${cudaPackages.cudatoolkit}
 LL_CUDA_RUNTIME=${cudaPackages.cudatoolkit.lib}
-LL_CUDA_DRIVER=${pkgsUnfree.linuxPackages_6_4.nvidia_x11}
+LL_CUDA_DRIVER=${pkgsUnfree.linuxKernel.packages.linux_latest_libre.nvidia_x11}
 ''}
 # Only used by rules_cc
 BAZEL_CXXOPTS=${pkgs.lib.concatStringsSep ":" [
@@ -80,7 +80,6 @@ BAZEL_CXXOPTS=${pkgs.lib.concatStringsSep ":" [
   "-nostdinc++"
   "-nostdlib++"
   "-isystem${llvmPackages.libcxx.dev}/include/c++/v1"
-  "-isystem${llvmPackages.libcxxabi.dev}/include/c++/v1"
 ]}
 
 # TODO: This somehow works without explicitly adding glibc to the library search
@@ -88,11 +87,9 @@ BAZEL_CXXOPTS=${pkgs.lib.concatStringsSep ":" [
 #       apparently that doesn't add the rpath. Find a better solution.
 BAZEL_LINKOPTS=${pkgs.lib.concatStringsSep ":" [
   "-L${llvmPackages.libcxx}/lib"
-  "-L${llvmPackages.libcxxabi}/lib"
   "-lc++"
   ("-Wl," +
   "-rpath,${llvmPackages.libcxx}/lib," +
-  "-rpath,${llvmPackages.libcxxabi}/lib," +
   "-rpath,${pkgs.glibc}/lib"
   )
 ]}
