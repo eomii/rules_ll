@@ -1,5 +1,5 @@
-load("@rules_ll//ll:defs.bzl", "ll_compilation_database")
 load("@bazel_skylib//rules:native_binary.bzl", "native_test")
+load("@rules_ll//ll:defs.bzl", "ll_compilation_database")
 
 filegroup(
     name = "clang_tidy_config",

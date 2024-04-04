@@ -1,9 +1,9 @@
 "Build file for ROCm-CompilerSupport."
 
+load("@bazel_skylib//rules:common_settings.bzl", "bool_flag")
+load("@bazel_skylib//rules:expand_template.bzl", "expand_template")
 load("@rules_ll//ll:defs.bzl", "ll_library")
 load("@rules_ll//third-party-overlays:defs.bzl", "opencl_pch")
-load("@bazel_skylib//rules:expand_template.bzl", "expand_template")
-load("@bazel_skylib//rules:common_settings.bzl", "bool_flag")
 
 bool_flag(
     name = "shared_amd_comgr",

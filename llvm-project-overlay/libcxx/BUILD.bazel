@@ -1,5 +1,5 @@
-load("@rules_ll//ll:defs.bzl", "ll_library")
 load("@bazel_skylib//rules:expand_template.bzl", "expand_template")
+load("@rules_ll//ll:defs.bzl", "ll_library")
 
 STD_PARTITIONS = [
     "algorithm",

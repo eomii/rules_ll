@@ -18,8 +18,8 @@ load(
     "LL_BINARY_ATTRS",
     "LL_LIBRARY_ATTRS",
 )
-load("//ll:resolve_rule_inputs.bzl", "expand_includes", "resolve_rule_inputs")
 load("//ll:providers.bzl", "LlCompilationDatabaseFragmentsInfo", "LlInfo")
+load("//ll:resolve_rule_inputs.bzl", "expand_includes", "resolve_rule_inputs")
 load("//ll:transitions.bzl", "ll_transition")
 
 def _ll_library_impl(ctx):

@@ -14,9 +14,9 @@
 
 # This becomes the BUILD file for @local_config_cc// under non-BSD unixes.
 
-load(":cc_toolchain_config.bzl", "cc_toolchain_config")
-load(":armeabi_cc_toolchain_config.bzl", "armeabi_cc_toolchain_config")
 load("@rules_cc//cc:defs.bzl", "cc_toolchain", "cc_toolchain_suite")
+load(":armeabi_cc_toolchain_config.bzl", "armeabi_cc_toolchain_config")
+load(":cc_toolchain_config.bzl", "cc_toolchain_config")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -92,31 +92,28 @@ cc_toolchain_config(
     coverage_link_flags = ["--coverage"],
     cpu = "k8",
     cxx_builtin_include_directories = [
-        "/nix/store/cqx7pimzhgvw5gr409mz70fsws55ggkj-clang-wrapper-16.0.6/resource-root/include",
-        "/nix/store/0ccvlygpc7p5zyfsyz8mmg9ycqkvrcp2-glibc-2.37-8-dev/include",
-        "/nix/store/cqx7pimzhgvw5gr409mz70fsws55ggkj-clang-wrapper-16.0.6/resource-root/share",
-        "/nix/store/2g8zr4jdiqm0fx7yvi63spb6d8g80dkc-libcxx-16.0.6-dev/include/c++/v1",
-        "/nix/store/4jky7lqxx7anqf2l4j9gham9sidc9b5g-libcxxabi-16.0.6-dev/include/c++/v1",
+        "/nix/store/xxbc7fnvar70sbq8ckks4fl8jagnw52y-clang-wrapper-17.0.6/resource-root/include",
+        "/nix/store/gzxqm8dyfirbysqjhh78ivam62ll0m87-glibc-2.39-5-dev/include",
+        "/nix/store/xxbc7fnvar70sbq8ckks4fl8jagnw52y-clang-wrapper-17.0.6/resource-root/share",
+        "/nix/store/2f8iy8mibi3iiia3hc0n5js7q3qgn507-libcxx-17.0.6-dev/include/c++/v1",
     ],
     cxx_flags = [
         "-std=c++17",
         "-O3",
         "-nostdinc++",
         "-nostdlib++",
-        "-isystem/nix/store/2g8zr4jdiqm0fx7yvi63spb6d8g80dkc-libcxx-16.0.6-dev/include/c++/v1",
-        "-isystem/nix/store/4jky7lqxx7anqf2l4j9gham9sidc9b5g-libcxxabi-16.0.6-dev/include/c++/v1",
+        "-isystem/nix/store/2f8iy8mibi3iiia3hc0n5js7q3qgn507-libcxx-17.0.6-dev/include/c++/v1",
     ],
     dbg_compile_flags = ["-g"],
     host_system_name = "x86_64-unknown-linux-gnu",
     link_flags = [
-        "-fuse-ld=/nix/store/cqx7pimzhgvw5gr409mz70fsws55ggkj-clang-wrapper-16.0.6/bin/ld.gold",
+        "-fuse-ld=/nix/store/xxbc7fnvar70sbq8ckks4fl8jagnw52y-clang-wrapper-17.0.6/bin/ld.gold",
         "-Wl,-no-as-needed",
         "-Wl,-z,relro,-z,now",
-        "-B/nix/store/cqx7pimzhgvw5gr409mz70fsws55ggkj-clang-wrapper-16.0.6/bin",
-        "-L/nix/store/16y1gb7gdmrsyf1hsjhsv9106s3n4820-libcxx-16.0.6/lib",
-        "-L/nix/store/2sh6clhnw6xn0nar8xwqrc0iw99yfv5x-libcxxabi-16.0.6/lib",
+        "-B/nix/store/xxbc7fnvar70sbq8ckks4fl8jagnw52y-clang-wrapper-17.0.6/bin",
+        "-L/nix/store/q28x84h4npmmwycq44481sir5m9jnv96-libcxx-17.0.6/lib",
         "-lc++",
-        "-Wl,-rpath,/nix/store/16y1gb7gdmrsyf1hsjhsv9106s3n4820-libcxx-16.0.6/lib,-rpath,/nix/store/2sh6clhnw6xn0nar8xwqrc0iw99yfv5x-libcxxabi-16.0.6/lib,-rpath,/nix/store/ayg065nw0xi1zsyi8glfh5pn4sfqd8xg-glibc-2.37-8/lib",
+        "-Wl,-rpath,/nix/store/q28x84h4npmmwycq44481sir5m9jnv96-libcxx-17.0.6/lib,-rpath,/nix/store/ddwyrxif62r8n6xclvskjyy6szdhvj60-glibc-2.39-5/lib",
     ],
     link_libs = [
         "-lstdc++",
@@ -135,18 +132,18 @@ cc_toolchain_config(
     target_libc = "glibc_2.35",
     target_system_name = "local",
     tool_paths = {
-        "ar": "/nix/store/cqx7pimzhgvw5gr409mz70fsws55ggkj-clang-wrapper-16.0.6/bin/ar",
-        "ld": "/nix/store/cqx7pimzhgvw5gr409mz70fsws55ggkj-clang-wrapper-16.0.6/bin/ld",
-        "llvm-cov": "/nix/store/sxyl3aqp978d34a0qvb5s95c7kmdhn39-llvm-16.0.6/bin/llvm-cov",
-        "llvm-profdata": "/nix/store/sxyl3aqp978d34a0qvb5s95c7kmdhn39-llvm-16.0.6/bin/llvm-profdata",
-        "cpp": "/nix/store/cqx7pimzhgvw5gr409mz70fsws55ggkj-clang-wrapper-16.0.6/bin/cpp",
-        "gcc": "/nix/store/cqx7pimzhgvw5gr409mz70fsws55ggkj-clang-wrapper-16.0.6/bin/clang",
-        "dwp": "/nix/store/cqx7pimzhgvw5gr409mz70fsws55ggkj-clang-wrapper-16.0.6/bin/dwp",
+        "ar": "/nix/store/xxbc7fnvar70sbq8ckks4fl8jagnw52y-clang-wrapper-17.0.6/bin/ar",
+        "ld": "/nix/store/xxbc7fnvar70sbq8ckks4fl8jagnw52y-clang-wrapper-17.0.6/bin/ld",
+        "llvm-cov": "/nix/store/6ycgxvalkbl2x6pyq0jbp3437ynglmjb-llvm-17.0.6/bin/llvm-cov",
+        "llvm-profdata": "/nix/store/6ycgxvalkbl2x6pyq0jbp3437ynglmjb-llvm-17.0.6/bin/llvm-profdata",
+        "cpp": "/nix/store/xxbc7fnvar70sbq8ckks4fl8jagnw52y-clang-wrapper-17.0.6/bin/cpp",
+        "gcc": "/nix/store/xxbc7fnvar70sbq8ckks4fl8jagnw52y-clang-wrapper-17.0.6/bin/clang",
+        "dwp": "/nix/store/xxbc7fnvar70sbq8ckks4fl8jagnw52y-clang-wrapper-17.0.6/bin/dwp",
         "gcov": "None",
-        "nm": "/nix/store/cqx7pimzhgvw5gr409mz70fsws55ggkj-clang-wrapper-16.0.6/bin/nm",
-        "objcopy": "/nix/store/cqx7pimzhgvw5gr409mz70fsws55ggkj-clang-wrapper-16.0.6/bin/objcopy",
-        "objdump": "/nix/store/cqx7pimzhgvw5gr409mz70fsws55ggkj-clang-wrapper-16.0.6/bin/objdump",
-        "strip": "/nix/store/cqx7pimzhgvw5gr409mz70fsws55ggkj-clang-wrapper-16.0.6/bin/strip",
+        "nm": "/nix/store/xxbc7fnvar70sbq8ckks4fl8jagnw52y-clang-wrapper-17.0.6/bin/nm",
+        "objcopy": "/nix/store/xxbc7fnvar70sbq8ckks4fl8jagnw52y-clang-wrapper-17.0.6/bin/objcopy",
+        "objdump": "/nix/store/xxbc7fnvar70sbq8ckks4fl8jagnw52y-clang-wrapper-17.0.6/bin/objdump",
+        "strip": "/nix/store/xxbc7fnvar70sbq8ckks4fl8jagnw52y-clang-wrapper-17.0.6/bin/strip",
     },
     toolchain_identifier = "local",
     unfiltered_compile_flags = [

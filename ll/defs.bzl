@@ -14,14 +14,14 @@ load(
     _ll_compilation_database = "ll_compilation_database",
 )
 load(
+    "//ll:coverage.bzl",
+    _ll_coverage_test = "ll_coverage_test",
+)
+load(
     "//ll:ll.bzl",
     _ll_binary = "ll_binary",
     _ll_library = "ll_library",
     _ll_test = "ll_test",
-)
-load(
-    "//ll:coverage.bzl",
-    _ll_coverage_test = "ll_coverage_test",
 )
 
 ll_binary = _ll_binary

@@ -1,6 +1,6 @@
 ---
 name: Scorecard supply-chain security
-on:
+"on":
   schedule:
     - cron: '35 14 * * 3'
   push:

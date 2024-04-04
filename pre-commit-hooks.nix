@@ -48,7 +48,7 @@
     enable = true;
     name = "buildifier format";
     description = "Format Starlark";
-    entry = "${pkgs.bazel-buildtools}/bin/buildifier";
+    entry = "${pkgs.bazel-buildtools}/bin/buildifier -lint=fix";
     types = [ "bazel" ];
   };
   bazel-buildifier-lint = {
@@ -62,7 +62,7 @@
   # YAML
   yamllint = {
     enable = true;
-    excludes = [ "^styles/" ];
+    excludes = [ "^.github/styles/" ];
   };
 
   # Bash/Shell
@@ -87,16 +87,14 @@
   # Markdown
   markdownlint = {
     enable = true;
-    excludes = [ "^(docs/reference/|docs/rules/|styles/)" ];
+    excludes = [ "^(docs/reference/|docs/rules/|.github/styles/)" ];
     types = [ "markdown" ];
   };
 
   # Vale
   vale = {
     enable = true;
-    name = "vale";
-    entry = "${pkgs.vale}/bin/vale";
-    excludes = [ "^styles/" ];
+    excludes = [ "^.github/styles/" ];
     types = [ "markdown" ];
   };
 
@@ -122,24 +120,9 @@
     description = "Shorten Go lines.";
     types = [ "go" ];
   };
-  golangci-lint =
-    let
-      wrapper = pkgs.symlinkJoin {
-        name = "golangci-lint-wrapped";
-        paths = [ pkgs.golangci-lint ];
-        nativeBuildInputs = [ pkgs.makeWrapper ];
-        postBuild = ''
-          wrapProgram $out/bin/golangci-lint \
-            --prefix PATH : ${pkgs.lib.makeBinPath [ pkgs.go ]}
-        '';
-      };
-    in
-    {
-      enable = true;
-      name = "golangci-lint";
-      entry = "${wrapper}/bin/golangci-lint run";
-      description = "Lint Go.";
-      types = [ "go" ];
-      pass_filenames = false;
-    };
+  golangci-lint = {
+    enable = true;
+    types = [ "go" ];
+    pass_filenames = false;
+  };
 }

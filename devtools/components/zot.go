@@ -20,7 +20,7 @@ func (component *Zot) Install(
 		Version:   pulumi.String(component.Version),
 		Namespace: pulumi.String("kube-system"),
 		FetchArgs: helmv3.FetchArgs{
-			Repo: pulumi.String("https://zotregistry.io/helm-charts"),
+			Repo: pulumi.String("https://zotregistry.dev/helm-charts"),
 		},
 	},
 	)

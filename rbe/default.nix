@@ -11,7 +11,7 @@ pkgs.buildGoModule rec {
     sha256 = "sha256-J1RFrDGBF7YR5O4D/kNNu6fkxImHpLR+fxhp+R1MaGE=";
   };
 
-  vendorSha256 = "sha256-E6PylI2prXCXqOUYgYi5nZ4qptqOqbcaOquDfEkhaQ4=";
+  vendorHash = "sha256-E6PylI2prXCXqOUYgYi5nZ4qptqOqbcaOquDfEkhaQ4=";
 
   meta = with pkgs.lib; {
     description = "Generate Bazel toolchain configs for remote execution.";

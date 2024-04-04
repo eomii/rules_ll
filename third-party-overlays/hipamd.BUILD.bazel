@@ -1,7 +1,7 @@
 "Build file for hipamd."
 
-load("@rules_ll//ll:defs.bzl", "ll_library")
 load("@bazel_skylib//rules:common_settings.bzl", "bool_flag")
+load("@rules_ll//ll:defs.bzl", "ll_library")
 load("@rules_ll//third-party-overlays:rocclr_config.bzl", "ROCCLR_DEFINES")
 
 bool_flag(

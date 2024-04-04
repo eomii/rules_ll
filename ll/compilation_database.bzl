@@ -3,11 +3,11 @@
 Implements the `ll_compilation_database` rule.
 """
 
+load("//ll:outputs.bzl", "ll_artifact")
 load(
     "//ll:providers.bzl",
     "LlCompilationDatabaseFragmentsInfo",
 )
-load("//ll:outputs.bzl", "ll_artifact")
 
 def _ll_compilation_database(ctx):
     toolchain = ctx.toolchains["//ll:toolchain_type"]
