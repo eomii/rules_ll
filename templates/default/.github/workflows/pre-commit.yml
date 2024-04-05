@@ -7,26 +7,27 @@ name: pre-commit
   push:
     branches:
       - main
+
+permissions: read-all
+
 jobs:
   pre-commit-checks:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: >- # v4.1.1
+          actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
+
       - name: Install Nix
-        uses: cachix/install-nix-action@v20
+        uses: >- # v10
+          DeterminateSystems/nix-installer-action@de22e16c4711fca50c816cc9081563429d1cf563
         with:
-          nix_path: nixpkgs=channel:nixos-unstable
-      - name: Cache Nix artifacts
-        uses: actions/cache@v3.3.1
-        with:
-          key: "${{ runner.os }}-nix-${{
-            hashfiles('flake.lock', 'flake.nix', 'pre-commit.nix') }}"
-          path: ~/nix
-          restore-keys: |
-            ${{ runner.os }}-nix-${{
-              hashfiles('flake.lock', 'flake.nix', 'pre-commit.nix') }}
-            ${{ runner.os }}-nix-
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Cache Nix derivations
+        uses: >- # v4
+          DeterminateSystems/magic-nix-cache-action@fc6aaceb40b9845a02b91e059ec147e78d1b4e41
+
       - name: Run pre-commit hooks
         run: |
-          nix --store ~/nix flake check -L
+          nix flake check --impure -L
