@@ -27,7 +27,7 @@ func program(ctx *pulumi.Context) error {
 	components.Check(components.AddComponent(
 		ctx,
 		"cilium",
-		&components.Cilium{Version: "1.14.0-snapshot.2"},
+		&components.Cilium{Version: "1.15.3"},
 	))
 	components.Check(components.AddComponent(
 		ctx,
@@ -37,17 +37,17 @@ func program(ctx *pulumi.Context) error {
 	components.Check(components.AddComponent(
 		ctx,
 		"tekton-pipelines",
-		&components.TektonPipelines{Version: "0.47.0"},
+		&components.TektonPipelines{Version: "0.58.0"},
 	))
 	components.Check(components.AddComponent(
 		ctx,
 		"tekton-triggers",
-		&components.TektonTriggers{Version: "0.24.0"},
+		&components.TektonTriggers{Version: "0.26.1"},
 	))
 	components.Check(components.AddComponent(
 		ctx,
 		"tekton-dashboard",
-		&components.TektonDashboard{Version: "0.35.0"},
+		&components.TektonDashboard{Version: "0.45.0"},
 	))
 	components.Check(components.AddComponent(
 		ctx,
@@ -55,7 +55,7 @@ func program(ctx *pulumi.Context) error {
 		// This is known to be vulnerable. For our use cases nothing dramatic,
 		// but we should update as soon as an updated version is available.
 		&components.CubeFS{
-			Version:  "3.2.0",
+			Version:  "3.3.1",
 			ChartDir: clusters.CubeFSHelmRepo(clusters.EomiiDir()),
 			MountPath: clusters.CreateLocalDiskDirs(
 				clusters.EomiiDir(),

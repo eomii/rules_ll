@@ -56,7 +56,7 @@ func (component *CubeFS) Install(
 				AccessModes: pulumi.StringArray{
 					pulumi.String("ReadWriteOnce"),
 				},
-				Resources: &corev1.ResourceRequirementsArgs{
+				Resources: &corev1.VolumeResourceRequirementsArgs{
 					Requests: pulumi.StringMap{
 						"storage": pulumi.String("5Gi"),
 					},

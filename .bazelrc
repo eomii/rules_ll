@@ -40,7 +40,7 @@ build --define=EXECUTOR=remote
 
 # Remote optimizations.
 build --experimental_remote_cache_compression
-build --experimental_remote_build_event_upload=minimal
+build --remote_build_event_upload=minimal
 build --remote_download_minimal
 build --nolegacy_important_outputs
 

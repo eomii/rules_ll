@@ -50,7 +50,7 @@
 
         wrappedBazel = (import ./bazel-wrapper/default.nix {
           inherit pkgs pkgsUnfree llvmPackages;
-          bazel = pkgs.bazel;
+          bazel = pkgs.bazel_7;
           ll_env = let openssl = (pkgs.openssl.override { static = true; }); in [
             "LL_CFLAGS=-I${openssl.dev}/include"
             "LL_LDFLAGS=-L${openssl.out}/lib"
@@ -61,7 +61,7 @@
         wrappedBazelCUDA = (import ./bazel-wrapper/default.nix {
           inherit pkgs pkgsUnfree llvmPackages cudaPackages;
           cudaSupport = true;
-          bazel = pkgs.bazel;
+          bazel = pkgs.bazel_7;
           ll_env = let openssl = (pkgs.openssl.override { static = true; }); in [
             "LL_CFLAGS=-I${openssl.dev}/include"
             "LL_LDFLAGS=-L${openssl.out}/lib"

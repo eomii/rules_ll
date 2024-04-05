@@ -29,7 +29,7 @@ Provider for a compilation database.
 
 | Name  | Description |
 | :------------- | :------------- |
-| <a id="LlCompilationDatabaseInfo-compilation_database"></a>`compilation_database` |  A `compile_commands.json` file.<br><br>        This file stores the compilation database.    |
+| <a id="LlCompilationDatabaseInfo-compilation_database"></a>`compilation_database` |  A `compile_commands.json` file.<br><br>This file stores the compilation database.    |
 
 
 <a id="LlInfo"></a>
