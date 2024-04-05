@@ -9,15 +9,38 @@ permissions: read-all
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     permissions:
       contents: write
     steps:
-      - uses: >- # v3.5.2
-          actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab
-      - uses: >- # v4.6.1
-          actions/setup-python@bd6b4b6205c4dbad673328db7b31b7fab9e241c0
+      - name: Checkout
+        uses: >- # v4.1.1
+          actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
+
+      - name: Configure Git Credentials
+        run: "\
+          git config user.name \
+            github-actions[bot] \n
+          git config user.email \
+            41898282+github-actions[bot]@users.noreply.github.com"
+
+      - run: echo "cache_id=$(date --utc '+%V')" >> $GITHUB_ENV
+
+      - name: Cache artifacts
+        uses: >- # v4.0.2
+          actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9
+        with:
+          key: mkdocs-material-${{ env.cache_id }}
+          path: .cache
+          restore-keys: |
+            mkdocs-material-
+
+      - uses: >- # v5.1.0
+          actions/setup-python@82c7e631bb3cdc910f68e0081d67478d79c6982d
         with:
           python-version: 3.x
-      - run: pip install mkdocs-material==9.1.15
+      - run: "\
+          pip install \
+            mkdocs==1.5.3 \
+            mkdocs-material==9.5.15"
       - run: mkdocs gh-deploy --force
