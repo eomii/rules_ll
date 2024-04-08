@@ -131,10 +131,10 @@ def _initialize_rules_ll_impl(_):
     http_archive(
         name = "rocm-opencl-runtime",
         build_file = "@rules_ll//third-party-overlays:rocm-opencl-runtime.BUILD.bazel",
-        sha256 = "515c666be19fe6fc101b4bfb135c20d022a29cc6e6f55fe5453d949e39c27d3e",
-        strip_prefix = "ROCm-OpenCL-Runtime-a919c67b5a581852ea1773b21e1e2109ba208274",
+        sha256 = "0be9026b23870246c4a7325dadace7ee49015a14b4a57094260127c146777fd8",
+        strip_prefix = "ROCm-OpenCL-Runtime-0cf1537e2863d463c165a79a380030d23345ceaa",
         urls = [
-            "https://github.com/RadeonOpenCompute/ROCm-OpenCL-Runtime/archive/a919c67b5a581852ea1773b21e1e2109ba208274.zip",
+            "https://github.com/RadeonOpenCompute/ROCm-OpenCL-Runtime/archive/0cf1537e2863d463c165a79a380030d23345ceaa.zip",
         ],
     )
 
