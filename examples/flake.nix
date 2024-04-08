@@ -9,40 +9,68 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs";
-    flake-utils.url = "github:numtide/flake-utils";
-    # If you use this file as template, substitute the line below with this,
-    # where `<version>` is the version of rules_ll you want to use:
-    #
-    #   rules_ll.url = "github:eomii/rules_ll/<version>";
-    rules_ll.url = path:../;
+    flake-parts = {
+      url = "github:hercules-ci/flake-parts";
+      inputs.nixpkgs-lib.follows = "nixpkgs";
+    };
+    rules_ll = {
+      # If you use this file as template, substitute the line below with this,
+      # where `<version>` is the version of rules_ll you want to use:
+      #
+      #   rules_ll.url = "github:eomii/rules_ll/<version>";
+      url = path:../;
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.flake-parts.follows = "flake-parts";
+    };
   };
 
   outputs =
     { self
-    , nixpkgs
-    , flake-utils
     , rules_ll
+    , flake-parts
     , ...
     } @ inputs:
-    flake-utils.lib.eachSystem [
-      "x86_64-linux"
-    ]
-      (system:
-      let
-        pkgs = import nixpkgs { inherit system; };
-        openssl_static = (pkgs.openssl.override { static = true; });
-        llShell = rules_ll.lib.${system}.llShell;
-      in
+    flake-parts.lib.mkFlake { inherit inputs; }
       {
-        devShells = {
-          default = llShell {
-            unfree = true; # Enable CUDA toolchains.
-            packages = [ ];
-            env = {
-              LL_CFLAGS = "-I${openssl_static.dev}/include";
-              LL_LDFLAGS = "-L${openssl_static.out}/lib";
+        systems = [
+          "x86_64-linux"
+        ];
+        imports = [
+          inputs.rules_ll.flakeModule
+        ];
+        perSystem =
+          { config
+          , pkgs
+          , system
+          , lib
+          , ...
+          }:
+          let
+            openssl = (pkgs.openssl.override { static = true; });
+          in
+          {
+            rules_ll.settings.actionEnv = rules_ll.lib.action-env {
+              inherit pkgs;
+              LL_CFLAGS = "-I${openssl.dev}/include";
+              LL_LDFLAGS = "-L${openssl.out}/lib";
+            };
+            devShells.default = pkgs.mkShell {
+              nativeBuildInputs = [ pkgs.bazel_7 ];
+              shellHook = ''
+                # Generate .bazelrc.ll which containes action-env
+                # configuration when rules_ll is run from a nix environment.
+                ${config.rules_ll.installationScript}
+
+                # Prevent rules_cc from using anything other than clang.
+                export CC=clang
+
+                # Probably a bug in nix. Setting LD=ld.lld here doesn't work.
+                export LD=${pkgs.llvmPackages_17.lld}/bin/ld.lld
+
+                # Java needs to be the same version as in the Bazel wrapper.
+                export JAVA_HOME=${pkgs.jdk17_headless}/lib/openjdk
+              '';
             };
           };
-        };
-      });
+      };
 }

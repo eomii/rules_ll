@@ -1,4 +1,4 @@
-{ pkgs, wrappedBazel, tag }:
+{ pkgs, bazel, tag }:
 
 let
 
@@ -18,7 +18,7 @@ let
   ll_docs = llScript "docs" ./docs.sh;
   ll_patch = llScript "overlay" ./overlay.sh;
   ll_release = llScript "module" ./module.sh;
-  ll_rbe = import ./rbe.nix { inherit pkgs wrappedBazel tag; };
+  ll_rbe = import ./rbe.nix { inherit pkgs bazel tag; };
 
 in
 
@@ -32,10 +32,10 @@ elif [[ "$1" == "module" ]]; then
 ${ll_release}/bin/module $2
 elif [[ "$1" == "up" ]]; then
 PATH=''${PATH+$PATH:}${pkgs.pulumi}/bin \
-  ${wrappedBazel.baze_ll}/bin/bazel run @rules_ll//devtools:cluster -- up
+  ${bazel}/bin/bazel run @rules_ll//devtools:cluster -- up
 elif [[ "$1" == "down" ]]; then
 PATH=''${PATH+$PATH:}${pkgs.pulumi}/bin \
-  ${wrappedBazel.baze_ll}/bin/bazel run @rules_ll//devtools:cluster -- down
+  ${bazel}/bin/bazel run @rules_ll//devtools:cluster -- down
 elif [[ "$1" == "rbe" ]]; then
 ${ll_rbe}/bin/rbe $2
 else

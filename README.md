@@ -83,7 +83,7 @@ ll_binary(
 )
 ```
 
-## 🧹 Clang-Tidy
+## 🧹 Clang-tidy
 
 Build compilation databases to use Clang-Tidy as part of your workflows and CI
 pipelines. [Clang-Tidy guide](https://ll.eomii.org/guides/clang_tidy).

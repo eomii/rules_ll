@@ -2,8 +2,7 @@
 
 Actions wiring up inputs, outputs, and tools to emit output files.
 
-Every function in this file effectively wraps `ctx.actions.run` or
-`ctx.actions.run_shell`.
+Every function in this file wraps `ctx.actions.run` or `ctx.actions.run_shell`.
 
 <a id="compile_object"></a>
 

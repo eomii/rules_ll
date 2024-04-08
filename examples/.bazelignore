@@ -1,0 +1,2 @@
+# Prevent infinite symlink chains
+.devenv

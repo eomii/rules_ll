@@ -160,10 +160,10 @@ For the `ll_binary` target:
 
 ## Pitfalls
 
-All interfaces in `ll_library` are `exposed`, even those in the `interfaces`
-attribute. `rules_ll` builds `interfaces` first and then makes them visible to
-`exposed_interfaces`. This way you can declare more complex modules in a single
-target.
+The `exposed` attribute applies to all interfaces in `ll_library`, including
+those in the `interfaces` attribute. `rules_ll` builds `interfaces` first and
+then makes them visible to `exposed_interfaces`. This way you can declare more
+complex modules in a single target.
 
 If you have a dependency chain `a -> b -> c` and you `import c` in a target, you
 need to add `deps = [":a", ":b", ":c"]` to that target. The build still requires
