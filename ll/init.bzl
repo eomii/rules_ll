@@ -121,10 +121,10 @@ def _initialize_rules_ll_impl(_):
     http_archive(
         name = "rocclr",
         build_file = "@rules_ll//third-party-overlays:rocclr.BUILD.bazel",
-        sha256 = "44b654d86a5459c783c0bfe663e257da110844f878e8dab67691c114d4d4655f",
-        strip_prefix = "ROCclr-63540e0b08c508c440e5d50431cc3d80647a45c4",
+        sha256 = "6afebc2e35269ec7c6455326bd268f0ce398dc2d5d62839eecf9502f0d74dc7a",
+        strip_prefix = "ROCclr-52639fe5285b746ea087d1269f471e2472bddecb",
         urls = [
-            "https://github.com/ROCm-Developer-Tools/ROCclr/archive/63540e0b08c508c440e5d50431cc3d80647a45c4.zip",
+            "https://github.com/ROCm-Developer-Tools/ROCclr/archive/52639fe5285b746ea087d1269f471e2472bddecb.zip",
         ],
     )
 
