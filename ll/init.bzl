@@ -59,10 +59,10 @@ def _initialize_rules_ll_impl(_):
     http_archive(
         name = "hipamd",
         build_file = "@rules_ll//third-party-overlays:hipamd.BUILD.bazel",
-        sha256 = "f82a20574e47ef10d2cd9e4b3c5e0feed2fdc0a6142fec36ed6621b62f725d21",
-        strip_prefix = "hipamd-4209792929ddf54ba9530813b7879cfdee42df14",
+        sha256 = "8daa6e27267342f2e1f6f161efe734ebd58d276fa893df41f73dc196f9fe37d0",
+        strip_prefix = "hipamd-ffb1b364a265321d9fe3d69788dab83cc9557c08",
         urls = [
-            "https://github.com/ROCm-Developer-Tools/hipamd/archive/4209792929ddf54ba9530813b7879cfdee42df14.zip",
+            "https://github.com/ROCm-Developer-Tools/hipamd/archive/ffb1b364a265321d9fe3d69788dab83cc9557c08.zip",
         ],
         patches = [
             "@rules_ll//patches:hipamd_deprecate_fix.diff",
