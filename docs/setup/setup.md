@@ -24,7 +24,7 @@ guide.
       build cache gets too large over time you can reset it using the
       `bazel clean` and `bazel clean --expunge` commands.
     - As a rough guideline, at least 1 GB of Memory per CPU core. The `nproc`
-      command prints the number of CPU cores for your system.
+      command prints the number of CPU cores available to your environment.
 <!-- markdownlint-enable code-block-style -->
 
 1. Install the [nix package manager](https://nixos.org/download.html) and enable
@@ -38,8 +38,8 @@ guide.
     nix flake init -t github:eomii/rules_ll/<version>
     ```
 
-    The default toolchains include C++ and HIP for AMDGPU. If you also want to
-    target NVPTX devices (Nvidia GPUs), make sure to read the [CUDA license](https://docs.nvidia.com/cuda/eula/index.html)
+    The default toolchains include C++ and HIP for AMDGPU. If you want to target
+    NVPTX devices (Nvidia GPUs), make sure to read the [CUDA license](https://docs.nvidia.com/cuda/eula/index.html)
     and set `unfree = true` in `flake.nix`.
 
     See [tags](https://github.com/eomii/rules_ll/tags) to find the most recent

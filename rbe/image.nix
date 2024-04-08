@@ -1,7 +1,7 @@
 { pkgs
 , llvmPackages
-, wrappedBazel
-, env ? wrappedBazel.env
+, bazel
+, env ? (import ../modules/rules_ll-action-env.nix { inherit pkgs; })
 , tag
 }:
 
@@ -10,8 +10,7 @@ pkgs.dockerTools.buildLayeredImage {
   name = "rules_ll";
 
   contents = [
-    # Wrapped Bazel, including the build environment.
-    wrappedBazel.baze_ll
+    bazel
 
     # Minimal user setup. Required by Bazel.
     pkgs.fakeNss

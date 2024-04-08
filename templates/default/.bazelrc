@@ -49,5 +49,8 @@ build --slim_profile
 build --experimental_profile_include_target_label
 build --noexperimental_profile_include_primary_output
 
+# Nix-generated action env for rules_ll.
+try-import %workspace%/.bazelrc.ll
+
 # Allow user-side customization.
 try-import %workspace%/.bazelrc.user

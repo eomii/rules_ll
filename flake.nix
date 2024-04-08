@@ -4,14 +4,14 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs";
     flake-utils.url = "github:numtide/flake-utils";
-    devenv = {
-      url = "github:cachix/devenv/latest";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    pre-commit-hooks-nix = {
+    pre-commit-hooks = {
       url = "github:cachix/pre-commit-hooks.nix";
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.flake-utils.follows = "flake-utils";
+    };
+    flake-parts = {
+      url = "github:hercules-ci/flake-parts";
+      inputs.nixpkgs-lib.follows = "nixpkgs";
     };
   };
 
@@ -25,77 +25,83 @@
     { self
     , nixpkgs
     , flake-utils
-    , devenv
-    , pre-commit-hooks-nix
+    , pre-commit-hooks
+    , flake-parts
     , ...
     } @ inputs:
-    flake-utils.lib.eachSystem [
-      "x86_64-linux"
-    ]
-      (system:
-      let
-
-        pkgs = import nixpkgs { inherit system; };
-
-        pkgsUnfree = import nixpkgs {
-          inherit system;
-          config.allowUnfree = true;
-        };
-
-        hooks = import ./pre-commit-hooks.nix { inherit pkgs; };
-
-        llvmPackages = pkgs.llvmPackages_17;
-
-        cudaPackages = pkgsUnfree.cudaPackages_12_2;
-
-        wrappedBazel = (import ./bazel-wrapper/default.nix {
-          inherit pkgs pkgsUnfree llvmPackages;
-          bazel = pkgs.bazel_7;
-          ll_env = let openssl = (pkgs.openssl.override { static = true; }); in [
-            "LL_CFLAGS=-I${openssl.dev}/include"
-            "LL_LDFLAGS=-L${openssl.out}/lib"
-          ];
-        });
-
-        # TODO: This is not pretty, but let's clean it up later.
-        wrappedBazelCUDA = (import ./bazel-wrapper/default.nix {
-          inherit pkgs pkgsUnfree llvmPackages cudaPackages;
-          cudaSupport = true;
-          bazel = pkgs.bazel_7;
-          ll_env = let openssl = (pkgs.openssl.override { static = true; }); in [
-            "LL_CFLAGS=-I${openssl.dev}/include"
-            "LL_LDFLAGS=-L${openssl.out}/lib"
-          ];
-        });
-
-        # Development tooling for rules_ll.
-        tag = "latest";
-        ll = import ./devtools/ll.nix { inherit pkgs wrappedBazel tag; };
-
-        llShell = (
-          { unfree ? false
-          , packages ? [ ]
-          , env ? { }
-          , hooks ? { }
+    flake-parts.lib.mkFlake { inherit inputs; }
+      {
+        systems = [
+          "x86_64-linux"
+        ];
+        imports = [
+          inputs.pre-commit-hooks.flakeModule
+          ./flake-module.nix
+        ];
+        perSystem =
+          { config
+          , pkgs
+          , system
+          , lib
+          , ...
           }:
-          devenv.lib.mkShell {
-            inherit inputs pkgs;
-
-            modules = [{
-              pre-commit = { inherit hooks; };
-
-              inherit env;
-
-              packages = [
-                (
-                  if !unfree
-                  then wrappedBazel.baze_ll
-                  else wrappedBazelCUDA.baze_ll
-                )
+          let
+            hooks = import ./pre-commit-hooks.nix { inherit pkgs; };
+            llvmPackages = pkgs.llvmPackages_17;
+            bazel = pkgs.bazel_7;
+            tag = "latest";
+            ll = import ./devtools/ll.nix { inherit pkgs tag bazel; };
+          in
+          {
+            _module.args.pkgs = import self.inputs.nixpkgs {
+              inherit system;
+              # CUDA support
+              config.allowUnfree = true;
+              config.cudaSupport = true;
+            };
+            pre-commit.settings = { inherit hooks; };
+            rules_ll.settings.actionEnv =
+              let
+                openssl = (pkgs.openssl.override { static = true; });
+              in
+              self.lib.action-env {
+                inherit pkgs;
+                LL_CFLAGS = "-I${openssl.dev}/include";
+                LL_LDFLAGS = "-L${openssl.out}/lib";
+              };
+            packages = {
+              ci-image = import ./rbe/image.nix {
+                inherit pkgs llvmPackages bazel tag;
+              };
+            };
+            devShells.default = pkgs.mkShell {
+              nativeBuildInputs = [
+                bazel
                 ll
-              ] ++ packages;
+                pkgs.git
+                (pkgs.python3.withPackages (pylib: [
+                  pylib.mkdocs-material
+                ]))
+                pkgs.mkdocs
+                pkgs.vale
+                pkgs.go
 
-              enterShell = ''
+                # Cloud tooling
+                pkgs.cilium-cli
+                pkgs.kubectl
+                pkgs.pulumi
+                pkgs.skopeo
+                pkgs.tektoncd-cli
+              ];
+              shellHook = ''
+                # Generate the .pre-commit-config.yaml symlink when entering the
+                # development shell.
+                ${config.pre-commit.installationScript}
+
+                # Generate .bazelrc.ll which containes action-env configuration
+                # when rules_ll is run from a nix environment.
+                ${config.rules_ll.installationScript}
+
                 # Ensure that the ll command points to our ll binary.
                 [[ $(type -t ll) == "alias" ]] && unalias ll
 
@@ -114,57 +120,16 @@
                 # Prettier color output for the ls command.
                 alias ls='ls --color=auto'
               '';
-            }];
-          }
-        );
-      in
-      {
-
-        packages = {
-          ci-image = import ./rbe/image.nix { inherit pkgs llvmPackages wrappedBazel tag; };
-        };
-
-        checks = {
-          pre-commit-check = pre-commit-hooks-nix.lib.${system}.run {
-            src = ./.;
-            inherit hooks;
+            };
           };
-        };
-
-        devShells = {
-          default = llShell {
-            unfree = true;
-            packages = [
-              ll
-              pkgs.git
-              (pkgs.python3.withPackages (pylib: [
-                pylib.mkdocs-material
-              ]))
-              pkgs.mkdocs
-              pkgs.vale
-              pkgs.go
-
-              # Cloud tooling
-              pkgs.cilium-cli
-              pkgs.kubectl
-              pkgs.pulumi
-              pkgs.skopeo
-              pkgs.tektoncd-cli
-            ];
-            inherit hooks;
-          };
-        };
-
-        lib = { inherit llShell; };
-
-      })
-    //
-    {
+      } // {
       templates = {
         default = {
           path = "${./templates/default}";
           description = "A basic rules_ll workspace";
         };
       };
+      flakeModule = ./flake-module.nix;
+      lib = { action-env = import ./modules/rules_ll-action-env.nix; };
     };
 }

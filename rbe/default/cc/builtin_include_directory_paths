@@ -8,3 +8,4 @@ declared action inputs or the action commandline changes.
 /nix/store/gzxqm8dyfirbysqjhh78ivam62ll0m87-glibc-2.39-5-dev/include
 /nix/store/xxbc7fnvar70sbq8ckks4fl8jagnw52y-clang-wrapper-17.0.6/resource-root/share
 /nix/store/2f8iy8mibi3iiia3hc0n5js7q3qgn507-libcxx-17.0.6-dev/include/c++/v1
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk

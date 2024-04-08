@@ -1,4 +1,4 @@
-{ pkgs, wrappedBazel, tag }:
+{ pkgs, bazel, tag }:
 
 let bazelToolchains = import ../rbe/default.nix { inherit pkgs; }; in
 
@@ -56,10 +56,10 @@ pkgs.writeShellScriptBin "rbe" ''
       --toolchain_container=$REGISTRY/rules_ll:${tag} \
       --exec_os=linux \
       --target_os=linux \
-      --bazel_version=${wrappedBazel.version} \
+      --bazel_version=${bazel.version} \
       --output_src_root=$(pwd) \
       --output_config_path=rbe/default \
-      --bazel_path=${wrappedBazel.baze_ll}/bin/bazel \
+      --bazel_path=${bazel}/bin/bazel \
       --cpp_env_json=rbe/rbeconfig.json
 
   pre-commit run --all-files

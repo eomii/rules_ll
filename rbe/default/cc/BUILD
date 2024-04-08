@@ -22,6 +22,24 @@ package(default_visibility = ["//visibility:public"])
 
 licenses(["notice"])  # Apache 2.0
 
+cc_library(name = "empty_lib")
+
+# Label flag for extra libraries to be linked into every binary.
+# TODO(bazel-team): Support passing flag multiple times to build a list.
+label_flag(
+    name = "link_extra_libs",
+    build_setting_default = ":empty_lib",
+)
+
+# The final extra library to be linked into every binary target. This collects
+# the above flag, but may also include more libraries depending on config.
+cc_library(
+    name = "link_extra_lib",
+    deps = [
+        ":link_extra_libs",
+    ],
+)
+
 cc_library(
     name = "malloc",
 )
@@ -88,6 +106,7 @@ cc_toolchain_config(
         "-fno-omit-frame-pointer",
     ],
     compiler = "clang",
+    conly_flags = [],
     coverage_compile_flags = ["--coverage"],
     coverage_link_flags = ["--coverage"],
     cpu = "k8",
@@ -96,9 +115,10 @@ cc_toolchain_config(
         "/nix/store/gzxqm8dyfirbysqjhh78ivam62ll0m87-glibc-2.39-5-dev/include",
         "/nix/store/xxbc7fnvar70sbq8ckks4fl8jagnw52y-clang-wrapper-17.0.6/resource-root/share",
         "/nix/store/2f8iy8mibi3iiia3hc0n5js7q3qgn507-libcxx-17.0.6-dev/include/c++/v1",
+        "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk",
     ],
     cxx_flags = [
-        "-std=c++17",
+        "-std=c++20",
         "-O3",
         "-nostdinc++",
         "-nostdlib++",
@@ -108,16 +128,20 @@ cc_toolchain_config(
     host_system_name = "x86_64-unknown-linux-gnu",
     link_flags = [
         "-fuse-ld=/nix/store/xxbc7fnvar70sbq8ckks4fl8jagnw52y-clang-wrapper-17.0.6/bin/ld.gold",
+        "-B/nix/store/xxbc7fnvar70sbq8ckks4fl8jagnw52y-clang-wrapper-17.0.6/bin",
         "-Wl,-no-as-needed",
         "-Wl,-z,relro,-z,now",
-        "-B/nix/store/xxbc7fnvar70sbq8ckks4fl8jagnw52y-clang-wrapper-17.0.6/bin",
         "-L/nix/store/q28x84h4npmmwycq44481sir5m9jnv96-libcxx-17.0.6/lib",
         "-lc++",
         "-Wl,-rpath,/nix/store/q28x84h4npmmwycq44481sir5m9jnv96-libcxx-17.0.6/lib,-rpath,/nix/store/ddwyrxif62r8n6xclvskjyy6szdhvj60-glibc-2.39-5/lib",
     ],
     link_libs = [
+        "-Wl,--push-state,-as-needed",
         "-lstdc++",
+        "-Wl,--pop-state",
+        "-Wl,--push-state,-as-needed",
         "-lm",
+        "-Wl,--pop-state",
     ],
     opt_compile_flags = [
         "-g0",

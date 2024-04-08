@@ -116,7 +116,11 @@ ll_binary(
 )
 ```
 
+<!-- vale Microsoft.Headings = NO -->
+
 ## Relocatable device code
+
+<!-- vale Microsoft.Headings = YES -->
 
 To build [relocatable device code](https://developer.nvidia.com/blog/separate-compilation-linking-cuda-device-code/),
 add `-fgpu-rdc` to `compile_flags`. This lets you split device code into
