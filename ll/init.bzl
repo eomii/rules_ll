@@ -15,6 +15,16 @@ filegroup(
 
 def _initialize_rules_ll_impl(_):
     http_archive(
+        name = "local-remote-execution",
+        urls = [
+            "https://github.com/TraceMachina/nativelink/archive/60f712bcddd5c2cd3d3bdd537c4cc136fe6497c7.zip",
+        ],
+        integrity = "sha256-ilNs8EmJe0YxrKTzbHXhxmEiayLkc+P0UaA991txgsg=",
+        # Note: Keep this in sync with `flake.nix` and `devtools/up.sh`.
+        strip_prefix = "nativelink-60f712bcddd5c2cd3d3bdd537c4cc136fe6497c7/local-remote-execution",
+    )
+
+    http_archive(
         name = "zstd",
         build_file = "@llvm-raw//utils/bazel/third_party_build:zstd.BUILD",
         integrity = "sha256-nEOWzIKc+uMZpuJhUgLoKq1BNyBzSC/OKG+seGRtPuQ=",

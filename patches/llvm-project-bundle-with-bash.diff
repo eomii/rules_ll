@@ -1,0 +1,87 @@
+diff --git a/clang/utils/bundle_resources.py b/clang/utils/bundle_resources.py
+deleted file mode 100644
+index 66871fbe99c1..000000000000
+--- a/clang/utils/bundle_resources.py
++++ /dev/null
+@@ -1,29 +0,0 @@
+-#!/usr/bin/env python3
+-
+-# ===- bundle_resources.py - Generate string constants with file contents. ===
+-#
+-# Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+-# See https://llvm.org/LICENSE.txt for license information.
+-# SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+-#
+-# ===----------------------------------------------------------------------===
+-
+-# Usage: bundle-resources.py foo.inc a.js path/b.css ...
+-# Produces foo.inc containing:
+-#   const char a_js[] = "...";
+-#   const char b_css[] = "...";
+-import os
+-import sys
+-
+-outfile = sys.argv[1]
+-infiles = sys.argv[2:]
+-
+-with open(outfile, "w") as out:
+-    for filename in infiles:
+-        varname = os.path.basename(filename).replace(".", "_")
+-        out.write("const char " + varname + "[] = \n")
+-        # MSVC limits each chunk of string to 2k, so split by lines.
+-        # The overall limit is 64k, which ought to be enough for anyone.
+-        for line in open(filename).read().split("\n"):
+-            out.write('  R"x(' + line + ')x" "\\n"\n')
+-        out.write("  ;\n")
+diff --git a/clang/utils/bundle_resources.sh b/clang/utils/bundle_resources.sh
+new file mode 100755
+index 000000000000..108421ad2dec
+--- /dev/null
++++ b/clang/utils/bundle_resources.sh
+@@ -0,0 +1,27 @@
++#!/usr/bin/env bash
++
++# ===- bundle_resources.sh - Generate string constants with file contents. ===
++#
++# Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
++# See https://llvm.org/LICENSE.txt for license information.
++# SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
++#
++# ===----------------------------------------------------------------------===
++
++# Usage: bundle-resources.sh foo.inc a.js path/b.css ...
++# Produces foo.inc containing:
++#   const char a_js[] = "...";
++#   const char b_css[] = "...";
++
++exec 3>"$1"
++shift
++
++for filename in "$@"; do
++    varname=$(basename "${filename//./_}")
++    printf 'const char %s[] =\n' "$varname" >&3
++    while IFS= read -r line; do
++        printf '  R"x(%s)x" "\\n"\n' "$line" >&3
++    done < "$filename"
++    printf '  ;\n' >&3
++done
++exec 3>&-
+diff --git a/utils/bazel/llvm-project-overlay/clang/BUILD.bazel b/utils/bazel/llvm-project-overlay/clang/BUILD.bazel
+index 037719a51dd1..1a8ad9951e76 100644
+--- a/utils/bazel/llvm-project-overlay/clang/BUILD.bazel
++++ b/utils/bazel/llvm-project-overlay/clang/BUILD.bazel
+@@ -501,12 +501,11 @@ genrule(
+     cmd = "echo '#undef CLANG_REVISION' > $@",
+ )
+ 
+-py_binary(
++sh_binary(
+     name = "bundle_resources",
+     srcs = [
+-        "utils/bundle_resources.py",
++        "utils/bundle_resources.sh",
+     ],
+-    main = "utils/bundle_resources.py",
+ )
+ 
+ # A hacky library to expose some internal headers of the `basic` library to its

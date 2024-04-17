@@ -8,10 +8,26 @@
   };
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs";
+    nixpkgs = {
+      url = "github:nixos/nixpkgs";
+      follows = "nativelink/nixpkgs";
+    };
+    flake-utils.url = "github:numtide/flake-utils";
     flake-parts = {
       url = "github:hercules-ci/flake-parts";
       inputs.nixpkgs-lib.follows = "nixpkgs";
+    };
+    pre-commit-hooks = {
+      url = "github:cachix/pre-commit-hooks.nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.flake-utils.follows = "flake-utils";
+    };
+    nativelink = {
+      # url = "github:TraceMachina/nativelink/64ed20a40964b8c606c7d65f76af840bcfc837fd";
+      url = "github:aaronmondal/nativelink/lre-flake-module";
+      inputs.flake-utils.follows = "flake-utils";
+      inputs.flake-parts.follows = "flake-parts";
+      inputs.pre-commit-hooks.follows = "pre-commit-hooks";
     };
     rules_ll = {
       # If you use this file as template, substitute the line below with this,
@@ -20,7 +36,10 @@
       #   rules_ll.url = "github:eomii/rules_ll/<version>";
       url = path:../;
       inputs.nixpkgs.follows = "nixpkgs";
+      inputs.flake-utils.follows = "flake-utils";
       inputs.flake-parts.follows = "flake-parts";
+      inputs.nativelink.follows = "nativelink";
+      inputs.pre-commit-hooks.follows = "pre-commit-hooks";
     };
   };
 
@@ -28,6 +47,7 @@
     { self
     , rules_ll
     , flake-parts
+    , nativelink
     , ...
     } @ inputs:
     flake-parts.lib.mkFlake { inherit inputs; }
@@ -36,6 +56,7 @@
           "x86_64-linux"
         ];
         imports = [
+          inputs.nativelink.flakeModule
           inputs.rules_ll.flakeModule
         ];
         perSystem =
@@ -55,11 +76,25 @@
               LL_LDFLAGS = "-L${openssl.out}/lib";
             };
             devShells.default = pkgs.mkShell {
-              nativeBuildInputs = [ pkgs.bazel_7 ];
+              nativeBuildInputs =
+                let
+                  bazel = pkgs.writeShellScriptBin "bazel" ''
+                    unset TMPDIR TMP
+                    exec ${pkgs.bazelisk}/bin/bazelisk "$@"
+                  '';
+                in
+                [ bazel pkgs.kubectl ];
               shellHook = ''
                 # Generate .bazelrc.ll which containes action-env
                 # configuration when rules_ll is run from a nix environment.
+                # Has no effect in the examples as it's already handled by the
+                # top-level flake.
                 ${config.rules_ll.installationScript}
+
+                # Generate .bazelrc.lre which configures the LRE toolchains.
+                # Has no effect in the examples as it's already handled by the
+                # top-level flake.
+                ${config.local-remote-execution.installationScript}
 
                 # Prevent rules_cc from using anything other than clang.
                 export CC=clang

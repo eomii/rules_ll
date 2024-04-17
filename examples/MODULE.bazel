@@ -21,3 +21,12 @@ use_repo(
     llvm_project_overlay,
     "llvm-project",
 )
+
+rules_ll_dependencies = use_extension(
+    "@rules_ll//ll:init.bzl",
+    "rules_ll_dependencies",
+)
+use_repo(
+    rules_ll_dependencies,
+    "local-remote-execution",
+)

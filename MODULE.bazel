@@ -4,13 +4,7 @@ module(
     compatibility_level = 0,
 )
 
-register_execution_platforms("@rules_ll//rbe/default/config:platform")
-
-register_toolchains(
-    "@rules_ll//ll:ll_toolchain",
-    "@rules_ll//rbe/default/config:cc-toolchain",
-    "@rules_ll//rbe/default/java:all",
-)
+register_toolchains("@rules_ll//ll:ll_toolchain")
 
 # Platform support.
 bazel_dep(name = "platforms", version = "0.0.9")
@@ -21,8 +15,7 @@ bazel_dep(name = "bazel_skylib", version = "1.5.0")
 
 # Documentation. These should be dev_dependencies, but that doesn't work at the
 # moment. This is a bug.
-bazel_dep(name = "rules_java", version = "7.5.0", dev_dependency = True)
-
+bazel_dep(name = "rules_java", version = "7.5.0", dev_dependency = False)
 bazel_dep(name = "stardoc", version = "0.6.2", dev_dependency = False)
 
 # The LLVM project. We override the specific commit below.
@@ -40,6 +33,7 @@ llvm_project_overlay.configure(
         "@rules_ll//patches:rules_ll_overlay_patch.diff",
         "@rules_ll//patches:llvm-project-fix-zlib-includes.diff",
         "@rules_ll//patches:llvm-add-missing-cuda-cmath-header.diff",
+        "@rules_ll//patches:llvm-project-bundle-with-bash.diff",
     ],
     sha256 = "da9a908ea6b158de5986ac1b40444a08a7329bd81e0940875413f1193c24ce5d",
     targets = [
@@ -65,6 +59,7 @@ use_repo(
     "clr",
     "hip",
     "llvm-project-rocm",
+    "local-remote-execution",
     "rocr",
     "roct",
     "zlib-ng",
