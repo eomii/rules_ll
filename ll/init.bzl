@@ -79,10 +79,10 @@ def _initialize_rules_ll_impl(_):
     http_archive(
         name = "roct",
         build_file = "@rules_ll//third-party-overlays:roct.BUILD.bazel",
-        strip_prefix = "ROCT-Thunk-Interface-rocm-5.4.3",
-        integrity = "sha256-DDBaV8l3csqXO8vALdpqsinHXGPKWuGePGindOoYNG8=",
+        strip_prefix = "ROCT-Thunk-Interface-rocm-6.1.0",
+        integrity = "sha256-KlnkZj87Dx8Zr0EpS4iiTVMnO2CU+eVTeqbHcaeYhU4=",
         urls = [
-            "https://github.com/RadeonOpenCompute/ROCT-Thunk-Interface/archive/refs/tags/rocm-5.4.3.zip",
+            "https://github.com/ROCm/ROCT-Thunk-Interface/archive/refs/tags/rocm-6.1.0.zip",
         ],
         patches = [
             "@rules_ll//patches:roct_adjust_kfd_bin_dir.diff",
