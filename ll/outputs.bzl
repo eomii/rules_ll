@@ -48,7 +48,10 @@ def precompile_interface_outputs(ctx, in_file):
         paths.dirname(ctx.build_file_path),
     )
 
-    relative_src_path = paths.relativize(in_file.path, build_file_path)
+    # Remove the gendir if the interface was a generated file.
+    in_path = in_file.path.removeprefix("{}/".format(ctx.var["GENDIR"]))
+
+    relative_src_path = paths.relativize(in_path, build_file_path)
     relative_src_dir = paths.dirname(relative_src_path)
 
     out_file = ctx.actions.declare_file(
