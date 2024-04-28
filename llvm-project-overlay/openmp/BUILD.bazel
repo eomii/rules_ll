@@ -1,3 +1,4 @@
+load("@bazel_skylib//rules:copy_file.bzl", "copy_file")
 load("@bazel_skylib//rules:expand_template.bzl", "expand_template")
 load("@rules_ll//ll:defs.bzl", "ll_library")
 
@@ -60,6 +61,12 @@ expand_template(
     },
     template = "runtime/src/include/omp.h.var",
     visibility = ["//visibility:public"],
+)
+
+copy_file(
+    name = "ompx_header",
+    src = "runtime/src/include/ompx.h.var",
+    out = "runtime/src/include/ompx.h",
 )
 
 expand_template(
@@ -137,6 +144,7 @@ ll_library(
         ":kmp_config_h",
         ":omp_header",
         ":omp_tools_h",
+        ":ompx_header",
     ],
     compile_flags = [
         "-std=c++17",
