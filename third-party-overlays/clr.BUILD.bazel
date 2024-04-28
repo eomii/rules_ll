@@ -1,0 +1,108 @@
+"Build file for clr."
+
+load("@rules_ll//ll:defs.bzl", "ll_library")
+load("@rules_ll//third-party-overlays:rocclr_config.bzl", "ROCCLR_DEFINES")
+
+ll_library(
+    name = "rocclr",
+    exposed_hdrs = glob([
+        "rocclr/device/**/*.hpp",
+        "rocclr/device/**/*.h",
+        "rocclr/elf/**/*.hpp",
+        "rocclr/elf/elfio/*.hpp",
+        "rocclr/include/**/*.hpp",
+        "rocclr/include/**/*.h",
+        "rocclr/utils/**/*.hpp",
+        "rocclr/platform/**/*.hpp",
+        "rocclr/platform/**/*.h",
+        "rocclr/thread/**/*.hpp",
+        "rocclr/os/**/*.hpp",
+    ]),
+    hdrs = glob([
+        "rocclr/compiler/lib/**/*.hpp",
+        "rocclr/compiler/lib/**/*.h",
+    ]) + [
+        "rocclr/compiler/lib/utils/OPTIONS.def",
+    ],
+    exposed_includes = [
+        "rocclr/include",
+    ],
+    exposed_angled_includes = [
+        "rocclr/elf",
+        "rocclr",
+    ],
+    includes = [
+        "rocclr/compiler/lib",
+        "rocclr/compiler/lib/backends/common",
+        "rocclr/device",
+    ],
+    srcs = [
+        "rocclr/compiler/lib/utils/options.cpp",
+        "rocclr/device/appprofile.cpp",
+        "rocclr/device/blit.cpp",
+        "rocclr/device/blitcl.cpp",
+        "rocclr/device/comgrctx.cpp",
+        "rocclr/device/devhcmessages.cpp",
+        "rocclr/device/devhcprintf.cpp",
+        "rocclr/device/devhostcall.cpp",
+        "rocclr/device/device.cpp",
+        "rocclr/device/devkernel.cpp",
+        "rocclr/device/devprogram.cpp",
+        "rocclr/device/devwavelimiter.cpp",
+        "rocclr/device/hsailctx.cpp",
+        "rocclr/elf/elf.cpp",
+        "rocclr/os/alloc.cpp",
+        "rocclr/os/os_posix.cpp",
+        "rocclr/os/os_win32.cpp",
+        "rocclr/os/os.cpp",
+        "rocclr/platform/activity.cpp",
+        "rocclr/platform/agent.cpp",
+        "rocclr/platform/command.cpp",
+        "rocclr/platform/commandqueue.cpp",
+        "rocclr/platform/context.cpp",
+        "rocclr/platform/kernel.cpp",
+        "rocclr/platform/memory.cpp",
+        "rocclr/platform/ndrange.cpp",
+        "rocclr/platform/program.cpp",
+        "rocclr/platform/runtime.cpp",
+        "rocclr/platform/interop_gl.cpp",
+        "rocclr/thread/monitor.cpp",
+        "rocclr/thread/semaphore.cpp",
+        "rocclr/thread/thread.cpp",
+        "rocclr/utils/debug.cpp",
+        "rocclr/utils/flags.cpp",
+
+        # HSA sources.
+        "rocclr/device/rocm/rocappprofile.cpp",
+        "rocclr/device/rocm/rocblit.cpp",
+        "rocclr/device/rocm/rocblitcl.cpp",
+        "rocclr/device/rocm/roccounters.cpp",
+        "rocclr/device/rocm/rocdevice.cpp",
+        "rocclr/device/rocm/rocglinterop.cpp",
+        "rocclr/device/rocm/rockernel.cpp",
+        "rocclr/device/rocm/rocmemory.cpp",
+        "rocclr/device/rocm/rocprintf.cpp",
+        "rocclr/device/rocm/rocprogram.cpp",
+        "rocclr/device/rocm/rocsettings.cpp",
+        "rocclr/device/rocm/rocsignal.cpp",
+        "rocclr/device/rocm/rocvirtual.cpp",
+        "rocclr/device/rocm/rocurilocator.cpp",
+    ],
+    defines = ROCCLR_DEFINES,
+    deps = [
+        "@rocm-opencl-runtime//:CL2.2",
+        "@rocm-opencl-runtime//:headers",
+        "@rocr//:libhsa-runtime64",
+        "@rocr//:hsa_headers",
+        "@comgr//:amd_comgr",
+    ],
+    compile_flags = [
+        "-std=c++17",
+        "-O3",  # In CMake decided by downstream targets. Let's just use O3.
+
+        # TODO: Upstream fixes for these.
+        "-Wno-inconsistent-missing-override",
+        "-Wno-parentheses",  # This one looks like an actual bug.
+    ],
+    visibility = ["//visibility:public"],
+)

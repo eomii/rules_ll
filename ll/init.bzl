@@ -119,12 +119,12 @@ def _initialize_rules_ll_impl(_):
     )
 
     http_archive(
-        name = "rocclr",
-        build_file = "@rules_ll//third-party-overlays:rocclr.BUILD.bazel",
-        integrity = "sha256-RLZU2GpUWceDwL/mY+JX2hEIRPh46Nq2dpHBFNTUZV8=",
-        strip_prefix = "ROCclr-63540e0b08c508c440e5d50431cc3d80647a45c4",
+        name = "clr",
+        build_file = "@rules_ll//third-party-overlays:clr.BUILD.bazel",
+        strip_prefix = "clr-899c0e54e780dbd25aac0071294f9daff829981b",
+        integrity = "sha256-+67pyGhBBRUcYwOnlvLXtum04v/xxgq+HbnRZbNLCz4=",
         urls = [
-            "https://github.com/ROCm-Developer-Tools/ROCclr/archive/63540e0b08c508c440e5d50431cc3d80647a45c4.zip",
+            "https://github.com/ROCm/clr/archive/899c0e54e780dbd25aac0071294f9daff829981b.zip",
         ],
     )
 

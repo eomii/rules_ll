@@ -62,10 +62,10 @@ rules_ll_dependencies = use_extension(
 )
 use_repo(
     rules_ll_dependencies,
+    "clr",
     "comgr",
     "hip",
     "hipamd",
-    "rocclr",
     "rocm-device-libs",
     "rocm-opencl-runtime",
     "rocr",
