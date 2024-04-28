@@ -1,7 +1,7 @@
-diff --git a/src/hip_graph_internal.hpp b/src/hip_graph_internal.hpp
+diff --git a/hipamd/src/hip_graph_internal.hpp b/hipamd/src/hip_graph_internal.hpp
 index 0918f4fc..6db61da2 100644
---- a/src/hip_graph_internal.hpp
-+++ b/src/hip_graph_internal.hpp
+--- a/hipamd/src/hip_graph_internal.hpp
++++ b/hipamd/src/hip_graph_internal.hpp
 @@ -1093,11 +1093,11 @@ class hipGraphMemcpyNode : public hipGraphNode {
      pCopyParams_ = new hipMemcpy3DParms(*rhs.pCopyParams_);
    }

@@ -128,16 +128,16 @@ ll_toolchain(
     hip_libraries = select({
         ":hip_amdgpu": [
             "@hip//:headers",
-            "@hipamd//:headers",
+            "@clr//:hipamd_headers",
         ],
         ":hip_nvptx": [
             "@hip//:headers",
-            "@hipamd//:headers",
+            "@clr//:hipamd_headers",
         ],
         "//conditions:default": [],
     }),
     hip_runtime = select({
-        ":hip_amdgpu": ["@hipamd//:libamdhip64"],
+        ":hip_amdgpu": ["@clr//:libamdhip64"],
         "//conditions:default": [],
     }),
     leak_sanitizer = select({

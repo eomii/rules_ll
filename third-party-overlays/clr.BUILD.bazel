@@ -1,5 +1,6 @@
 "Build file for clr."
 
+load("@bazel_skylib//rules:common_settings.bzl", "bool_flag")
 load("@rules_ll//ll:defs.bzl", "ll_library")
 load("@rules_ll//third-party-overlays:rocclr_config.bzl", "ROCCLR_DEFINES")
 
@@ -134,6 +135,114 @@ ll_library(
         "-Wno-parentheses",  # This one looks like an actual bug.
     ],
     visibility = ["//visibility:public"],
+)
+
+bool_flag(
+    name = "shared_libamdhip64",
+    build_setting_default = True,
+)
+
+config_setting(
+    name = "shared",
+    flag_values = {":shared_libamdhip64": "true"},
+)
+
+# Target for the toolchians.
+filegroup(
+    name = "hipamd_headers",
+    srcs = glob(["hipamd/include/**"]),
+    visibility = ["//visibility:public"],
+)
+
+ll_library(
+    name = "libamdhip64",
+    includes = ["hipamd/src"],
+    angled_includes = ["hipamd/include"],
+    srcs = [
+        "hipamd/src/fixme.cpp",
+        "hipamd/src/hip_activity.cpp",
+        "hipamd/src/hip_code_object.cpp",
+        "hipamd/src/hip_context.cpp",
+        "hipamd/src/hip_device_runtime.cpp",
+        "hipamd/src/hip_device.cpp",
+        "hipamd/src/hip_error.cpp",
+        "hipamd/src/hip_event.cpp",
+        "hipamd/src/hip_event_ipc.cpp",
+        "hipamd/src/hip_fatbin.cpp",
+        "hipamd/src/hip_global.cpp",
+        "hipamd/src/hip_graph_internal.cpp",
+        "hipamd/src/hip_graph.cpp",
+        "hipamd/src/hip_hmm.cpp",
+        "hipamd/src/hip_intercept.cpp",
+        "hipamd/src/hip_memory.cpp",
+        "hipamd/src/hip_mempool.cpp",
+        "hipamd/src/hip_mempool_impl.cpp",
+        "hipamd/src/hip_module.cpp",
+        "hipamd/src/hip_peer.cpp",
+        "hipamd/src/hip_platform.cpp",
+        "hipamd/src/hip_profile.cpp",
+        "hipamd/src/hip_stream_ops.cpp",
+        "hipamd/src/hip_stream.cpp",
+        "hipamd/src/hip_surface.cpp",
+        "hipamd/src/hip_texture.cpp",
+        "hipamd/src/hip_gl.cpp",
+        "hipamd/src/hip_vm.cpp",
+    ],
+    hdrs = glob([
+        "hipamd/src/*.h",
+        "hipamd/src/*.hpp",
+        "hipamd/include/hip/amd_detail/*.h",
+        "hipamd/include/hip/amd_detail/*.hpp",
+    ]),
+    deps = [
+        ":CL2.2",
+        ":amdocl_headers",
+        ":rocclr",
+        "@comgr//:amd_comgr",
+        "@hip//:hip_headers",
+        "@rocr//:libhsa-runtime64",
+    ] + select({
+        "@roct//:shared": ["@roct//:libhsakmt"],
+        "//conditions:default": [],
+    }),
+    defines = ROCCLR_DEFINES + [
+        "HIP_VERSION_MAJOR=5",
+        "HIP_VERSION_MINOR=7",
+        "HIP_VERSION_PATCH=0",
+        "HIP_VERSION=50700000",
+        'HIP_VERSION_GITHASH="0000"',
+        'HIP_VERSION_BUILD_NAME="rules_hip_custom_build_name_string"',
+        "HIP_VERSION_BUILD_ID=0",
+        "__HIP_PLATFORM_AMD__",
+    ],
+    compile_flags = [
+        "-std=c++17",
+        "-O2",  # TODO: Might want to tweak this.
+        # "-fvisibility=hidden",  # TODO: Enable after verifying with the tests.
+        "-Wno-delete-abstract-non-virtual-dtor",  # TODO: Fix this.
+    ],
+    visibility = ["//visibility:public"],
+    depends_on_llvm = 1,
+    emit = select({
+        ":shared": ["shared_object"],
+        "//conditions:default": ["archive"],
+    }),
+    shared_object_link_flags = select({
+        ":shared": [
+            "--no-undefined",
+
+            # Required by rocr.
+            "-lnuma",
+            "-ldrm",
+            "-ldrm_amdgpu",
+        ],
+        "//conditions:default": [],
+    }) + select({
+        "@rocr//:shared": [],
+        "//conditions:default": [
+            "-lelf",
+        ],
+    }),
 )
 
 # TODO: Everything below this point under (suspended) construction for now. This

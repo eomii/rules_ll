@@ -239,7 +239,7 @@ def compile_object_args(
         args.add_all(
             [
                 Label("@hip").workspace_root,
-                Label("@hipamd").workspace_root,
+                paths.join(Label("@clr").workspace_root, "hipamd"),
             ],
             format_each = "-I%s/include",
         )

@@ -1,7 +1,7 @@
-diff --git a/include/hip/nvidia_detail/nvidia_hip_runtime_api.h b/include/hip/nvidia_detail/nvidia_hip_runtime_api.h
+diff --git a/hipamd/include/hip/nvidia_detail/nvidia_hip_runtime_api.h b/hipamd/include/hip/nvidia_detail/nvidia_hip_runtime_api.h
 index 0522cc8e..8678403b 100644
---- a/include/hip/nvidia_detail/nvidia_hip_runtime_api.h
-+++ b/include/hip/nvidia_detail/nvidia_hip_runtime_api.h
+--- a/hipamd/include/hip/nvidia_detail/nvidia_hip_runtime_api.h
++++ b/hipamd/include/hip/nvidia_detail/nvidia_hip_runtime_api.h
 @@ -39,6 +39,7 @@ THE SOFTWARE.
  #define CUDA_11030 11030
  #define CUDA_11040 11040

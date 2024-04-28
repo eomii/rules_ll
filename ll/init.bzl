@@ -42,38 +42,18 @@ def _initialize_rules_ll_impl(_):
             #define HIP_VERSION_MAJOR 5
             #define HIP_VERSION_MINOR 7
             #define HIP_VERSION_PATCH 0
-            #define HIP_VERSION 50500000
+            #define HIP_VERSION 50700000
             #define HIP_VERSION_GITHASH "0000"
             #define HIP_VERSION_BUILD_NAME "rules_hip_custom_build_name_string"
             #define HIP_VERSION_BUILD_ID 0
             "
             >> include/hip/hip_version.h""",
         ],
-        integrity = "sha256-51lrBaaxtu7kXuezZfLzG92u1OAjUuiNjwamfsVtN+k=",
-        strip_prefix = "HIP-d579c4d3cab15f7beb2943eddb75dba8877c2be3",
+        integrity = "sha256-MnMFzzUdJyRakujoAUiGHI4U7HC2hl/LNF+za1q3tEw=",
+        strip_prefix = "HIP-rocm-5.7.1",
         urls = [
-            "https://github.com/ROCm-Developer-Tools/HIP/archive/d579c4d3cab15f7beb2943eddb75dba8877c2be3.zip",
+            "https://github.com/ROCm/HIP/archive/refs/tags/rocm-5.7.1.zip",
         ],
-    )
-
-    http_archive(
-        name = "hipamd",
-        build_file = "@rules_ll//third-party-overlays:hipamd.BUILD.bazel",
-        strip_prefix = "hipamd-4209792929ddf54ba9530813b7879cfdee42df14",
-        integrity = "sha256-+CogV05H7xDSzZ5LPF4P7tL9wKYUL+w27WYhti9yXSE=",
-        urls = [
-            "https://github.com/ROCm-Developer-Tools/hipamd/archive/4209792929ddf54ba9530813b7879cfdee42df14.zip",
-        ],
-        patches = [
-            "@rules_ll//patches:hipamd_deprecate_fix.diff",
-            "@rules_ll//patches:hipamd_correct_jit_option.diff",
-            "@rules_ll//patches:hipamd_inconsistent_overrides.diff",
-            "@rules_ll//patches:hipamd_fix_extraneous_parentheses.diff",
-            "@rules_ll//patches:hipamd_default_visibility.diff",
-            "@rules_ll//patches:hipamd_enforce_semicolon.diff",
-            "@rules_ll//patches:hipamd_fix_local_address_space.diff",
-        ],
-        patch_args = ["-p1"],
     )
 
     http_archive(
@@ -121,11 +101,20 @@ def _initialize_rules_ll_impl(_):
     http_archive(
         name = "clr",
         build_file = "@rules_ll//third-party-overlays:clr.BUILD.bazel",
-        strip_prefix = "clr-ccf4f5f8491f6359247ec831a364b1d1d2f127e8",
-        integrity = "sha256-VWEq8NKBDKXSRW0SX5aOdz7z8w4PnvEZgOqAAegu0uU=",
+        strip_prefix = "clr-6e86d29a582e28d40d6d8acd55b9f4c32e974e87",
+        integrity = "sha256-pL0EV8AXK5NsLJGoyNJCEaUlOSmK/uy9qXwX6JHmd18=",
         urls = [
-            "https://github.com/ROCm/clr/archive/ccf4f5f8491f6359247ec831a364b1d1d2f127e8.zip",
+            "https://github.com/ROCm/clr/archive/6e86d29a582e28d40d6d8acd55b9f4c32e974e87.zip",
         ],
+        patches = [
+            "@rules_ll//patches:hipamd_deprecate_fix.diff",
+            "@rules_ll//patches:hipamd_correct_jit_option.diff",
+            "@rules_ll//patches:hipamd_inconsistent_overrides.diff",
+            "@rules_ll//patches:hipamd_fix_extraneous_parentheses.diff",
+            "@rules_ll//patches:hipamd_enforce_semicolon.diff",
+            "@rules_ll//patches:hipamd_fix_local_address_space.diff",
+        ],
+        patch_args = ["-p1"],
     )
 
     http_archive(
