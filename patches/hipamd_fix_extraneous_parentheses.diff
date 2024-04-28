@@ -1,7 +1,7 @@
-diff --git a/src/hip_module.cpp b/src/hip_module.cpp
+diff --git a/hipamd/src/hip_module.cpp b/hipamd/src/hip_module.cpp
 index ae5d2660..b74b9ec3 100644
---- a/src/hip_module.cpp
-+++ b/src/hip_module.cpp
+--- a/hipamd/src/hip_module.cpp
++++ b/hipamd/src/hip_module.cpp
 @@ -114,7 +114,7 @@ hipError_t hipModuleGetGlobal(hipDeviceptr_t* dptr, size_t* bytes, hipModule_t h
  hipError_t hipFuncGetAttribute(int* value, hipFunction_attribute attrib, hipFunction_t hfunc) {
    HIP_INIT_API(hipFuncGetAttribute, value, attrib, hfunc);

@@ -1,7 +1,7 @@
-diff --git a/src/hip_formatting.hpp b/src/hip_formatting.hpp
+diff --git a/hipamd/src/hip_formatting.hpp b/hipamd/src/hip_formatting.hpp
 index 00a27476..c45aae46 100644
---- a/src/hip_formatting.hpp
-+++ b/src/hip_formatting.hpp
+--- a/hipamd/src/hip_formatting.hpp
++++ b/hipamd/src/hip_formatting.hpp
 @@ -342,7 +342,7 @@ inline std::ostream& operator<<(std::ostream& os, const hiprtcResult& s) {
    return os;
  }

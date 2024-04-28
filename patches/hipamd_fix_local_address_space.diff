@@ -1,7 +1,7 @@
-diff --git a/include/hip/amd_detail/device_library_decls.h b/include/hip/amd_detail/device_library_decls.h
+diff --git a/hipamd/include/hip/amd_detail/device_library_decls.h b/hipamd/include/hip/amd_detail/device_library_decls.h
 index 02228705..55817c8a 100644
---- a/include/hip/amd_detail/device_library_decls.h
-+++ b/include/hip/amd_detail/device_library_decls.h
+--- a/hipamd/include/hip/amd_detail/device_library_decls.h
++++ b/hipamd/include/hip/amd_detail/device_library_decls.h
 @@ -118,10 +118,10 @@ extern "C" __device__ uint64_t __ockl_fprintf_append_string_n(uint64_t msg_desc,
                                                                uint64_t length, uint32_t is_last);
 
