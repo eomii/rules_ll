@@ -151,6 +151,7 @@ ll_library(
         # TODO: At the moment we generate trap_handler_v2.h offline and patch
         # the final header in. Recreate the logic to generate it properly.
         "src/core/runtime/amd_trap_handler_v2.h",
+        "src/core/runtime/amd_blit_shaders_v2.h",
         "src/loader/executable.hpp",
         "src/loader/AMDHSAKernelDescriptor.h",
     ]),

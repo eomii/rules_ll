@@ -93,13 +93,13 @@ def _initialize_rules_ll_impl(_):
     http_archive(
         name = "rocr",
         build_file = "@rules_ll//third-party-overlays:rocr.BUILD.bazel",
-        strip_prefix = "ROCR-Runtime-rocm-5.6.0",
-        integrity = "sha256-wI3YXp94ZZlSv89eTtOkIfensan+B5wOZdPdx6GOaj4=",
+        strip_prefix = "ROCR-Runtime-rocm-6.0.2",
+        integrity = "sha256-2M7DZm6qN0xas1UNOFAhhP0dckQEQFbJaMzrjAfuBL4=",
         urls = [
-            "https://github.com/ROCm/ROCR-Runtime/archive/refs/tags/rocm-5.6.0.zip",
+            "https://github.com/ROCm/ROCR-Runtime/archive/refs/tags/rocm-6.0.2.zip",
         ],
         patches = [
-            "@rules_ll//patches:rocr-amd_trap_handler_v2.diff",
+            "@rules_ll//patches:rocr-generated-files.diff",
         ],
         patch_args = ["-p1"],
     )
@@ -141,10 +141,10 @@ def _initialize_rules_ll_impl(_):
     http_archive(
         name = "rocm-device-libs",
         build_file = "@rules_ll//third-party-overlays:rocm-device-libs.BUILD.bazel",
-        integrity = "sha256-xLi76yCKqdkU+kpAzxt24nUv0wDHn+iX2EoWpOHVG6k=",
-        strip_prefix = "ROCm-Device-Libs-7fff8d33f591a24489222ee37560b0021f202316",
+        integrity = "sha256-Q2GrctM0GQjAnWDlFeiQXVIBHWS1xtzP+k9OWtgqGMM=",
+        strip_prefix = "ROCm-Device-Libs-rocm-6.0.2",
         urls = [
-            "https://github.com/RadeonOpenCompute/ROCm-Device-Libs/archive/7fff8d33f591a24489222ee37560b0021f202316.zip",
+            "https://github.com/RadeonOpenCompute/ROCm-Device-Libs/archive/refs/tags/rocm-6.0.2.zip",
         ],
     )
 
