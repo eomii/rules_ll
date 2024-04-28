@@ -121,20 +121,10 @@ def _initialize_rules_ll_impl(_):
     http_archive(
         name = "clr",
         build_file = "@rules_ll//third-party-overlays:clr.BUILD.bazel",
-        strip_prefix = "clr-899c0e54e780dbd25aac0071294f9daff829981b",
-        integrity = "sha256-+67pyGhBBRUcYwOnlvLXtum04v/xxgq+HbnRZbNLCz4=",
+        strip_prefix = "clr-ccf4f5f8491f6359247ec831a364b1d1d2f127e8",
+        integrity = "sha256-VWEq8NKBDKXSRW0SX5aOdz7z8w4PnvEZgOqAAegu0uU=",
         urls = [
-            "https://github.com/ROCm/clr/archive/899c0e54e780dbd25aac0071294f9daff829981b.zip",
-        ],
-    )
-
-    http_archive(
-        name = "rocm-opencl-runtime",
-        build_file = "@rules_ll//third-party-overlays:rocm-opencl-runtime.BUILD.bazel",
-        integrity = "sha256-UVxma+Gf5vwQG0v7E1wg0CKinMbm9V/lRT2UnjnCfT4=",
-        strip_prefix = "ROCm-OpenCL-Runtime-a919c67b5a581852ea1773b21e1e2109ba208274",
-        urls = [
-            "https://github.com/RadeonOpenCompute/ROCm-OpenCL-Runtime/archive/a919c67b5a581852ea1773b21e1e2109ba208274.zip",
+            "https://github.com/ROCm/clr/archive/ccf4f5f8491f6359247ec831a364b1d1d2f127e8.zip",
         ],
     )
 

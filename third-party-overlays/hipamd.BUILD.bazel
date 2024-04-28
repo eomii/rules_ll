@@ -62,11 +62,11 @@ ll_library(
         "include/hip/amd_detail/*.hpp",
     ]),
     deps = [
+        "@clr//:CL2.2",
+        "@clr//:amdocl_headers",
         "@clr//:rocclr",
-        "@rocm-opencl-runtime//:CL2.2",
-        "@hip//:hip_headers",
-        "@rocm-opencl-runtime//:headers",
         "@comgr//:amd_comgr",
+        "@hip//:hip_headers",
         "@rocr//:libhsa-runtime64",
     ] + select({
         "@roct//:shared": ["@roct//:libhsakmt"],
