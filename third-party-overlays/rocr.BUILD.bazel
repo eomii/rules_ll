@@ -53,6 +53,7 @@ HSA_CXX_FLAGS = HSA_COMMON_CXX_FLAGS + [
     "-fno-threadsafe-statics",
     "-fmerge-all-constants",
     "-fms-extensions",
+    "-mmwaitx",  # Added in CMake for x86_64 CPUs.
 ]
 
 HSA_HEADER_NAMES = [
