@@ -143,15 +143,6 @@ expand_template(
     template = "modules/std.cppm.in",
 )
 
-expand_template(
-    name = "module_modulemap_gen",
-    out = "include/module.modulemap",
-    substitutions = {
-        "@requires_LIBCXX_ENABLE_LOCALIZATION@": "",
-    },
-    template = "include/module.modulemap.in",
-)
-
 NO = "/* Undefined by Bazel. */"
 
 expand_template(
@@ -202,7 +193,6 @@ filegroup(
     ]) + [
         ":__assertion_handler_gen",
         ":__config_site_gen",
-        ":module_modulemap_gen",
     ],
     visibility = ["//visibility:public"],
 )

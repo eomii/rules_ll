@@ -1,10 +1,10 @@
 diff --git a/utils/bazel/llvm-project-overlay/compiler-rt/BUILD.bazel b/utils/bazel/llvm-project-overlay/compiler-rt/BUILD.bazel
-index 573549781ab7..3025cde923f6 100644
+index 9bdd454e1e36..a266477922b0 100644
 --- a/utils/bazel/llvm-project-overlay/compiler-rt/BUILD.bazel
 +++ b/utils/bazel/llvm-project-overlay/compiler-rt/BUILD.bazel
-@@ -49,3 +49,1209 @@ cc_library(
+@@ -50,3 +50,1209 @@ cc_library(
+         ":config",
      ],
-     linkstatic = True,
  )
 +load("@rules_ll//ll:defs.bzl", "ll_library")
 +
@@ -1214,12 +1214,12 @@ index 573549781ab7..3025cde923f6 100644
 +)
 diff --git a/utils/bazel/llvm-project-overlay/libcxx/BUILD.bazel b/utils/bazel/llvm-project-overlay/libcxx/BUILD.bazel
 new file mode 100644
-index 000000000000..f68af0f8d0f0
+index 000000000000..10e3e555105c
 --- /dev/null
 +++ b/utils/bazel/llvm-project-overlay/libcxx/BUILD.bazel
-@@ -0,0 +1,368 @@
-+load("@bazel_skylib//rules:expand_template.bzl", "expand_template")
+@@ -0,0 +1,358 @@
 +load("@bazel_skylib//rules:copy_file.bzl", "copy_file")
++load("@bazel_skylib//rules:expand_template.bzl", "expand_template")
 +load("@rules_ll//ll:defs.bzl", "ll_library")
 +
 +STD_PARTITIONS = [
@@ -1363,15 +1363,6 @@ index 000000000000..f68af0f8d0f0
 +    template = "modules/std.cppm.in",
 +)
 +
-+expand_template(
-+    name = "module_modulemap_gen",
-+    out = "include/module.modulemap",
-+    substitutions = {
-+        "@requires_LIBCXX_ENABLE_LOCALIZATION@": "",
-+    },
-+    template = "include/module.modulemap.in",
-+)
-+
 +NO = "/* Undefined by Bazel. */"
 +
 +expand_template(
@@ -1422,7 +1413,6 @@ index 000000000000..f68af0f8d0f0
 +    ]) + [
 +        ":__assertion_handler_gen",
 +        ":__config_site_gen",
-+        ":module_modulemap_gen",
 +    ],
 +    visibility = ["//visibility:public"],
 +)

@@ -25,6 +25,7 @@ LLVM_PROJECT_DEPS = [
     "@llvm-project//clang:frontend_rewrite",
     "@llvm-project//clang:frontend_tool",
     "@llvm-project//clang:index",
+    "@llvm-project//clang:install_api",
     "@llvm-project//clang:interpreter",
     "@llvm-project//clang:lex",
     "@llvm-project//clang:libclang",

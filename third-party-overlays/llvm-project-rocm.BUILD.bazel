@@ -35,6 +35,7 @@ cc_binary(
 AMD_DEVICE_LIBS_TARGETS = [
     "oclc_abi_version_400",
     "oclc_abi_version_500",
+    "oclc_abi_version_600",
     "oclc_correctly_rounded_sqrt_off",
     "oclc_correctly_rounded_sqrt_on",
     "oclc_daz_opt_off",
@@ -56,6 +57,10 @@ AMD_DEVICE_LIBS_TARGETS = [
     "oclc_isa_version_1101",
     "oclc_isa_version_1102",
     "oclc_isa_version_1103",
+    "oclc_isa_version_1150",
+    "oclc_isa_version_1151",
+    "oclc_isa_version_1200",
+    "oclc_isa_version_1201",
     "oclc_isa_version_600",
     "oclc_isa_version_601",
     "oclc_isa_version_602",
@@ -79,10 +84,16 @@ AMD_DEVICE_LIBS_TARGETS = [
     "oclc_isa_version_90a",
     "oclc_isa_version_90c",
     "oclc_isa_version_940",
+    "oclc_isa_version_941",
+    "oclc_isa_version_942",
     "oclc_unsafe_math_off",
     "oclc_unsafe_math_on",
     "oclc_wavefrontsize64_off",
     "oclc_wavefrontsize64_on",
+    "oclc_isa_version_10_1_generic",
+    "oclc_isa_version_10_3_generic",
+    "oclc_isa_version_11_generic",
+    "oclc_isa_version_9_generic",
     "ocml",
     "ockl",
     "opencl",
@@ -101,6 +112,7 @@ for f in $(SRCS)
 do
     base=$$(basename $$f)
     without_extension=$${base%.*}
+    without_extension=$$(echo $$without_extension | tr '-' '_')
     $(location :bc2h) $$f $(RULEDIR)/amd/comgr/internal/$${without_extension}.inc "$${without_extension}_lib"
 done
     """,
@@ -277,6 +289,7 @@ ll_binary(
 OCLC_NAMES = [
     "abi_version_400",
     "abi_version_500",
+    "abi_version_600",
     "correctly_rounded_sqrt_off",
     "correctly_rounded_sqrt_on",
     "daz_opt_off",
@@ -300,6 +313,8 @@ OCLC_NAMES = [
     "isa_version_1103",
     "isa_version_1150",
     "isa_version_1151",
+    "isa_version_1200",
+    "isa_version_1201",
     "isa_version_600",
     "isa_version_601",
     "isa_version_602",
@@ -325,6 +340,10 @@ OCLC_NAMES = [
     "isa_version_940",
     "isa_version_941",
     "isa_version_942",
+    "isa_version_10-1-generic",
+    "isa_version_10-3-generic",
+    "isa_version_11-generic",
+    "isa_version_9-generic",
     "unsafe_math_off",
     "unsafe_math_on",
     "wavefrontsize64_off",
