@@ -408,8 +408,6 @@ def link_executable_args(ctx, in_files, out_file, mode):
     args.add("--host-triple=x86_64-pc-linux-gnu")
     args.add("--linker-path={}".format(toolchain.linker.path))
 
-    args.add("--")
-
     args.add("--color-diagnostics")
 
     # Encapsulation.

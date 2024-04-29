@@ -84,22 +84,17 @@ def _initialize_rules_ll_impl(_):
         patch_args = ["-p1"],
     )
 
-    # This commit needs further treatment. It changes the default code object
-    # version from 4 to 5 which appears to cause segfaults.
-    # clr_commit = "2eab055436e4ccda8b52ad801bfaa44adfda885c"
-
     http_archive(
         name = "clr",
         build_file = "@rules_ll//third-party-overlays:clr.BUILD.bazel",
-        strip_prefix = "clr-8c8c00f64c4fa860f75b713d338edd364229326f",
-        integrity = "sha256-+7BpjDZqUrjZONoqaesYF6UvOvcj+H7iWMKlH5OIwec=",
+        strip_prefix = "clr-5914ac3c6e9b3848023a7fa25e19e560b1c38541",
+        integrity = "sha256-CK28uzu4HwjXWX9moxr+fN9py2dxEcaSyn8O5mKTsQk=",
         urls = [
-            "https://github.com/ROCm/clr/archive/8c8c00f64c4fa860f75b713d338edd364229326f.zip",
+            "https://github.com/ROCm/clr/archive/5914ac3c6e9b3848023a7fa25e19e560b1c38541.zip",
         ],
         patches = [
             "@rules_ll//patches:hipamd_deprecate_fix.diff",
             "@rules_ll//patches:hipamd_correct_jit_option.diff",
-            "@rules_ll//patches:hipamd_inconsistent_overrides.diff",
             "@rules_ll//patches:hipamd_fix_extraneous_parentheses.diff",
             "@rules_ll//patches:hipamd_enforce_semicolon.diff",
             "@rules_ll//patches:hipamd_fix_local_address_space.diff",
@@ -110,10 +105,10 @@ def _initialize_rules_ll_impl(_):
     http_archive(
         name = "llvm-project-rocm",
         build_file = "@rules_ll//third-party-overlays:llvm-project-rocm.BUILD.bazel",
-        integrity = "sha256-wPNx2by33XA4kDw2xUADzI9xpTqqGukH7qhZG9BbYUU=",
-        strip_prefix = "llvm-project-e80d300ecf0c235948345e81264af62adb479f02",
+        strip_prefix = "llvm-project-91c18ff3482abdf90239e9b482797403f6e7e9bc",
+        integrity = "sha256-U5bqkNfuXHa0s+bc6cq9caAIFgHoyLFz6i0tBXgmTSw=",
         urls = [
-            "https://github.com/ROCm/llvm-project/archive/e80d300ecf0c235948345e81264af62adb479f02.zip",
+            "https://github.com/ROCm/llvm-project/archive/91c18ff3482abdf90239e9b482797403f6e7e9bc.zip",
         ],
         patches = [
             "@rules_ll//patches:comgr_bc2h.diff",
