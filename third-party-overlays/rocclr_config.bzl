@@ -37,6 +37,6 @@ ROCCLR_DEFINES = [
     "CL_USE_DEPRECATED_OPENCL_1_2_APIS",
     "CL_USE_DEPRECATED_OPENCL_2_0_APIS",
 ] + select({
-    "@comgr//:shared": ["COMGR_DYN_DLL"],
+    "@llvm-project-rocm//:shared": ["COMGR_DYN_DLL"],
     "//conditions:default": [],
 })

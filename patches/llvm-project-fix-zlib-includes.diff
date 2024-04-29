@@ -1,11 +1,11 @@
 diff --git a/lld/ELF/OutputSections.cpp b/lld/ELF/OutputSections.cpp
-index 0b9b76e5b832..22cb971dd795 100644
+index ee9374186787..5bef0824d260 100644
 --- a/lld/ELF/OutputSections.cpp
 +++ b/lld/ELF/OutputSections.cpp
-@@ -22,7 +22,7 @@
- #include "llvm/Support/Path.h"
- #include "llvm/Support/TimeProfiler.h"
+@@ -24,7 +24,7 @@
  #if LLVM_ENABLE_ZLIB
+ // Avoid introducing max as a macro from Windows headers.
+ #define NOMINMAX
 -#include <zlib.h>
 +#include "zlib.h"
  #endif
@@ -37,4 +37,3 @@ index 8e57ba798f52..9c460108d5bc 100644
  #endif
  #if LLVM_ENABLE_ZSTD
  #include <zstd.h>
-

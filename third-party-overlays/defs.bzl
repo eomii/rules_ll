@@ -65,12 +65,8 @@ def _opencl_bitcode_library_impl(ctx):
 
         args.add_all(
             CLANG_OCL_FLAGS + [
-                "-c",
                 "-emit-llvm",
-                "-Xclang",
-                "-mlink-builtin-bitcode",
-                "-Xclang",
-                ctx.file.irif,
+                "-c",
                 file,
                 "-o",
                 intermediary_bitcode,
@@ -85,7 +81,7 @@ def _opencl_bitcode_library_impl(ctx):
             inputs = [file] + ctx.files.hdrs,
             executable = toolchain.cpp_driver,
             arguments = [args],
-            tools = [ctx.file.irif] + toolchain.builtin_includes,
+            tools = toolchain.builtin_includes,
             use_default_shell_env = False,
             env = compile_object_environment(ctx),
         )
@@ -177,15 +173,11 @@ opencl_bitcode_library = rule(
             default = "@rules_ll//ll:current_ll_toolchain_configuration",
         ),
         "compilation_mode": attr.string(default = "cpp"),
-        "irif": attr.label(
-            allow_single_file = True,
-            default = "@rocm-device-libs//:irif",
-        ),
         "prepare_builtins": attr.label(
             allow_single_file = True,
             executable = True,
             cfg = transition_to_bootstrap,
-            default = "@rocm-device-libs//:prepare-builtins",
+            default = "@llvm-project-rocm//:prepare-builtins",
         ),
         "_allowlist_function_transition": attr.label(
             default = "@bazel_tools//tools/allowlists/function_transition_allowlist",

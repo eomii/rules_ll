@@ -13,7 +13,1194 @@ ll_library(
     compilation_mode = "bootstrap",
     visibility = ["//visibility:public"],
     deps = [
-        "//compiler-rt/lib/builtins",
-        "//compiler-rt/lib/builtins:crt",
+        ":builtins",
+        ":crt",
+    ],
+)
+
+filegroup(
+    name = "asan_headers",
+    srcs = [
+        "lib/asan/asan_activation.h",
+        "lib/asan/asan_activation_flags.inc",
+        "lib/asan/asan_allocator.h",
+        "lib/asan/asan_descriptions.h",
+        "lib/asan/asan_errors.h",
+        "lib/asan/asan_fake_stack.h",
+        "lib/asan/asan_flags.h",
+        "lib/asan/asan_flags.inc",
+        "lib/asan/asan_init_version.h",
+        "lib/asan/asan_interceptors.h",
+        "lib/asan/asan_interceptors_memintrinsics.h",
+        "lib/asan/asan_interface.inc",
+        "lib/asan/asan_interface_internal.h",
+        "lib/asan/asan_internal.h",
+        "lib/asan/asan_mapping.h",
+        "lib/asan/asan_poisoning.h",
+        "lib/asan/asan_premap_shadow.h",
+        "lib/asan/asan_report.h",
+        "lib/asan/asan_scariness_score.h",
+        "lib/asan/asan_stack.h",
+        "lib/asan/asan_stats.h",
+        "lib/asan/asan_suppressions.h",
+        "lib/asan/asan_thread.h",
+    ],
+)
+
+filegroup(
+    name = "asan_sources",
+    srcs = [
+        "lib/asan/asan_activation.cpp",
+        "lib/asan/asan_allocator.cpp",
+        "lib/asan/asan_debugging.cpp",
+        "lib/asan/asan_descriptions.cpp",
+        "lib/asan/asan_errors.cpp",
+        "lib/asan/asan_fake_stack.cpp",
+        "lib/asan/asan_flags.cpp",
+        "lib/asan/asan_fuchsia.cpp",
+        "lib/asan/asan_globals.cpp",
+        "lib/asan/asan_globals_win.cpp",
+        "lib/asan/asan_interceptors.cpp",
+        "lib/asan/asan_interceptors_memintrinsics.cpp",
+        "lib/asan/asan_interceptors_vfork.S",  # Not Win32 and not Apple.
+        "lib/asan/asan_linux.cpp",
+        "lib/asan/asan_mac.cpp",
+        "lib/asan/asan_malloc_linux.cpp",
+        "lib/asan/asan_malloc_mac.cpp",
+        "lib/asan/asan_malloc_win.cpp",
+        "lib/asan/asan_memory_profile.cpp",
+        "lib/asan/asan_poisoning.cpp",
+        "lib/asan/asan_posix.cpp",
+        "lib/asan/asan_premap_shadow.cpp",
+        "lib/asan/asan_report.cpp",
+        "lib/asan/asan_rtl.cpp",
+        "lib/asan/asan_shadow_setup.cpp",
+        "lib/asan/asan_stack.cpp",
+        "lib/asan/asan_stats.cpp",
+        "lib/asan/asan_suppressions.cpp",
+        "lib/asan/asan_thread.cpp",
+        "lib/asan/asan_win.cpp",
+    ],
+)
+
+filegroup(
+    name = "asan_cxx_sources",
+    srcs = [
+        "lib/asan/asan_new_delete.cpp",
+    ],
+)
+
+filegroup(
+    name = "asan_static_sources",
+    srcs = [
+        "lib/asan/asan_rtl_static.cpp",
+        "lib/asan/asan_rtl_x86_64.S",  # Not Win32 and not Apple.
+    ],
+)
+
+filegroup(
+    name = "asan_preinit_sources",
+    srcs = [
+        "lib/asan/asan_preinit.cpp",
+    ],
+)
+
+ll_library(
+    name = "RTAsan_dynamic",
+    srcs = [
+        ":asan_cxx_sources",
+        ":asan_sources",
+    ],
+    hdrs = [
+        ":asan_headers",
+        ":interception_headers",
+        ":lsan_headers",
+        ":sanitizer_impl_headers",
+        ":ubsan_headers",
+    ],
+    compilation_mode = "bootstrap",
+    compile_flags = [
+        "-fvisibility=hidden",
+    ],
+    defines = ["ASAN_DYNAMIC=1"],
+    emit = ["objects"],
+    includes = ["compiler-rt/lib"],
+    visibility = ["//visibility:public"],
+)
+
+ll_library(
+    name = "RTAsan",
+    srcs = [
+        ":asan_sources",
+    ],
+    hdrs = [
+        ":asan_headers",
+        ":interception_headers",
+        ":lsan_headers",
+        ":sanitizer_impl_headers",
+        ":ubsan_headers",
+    ],
+    compilation_mode = "bootstrap",
+    emit = ["objects"],
+    includes = ["compiler-rt/lib"],
+    visibility = ["//visibility:public"],
+)
+
+ll_library(
+    name = "RTAsan_cxx",
+    srcs = [
+        ":asan_cxx_sources",
+    ],
+    hdrs = [
+        ":asan_headers",
+        ":interception_headers",
+        ":sanitizer_impl_headers",
+    ],
+    compilation_mode = "bootstrap",
+    emit = ["objects"],
+    includes = ["compiler-rt/lib"],
+    visibility = ["//visibility:public"],
+)
+
+ll_library(
+    name = "RTAsan_static",
+    srcs = [
+        "lib/asan/asan_rtl_static.cpp",
+        "lib/asan/asan_rtl_x86_64.S",  # Not Win32 and not Apple.
+    ],
+    hdrs = [
+        ":asan_headers",
+        ":sanitizer_impl_headers",
+    ],
+    compilation_mode = "bootstrap",
+    emit = ["objects"],
+    includes = ["compiler-rt/lib"],
+    visibility = ["//visibility:public"],
+)
+
+ll_library(
+    name = "RTAsan_preinit",
+    srcs = [
+        ":asan_preinit_sources",
+    ],
+    hdrs = [
+        ":asan_headers",
+        ":sanitizer_impl_headers",
+    ],
+    compilation_mode = "bootstrap",
+    emit = ["objects"],
+    includes = ["compiler-rt/lib"],
+    visibility = ["//visibility:public"],
+)
+
+ll_library(
+    name = "clang_rt.asan",
+    compilation_mode = "bootstrap",
+    visibility = ["//visibility:public"],
+    deps = [
+        ":RTAsan",
+        ":RTAsan_preinit",
+        ":RTInterception",
+        ":RTLSanCommon",
+        ":RTSanitizerCommon",
+        ":RTSanitizerCommonCoverage",
+        ":RTSanitizerCommonLibc",
+        ":RTSanitizerCommonSymbolizer",
+        ":RTUbsan",
+    ],
+)
+
+ll_library(
+    # We want the output library to be named libasan.so. Otherwise it will not
+    # be recognized by IsDynamicRTName in asan_linux.cpp.
+    name = "libasan",
+    compilation_mode = "bootstrap",
+    emit = ["shared_object"],
+    shared_object_link_flags = [
+        "--eh-frame-hdr",
+    ],
+    visibility = ["//visibility:public"],
+    deps = [
+        ":RTAsan_dynamic",
+        ":RTInterception",
+        ":RTLSanCommon",
+        ":RTSanitizerCommon",
+        ":RTSanitizerCommonCoverage",
+        ":RTSanitizerCommonLibc",
+        ":RTSanitizerCommonSymbolizer",
+        ":RTUbsan",
+        ":RTUbsan_cxx",
+    ],
+)
+
+ll_library(
+    name = "clang_rt.asan_cxx",
+    compilation_mode = "bootstrap",
+    visibility = ["//visibility:public"],
+    deps = [
+        ":RTAsan_cxx",
+        ":RTUbsan_cxx",
+    ],
+)
+
+ll_library(
+    name = "clang_rt.asan_static",
+    compilation_mode = "bootstrap",
+    visibility = ["//visibility:public"],
+    deps = [
+        ":RTAsan_static",
+    ],
+)
+
+ll_library(
+    name = "clang_rt.asan-preinit",
+    compilation_mode = "bootstrap",
+    visibility = ["//visibility:public"],
+    deps = [
+        ":RTAsan_preinit",
+    ],
+)
+
+GENERIC_SOURCES = [
+    "lib/builtins/absvdi2.c",
+    "lib/builtins/absvsi2.c",
+    "lib/builtins/absvti2.c",
+    "lib/builtins/adddf3.c",
+    "lib/builtins/addsf3.c",
+    "lib/builtins/addvdi3.c",
+    "lib/builtins/addvsi3.c",
+    "lib/builtins/addvti3.c",
+    "lib/builtins/apple_versioning.c",
+    "lib/builtins/ashldi3.c",
+    "lib/builtins/ashlti3.c",
+    "lib/builtins/ashrdi3.c",
+    "lib/builtins/ashrti3.c",
+    "lib/builtins/bswapdi2.c",
+    "lib/builtins/bswapsi2.c",
+    "lib/builtins/clzdi2.c",
+    "lib/builtins/clzsi2.c",
+    "lib/builtins/clzti2.c",
+    "lib/builtins/cmpdi2.c",
+    "lib/builtins/cmpti2.c",
+    "lib/builtins/comparedf2.c",
+    "lib/builtins/comparesf2.c",
+    "lib/builtins/ctzdi2.c",
+    "lib/builtins/ctzsi2.c",
+    "lib/builtins/ctzti2.c",
+    "lib/builtins/divdc3.c",
+    "lib/builtins/divdf3.c",
+    "lib/builtins/divdi3.c",
+    "lib/builtins/divmoddi4.c",
+    "lib/builtins/divmodsi4.c",
+    "lib/builtins/divmodti4.c",
+    "lib/builtins/divsc3.c",
+    "lib/builtins/divsf3.c",
+    "lib/builtins/divsi3.c",
+    "lib/builtins/divti3.c",
+    "lib/builtins/extendsfdf2.c",
+    "lib/builtins/extendhfsf2.c",
+    "lib/builtins/ffsdi2.c",
+    "lib/builtins/ffssi2.c",
+    "lib/builtins/ffsti2.c",
+    "lib/builtins/fixdfdi.c",
+    "lib/builtins/fixdfsi.c",
+    "lib/builtins/fixdfti.c",
+    "lib/builtins/fixsfdi.c",
+    "lib/builtins/fixsfsi.c",
+    "lib/builtins/fixsfti.c",
+    "lib/builtins/fixunsdfdi.c",
+    "lib/builtins/fixunsdfsi.c",
+    "lib/builtins/fixunsdfti.c",
+    "lib/builtins/fixunssfdi.c",
+    "lib/builtins/fixunssfsi.c",
+    "lib/builtins/fixunssfti.c",
+    "lib/builtins/floatdidf.c",
+    "lib/builtins/floatdisf.c",
+    "lib/builtins/floatsidf.c",
+    "lib/builtins/floatsisf.c",
+    "lib/builtins/floattidf.c",
+    "lib/builtins/floattisf.c",
+    "lib/builtins/floatundidf.c",
+    "lib/builtins/floatundisf.c",
+    "lib/builtins/floatunsidf.c",
+    "lib/builtins/floatunsisf.c",
+    "lib/builtins/floatuntidf.c",
+    "lib/builtins/floatuntisf.c",
+    "lib/builtins/fp_mode.c",
+    "lib/builtins/int_util.c",
+    "lib/builtins/lshrdi3.c",
+    "lib/builtins/lshrti3.c",
+    "lib/builtins/moddi3.c",
+    "lib/builtins/modsi3.c",
+    "lib/builtins/modti3.c",
+    "lib/builtins/muldc3.c",
+    "lib/builtins/muldf3.c",
+    "lib/builtins/muldi3.c",
+    "lib/builtins/mulodi4.c",
+    "lib/builtins/mulosi4.c",
+    "lib/builtins/muloti4.c",
+    "lib/builtins/mulsc3.c",
+    "lib/builtins/mulsf3.c",
+    "lib/builtins/multi3.c",
+    "lib/builtins/mulvdi3.c",
+    "lib/builtins/mulvsi3.c",
+    "lib/builtins/mulvti3.c",
+    "lib/builtins/negdf2.c",
+    "lib/builtins/negdi2.c",
+    "lib/builtins/negsf2.c",
+    "lib/builtins/negti2.c",
+    "lib/builtins/negvdi2.c",
+    "lib/builtins/negvsi2.c",
+    "lib/builtins/negvti2.c",
+    "lib/builtins/os_version_check.c",
+    "lib/builtins/paritydi2.c",
+    "lib/builtins/paritysi2.c",
+    "lib/builtins/parityti2.c",
+    "lib/builtins/popcountdi2.c",
+    "lib/builtins/popcountsi2.c",
+    "lib/builtins/popcountti2.c",
+    "lib/builtins/powidf2.c",
+    "lib/builtins/powisf2.c",
+    "lib/builtins/subdf3.c",
+    "lib/builtins/subsf3.c",
+    "lib/builtins/subvdi3.c",
+    "lib/builtins/subvsi3.c",
+    "lib/builtins/subvti3.c",
+    "lib/builtins/trampoline_setup.c",
+    "lib/builtins/truncdfhf2.c",
+    "lib/builtins/truncdfsf2.c",
+    "lib/builtins/truncsfhf2.c",
+    "lib/builtins/ucmpdi2.c",
+    "lib/builtins/ucmpti2.c",
+    "lib/builtins/udivdi3.c",
+    "lib/builtins/udivmoddi4.c",
+    "lib/builtins/udivmodsi4.c",
+    "lib/builtins/udivmodti4.c",
+    "lib/builtins/udivsi3.c",
+    "lib/builtins/udivti3.c",
+    "lib/builtins/umoddi3.c",
+    "lib/builtins/umodsi3.c",
+    "lib/builtins/umodti3.c",
+
+    # Not Fuchsia and not a bare-metal build.
+    "lib/builtins/emutls.c",
+    "lib/builtins/enable_execute_stack.c",
+    "lib/builtins/eprintf.c",
+
+    # Not sure whether we want atomic in this or separately.
+    "lib/builtins/atomic.c",
+
+    # Not sure whether this is for libunwind or gcc_s. gotta check.
+    "lib/builtins/gcc_personality_v0.c",
+
+    # Not Fuchsia.
+    "lib/builtins/clear_cache.c",
+]
+
+GENERIC_TF_SOURCES = [
+    "lib/builtins/addtf3.c",
+    "lib/builtins/comparetf2.c",
+    "lib/builtins/divtc3.c",
+    "lib/builtins/divtf3.c",
+    "lib/builtins/extenddftf2.c",
+    "lib/builtins/extendhftf2.c",
+    "lib/builtins/extendsftf2.c",
+    "lib/builtins/fixtfdi.c",
+    "lib/builtins/fixtfsi.c",
+    "lib/builtins/fixtfti.c",
+    "lib/builtins/fixunstfdi.c",
+    "lib/builtins/fixunstfsi.c",
+    "lib/builtins/fixunstfti.c",
+    "lib/builtins/floatditf.c",
+    "lib/builtins/floatsitf.c",
+    "lib/builtins/floattitf.c",
+    "lib/builtins/floatunditf.c",
+    "lib/builtins/floatunsitf.c",
+    "lib/builtins/floatuntitf.c",
+    "lib/builtins/multc3.c",
+    "lib/builtins/multf3.c",
+    "lib/builtins/powitf2.c",
+    "lib/builtins/subtf3.c",
+    "lib/builtins/trunctfdf2.c",
+    "lib/builtins/trunctfhf2.c",
+    "lib/builtins/trunctfsf2.c",
+]
+
+X86_ARCH_SOURCES = [
+    "lib/builtins/cpu_model/x86.c",
+    "lib/builtins/i386/fp_mode.c",  # Used on 64-bit as well.
+]
+
+X86_80_BIT_SOURCES = [
+    "lib/builtins/divxc3.c",
+    "lib/builtins/extendxftf2.c",
+    "lib/builtins/fixxfdi.c",
+    "lib/builtins/fixxfti.c",
+    "lib/builtins/fixunsxfdi.c",
+    "lib/builtins/fixunsxfsi.c",
+    "lib/builtins/fixunsxfti.c",
+    "lib/builtins/floatdixf.c",
+    "lib/builtins/floattixf.c",
+    "lib/builtins/floatundixf.c",
+    "lib/builtins/floatuntixf.c",
+    "lib/builtins/mulxc3.c",
+    "lib/builtins/powixf2.c",
+    "lib/builtins/trunctfxf2.c",
+]
+
+X86_64_SOURCES = GENERIC_SOURCES + GENERIC_TF_SOURCES + X86_ARCH_SOURCES + X86_80_BIT_SOURCES + [
+    "lib/builtins/x86_64/floatdidf.c",
+    "lib/builtins/x86_64/floatdisf.c",
+    "lib/builtins/x86_64/floatundidf.S",
+    "lib/builtins/x86_64/floatundisf.S",
+    "lib/builtins/x86_64/floatdixf.c",
+    "lib/builtins/x86_64/floatundixf.S",
+]
+
+ll_library(
+    name = "builtins",
+    srcs = X86_64_SOURCES,
+    hdrs = [
+        "lib/builtins/assembly.h",
+        "lib/builtins/cpu_model/cpu_model.h",
+        "lib/builtins/fp_add_impl.inc",
+        "lib/builtins/fp_compare_impl.inc",
+        "lib/builtins/fp_div_impl.inc",
+        "lib/builtins/fp_extend.h",
+        "lib/builtins/fp_extend_impl.inc",
+        "lib/builtins/fp_fixint_impl.inc",
+        "lib/builtins/fp_fixuint_impl.inc",
+        "lib/builtins/fp_lib.h",
+        "lib/builtins/fp_mode.h",
+        "lib/builtins/fp_mul_impl.inc",
+        "lib/builtins/fp_trunc.h",
+        "lib/builtins/fp_trunc_impl.inc",
+        "lib/builtins/int_div_impl.inc",
+        "lib/builtins/int_endianness.h",
+        "lib/builtins/int_lib.h",
+        "lib/builtins/int_math.h",
+        "lib/builtins/int_mulo_impl.inc",
+        "lib/builtins/int_mulv_impl.inc",
+        "lib/builtins/int_to_fp.h",
+        "lib/builtins/int_to_fp_impl.inc",
+        "lib/builtins/int_types.h",
+        "lib/builtins/int_util.h",
+    ],
+    compilation_mode = "bootstrap",
+    visibility = ["//visibility:public"],
+)
+
+ll_library(
+    name = "crtbegin",
+    srcs = ["lib/builtins/crtbegin.c"],
+    compilation_mode = "bootstrap",
+    defines = ["EH_USE_FRAME_REGISTRY"],
+    emit = ["objects"],
+    visibility = ["//visibility:public"],
+)
+
+ll_library(
+    name = "crtend",
+    srcs = ["lib/builtins/crtend.c"],
+    compilation_mode = "bootstrap",
+    emit = ["objects"],
+    visibility = ["//visibility:public"],
+)
+
+ll_library(
+    name = "crt",
+    compilation_mode = "bootstrap",
+    visibility = ["//visibility:public"],
+    deps = [
+        ":crtbegin",
+        ":crtend",
+    ],
+)
+
+filegroup(
+    name = "interception_headers",
+    srcs = [
+        "lib/interception/interception.h",
+        "lib/interception/interception_linux.h",
+        "lib/interception/interception_mac.h",
+        "lib/interception/interception_win.h",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+ll_library(
+    name = "RTInterception",
+    srcs = [
+        "lib/interception/interception_linux.cpp",
+        "lib/interception/interception_mac.cpp",
+        "lib/interception/interception_type_test.cpp",
+        "lib/interception/interception_win.cpp",
+    ],
+    hdrs = [
+        ":interception_headers",
+        ":sanitizer_impl_headers",
+    ],
+    compilation_mode = "bootstrap",
+    includes = ["compiler-rt/lib"],
+    visibility = ["//visibility:public"],
+)
+
+filegroup(
+    name = "lsan_headers",
+    srcs = [
+        "lib/lsan/lsan.h",
+        "lib/lsan/lsan_allocator.h",
+        "lib/lsan/lsan_common.h",
+        "lib/lsan/lsan_flags.inc",
+        "lib/lsan/lsan_posix.h",  # Missing in CMake.
+        "lib/lsan/lsan_thread.h",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+ll_library(
+    name = "RTLSanCommon",
+    srcs = [
+        "lib/lsan/lsan_common.cpp",
+        "lib/lsan/lsan_common_fuchsia.cpp",
+        "lib/lsan/lsan_common_linux.cpp",
+        "lib/lsan/lsan_common_mac.cpp",
+    ],
+    hdrs = [
+        ":lsan_headers",
+        ":sanitizer_impl_headers",
+    ],
+    compilation_mode = "bootstrap",
+    includes = ["compiler-rt/lib"],
+    visibility = ["//visibility:public"],
+)
+
+ll_library(
+    name = "clang_rt.lsan",
+    srcs = [
+        "lib/lsan/lsan.cpp",
+        "lib/lsan/lsan_allocator.cpp",
+        "lib/lsan/lsan_fuchsia.cpp",
+        "lib/lsan/lsan_interceptors.cpp",
+        "lib/lsan/lsan_linux.cpp",
+        "lib/lsan/lsan_mac.cpp",
+        "lib/lsan/lsan_malloc_mac.cpp",
+        "lib/lsan/lsan_posix.cpp",
+        "lib/lsan/lsan_preinit.cpp",
+        "lib/lsan/lsan_thread.cpp",
+    ],
+    hdrs = [
+        ":interception_headers",
+        ":lsan_headers",
+        ":sanitizer_impl_headers",
+    ],
+    compilation_mode = "bootstrap",
+    includes = ["compiler-rt/lib"],
+    visibility = ["//visibility:public"],
+    deps = [
+        ":RTInterception",
+        ":RTLSanCommon",
+        ":RTSanitizerCommon",
+        ":RTSanitizerCommonCoverage",
+        ":RTSanitizerCommonLibc",
+        ":RTSanitizerCommonSymbolizer",
+    ],
+)
+
+filegroup(
+    name = "msan_headers",
+    srcs = [
+        "lib/msan/msan.h",
+        "lib/msan/msan_allocator.h",
+        "lib/msan/msan_chained_origin_depot.h",
+        "lib/msan/msan_dl.h",
+        "lib/msan/msan_flags.h",
+        "lib/msan/msan_flags.inc",
+        "lib/msan/msan_interface_internal.h",
+        "lib/msan/msan_origin.h",
+        "lib/msan/msan_poisoning.h",
+        "lib/msan/msan_report.h",
+        "lib/msan/msan_thread.h",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+ll_library(
+    name = "clang_rt.msan",
+    srcs = [
+        "lib/msan/msan.cpp",
+        "lib/msan/msan_allocator.cpp",
+        "lib/msan/msan_chained_origin_depot.cpp",
+        "lib/msan/msan_dl.cpp",
+        "lib/msan/msan_interceptors.cpp",
+        "lib/msan/msan_linux.cpp",
+        "lib/msan/msan_poisoning.cpp",
+        "lib/msan/msan_report.cpp",
+        "lib/msan/msan_thread.cpp",
+    ],
+    hdrs = [
+        ":interception_headers",
+        ":msan_headers",
+        ":sanitizer_impl_headers",
+        ":ubsan_headers",
+    ],
+    compilation_mode = "bootstrap",
+    compile_flags = [
+        "-ffreestanding",
+    ],
+    includes = ["compiler-rt/lib"],
+    visibility = ["//visibility:public"],
+    deps = [
+        ":RTInterception",
+        ":RTSanitizerCommon",
+        ":RTSanitizerCommonCoverage",
+        ":RTSanitizerCommonLibc",
+        ":RTSanitizerCommonSymbolizer",
+        ":RTUbsan",
+    ],
+)
+
+ll_library(
+    name = "clang_rt.msan_cxx",
+    srcs = [
+        "lib/msan/msan_new_delete.cpp",
+    ],
+    hdrs = [
+        ":interception_headers",
+        ":msan_headers",
+        ":sanitizer_impl_headers",
+        ":ubsan_headers",
+    ],
+    compilation_mode = "bootstrap",
+    compile_flags = [
+        "-ffreestanding",
+    ],
+    includes = ["compiler-rt/lib"],
+    visibility = ["//visibility:public"],
+    deps = [
+        ":RTUbsan_cxx",
+    ],
+)
+
+ll_library(
+    name = "clang_rt.profile",
+    srcs = [
+        "lib/profile/GCDAProfiling.c",
+        "lib/profile/InstrProfiling.c",
+        "lib/profile/InstrProfilingBuffer.c",
+        "lib/profile/InstrProfilingFile.c",
+        "lib/profile/InstrProfilingInternal.c",
+        "lib/profile/InstrProfilingMerge.c",
+        "lib/profile/InstrProfilingMergeFile.c",
+        "lib/profile/InstrProfilingNameVar.c",
+        "lib/profile/InstrProfilingPlatformDarwin.c",
+        "lib/profile/InstrProfilingPlatformFuchsia.c",
+        "lib/profile/InstrProfilingPlatformLinux.c",
+        "lib/profile/InstrProfilingPlatformOther.c",
+        "lib/profile/InstrProfilingPlatformWindows.c",
+        "lib/profile/InstrProfilingRuntime.cpp",
+        "lib/profile/InstrProfilingUtil.c",
+        "lib/profile/InstrProfilingValue.c",
+        "lib/profile/InstrProfilingVersionVar.c",
+        "lib/profile/InstrProfilingWriter.c",
+    ],
+    hdrs = [
+        "lib/profile/InstrProfiling.h",
+        "lib/profile/InstrProfilingInternal.h",
+        "lib/profile/InstrProfilingPort.h",
+        "lib/profile/InstrProfilingUtil.h",
+        "lib/profile/WindowsMMap.h",
+    ],
+    compilation_mode = "bootstrap",
+    defines = [
+        "COMPILER_RT_HAS_UNAME=1",
+        "COMPILER_RT_HAS_FCNTL_LCK=1",
+        "COMPILER_RT_HAS_ATOMICS=1",
+    ],
+    includes = [
+        "compiler-rt/include",
+        "compiler-rt/lib",
+    ],
+    visibility = ["//visibility:public"],
+    deps = [":compiler_rt_hdrs"],
+)
+
+filegroup(
+    name = "sanitizer_impl_headers",
+    srcs = [
+        "lib/sanitizer_common/sancov_flags.h",
+        "lib/sanitizer_common/sancov_flags.inc",
+        "lib/sanitizer_common/sanitizer_addrhashmap.h",
+        "lib/sanitizer_common/sanitizer_allocator.h",
+        "lib/sanitizer_common/sanitizer_allocator_checks.h",
+        "lib/sanitizer_common/sanitizer_allocator_combined.h",
+        "lib/sanitizer_common/sanitizer_allocator_dlsym.h",
+        "lib/sanitizer_common/sanitizer_allocator_interface.h",
+        "lib/sanitizer_common/sanitizer_allocator_internal.h",
+        "lib/sanitizer_common/sanitizer_allocator_local_cache.h",
+        "lib/sanitizer_common/sanitizer_allocator_primary32.h",
+        "lib/sanitizer_common/sanitizer_allocator_primary64.h",
+        "lib/sanitizer_common/sanitizer_allocator_report.h",
+        "lib/sanitizer_common/sanitizer_allocator_secondary.h",
+        "lib/sanitizer_common/sanitizer_allocator_size_class_map.h",
+        "lib/sanitizer_common/sanitizer_allocator_stats.h",
+        "lib/sanitizer_common/sanitizer_array_ref.h",
+        "lib/sanitizer_common/sanitizer_asm.h",
+        "lib/sanitizer_common/sanitizer_atomic.h",
+        "lib/sanitizer_common/sanitizer_atomic_clang.h",
+        "lib/sanitizer_common/sanitizer_atomic_clang_mips.h",
+        "lib/sanitizer_common/sanitizer_atomic_clang_other.h",
+        "lib/sanitizer_common/sanitizer_atomic_clang_x86.h",
+        "lib/sanitizer_common/sanitizer_atomic_msvc.h",
+        "lib/sanitizer_common/sanitizer_bitvector.h",
+        "lib/sanitizer_common/sanitizer_bvgraph.h",
+        "lib/sanitizer_common/sanitizer_chained_origin_depot.h",
+        "lib/sanitizer_common/sanitizer_common.h",
+        "lib/sanitizer_common/sanitizer_common_interceptors.inc",
+        "lib/sanitizer_common/sanitizer_common_interceptors_format.inc",
+        "lib/sanitizer_common/sanitizer_common_interceptors_ioctl.inc",
+        "lib/sanitizer_common/sanitizer_common_interceptors_memintrinsics.inc",
+        "lib/sanitizer_common/sanitizer_common_interceptors_netbsd_compat.inc",  # Missing in CMake.
+
+        # Always linux. Missing in CMake.
+        "lib/sanitizer_common/sanitizer_common_interceptors_vfork_aarch64.inc.S",
+        "lib/sanitizer_common/sanitizer_common_interceptors_vfork_arm.inc.S",
+        "lib/sanitizer_common/sanitizer_common_interceptors_vfork_i386.inc.S",
+        "lib/sanitizer_common/sanitizer_common_interceptors_vfork_loongarch64.inc.S",
+        "lib/sanitizer_common/sanitizer_common_interceptors_vfork_riscv64.inc.S",
+        "lib/sanitizer_common/sanitizer_common_interceptors_vfork_x86_64.inc.S",
+        "lib/sanitizer_common/sanitizer_common_interface.inc",
+        "lib/sanitizer_common/sanitizer_common_interface_posix.inc",
+        "lib/sanitizer_common/sanitizer_common_syscalls.inc",
+        "lib/sanitizer_common/sanitizer_coverage_interface.inc",
+        "lib/sanitizer_common/sanitizer_dbghelp.h",
+        "lib/sanitizer_common/sanitizer_deadlock_detector.h",
+        "lib/sanitizer_common/sanitizer_deadlock_detector_interface.h",
+        "lib/sanitizer_common/sanitizer_dense_map.h",
+        "lib/sanitizer_common/sanitizer_dense_map_info.h",
+        "lib/sanitizer_common/sanitizer_dl.h",
+        "lib/sanitizer_common/sanitizer_errno.h",
+        "lib/sanitizer_common/sanitizer_errno_codes.h",
+        "lib/sanitizer_common/sanitizer_file.h",
+        "lib/sanitizer_common/sanitizer_flag_parser.h",
+        "lib/sanitizer_common/sanitizer_flags.h",
+        "lib/sanitizer_common/sanitizer_flags.inc",
+        "lib/sanitizer_common/sanitizer_flat_map.h",
+        "lib/sanitizer_common/sanitizer_fuchsia.h",
+        "lib/sanitizer_common/sanitizer_getauxval.h",
+        "lib/sanitizer_common/sanitizer_glibc_version.h",  # Missing in CMake.
+        "lib/sanitizer_common/sanitizer_hash.h",
+        "lib/sanitizer_common/sanitizer_interceptors_ioctl_netbsd.inc",
+        "lib/sanitizer_common/sanitizer_interface_internal.h",
+        "lib/sanitizer_common/sanitizer_internal_defs.h",
+        "lib/sanitizer_common/sanitizer_leb128.h",
+        "lib/sanitizer_common/sanitizer_lfstack.h",
+        "lib/sanitizer_common/sanitizer_libc.h",
+        "lib/sanitizer_common/sanitizer_libignore.h",
+        "lib/sanitizer_common/sanitizer_linux.h",
+        "lib/sanitizer_common/sanitizer_list.h",
+        "lib/sanitizer_common/sanitizer_local_address_space_view.h",
+        "lib/sanitizer_common/sanitizer_lzw.h",
+        "lib/sanitizer_common/sanitizer_mac.h",
+        "lib/sanitizer_common/sanitizer_mallinfo.h",
+        "lib/sanitizer_common/sanitizer_malloc_mac.inc",
+        "lib/sanitizer_common/sanitizer_mutex.h",
+        "lib/sanitizer_common/sanitizer_placement_new.h",
+        "lib/sanitizer_common/sanitizer_platform.h",
+        "lib/sanitizer_common/sanitizer_platform_interceptors.h",
+        "lib/sanitizer_common/sanitizer_platform_limits_freebsd.h",  # Missing in CMake.
+        "lib/sanitizer_common/sanitizer_platform_limits_netbsd.h",
+        "lib/sanitizer_common/sanitizer_platform_limits_posix.h",
+        "lib/sanitizer_common/sanitizer_platform_limits_solaris.h",
+        "lib/sanitizer_common/sanitizer_posix.h",
+        "lib/sanitizer_common/sanitizer_procmaps.h",
+        "lib/sanitizer_common/sanitizer_ptrauth.h",
+        "lib/sanitizer_common/sanitizer_quarantine.h",
+        "lib/sanitizer_common/sanitizer_range.h",
+        "lib/sanitizer_common/sanitizer_redefine_builtins.h",
+        "lib/sanitizer_common/sanitizer_report_decorator.h",
+        "lib/sanitizer_common/sanitizer_ring_buffer.h",
+        "lib/sanitizer_common/sanitizer_signal_interceptors.inc",
+        "lib/sanitizer_common/sanitizer_solaris.h",
+        "lib/sanitizer_common/sanitizer_stack_store.h",
+        "lib/sanitizer_common/sanitizer_stackdepot.h",
+        "lib/sanitizer_common/sanitizer_stackdepotbase.h",
+        "lib/sanitizer_common/sanitizer_stacktrace.h",
+        "lib/sanitizer_common/sanitizer_stacktrace_printer.h",
+        "lib/sanitizer_common/sanitizer_stoptheworld.h",
+        "lib/sanitizer_common/sanitizer_suppressions.h",
+        "lib/sanitizer_common/sanitizer_symbolizer.h",
+        "lib/sanitizer_common/sanitizer_symbolizer_markup_constants.h",
+        "lib/sanitizer_common/sanitizer_symbolizer_internal.h",
+        "lib/sanitizer_common/sanitizer_symbolizer_libbacktrace.h",
+        "lib/sanitizer_common/sanitizer_symbolizer_mac.h",
+        "lib/sanitizer_common/sanitizer_symbolizer_markup.h",
+        "lib/sanitizer_common/sanitizer_syscall_generic.inc",
+        "lib/sanitizer_common/sanitizer_syscall_linux_aarch64.inc",
+        "lib/sanitizer_common/sanitizer_syscall_linux_arm.inc",
+        "lib/sanitizer_common/sanitizer_syscall_linux_riscv64.inc",
+        "lib/sanitizer_common/sanitizer_syscall_linux_x86_64.inc",
+        "lib/sanitizer_common/sanitizer_syscalls_netbsd.inc",
+        "lib/sanitizer_common/sanitizer_thread_arg_retval.h",
+        "lib/sanitizer_common/sanitizer_thread_registry.h",
+        "lib/sanitizer_common/sanitizer_thread_safety.h",
+        "lib/sanitizer_common/sanitizer_tls_get_addr.h",
+        "lib/sanitizer_common/sanitizer_type_traits.h",  # Missing in CMake.
+        "lib/sanitizer_common/sanitizer_vector.h",
+        "lib/sanitizer_common/sanitizer_win.h",
+        "lib/sanitizer_common/sanitizer_win_defs.h",
+        "lib/sanitizer_common/sanitizer_win_dll_thunk.h",
+        "lib/sanitizer_common/sanitizer_win_weak_interception.h",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+# TODO: Architecture-specific names as in CMake.
+ll_library(
+    name = "RTSanitizerCommon",
+    srcs = [
+        "lib/sanitizer_common/sanitizer_allocator.cpp",
+        "lib/sanitizer_common/sanitizer_common.cpp",
+        "lib/sanitizer_common/sanitizer_deadlock_detector1.cpp",
+        "lib/sanitizer_common/sanitizer_deadlock_detector2.cpp",
+        "lib/sanitizer_common/sanitizer_errno.cpp",
+        "lib/sanitizer_common/sanitizer_file.cpp",
+        "lib/sanitizer_common/sanitizer_flags.cpp",
+        "lib/sanitizer_common/sanitizer_flag_parser.cpp",
+        "lib/sanitizer_common/sanitizer_fuchsia.cpp",
+        "lib/sanitizer_common/sanitizer_libc.cpp",
+        "lib/sanitizer_common/sanitizer_libignore.cpp",
+        "lib/sanitizer_common/sanitizer_linux.cpp",
+        "lib/sanitizer_common/sanitizer_linux_s390.cpp",
+        "lib/sanitizer_common/sanitizer_mac.cpp",
+        "lib/sanitizer_common/sanitizer_mutex.cpp",
+        "lib/sanitizer_common/sanitizer_netbsd.cpp",
+        "lib/sanitizer_common/sanitizer_platform_limits_freebsd.cpp",
+        "lib/sanitizer_common/sanitizer_platform_limits_linux.cpp",
+        "lib/sanitizer_common/sanitizer_platform_limits_netbsd.cpp",
+        "lib/sanitizer_common/sanitizer_platform_limits_posix.cpp",
+        "lib/sanitizer_common/sanitizer_platform_limits_solaris.cpp",
+        "lib/sanitizer_common/sanitizer_posix.cpp",
+        "lib/sanitizer_common/sanitizer_printf.cpp",
+        "lib/sanitizer_common/sanitizer_procmaps_common.cpp",
+        "lib/sanitizer_common/sanitizer_procmaps_bsd.cpp",
+        "lib/sanitizer_common/sanitizer_procmaps_fuchsia.cpp",
+        "lib/sanitizer_common/sanitizer_procmaps_linux.cpp",
+        "lib/sanitizer_common/sanitizer_procmaps_mac.cpp",
+        "lib/sanitizer_common/sanitizer_procmaps_solaris.cpp",
+        "lib/sanitizer_common/sanitizer_range.cpp",
+        "lib/sanitizer_common/sanitizer_solaris.cpp",
+        "lib/sanitizer_common/sanitizer_stoptheworld_fuchsia.cpp",
+        "lib/sanitizer_common/sanitizer_stoptheworld_mac.cpp",
+        "lib/sanitizer_common/sanitizer_stoptheworld_win.cpp",
+        "lib/sanitizer_common/sanitizer_suppressions.cpp",
+        "lib/sanitizer_common/sanitizer_tls_get_addr.cpp",
+        "lib/sanitizer_common/sanitizer_thread_arg_retval.cpp",
+        "lib/sanitizer_common/sanitizer_thread_registry.cpp",
+        "lib/sanitizer_common/sanitizer_type_traits.cpp",
+        "lib/sanitizer_common/sanitizer_win.cpp",
+
+        # Always termination.
+        "lib/sanitizer_common/sanitizer_termination.cpp",
+    ],
+    hdrs = [":sanitizer_impl_headers"],
+    compilation_mode = "bootstrap",
+    includes = ["compiler-rt/lib"],
+    visibility = ["//visibility:public"],
+)
+
+ll_library(
+    name = "RTSanitizerCommonNoLibc",
+    srcs = [
+        "lib/sanitizer_common/sanitizer_common_nolibc.cpp",
+    ],
+    hdrs = [":sanitizer_impl_headers"],
+    compilation_mode = "bootstrap",
+    includes = ["compiler-rt/lib"],
+    visibility = ["//visibility:public"],
+)
+
+ll_library(
+    name = "RTSanitizerCommonLibc",
+    srcs = [
+        "lib/sanitizer_common/sanitizer_allocator_checks.cpp",
+        "lib/sanitizer_common/sanitizer_common_libcdep.cpp",
+        "lib/sanitizer_common/sanitizer_dl.cpp",
+        "lib/sanitizer_common/sanitizer_linux_libcdep.cpp",
+        "lib/sanitizer_common/sanitizer_mac_libcdep.cpp",
+        "lib/sanitizer_common/sanitizer_posix_libcdep.cpp",
+        "lib/sanitizer_common/sanitizer_stoptheworld_linux_libcdep.cpp",
+        "lib/sanitizer_common/sanitizer_stoptheworld_netbsd_libcdep.cpp",
+    ],
+    hdrs = [":sanitizer_impl_headers"],
+    compilation_mode = "bootstrap",
+    includes = ["compiler-rt/lib"],
+    visibility = ["//visibility:public"],
+)
+
+ll_library(
+    name = "RTSanitizerCommonCoverage",
+    srcs = [
+        "lib/sanitizer_common/sancov_flags.cpp",
+        "lib/sanitizer_common/sanitizer_coverage_fuchsia.cpp",
+        "lib/sanitizer_common/sanitizer_coverage_libcdep_new.cpp",
+        "lib/sanitizer_common/sanitizer_coverage_win_sections.cpp",
+    ],
+    hdrs = [":sanitizer_impl_headers"],
+    compilation_mode = "bootstrap",
+    includes = ["compiler-rt/lib"],
+    visibility = ["//visibility:public"],
+)
+
+ll_library(
+    name = "RTSanitizerCommonSymbolizer",
+    srcs = [
+        "lib/sanitizer_common/sanitizer_allocator_report.cpp",
+        "lib/sanitizer_common/sanitizer_chained_origin_depot.cpp",
+        "lib/sanitizer_common/sanitizer_stack_store.cpp",
+        "lib/sanitizer_common/sanitizer_stackdepot.cpp",
+        "lib/sanitizer_common/sanitizer_stacktrace.cpp",
+        "lib/sanitizer_common/sanitizer_stacktrace_libcdep.cpp",
+        "lib/sanitizer_common/sanitizer_stacktrace_printer.cpp",
+        "lib/sanitizer_common/sanitizer_stacktrace_sparc.cpp",
+        "lib/sanitizer_common/sanitizer_symbolizer.cpp",
+        "lib/sanitizer_common/sanitizer_symbolizer_libbacktrace.cpp",
+        "lib/sanitizer_common/sanitizer_symbolizer_libcdep.cpp",
+        "lib/sanitizer_common/sanitizer_symbolizer_mac.cpp",
+        "lib/sanitizer_common/sanitizer_symbolizer_markup.cpp",
+        "lib/sanitizer_common/sanitizer_symbolizer_markup_fuchsia.cpp",
+        "lib/sanitizer_common/sanitizer_symbolizer_posix_libcdep.cpp",
+        "lib/sanitizer_common/sanitizer_symbolizer_report.cpp",
+        "lib/sanitizer_common/sanitizer_symbolizer_report_fuchsia.cpp",
+        "lib/sanitizer_common/sanitizer_symbolizer_win.cpp",
+        "lib/sanitizer_common/sanitizer_unwind_fuchsia.cpp",
+        "lib/sanitizer_common/sanitizer_unwind_linux_libcdep.cpp",
+        "lib/sanitizer_common/sanitizer_unwind_win.cpp",
+    ],
+    hdrs = [":sanitizer_impl_headers"],
+    compilation_mode = "bootstrap",
+    includes = ["compiler-rt/lib"],
+    visibility = ["//visibility:public"],
+)
+
+filegroup(
+    name = "tsan_headers",
+    srcs = [
+        "lib/tsan/rtl/tsan_defs.h",
+        "lib/tsan/rtl/tsan_dense_alloc.h",
+        "lib/tsan/rtl/tsan_fd.h",
+        "lib/tsan/rtl/tsan_flags.h",
+        "lib/tsan/rtl/tsan_flags.inc",
+        "lib/tsan/rtl/tsan_ignoreset.h",
+        "lib/tsan/rtl/tsan_ilist.h",
+        "lib/tsan/rtl/tsan_interceptors.h",
+        "lib/tsan/rtl/tsan_interface.h",
+        "lib/tsan/rtl/tsan_interface.inc",
+        "lib/tsan/rtl/tsan_interface_ann.h",
+        "lib/tsan/rtl/tsan_interface_java.h",
+        "lib/tsan/rtl/tsan_mman.h",
+        "lib/tsan/rtl/tsan_mutexset.h",
+        "lib/tsan/rtl/tsan_platform.h",
+        "lib/tsan/rtl/tsan_ppc_regs.h",
+        "lib/tsan/rtl/tsan_report.h",
+        "lib/tsan/rtl/tsan_rtl.h",
+        "lib/tsan/rtl/tsan_shadow.h",
+        "lib/tsan/rtl/tsan_stack_trace.h",
+        "lib/tsan/rtl/tsan_suppressions.h",
+        "lib/tsan/rtl/tsan_symbolize.h",
+        "lib/tsan/rtl/tsan_sync.h",
+        "lib/tsan/rtl/tsan_trace.h",
+        "lib/tsan/rtl/tsan_vector_clock.h",
+    ],
+)
+
+ll_library(
+    name = "clang_rt.tsan",
+    srcs = [
+        # TSAN_SOURCES.
+        "lib/tsan/rtl/tsan_debugging.cpp",
+        "lib/tsan/rtl/tsan_external.cpp",
+        "lib/tsan/rtl/tsan_fd.cpp",
+        "lib/tsan/rtl/tsan_flags.cpp",
+        "lib/tsan/rtl/tsan_ignoreset.cpp",
+        "lib/tsan/rtl/tsan_interceptors_memintrinsics.cpp",
+        "lib/tsan/rtl/tsan_interceptors_posix.cpp",
+        "lib/tsan/rtl/tsan_interface.cpp",
+        "lib/tsan/rtl/tsan_interface_ann.cpp",
+        "lib/tsan/rtl/tsan_interface_atomic.cpp",
+        "lib/tsan/rtl/tsan_interface_java.cpp",
+        "lib/tsan/rtl/tsan_malloc_mac.cpp",
+        "lib/tsan/rtl/tsan_md5.cpp",
+        "lib/tsan/rtl/tsan_mman.cpp",
+        "lib/tsan/rtl/tsan_mutexset.cpp",
+        "lib/tsan/rtl/tsan_report.cpp",
+        "lib/tsan/rtl/tsan_rtl.cpp",
+        "lib/tsan/rtl/tsan_rtl_access.cpp",
+        "lib/tsan/rtl/tsan_rtl_mutex.cpp",
+        "lib/tsan/rtl/tsan_rtl_proc.cpp",
+        "lib/tsan/rtl/tsan_rtl_report.cpp",
+        "lib/tsan/rtl/tsan_rtl_thread.cpp",
+        "lib/tsan/rtl/tsan_stack_trace.cpp",
+        "lib/tsan/rtl/tsan_suppressions.cpp",
+        "lib/tsan/rtl/tsan_symbolize.cpp",
+        "lib/tsan/rtl/tsan_sync.cpp",
+        "lib/tsan/rtl/tsan_vector_clock.cpp",
+
+        # TSAN_ASM_SOURCES.
+        "lib/tsan/rtl/tsan_rtl_amd64.S",
+
+        # TSAN_PREINIT_SOURCES.
+        "lib/tsan/rtl/tsan_preinit.cpp",
+
+        # Linux sources.
+        "lib/tsan/rtl/tsan_platform_linux.cpp",
+        "lib/tsan/rtl/tsan_platform_posix.cpp",
+    ],
+    hdrs = [
+        ":interception_headers",
+        ":sanitizer_impl_headers",
+        ":tsan_headers",
+        ":ubsan_headers",
+    ],
+    angled_includes = ["compiler-rt/lib"],
+    compilation_mode = "bootstrap",
+    compile_flags = ["-msse4.2"],
+    includes = ["compiler-rt/lib"],
+    visibility = ["//visibility:public"],
+    deps = [
+        ":RTInterception",
+        ":RTSanitizerCommon",
+        ":RTSanitizerCommonCoverage",
+        ":RTSanitizerCommonLibc",
+        ":RTSanitizerCommonSymbolizer",
+        ":RTUbsan",
+    ],
+)
+
+ll_library(
+    name = "clang_rt.tsan_cxx",
+    srcs = [
+        "lib/tsan/rtl/tsan_new_delete.cpp",
+    ],
+    hdrs = [
+        ":interception_headers",
+        ":sanitizer_impl_headers",
+        ":tsan_headers",
+        ":ubsan_headers",
+    ],
+    compilation_mode = "bootstrap",
+    compile_flags = ["-msse4.2"],
+    includes = ["compiler-rt/lib"],
+    visibility = ["//visibility:public"],
+    deps = [
+        ":RTUbsan_cxx",
+    ],
+)
+
+filegroup(
+    name = "ubsan_headers",
+    srcs = [
+        "lib/ubsan/ubsan_checks.inc",
+        "lib/ubsan/ubsan_diag.h",
+        "lib/ubsan/ubsan_flags.h",
+        "lib/ubsan/ubsan_flags.inc",
+        "lib/ubsan/ubsan_handlers.h",
+        "lib/ubsan/ubsan_handlers_cxx.h",
+        "lib/ubsan/ubsan_init.h",
+        "lib/ubsan/ubsan_interface.inc",
+        "lib/ubsan/ubsan_monitor.h",
+        "lib/ubsan/ubsan_platform.h",
+        "lib/ubsan/ubsan_signals_standalone.h",
+        "lib/ubsan/ubsan_type_hash.h",
+        "lib/ubsan/ubsan_value.h",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+ll_library(
+    name = "RTUbsan",
+    srcs = [
+        "lib/ubsan/ubsan_diag.cpp",
+        "lib/ubsan/ubsan_flags.cpp",
+        "lib/ubsan/ubsan_handlers.cpp",
+        "lib/ubsan/ubsan_init.cpp",
+        "lib/ubsan/ubsan_monitor.cpp",
+        "lib/ubsan/ubsan_value.cpp",
+    ],
+    hdrs = [
+        ":sanitizer_impl_headers",
+        ":ubsan_headers",
+    ],
+    compilation_mode = "bootstrap",
+    defines = [
+        "UBSAN_CAN_USE_CXXABI",
+    ],
+    includes = ["compiler-rt/lib"],
+    visibility = ["//visibility:public"],
+)
+
+ll_library(
+    name = "RTUbsan_cxx",
+    srcs = [
+        "lib/ubsan/ubsan_handlers_cxx.cpp",
+        "lib/ubsan/ubsan_type_hash.cpp",
+        "lib/ubsan/ubsan_type_hash_itanium.cpp",
+        "lib/ubsan/ubsan_type_hash_win.cpp",
+    ],
+    hdrs = [
+        ":sanitizer_impl_headers",
+        ":ubsan_headers",
+    ],
+    compilation_mode = "bootstrap",
+    includes = ["compiler-rt/lib"],
+    visibility = ["//visibility:public"],
+)
+
+ll_library(
+    name = "RTUbsan_standalone",
+    srcs = [
+        "lib/ubsan/ubsan_diag_standalone.cpp",
+        "lib/ubsan/ubsan_init_standalone.cpp",
+        "lib/ubsan/ubsan_signals_standalone.cpp",
+    ],
+    hdrs = [
+        ":interception_headers",
+        ":sanitizer_impl_headers",
+        ":ubsan_headers",
+    ],
+    compilation_mode = "bootstrap",
+    includes = ["compiler-rt/lib"],
+    visibility = ["//visibility:public"],
+)
+
+ll_library(
+    name = "clang_rt.ubsan_standalone",
+    srcs = [
+        "lib/ubsan/ubsan_init_standalone_preinit.cpp",
+    ],
+    hdrs = [
+        ":sanitizer_impl_headers",
+        ":ubsan_headers",
+    ],
+    compilation_mode = "bootstrap",
+    includes = ["compiler-rt/lib"],
+    visibility = ["//visibility:public"],
+    deps = [
+        ":RTInterception",
+        ":RTSanitizerCommon",
+        ":RTSanitizerCommonCoverage",
+        ":RTSanitizerCommonLibc",
+        ":RTSanitizerCommonSymbolizer",
+        ":RTUbsan",
+        ":RTUbsan_standalone",
+    ],
+)
+
+ll_library(
+    name = "clang_rt.ubsan_standalone_cxx",
+    compilation_mode = "bootstrap",
+    visibility = ["//visibility:public"],
+    deps = [
+        ":RTUbsan_cxx",
     ],
 )

@@ -6,6 +6,7 @@ Targets from the `llvm-project-overlay` used in `depends_on_llvm`.
 LLVM_PROJECT_DEPS = [
     # Clang libraries.
     "@llvm-project//clang:analysis",
+    "@llvm-project//clang:apinotes",
     "@llvm-project//clang:arc_migrate",
     "@llvm-project//clang:ast",
     "@llvm-project//clang:ast-diff",
@@ -78,9 +79,12 @@ LLVM_PROJECT_DEPS = [
     "@llvm-project//llvm:ExecutionEngine",
     # "@llvm-project//llvm:Exegesis",  # Not working properly.
     "@llvm-project//llvm:FileCheckLib",
+    "@llvm-project//llvm:FrontendDriver",
     "@llvm-project//llvm:FrontendHLSL",
+    "@llvm-project//llvm:FrontendOffloading",
     "@llvm-project//llvm:FrontendOpenACC",
     "@llvm-project//llvm:FrontendOpenMP",
+    "@llvm-project//llvm:HipStdPar",
     "@llvm-project//llvm:IPO",
     "@llvm-project//llvm:IRPrinter",
     "@llvm-project//llvm:IRReader",

@@ -84,27 +84,17 @@ def _initialize_rules_ll_impl(_):
         patch_args = ["-p1"],
     )
 
-    http_archive(
-        name = "comgr",
-        build_file = "@rules_ll//third-party-overlays:comgr.BUILD.bazel",
-        strip_prefix = "ROCm-CompilerSupport-8c0f3bc3e1ad6d6f693c066a9ab96e612f86e606",
-        integrity = "sha256-uUqfGHJV3aV3uUNDwsjj4sG9Ds/47ksX6cs6DQgTgyQ=",
-        urls = [
-            "https://github.com/RadeonOpenCompute/ROCm-CompilerSupport/archive/8c0f3bc3e1ad6d6f693c066a9ab96e612f86e606.zip",
-        ],
-        patches = [
-            "@rules_ll//patches:comgr_bc2h.diff",
-        ],
-        patch_args = ["-p1"],
-    )
+    # This commit needs further treatment. It changes the default code object
+    # version from 4 to 5 which appears to cause segfaults.
+    # clr_commit = "2eab055436e4ccda8b52ad801bfaa44adfda885c"
 
     http_archive(
         name = "clr",
         build_file = "@rules_ll//third-party-overlays:clr.BUILD.bazel",
-        strip_prefix = "clr-6e86d29a582e28d40d6d8acd55b9f4c32e974e87",
-        integrity = "sha256-pL0EV8AXK5NsLJGoyNJCEaUlOSmK/uy9qXwX6JHmd18=",
+        strip_prefix = "clr-8c8c00f64c4fa860f75b713d338edd364229326f",
+        integrity = "sha256-+7BpjDZqUrjZONoqaesYF6UvOvcj+H7iWMKlH5OIwec=",
         urls = [
-            "https://github.com/ROCm/clr/archive/6e86d29a582e28d40d6d8acd55b9f4c32e974e87.zip",
+            "https://github.com/ROCm/clr/archive/8c8c00f64c4fa860f75b713d338edd364229326f.zip",
         ],
         patches = [
             "@rules_ll//patches:hipamd_deprecate_fix.diff",
@@ -118,13 +108,17 @@ def _initialize_rules_ll_impl(_):
     )
 
     http_archive(
-        name = "rocm-device-libs",
-        build_file = "@rules_ll//third-party-overlays:rocm-device-libs.BUILD.bazel",
-        integrity = "sha256-Q2GrctM0GQjAnWDlFeiQXVIBHWS1xtzP+k9OWtgqGMM=",
-        strip_prefix = "ROCm-Device-Libs-rocm-6.0.2",
+        name = "llvm-project-rocm",
+        build_file = "@rules_ll//third-party-overlays:llvm-project-rocm.BUILD.bazel",
+        integrity = "sha256-wPNx2by33XA4kDw2xUADzI9xpTqqGukH7qhZG9BbYUU=",
+        strip_prefix = "llvm-project-e80d300ecf0c235948345e81264af62adb479f02",
         urls = [
-            "https://github.com/RadeonOpenCompute/ROCm-Device-Libs/archive/refs/tags/rocm-6.0.2.zip",
+            "https://github.com/ROCm/llvm-project/archive/e80d300ecf0c235948345e81264af62adb479f02.zip",
         ],
+        patches = [
+            "@rules_ll//patches:comgr_bc2h.diff",
+        ],
+        patch_args = ["-p1"],
     )
 
 rules_ll_dependencies = module_extension(
