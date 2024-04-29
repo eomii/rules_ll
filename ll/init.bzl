@@ -73,10 +73,10 @@ def _initialize_rules_ll_impl(_):
     http_archive(
         name = "rocr",
         build_file = "@rules_ll//third-party-overlays:rocr.BUILD.bazel",
-        strip_prefix = "ROCR-Runtime-rocm-6.0.2",
-        integrity = "sha256-2M7DZm6qN0xas1UNOFAhhP0dckQEQFbJaMzrjAfuBL4=",
+        strip_prefix = "ROCR-Runtime-rocm-6.1.0",
+        integrity = "sha256-ZPaRQTFkzI/+++tcLIgYmN8Zg/jOwqkzUBIpPy0uDiY=",
         urls = [
-            "https://github.com/ROCm/ROCR-Runtime/archive/refs/tags/rocm-6.0.2.zip",
+            "https://github.com/ROCm/ROCR-Runtime/archive/refs/tags/rocm-6.1.0.zip",
         ],
         patches = [
             "@rules_ll//patches:rocr-generated-files.diff",
