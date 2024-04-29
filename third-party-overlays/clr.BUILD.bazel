@@ -124,7 +124,7 @@ ll_library(
         ":amdocl_headers",
         "@rocr//:libhsa-runtime64",
         "@rocr//:hsa_headers",
-        "@comgr//:amd_comgr",
+        "@llvm-project-rocm//:amd_comgr",
     ],
     compile_flags = [
         "-std=c++17",
@@ -198,7 +198,7 @@ ll_library(
         ":CL2.2",
         ":amdocl_headers",
         ":rocclr",
-        "@comgr//:amd_comgr",
+        "@llvm-project-rocm//:amd_comgr",
         "@hip//:hip_headers",
         "@rocr//:libhsa-runtime64",
     ] + select({

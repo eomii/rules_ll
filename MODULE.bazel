@@ -34,14 +34,13 @@ llvm_project_overlay = use_extension(
     "llvm_project_overlay",
 )
 llvm_project_overlay.configure(
-    commit = "ffa7c7897c14223c591249dde41f33ecb3c4c148",
+    commit = "7378fb30645ad5398491acea3960a8115d1b171c",
     patches = [
         "@rules_ll//patches:mallinfo2_patch.diff",
         "@rules_ll//patches:rules_ll_overlay_patch.diff",
-        "@rules_ll//patches:llvm-project-fix-bazel-7.diff",
         "@rules_ll//patches:llvm-project-fix-zlib-includes.diff",
     ],
-    sha256 = "c515f808ee7984294c315e3f04a232609e08b6bc168502dc2db329b1c4aca1ec",
+    sha256 = "8b6a6edc4d651e280ac2e52cb693df1ab13739e2ba38076fb7cd5be1d5623b50",
     targets = [
         "AMDGPU",
         "NVPTX",
@@ -63,9 +62,8 @@ rules_ll_dependencies = use_extension(
 use_repo(
     rules_ll_dependencies,
     "clr",
-    "comgr",
     "hip",
-    "rocm-device-libs",
+    "llvm-project-rocm",
     "rocr",
     "roct",
     "zlib-ng",

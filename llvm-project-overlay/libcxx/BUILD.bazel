@@ -1,3 +1,4 @@
+load("@bazel_skylib//rules:copy_file.bzl", "copy_file")
 load("@bazel_skylib//rules:expand_template.bzl", "expand_template")
 load("@rules_ll//ll:defs.bzl", "ll_library")
 
@@ -127,6 +128,12 @@ LIBCXX_MODULE_STD_INCLUDE_SOURCES = "\n".join([
     for file in LIBCXX_MODULE_STD_INCLUDE_SOURCES_FILES
 ])
 
+copy_file(
+    name = "__assertion_handler_gen",
+    src = "vendor/llvm/default_assertion_handler.in",
+    out = "include/__assertion_handler",
+)
+
 expand_template(
     name = "std.cppm",
     out = "modules/std.cppm",
@@ -170,6 +177,8 @@ expand_template(
         "#cmakedefine _LIBCPP_HAS_NO_LOCALIZATION": NO,
         "#cmakedefine _LIBCPP_HAS_NO_WIDE_CHARACTERS": NO,
         "#cmakedefine _LIBCPP_HAS_NO_STD_MODULES": NO,
+        "#cmakedefine _LIBCPP_HAS_NO_TIME_ZONE_DATABASE": NO,
+        "#cmakedefine _LIBCPP_INSTRUMENTED_WITH_ASAN": NO,
 
         # PSTL backends.
         "#cmakedefine _LIBCPP_PSTL_CPU_BACKEND_SERIAL": "#define _LIBCPP_PSTL_CPU_BACKEND_SERIAL",
@@ -179,8 +188,7 @@ expand_template(
         # Hardening.
         # TODO: Evaluate performance impact of this. If it isn't noticeable for
         #       most use-cases, enable it.
-        "#cmakedefine01 _LIBCPP_ENABLE_HARDENED_MODE_DEFAULT": "#define _LIBCPP_ENABLE_HARDENED_MODE_DEFAULT 0",
-        "#cmakedefine01 _LIBCPP_ENABLE_DEBUG_MODE_DEFAULT": "#define _LIBCPP_ENABLE_DEBUG_MODE_DEFAULT 0",
+        "#cmakedefine _LIBCPP_HARDENING_MODE_DEFAULT @_LIBCPP_HARDENING_MODE_DEFAULT@": "#define _LIBCPP_HARDENING_MODE_DEFAULT _LIBCPP_HARDENING_MODE_NONE",
         "@_LIBCPP_ABI_DEFINES@": NO,
         "@_LIBCPP_EXTRA_SITE_DEFINES@": NO,
     },
@@ -192,6 +200,7 @@ filegroup(
     srcs = glob([
         "include/**/*",
     ]) + [
+        ":__assertion_handler_gen",
         ":__config_site_gen",
         ":module_modulemap_gen",
     ],
@@ -210,8 +219,10 @@ ll_library(
         "src/algorithm.cpp",
         "src/any.cpp",
         "src/bind.cpp",
+        "src/call_once.cpp",
         "src/charconv.cpp",
         "src/chrono.cpp",
+        "src/error_category.cpp",
         "src/exception.cpp",
         "src/filesystem/filesystem_clock.cpp",
         "src/filesystem/filesystem_error.cpp",

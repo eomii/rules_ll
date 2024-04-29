@@ -92,16 +92,16 @@ ll_toolchain(
     address_sanitizer = select({
         ":bootstrap": [],
         "//conditions:default": [
-            "@llvm-project//compiler-rt/lib/asan:clang_rt.asan",
-            "@llvm-project//compiler-rt/lib/asan:clang_rt.asan_static",
-            "@llvm-project//compiler-rt/lib/asan:clang_rt.asan_cxx",
+            "@llvm-project//compiler-rt:clang_rt.asan",
+            "@llvm-project//compiler-rt:clang_rt.asan_static",
+            "@llvm-project//compiler-rt:clang_rt.asan_cxx",
         ],
     }),
     compiler_runtime = select({
         ":bootstrap": [],
         "//conditions:default": [
             "@llvm-project//compiler-rt:libll_compiler-rt",
-            "@llvm-project//compiler-rt/lib/builtins:crt",
+            "@llvm-project//compiler-rt:crt",
         ],
     }),
     cpp_abihdrs = select({
@@ -143,7 +143,7 @@ ll_toolchain(
     leak_sanitizer = select({
         ":bootstrap": [],
         "//conditions:default": [
-            "@llvm-project//compiler-rt/lib/lsan:clang_rt.lsan",
+            "@llvm-project//compiler-rt:clang_rt.lsan",
         ],
     }),
     libomp = select({
@@ -153,8 +153,8 @@ ll_toolchain(
     memory_sanitizer = select({
         ":bootstrap": [],
         "//conditions:default": [
-            "@llvm-project//compiler-rt/lib/msan:clang_rt.msan",
-            "@llvm-project//compiler-rt/lib/msan:clang_rt.msan_cxx",
+            "@llvm-project//compiler-rt:clang_rt.msan",
+            "@llvm-project//compiler-rt:clang_rt.msan_cxx",
         ],
     }),
     omp_header = select({
@@ -163,24 +163,24 @@ ll_toolchain(
     }),
     profile = select({
         ":bootstrap": None,
-        "//conditions:default": "@llvm-project//compiler-rt/lib/profile:clang_rt.profile",
+        "//conditions:default": "@llvm-project//compiler-rt:clang_rt.profile",
     }),
     rocm_device_libs = select({
-        ":hip_amdgpu": "@rocm-device-libs//:rocm-device-libs",
+        ":hip_amdgpu": "@llvm-project-rocm//:rocm-device-libs",
         "//conditions:default": None,
     }),
     thread_sanitizer = select({
         ":bootstrap": None,
         "//conditions:default": [
-            "@llvm-project//compiler-rt/lib/tsan:clang_rt.tsan",
-            "@llvm-project//compiler-rt/lib/tsan:clang_rt.tsan_cxx",
+            "@llvm-project//compiler-rt:clang_rt.tsan",
+            "@llvm-project//compiler-rt:clang_rt.tsan_cxx",
         ],
     }),
     undefined_behavior_sanitizer = select({
         ":bootstrap": [],
         "//conditions:default": [
-            "@llvm-project//compiler-rt/lib/ubsan:clang_rt.ubsan_standalone",
-            "@llvm-project//compiler-rt/lib/ubsan:clang_rt.ubsan_standalone_cxx",
+            "@llvm-project//compiler-rt:clang_rt.ubsan_standalone",
+            "@llvm-project//compiler-rt:clang_rt.ubsan_standalone_cxx",
         ],
     }),
     unwind_library = select({
