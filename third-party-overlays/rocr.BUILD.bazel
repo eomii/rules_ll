@@ -70,6 +70,7 @@ HSA_HEADER_NAMES = [
     "hsa_ext_image",
     "hsa_ven_amd_aqlprofile",
     "hsa_ven_amd_loader",
+    "hsa_amd_tool",
 ]
 
 [
@@ -129,6 +130,7 @@ ll_library(
         "src/libamdhsacode/amd_hsa_locks.cpp",
         "src/libamdhsacode/amd_options.cpp",
         "src/libamdhsacode/amd_hsa_code.cpp",
+        "src/libamdhsacode/amd_core_dump.cpp",
     ],
     includes = [
         "src",
