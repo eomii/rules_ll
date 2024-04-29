@@ -67,7 +67,7 @@ ll_library(
     ],
     compilation_mode = "bootstrap",
     compile_flags = [
-        "-std=c++20",
+        "-std=c++2b",
         "-faligned-allocation",
         "-funwind-tables",
         "-fstrict-aliasing",

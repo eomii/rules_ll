@@ -41,7 +41,8 @@ STD_PARTITIONS = [
     "deque",
     "exception",
     "execution",
-    "expected",
+    # "expected", # TODO(aaronmondal): This clashes with exception. It should
+    # work, but somehow this buildfile is misconfigured.
     "filesystem",
     "flat_map",
     "flat_set",
@@ -68,7 +69,7 @@ STD_PARTITIONS = [
     "memory",
     "memory_resource",
     "mutex",
-    # "new",  # Needs special treatment. Module is called __new.
+    "new",
     "numbers",
     "numeric",
     "optional",
@@ -104,7 +105,7 @@ STD_PARTITIONS = [
     "tuple",
     "typeindex",
     "typeinfo",
-    "type_traits",  # Manually had to include <functional>.
+    "type_traits",
     "unordered_map",
     "unordered_set",
     "utility",
@@ -114,14 +115,32 @@ STD_PARTITIONS = [
     "version",
 ]
 
+# Added to the list of private headers during libcxx compilation.
+LIBCXX_MODULE_STD_INCLUDE_SOURCES_FILES = [
+    "modules/std/{}.inc".format(name)
+    for name in STD_PARTITIONS
+]
+
+# Substituted in std.cppm.in to generate std.cppm.
+LIBCXX_MODULE_STD_INCLUDE_SOURCES = "\n".join([
+    '#include "{}"'.format(file)
+    for file in LIBCXX_MODULE_STD_INCLUDE_SOURCES_FILES
+])
+
+expand_template(
+    name = "std.cppm",
+    out = "modules/std.cppm",
+    substitutions = {
+        "@LIBCXX_MODULE_STD_INCLUDE_SOURCES@": LIBCXX_MODULE_STD_INCLUDE_SOURCES,
+    },
+    template = "modules/std.cppm.in",
+)
+
 expand_template(
     name = "module_modulemap_gen",
     out = "include/module.modulemap",
     substitutions = {
         "@requires_LIBCXX_ENABLE_LOCALIZATION@": "",
-        "@requires_LIBCXX_ENABLE_FILESYSTEM@": "",
-        "@requires_LIBCXX_ENABLE_THREADS@": "",
-        "@requires_LIBCXX_ENABLE_WIDE_CHARACTERS@": "",
     },
     template = "include/module.modulemap.in",
 )
@@ -150,10 +169,13 @@ expand_template(
         "#cmakedefine _LIBCPP_HAS_NO_RANDOM_DEVICE": NO,
         "#cmakedefine _LIBCPP_HAS_NO_LOCALIZATION": NO,
         "#cmakedefine _LIBCPP_HAS_NO_WIDE_CHARACTERS": NO,
+        "#cmakedefine _LIBCPP_HAS_NO_STD_MODULES": NO,
+
         # PSTL backends.
         "#cmakedefine _LIBCPP_PSTL_CPU_BACKEND_SERIAL": "#define _LIBCPP_PSTL_CPU_BACKEND_SERIAL",
         "#cmakedefine _LIBCPP_PSTL_CPU_BACKEND_THREAD": NO,
         "#cmakedefine _LIBCPP_PSTL_CPU_BACKEND_LIBDISPATCH": NO,
+
         # Hardening.
         # TODO: Evaluate performance impact of this. If it isn't noticeable for
         #       most use-cases, enable it.
@@ -167,7 +189,9 @@ expand_template(
 
 filegroup(
     name = "headers",
-    srcs = glob(["include/**/*"]) + [
+    srcs = glob([
+        "include/**/*",
+    ]) + [
         ":__config_site_gen",
         ":module_modulemap_gen",
     ],
@@ -185,51 +209,63 @@ ll_library(
     srcs = [
         "src/algorithm.cpp",
         "src/any.cpp",
-        "src/atomic.cpp",
-        "src/barrier.cpp",
         "src/bind.cpp",
         "src/charconv.cpp",
         "src/chrono.cpp",
-        "src/condition_variable.cpp",
-        "src/condition_variable_destructor.cpp",
         "src/exception.cpp",
-        "src/filesystem/directory_entry.cpp",
-        "src/filesystem/directory_iterator.cpp",
         "src/filesystem/filesystem_clock.cpp",
         "src/filesystem/filesystem_error.cpp",
-        "src/filesystem/operations.cpp",
         "src/filesystem/path.cpp",
         "src/functional.cpp",
-        "src/future.cpp",
         "src/hash.cpp",
-        "src/ios.cpp",
-        "src/ios.instantiations.cpp",
-        "src/iostream.cpp",
         "src/legacy_pointer_safety.cpp",
-        "src/locale.cpp",
         "src/memory.cpp",
-        "src/mutex.cpp",
-        "src/mutex_destructor.cpp",
-        # "src/new.cpp",  # We pull this from libcxxabi for now.
+        "src/memory_resource.cpp",
         "src/new_handler.cpp",
         "src/new_helpers.cpp",
         "src/optional.cpp",
-        "src/random.cpp",
+        "src/print.cpp",
         "src/random_shuffle.cpp",
-        "src/regex.cpp",
         "src/ryu/d2fixed.cpp",
         "src/ryu/d2s.cpp",
         "src/ryu/f2s.cpp",
-        "src/shared_mutex.cpp",
         "src/stdexcept.cpp",
         "src/string.cpp",
-        "src/strstream.cpp",
         "src/system_error.cpp",
-        "src/thread.cpp",
         "src/typeinfo.cpp",
         "src/valarray.cpp",
         "src/variant.cpp",
         "src/vector.cpp",
+        "src/verbose_abort.cpp",
+
+        # Threads support.
+        "src/atomic.cpp",
+        "src/barrier.cpp",
+        "src/condition_variable_destructor.cpp",
+        "src/condition_variable.cpp",
+        "src/future.cpp",
+        "src/mutex_destructor.cpp",
+        "src/mutex.cpp",
+        "src/shared_mutex.cpp",
+        "src/thread.cpp",
+
+        # Random device support.
+        "src/random.cpp",
+
+        # Localization support.
+        "src/ios.cpp",
+        "src/ios.instantiations.cpp",
+        "src/iostream.cpp",
+        "src/locale.cpp",
+        "src/regex.cpp",
+        "src/strstream.cpp",
+
+        # Filesystem support.
+        "src/filesystem/directory_entry.cpp",
+        "src/filesystem/directory_iterator.cpp",
+        "src/filesystem/operations.cpp",
+
+        # "src/new.cpp",  # We pull this from libcxxabi for now.
     ],
     hdrs = [
         # Files in src/include.
@@ -273,7 +309,10 @@ ll_library(
         "src/include/sso_allocator.h",
         "src/iostream_init.h",
         "src/std_stream.h",
-    ],
+
+        # This seems to be forgotten in CMake.
+        "src/memory_resource_init_helper.h",
+    ] + LIBCXX_MODULE_STD_INCLUDE_SOURCES_FILES,
     compilation_mode = "bootstrap",
     compile_flags = [
         "-std=c++2b",
@@ -307,17 +346,12 @@ ll_library(
         "//libcxx:headers",
     ],
     exposed_interfaces = {
-        "modules/std.cppm": "std",
+        ":std.cppm": "std",
     },
     includes = [
+        "libcxx",  # Used for modules which are included as `modules/std/...`.
         "libcxx/src",
     ],
-    interfaces = {
-        "modules/std/{}.cppm".format(name): "std:{}".format(name)
-        for name in STD_PARTITIONS
-    } | {
-        "modules/std/new.cppm": "std:__new",
-    },
     visibility = ["//visibility:public"],
     deps = ["//libcxxabi"],
 )
