@@ -379,7 +379,6 @@ opencl_bitcode_library(
     hdrs = glob(["amd/device-libs/ockl/inc/*.h"]) + [
         "amd/device-libs/oclc/inc/oclc.h",
         "amd/device-libs/irif/inc/irif.h",
-        "amd/device-libs/ockl/src/ockl_priv.h",
     ],
     srcs = glob(["amd/device-libs/ockl/src/*.cl"]),
     bitcode_srcs = [

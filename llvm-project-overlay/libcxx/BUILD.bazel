@@ -172,9 +172,9 @@ expand_template(
         "#cmakedefine _LIBCPP_INSTRUMENTED_WITH_ASAN": NO,
 
         # PSTL backends.
-        "#cmakedefine _LIBCPP_PSTL_CPU_BACKEND_SERIAL": "#define _LIBCPP_PSTL_CPU_BACKEND_SERIAL",
-        "#cmakedefine _LIBCPP_PSTL_CPU_BACKEND_THREAD": NO,
-        "#cmakedefine _LIBCPP_PSTL_CPU_BACKEND_LIBDISPATCH": NO,
+        "#cmakedefine _LIBCPP_PSTL_BACKEND_SERIAL": "#define _LIBCPP_PSTL_BACKEND_SERIAL",
+        "#cmakedefine _LIBCPP_PSTL_BACKEND_STD_THREAD": NO,
+        "#cmakedefine _LIBCPP_PSTL_BACKEND_LIBDISPATCH": NO,
 
         # Hardening.
         # TODO: Evaluate performance impact of this. If it isn't noticeable for
