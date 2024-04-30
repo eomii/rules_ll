@@ -37,6 +37,7 @@ def _initialize_rules_ll_impl(_):
     http_archive(
         name = "hip",
         build_file = "@rules_ll//third-party-overlays:hip.BUILD.bazel",
+        integrity = "sha256-MnMFzzUdJyRakujoAUiGHI4U7HC2hl/LNF+za1q3tEw=",
         patch_cmds = [
             """echo "
             #define HIP_VERSION_MAJOR 5
@@ -49,7 +50,6 @@ def _initialize_rules_ll_impl(_):
             "
             >> include/hip/hip_version.h""",
         ],
-        integrity = "sha256-MnMFzzUdJyRakujoAUiGHI4U7HC2hl/LNF+za1q3tEw=",
         strip_prefix = "HIP-rocm-5.7.1",
         urls = [
             "https://github.com/ROCm/HIP/archive/refs/tags/rocm-5.7.1.zip",
@@ -87,10 +87,10 @@ def _initialize_rules_ll_impl(_):
     http_archive(
         name = "clr",
         build_file = "@rules_ll//third-party-overlays:clr.BUILD.bazel",
-        strip_prefix = "clr-5914ac3c6e9b3848023a7fa25e19e560b1c38541",
-        integrity = "sha256-CK28uzu4HwjXWX9moxr+fN9py2dxEcaSyn8O5mKTsQk=",
+        integrity = "sha256-IKlxPbTNaoGdJSrQ/wv1d+iFeaE6Qomhcx/GOTKHQR0=",
+        strip_prefix = "clr-rocm-5.7.1",
         urls = [
-            "https://github.com/ROCm/clr/archive/5914ac3c6e9b3848023a7fa25e19e560b1c38541.zip",
+            "https://github.com/ROCm/clr/archive/refs/tags/rocm-5.7.1.zip",
         ],
         patches = [
             "@rules_ll//patches:hipamd_deprecate_fix.diff",
@@ -105,10 +105,10 @@ def _initialize_rules_ll_impl(_):
     http_archive(
         name = "llvm-project-rocm",
         build_file = "@rules_ll//third-party-overlays:llvm-project-rocm.BUILD.bazel",
-        strip_prefix = "llvm-project-91c18ff3482abdf90239e9b482797403f6e7e9bc",
-        integrity = "sha256-U5bqkNfuXHa0s+bc6cq9caAIFgHoyLFz6i0tBXgmTSw=",
+        strip_prefix = "llvm-project-e156b4cbbe9ec271c29b76979a4c04e59eb24c23",
+        integrity = "sha256-OtN36Kg+aHJ4SJndw/AEd4qAz1WpCCsXp1v3mtePmhA=",
         urls = [
-            "https://github.com/ROCm/llvm-project/archive/91c18ff3482abdf90239e9b482797403f6e7e9bc.zip",
+            "https://github.com/ROCm/llvm-project/archive/e156b4cbbe9ec271c29b76979a4c04e59eb24c23.zip",
         ],
         patches = [
             "@rules_ll//patches:comgr_bc2h.diff",

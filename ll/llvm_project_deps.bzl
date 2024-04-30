@@ -102,7 +102,6 @@ LLVM_PROJECT_DEPS = [
     "@llvm-project//llvm:MCA",
     "@llvm-project//llvm:MCDisassembler",
     "@llvm-project//llvm:MCParser",
-    "@llvm-project//llvm:MLPolicies",
     "@llvm-project//llvm:ObjCARC",
     "@llvm-project//llvm:Object",
     "@llvm-project//llvm:ObjectYAML",
