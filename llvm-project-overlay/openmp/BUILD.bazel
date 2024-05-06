@@ -128,7 +128,7 @@ expand_template(
 )
 
 ll_library(
-    name = "libomp",
+    name = "openmp",
     srcs = LIBOMP_SOURCES,
     # Includes the following manually generated patched-in headers.
     # We ultimately need these to be generated as part of the build.
@@ -155,7 +155,7 @@ ll_library(
         "openmp/runtime/src/include",
     ],
     exposed_hdrs = [
-        "runtime/src/include/omp.h",
+        ":omp_header",
     ],
     includes = [
         "$(GENERATED)/openmp/runtime/src",

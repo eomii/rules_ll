@@ -1,7 +1,23 @@
+bazel_dep(name = "bazel_skylib", version = "1.5.0")
 bazel_dep(name = "rules_ll", version = "20230411.0")
 local_path_override(
     module_name = "rules_ll",
     path = "..",
 )
 
-bazel_dep(name = "bazel_skylib", version = "1.5.0")
+bazel_dep(name = "llvm-project-overlay", version = "17-init-bcr.3")
+
+# The llvm-project-overlay extension aggregates patches across all modules that
+# invoke it. This means that rules_ll's custom patches are applied implicitly.
+#
+# We require explicit access to `@llvm-project//openmp` for the OpenMP example,
+# so we make the `@llvm-project` workspace available here. You may omit
+# declaring this extension if you don't need explicit access to this workspace.
+llvm_project_overlay = use_extension(
+    "@llvm-project-overlay//utils/bazel:extensions.bzl",
+    "llvm_project_overlay",
+)
+use_repo(
+    llvm_project_overlay,
+    "llvm-project",
+)

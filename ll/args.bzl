@@ -206,16 +206,6 @@ def compile_object_args(
     # Always generate position independent code.
     args.add("-fPIC")
 
-    # Maybe enable OpenMP.
-    if ctx.attr.compilation_mode == "omp_cpu":
-        args.add("-fopenmp")
-
-        # TODO: This is obviously not the way lol.
-        args.add(
-            toolchain.omp_header[0].dirname,
-            format = "-I%s",
-        )
-
     # Maybe enable heterogeneous compilation.
     if ctx.attr.compilation_mode in [
         "cuda_nvptx",

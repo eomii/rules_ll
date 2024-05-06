@@ -27,8 +27,6 @@ DEFAULT_ATTRS = {
 
         `"hip_nvptx"` The HIP toolchain.
 
-        `"omp_cpu"` The OpenMP CPU toolchain.
-
         `"bootstrap"` The bootstrap toolchain used by internal dependencies of
         the `ll_toolchain`.
         """,
@@ -36,7 +34,6 @@ DEFAULT_ATTRS = {
         # TODO: hip_amd, sycl_amd
         values = [
             "cpp",
-            "omp_cpu",
             "cuda_nvptx",
             "hip_amdgpu",
             "hip_nvptx",
@@ -369,12 +366,6 @@ LL_TOOLCHAIN_ATTRS = {
         cfg = transition_to_bootstrap,
         providers = [LlInfo],
     ),
-    "omp_header": attr.label(
-        doc = "The OpenMP header.",
-        cfg = transition_to_cpp,
-        allow_files = True,
-        # default = "@llvm-project//openmp:omp_header",
-    ),
     "opt": attr.label(
         doc = "The LLVM `opt` tool.",
         cfg = transition_to_bootstrap,
@@ -388,12 +379,6 @@ LL_TOOLCHAIN_ATTRS = {
         allow_single_file = True,
         executable = True,
         default = "@llvm-project//llvm:llvm-objcopy",
-    ),
-    "libomp": attr.label(
-        doc = "The OpenMP library.",
-        cfg = transition_to_cpp,
-        providers = [LlInfo],
-        # default = "@llvm-project//openmp:libomp",
     ),
     "hip_libraries": attr.label_list(
         doc = """The HIP libraries.

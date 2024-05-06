@@ -54,7 +54,6 @@ def compile_object_inputs(
             toolchain.cpp_stdhdrs +
             toolchain.hip_libraries +
             toolchain.hip_runtime +
-            toolchain.omp_header +
             toolchain.rocm_device_libs +
             toolchain.unwind_library
         ) + [
@@ -103,7 +102,6 @@ def link_executable_inputs(ctx, in_files):
         toolchain.cpp_stdlib +
         toolchain.hip_libraries +
         toolchain.hip_runtime +
-        toolchain.libomp +
         toolchain.unwind_library +
         (
             toolchain.llvm_project_artifacts if ctx.attr.depends_on_llvm else []
