@@ -24,6 +24,7 @@ buildable
 bundler
 eomii
 hermeticity
+intrinsics
 lockfile
 multithreading
 namespace

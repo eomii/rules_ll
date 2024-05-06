@@ -157,6 +157,10 @@ def compile_object_args(
             args.add_all(["-Xarch_device", "-gdwarf-2"])
             args.add("--cuda-noopt-device-debug")
 
+            for file in ctx.files.experimental_device_intrinsics:
+                args.add("-Xarch_device")
+                args.add(file.path, format = "-include%s")
+
     if ctx.coverage_instrumented and ctx.attr.compilation_mode != "bootstrap":
         args.add_all(["-fprofile-instr-generate", "-fcoverage-mapping"])
 
