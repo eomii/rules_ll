@@ -1,0 +1,13 @@
+diff --git a/utils/bazel/llvm-project-overlay/clang/BUILD.bazel b/utils/bazel/llvm-project-overlay/clang/BUILD.bazel
+index 725ac6bb3812..e84f859a9dd8 100644
+--- a/utils/bazel/llvm-project-overlay/clang/BUILD.bazel
++++ b/utils/bazel/llvm-project-overlay/clang/BUILD.bazel
+@@ -1778,6 +1778,8 @@ builtin_headers = glob(
+     "lib/Headers/module.modulemap",
+     "lib/Headers/riscv_vector.h",
+     "lib/Headers/cuda_wrappers/algorithm",
++    "lib/Headers/cuda_wrappers/bits/basic_string.tcc",
++    "lib/Headers/cuda_wrappers/cmath",
+     "lib/Headers/cuda_wrappers/complex",
+     "lib/Headers/cuda_wrappers/new",
+     "lib/Headers/openmp_wrappers/cmath",
