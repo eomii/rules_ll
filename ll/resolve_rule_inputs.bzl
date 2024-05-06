@@ -32,7 +32,11 @@ def resolve_rule_inputs(ctx):
         [//ll:actions.bzl](actions.md) for usage.
     """
     hdrs = depset(
-        ctx.files.hdrs + ctx.files.exposed_hdrs,
+        (
+            ctx.files.hdrs +
+            ctx.files.exposed_hdrs +
+            ctx.files.experimental_device_intrinsics
+        ),
         transitive = [dep[LlInfo].exposed_hdrs for dep in ctx.attr.deps],
         order = "preorder",
     )

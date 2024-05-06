@@ -51,6 +51,14 @@ DEFAULT_ATTRS = {
         Unavailable to downstream targets.
         """,
     ),
+    "experimental_device_intrinsics": attr.label_list(
+        doc = """Custom intrinsics for device compilation.
+
+        Adds `-Xarch_device -include<thefile>` to the compile commands for this
+        target.
+        """,
+        allow_files = True,
+    ),
     "depends_on_llvm": attr.bool(
         doc = """Whether this target directly depends on targets from the
         `llvm-project-overlay`.
