@@ -34,13 +34,14 @@ llvm_project_overlay = use_extension(
     "llvm_project_overlay",
 )
 llvm_project_overlay.configure(
-    commit = "fa8fda85c6792d9078922ab8658c321c4939e63a",
+    commit = "41574f5a6e2d961f398d3c671c34ac3c8e417464",
     patches = [
         "@rules_ll//patches:mallinfo2_patch.diff",
         "@rules_ll//patches:rules_ll_overlay_patch.diff",
         "@rules_ll//patches:llvm-project-fix-zlib-includes.diff",
+        "@rules_ll//patches:llvm-add-missing-cuda-cmath-header.diff",
     ],
-    sha256 = "109d4c7c29b986183342988ed3842bd6a0325f7818d16f355b56b42fc2b80777",
+    sha256 = "da9a908ea6b158de5986ac1b40444a08a7329bd81e0940875413f1193c24ce5d",
     targets = [
         "AMDGPU",
         "NVPTX",
