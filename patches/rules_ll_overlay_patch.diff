@@ -1,9 +1,9 @@
 diff --git a/utils/bazel/llvm-project-overlay/compiler-rt/BUILD.bazel b/utils/bazel/llvm-project-overlay/compiler-rt/BUILD.bazel
-index 9bdd454e1e36..b6376508c465 100644
+index 9a4e103be01e..be11bebe8ee5 100644
 --- a/utils/bazel/llvm-project-overlay/compiler-rt/BUILD.bazel
 +++ b/utils/bazel/llvm-project-overlay/compiler-rt/BUILD.bazel
-@@ -50,3 +50,1206 @@ cc_library(
-         ":config",
+@@ -108,3 +108,1206 @@ cc_library(
+         ":orc_rt_common_headers",
      ],
  )
 +load("@rules_ll//ll:defs.bzl", "ll_library")
@@ -1734,7 +1734,7 @@ index f8448fb0e726..7540cd9f8495 100644
 +)
 diff --git a/utils/bazel/llvm-project-overlay/openmp/BUILD.bazel b/utils/bazel/llvm-project-overlay/openmp/BUILD.bazel
 new file mode 100644
-index 000000000000..9241a982754a
+index 000000000000..2f102026ebc1
 --- /dev/null
 +++ b/utils/bazel/llvm-project-overlay/openmp/BUILD.bazel
 @@ -0,0 +1,166 @@
@@ -1868,7 +1868,7 @@ index 000000000000..9241a982754a
 +)
 +
 +ll_library(
-+    name = "libomp",
++    name = "openmp",
 +    srcs = LIBOMP_SOURCES,
 +    # Includes the following manually generated patched-in headers.
 +    # We ultimately need these to be generated as part of the build.
@@ -1895,7 +1895,7 @@ index 000000000000..9241a982754a
 +        "openmp/runtime/src/include",
 +    ],
 +    exposed_hdrs = [
-+        "runtime/src/include/omp.h",
++        ":omp_header",
 +    ],
 +    includes = [
 +        "$(GENERATED)/openmp/runtime/src",

@@ -6,7 +6,6 @@ Transitions used by the `ll_toolchain` rule.
 COMPILATION_MODES = [
     "bootstrap",
     "cpp",
-    "omp_cpu",
     "cuda_nvptx",
     "hip_amdgpu",
     "hip_nvptx",

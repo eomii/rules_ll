@@ -54,8 +54,6 @@ def _ll_toolchain_impl(ctx):
             unwind_library = ctx.files.unwind_library,
             llvm_project_sources = llvm_project_sources,
             llvm_project_artifacts = llvm_project_artifacts,
-            libomp = ctx.files.libomp,
-            omp_header = ctx.files.omp_header,
             objcopy = ctx.executable.objcopy,
             opt = ctx.executable.opt,
             clang_tidy = ctx.executable.clang_tidy,

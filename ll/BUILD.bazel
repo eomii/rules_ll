@@ -146,20 +146,12 @@ ll_toolchain(
             "@llvm-project//compiler-rt:clang_rt.lsan",
         ],
     }),
-    libomp = select({
-        "omp_cpu": "@llvm-project//openmp:libomp",
-        "//conditions:default": None,
-    }),
     memory_sanitizer = select({
         ":bootstrap": [],
         "//conditions:default": [
             "@llvm-project//compiler-rt:clang_rt.msan",
             "@llvm-project//compiler-rt:clang_rt.msan_cxx",
         ],
-    }),
-    omp_header = select({
-        "omp_cpu": "@llvm-project//openmp:omp_header",
-        "//conditions:default": None,
     }),
     profile = select({
         ":bootstrap": None,
