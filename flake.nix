@@ -43,11 +43,11 @@
 
   outputs =
     { self
-    , nixpkgs
-    , flake-utils
-    , pre-commit-hooks
     , flake-parts
+    , flake-utils
     , nativelink
+    , nixpkgs
+    , pre-commit-hooks
     , ...
     } @ inputs:
     flake-parts.lib.mkFlake { inherit inputs; }
@@ -67,17 +67,6 @@
           , lib
           , ...
           }:
-          let
-            hooks = import ./pre-commit-hooks.nix { inherit pkgs; };
-            llvmPackages = pkgs.llvmPackages_17;
-            bazel = pkgs.writeShellScriptBin "bazel" ''
-              unset TMPDIR TMP
-              exec ${pkgs.bazelisk}/bin/bazelisk "$@"
-            '';
-            tag = "latest";
-            ll = import ./devtools/ll.nix { inherit pkgs tag bazel; };
-            native = inputs.nativelink.packages.${system}.native-cli;
-          in
           {
             _module.args.pkgs = import self.inputs.nixpkgs {
               inherit system;
@@ -85,9 +74,11 @@
               config.allowUnfree = true;
               config.cudaSupport = true;
             };
-            pre-commit.settings = { inherit hooks; };
             local-remote-execution.settings = {
               inherit (nativelink.packages.${system}.lre-cc.meta) Env;
+            };
+            pre-commit.settings = {
+              hooks = import ./pre-commit-hooks.nix { inherit pkgs; };
             };
             rules_ll.settings.actionEnv =
               let
@@ -103,28 +94,38 @@
               # git repository into the kind nodes and derives the lre-cc worker
               # tag from this target. Consider changing this upstream.
               lre-cc = nativelink.packages.${system}.lre-cc;
+              ll = import ./devtools/ll.nix {
+                inherit pkgs;
+                native = inputs.nativelink.packages.${system}.native-cli;
+              };
             };
             devShells.default = pkgs.mkShell {
-              nativeBuildInputs = [
-                bazel
-                ll
-                pkgs.git
-                (pkgs.python3.withPackages (pylib: [
-                  pylib.mkdocs-material
-                ]))
-                pkgs.mkdocs
-                pkgs.vale
-                pkgs.go
+              nativeBuildInputs =
+                let
+                  bazel = pkgs.writeShellScriptBin "bazel" ''
+                    unset TMPDIR TMP
+                    exec ${pkgs.bazelisk}/bin/bazelisk "$@"
+                  '';
+                in
+                [
+                  bazel
+                  self.packages.${system}.ll
+                  pkgs.git
+                  (pkgs.python3.withPackages (pylib: [
+                    pylib.mkdocs-material
+                  ]))
+                  pkgs.mkdocs
+                  pkgs.vale
+                  pkgs.go
 
-                # Cloud tooling
-                pkgs.cilium-cli
-                pkgs.kubectl
-                pkgs.pulumi
-                pkgs.skopeo
-                pkgs.tektoncd-cli
-                pkgs.kustomize
-                native
-              ];
+                  # Cloud tooling
+                  pkgs.cilium-cli
+                  pkgs.kubectl
+                  pkgs.pulumi
+                  pkgs.skopeo
+                  pkgs.tektoncd-cli
+                  pkgs.kustomize
+                ];
               shellHook = ''
                 # Generate the .pre-commit-config.yaml symlink when entering the
                 # development shell.
@@ -142,15 +143,6 @@
 
                 # Ensure that the bazel command points to our custom wrapper.
                 [[ $(type -t bazel) == "alias" ]] && unalias bazel
-
-                # Prevent rules_cc from using anything other than clang.
-                export CC=clang
-
-                # Probably a bug in nix. Setting LD=ld.lld here doesn't work.
-                export LD=${llvmPackages.lld}/bin/ld.lld
-
-                # Java needs to be the same version as in the Bazel wrapper.
-                export JAVA_HOME=${pkgs.jdk17_headless}/lib/openjdk
 
                 # Prettier color output for the ls command.
                 alias ls='ls --color=auto'

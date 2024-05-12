@@ -4,17 +4,14 @@
 `rules_ll` uses remote execution compatible toolchains by default, even when you
 run local builds.
 
-`rules_ll` disables Bazel's toolchain auto detection and pins every tool to a
+`rules_ll` extends [Local Remote Execution (LRE)](https://github.com/TraceMachina/nativelink/tree/main/local-remote-execution)
+which disables Bazel's toolchain auto detection and pins every tool to a
 reproducible artifact from `nixpkgs`. This way every system running the same
 version of `rules_ll` uses the same toolchain, regardless of the host's
 operating system and locally installed toolchains.
 
-The remote execution toolchains in `rules_ll` achieve virtually perfect cache
-hit rates even among different systems sharing the same cache.
-
-You don't actually have to use the `ll_*` rules to leverage the remote execution
-setup. The implementation in `rules_ll` also works for `rules_cc`. You do need
-to set up your workspace as described in the [setup](./setup.md) though.
+Similar to LRE, the remote execution toolchains in `rules_ll` achieve virtually
+perfect cache hit rates even among different systems sharing the same cache.
 
 <!-- markdownlint-disable code-block-style -->
 !!! warning
@@ -32,12 +29,11 @@ and you probably don't want to rebuild LLVM every time you start a new project.
 
 ![Local Remote Cache](../images/local_remote_cache.png){ loading=lazy }
 
-1. Set up a remote cache like [`bazel-remote`](https://github.com/buchgr/bazel-remote)
-   or [`turbo-cache`](https://github.com/allada/turbo-cache).
+1. Set up a remote cache like [NativeLink](https://github.com/TraceMachina/nativelink).
 2. Instruct all your local Bazel invocations to use that cache:
 
     ```bash title="~/.bazelrc"
-    build --remote_cache=grpc://127.0.0.1:9002
+    build --remote_cache=grpc://<ip>:<port>
     ```
 
 ## Personal remote cache
@@ -51,8 +47,8 @@ cache via the internet this setup requires some form of authentication:
 ```bash title="~/.bazelrc"
 build --remote_cache=grpcs://<remote_cache>
 
-# Authenticate as instructed by your remote cache provider.
-build --some_authentication_flags
+# Authenticate as instructed by your remote cache provider. For instance
+build --remote_header=...
 ```
 
 ## Trusted remote cache

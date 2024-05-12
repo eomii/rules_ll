@@ -1,4 +1,4 @@
-{ pkgs, bazel, tag }:
+{ pkgs, native, ... }:
 
 let
 
@@ -15,7 +15,7 @@ let
   opt = (string: "\\E[33m" + string + "\\033[0m");
 
 
-  ll_up = llScript "up" ./up.sh;
+  ll_up = import ./up.nix { inherit pkgs native; };
   ll_docs = llScript "docs" ./docs.sh;
   ll_patch = llScript "overlay" ./overlay.sh;
   ll_release = llScript "module" ./module.sh;

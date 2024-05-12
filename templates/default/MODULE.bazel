@@ -1,4 +1,10 @@
-bazel_dep(name = "rules_ll", version = "20230411.0")
+bazel_dep(name = "rules_ll", version = "0")
+git_override(
+    module_name = "rules_ll",
+    # Note: Keep this commit in sync with the one in flake.nix.
+    commit = "<TODO: USE THE COMMIT FROM THE FLAKE HERE HERE>",
+    remote = "https://github.com/eomii/rules_ll",
+)
 
 rules_ll_dependencies = use_extension(
     "@rules_ll//ll:init.bzl",
