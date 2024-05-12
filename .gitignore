@@ -33,3 +33,6 @@ examples/MODULE.bazel.lock
 
 # Ignore NativeLink's local Pulumi stack.
 Pulumi.dev.yaml
+
+# Ignore the temporary kustomization.yaml
+/kustomization.yaml

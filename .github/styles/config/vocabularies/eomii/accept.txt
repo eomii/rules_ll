@@ -7,6 +7,7 @@ CUDA
 GPUs
 HIP
 LLVM
+NativeLink
 NVPTX
 Nvidia
 OSSF

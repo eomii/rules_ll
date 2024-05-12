@@ -1,7 +1,7 @@
 # `rules_ll`
 
 [![OpenSSF Best Practices](https://bestpractices.coreinfrastructure.org/projects/6822/badge)](https://bestpractices.coreinfrastructure.org/projects/6822)
-[![OSSF-Scorecard Score](https://img.shields.io/ossf-scorecard/github.com/eomii/rules_ll?label=openssf%20scorecard)](https://api.securityscorecards.dev/projects/github.com/eomii/rules_ll)
+[![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/eomii/rules_ll/badge)](https://securityscorecards.dev/viewer/?uri=github.com/eomii/rules_ll)
 
 An upstream Clang/LLVM-based toolchain for contemporary C++ and heterogeneous
 programming.
@@ -20,33 +20,43 @@ share caches.
 
 ## ✨ Setup
 
-1. Install the [nix package manager](https://nixos.org/download.html) and enable
-   [flakes](https://nixos.wiki/wiki/Flakes).
+<!-- markdownlint-disable MD029 -->
+
+1. Install [nix with flakes](https://github.com/NixOS/experimental-nix-installer).
 
 2. Create a `rules_ll` compatible workspace. To keep the development shell in
-   sync with the `rules_ll` Bazel module, pin the flake to a specific version:
+   sync with the `rules_ll` Bazel module, pin the flake to a specific commit:
 
-    ```bash
-    git init
-    nix flake init -t github:eomii/rules_ll/<version>
-    ```
+   ```bash
+   git init
+   nix flake init -t github:eomii/rules_ll/<commit>
+   ```
 
-    The default toolchains include C++ and HIP for AMDGPU. If you also want to
-    target NVPTX devices (Nvidia GPUs), make sure to read the [CUDA license](https://docs.nvidia.com/cuda/eula/index.html)
-    and set `unfree = true` in `flake.nix`.
+   The default toolchains include C++ and HIP for AMDGPU. If you also want to
+   target NVPTX devices (Nvidia GPUs), make sure to read the [CUDA license](https://docs.nvidia.com/cuda/eula/index.html)
+   and set `comment.allowUnfree` and `config.cudaSupport` in `flake.nix`.
 
-    See [tags](https://github.com/eomii/rules_ll/tags) to find the most recent
-    version.
+> [!WARNING]
+> Don't use the tags or releases from the GitHub repository. They're an artifact
+> from old versions of `rules_ll` and probably in a broken state. We'll remove
+> them at some point. Use a pinned commit instead.
 
 3. Enter the `rules_ll` development shell:
 
-    ```bash
-    nix develop
-    ```
+   ```bash
+   nix develop
+   ```
+
+> [!TIP]
+> Strongly consider setting up [`direnv`](https://github.com/direnv/direnv) so
+> that you don't need to remember running `nix develop` to enter the flake and
+> `exit` to exit it.
 
 4. Consider setting up at least a local remote cache as described in the [remote
    execution guide](https://ll.eomii.org/setup/remote_execution).
 <!-- vale alex.ProfanityUnlikely = YES -->
+
+<!-- markdownlint-enable MD029 -->
 
 ## 🔗 Links
 
