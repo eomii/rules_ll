@@ -15,29 +15,25 @@ let
   opt = (string: "\\E[33m" + string + "\\033[0m");
 
 
+  ll_up = llScript "up" ./up.sh;
   ll_docs = llScript "docs" ./docs.sh;
   ll_patch = llScript "overlay" ./overlay.sh;
   ll_release = llScript "module" ./module.sh;
-  ll_rbe = import ./rbe.nix { inherit pkgs bazel tag; };
 
 in
 
 pkgs.writeShellScriptBin "ll" ''
 
 if [[ "$1" == "docs" ]]; then
-${ll_docs}/bin/docs
+  ${ll_docs}/bin/docs
 elif [[ "$1" == "overlay" ]]; then
-${ll_patch}/bin/overlay
+  ${ll_patch}/bin/overlay
 elif [[ "$1" == "module" ]]; then
-${ll_release}/bin/module $2
+  ${ll_release}/bin/module $2
 elif [[ "$1" == "up" ]]; then
-PATH=''${PATH+$PATH:}${pkgs.pulumi}/bin \
-  ${bazel}/bin/bazel run @rules_ll//devtools:cluster -- up
+  ${ll_up}/bin/up
 elif [[ "$1" == "down" ]]; then
-PATH=''${PATH+$PATH:}${pkgs.pulumi}/bin \
-  ${bazel}/bin/bazel run @rules_ll//devtools:cluster -- down
-elif [[ "$1" == "rbe" ]]; then
-${ll_rbe}/bin/rbe $2
+  native down
 else
 
 printf '
@@ -54,8 +50,6 @@ ll ${cmd "down"}:\tStop and delete the development cluster.
 
 ll ${cmd "module"} ${opt "tag"}:\tGiven a git tag, create a directory ${dir "<tag>"} for copy-pasting into a
 \t\tbazel registry.
-
-ll ${cmd "rbe"}:\t\tBuild the toolchains in ${dir "rbe/default/"}.
 
 '
 

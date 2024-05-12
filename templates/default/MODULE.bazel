@@ -1,1 +1,10 @@
 bazel_dep(name = "rules_ll", version = "20230411.0")
+
+rules_ll_dependencies = use_extension(
+    "@rules_ll//ll:init.bzl",
+    "rules_ll_dependencies",
+)
+use_repo(
+    rules_ll_dependencies,
+    "local-remote-execution",
+)

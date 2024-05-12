@@ -49,6 +49,20 @@ build --slim_profile
 build --experimental_profile_include_target_label
 build --noexperimental_profile_include_primary_output
 
+# The instance name for nativelink. Most likely `main` is correct here.
+# Depending on the nativelink configuration this might need to be adjusted.
+build --remote_instance_name=main
+
+# Select the correct toolchains.
+build --extra_execution_platforms=@local-remote-execution//generated-cc/config:platform
+build --extra_toolchains=@local-remote-execution//generated-cc/config:cc-toolchain
+build --extra_toolchains=@local-remote-execution//generated-java/java:all
+
+# TODO(aaronmondal): Either set the correct values in this file or add them to
+#                    the Bazel build command.
+# build --remote_cache=grpc://172.18.255.10:50051
+# build --remote_executor=grpc://172.18.255.9:50052
+
 # Nix-generated action env for rules_ll.
 try-import %workspace%/.bazelrc.ll
 

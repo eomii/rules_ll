@@ -1,9 +1,6 @@
 # Don't inherit PATH and LD_LIBRARY_PATH.
 build --incompatible_strict_action_env
 
-# TODO(aaronmondal): Remove this once we get the build working without it.
-common --noincompatible_sandbox_hermetic_tmp
-
 # Enforce C++20 as the default for rules_cc, regardless of toolchain config.
 build --cxxopt=-std=c++20 --host_cxxopt=-std=c++20
 
@@ -30,16 +27,7 @@ common --enable_bzlmod
 common --registry=https://raw.githubusercontent.com/bazelbuild/bazel-central-registry/main/
 common --registry=https://raw.githubusercontent.com/eomii/bazel-eomii-registry/main/
 
-# Make sure to use the correct java runtime.
-build --java_runtime_version=rbe_jdk
-build --tool_java_runtime_version=rbe_jdk
-
-# Always act as if using remote execution.
-build --action_env=BAZEL_DO_NOT_DETECT_CPP_TOOLCHAIN=1
-build --define=EXECUTOR=remote
-
 # Remote optimizations.
-build --experimental_remote_cache_compression
 build --remote_build_event_upload=minimal
 build --remote_download_minimal
 build --nolegacy_important_outputs
@@ -49,17 +37,16 @@ build --slim_profile
 build --experimental_profile_include_target_label
 build --noexperimental_profile_include_primary_output
 
-# This config should only be used to test remote execution locally.
-build:rbe_local --experimental_docker_image=localhost:5000/rules_ll_remote:latest
-build:rbe_local --noexperimental_docker_use_customized_images
-build:rbe_local --spawn_strategy=docker --strategy=Javac=docker --genrule_strategy=docker
-build:rbe_local --experimental_enable_docker_sandbox
-build:rbe_local --experimental_docker_verbose
+# Workaround for NativeLink expecting this to be set to `main`
+build --remote_instance_name=main
 
 # Nix-generated action env for rules_ll. Usually this would be
 # `%workspace%/.bazelrc.ll`, but since this example flake is in the rules_ll
 # repository we need to reference the file from the parent directory.
 try-import %workspace%/../.bazelrc.ll
+
+# Nix-generated flags for LRE.
+try-import %workspace%/../.bazelrc.lre
 
 # Allow user-side customization.
 try-import %workspace%/.bazelrc.user
