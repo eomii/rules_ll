@@ -9,7 +9,7 @@ let
   nix = pkgs.nix;
 
   # The specific commit to use
-  nativelinkCommit = "60f712bcddd5c2cd3d3bdd537c4cc136fe6497c7";
+  nativelinkCommit = "8a632953b86395088e4ab8c1e160a650739549b7";
 
   # Base URL for GitHub access
   githubBaseUrl = "github:TraceMachina/nativelink/";

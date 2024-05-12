@@ -21,3 +21,6 @@ bazel-*
 
 # Ignore NativeLink's local Pulumi stack.
 Pulumi.dev.yaml
+
+# Ignore the generated kustomization from NativeLink.
+/kustomization.yaml
