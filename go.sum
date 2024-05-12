@@ -180,6 +180,7 @@ github.com/pulumi/esc v0.8.3 h1:myeDL6dD/mz34zZjCL8s7d/tWHBJYxfMxDCL11MHoqc=
 github.com/pulumi/esc v0.8.3/go.mod h1:v5VAPxYDa9DRwvubbzKt4ZYf5y0esWC2ccSp/AT923I=
 github.com/pulumi/pulumi-kubernetes/sdk/v4 v4.9.1 h1:dgazi5bI3Vxz+aLuH+DxRqKxPWGaFIkT3fIepHr7h0g=
 github.com/pulumi/pulumi-kubernetes/sdk/v4 v4.9.1/go.mod h1:O8hanLXCEXiyzA8gIeME5o/SmJ39Vyy9wLcBYCFpOp0=
+github.com/pulumi/pulumi-kubernetes/sdk/v4 v4.11.0/go.mod h1:9SKR5gTWY4FP9XnSNWd+HSeQt9lffrNCe+zbKvezI/o=
 github.com/pulumi/pulumi/sdk/v3 v3.112.0 h1:cq2x5N6iuYhSLdeOdRs+LIq0EneB0Cb54WOlD/VaX3E=
 github.com/pulumi/pulumi/sdk/v3 v3.112.0/go.mod h1:JWSzKBoHd8rlncC1DhXLf7YdV+Bk/Qf+hSZOOQh0WwQ=
 github.com/rivo/uniseg v0.1.0/go.mod h1:J6wj4VEh+S6ZtnVlnTBMWIodfgj8LQOQFoIToxlJtxc=
