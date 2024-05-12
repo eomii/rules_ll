@@ -66,7 +66,7 @@ use_repo(
     "zstd",
 )
 
-bazel_dep(name = "rules_go", version = "0.46.0")
+bazel_dep(name = "rules_go", version = "0.47.1")
 
 # This overrides the Go dependency github.com/cloudflare/circl, which requires
 # custom patches beyond what Gazelle can generate.
