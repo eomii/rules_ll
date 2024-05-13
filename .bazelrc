@@ -1,6 +1,9 @@
 # Don't inherit PATH and LD_LIBRARY_PATH.
 build --incompatible_strict_action_env
 
+# Don't use the legacy workspace system.
+build --noenable_workspace
+
 # Enforce C++20 as the default for rules_cc, regardless of toolchain config.
 build --cxxopt=-std=c++20 --host_cxxopt=-std=c++20
 
