@@ -17,11 +17,11 @@ def _initialize_rules_ll_impl(_):
     http_archive(
         name = "local-remote-execution",
         urls = [
-            "https://github.com/TraceMachina/nativelink/archive/60f712bcddd5c2cd3d3bdd537c4cc136fe6497c7.zip",
+            "https://github.com/TraceMachina/nativelink/archive/8a632953b86395088e4ab8c1e160a650739549b7.zip",
         ],
-        integrity = "sha256-ilNs8EmJe0YxrKTzbHXhxmEiayLkc+P0UaA991txgsg=",
+        integrity = "sha256-L+I3608IU4mDSqLWJ6zJV5zA17zGVay8c8TvmLkoneY=",
         # Note: Keep this in sync with `flake.nix` and `devtools/up.sh`.
-        strip_prefix = "nativelink-60f712bcddd5c2cd3d3bdd537c4cc136fe6497c7/local-remote-execution",
+        strip_prefix = "nativelink-8a632953b86395088e4ab8c1e160a650739549b7/local-remote-execution",
     )
 
     http_archive(
