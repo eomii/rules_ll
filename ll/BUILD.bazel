@@ -81,6 +81,27 @@ string_flag(
     for mode in COMPILATION_MODES
 ]
 
+[
+    string_flag(
+        name = flag_name,
+        build_setting_default = "",
+        visibility = ["//visibility:public"],
+    )
+    for flag_name in [
+        "LL_CFLAGS",
+        "LL_LDFLAGS",
+        "LL_DYNAMIC_LINKER",
+        "LL_AMD_INCLUDES",
+        "LL_AMD_LIBRARIES",
+        "LL_CUDA_TOOLKIT",
+        "LL_CUDA_RUNTIME",
+        "LL_CUDA_DRIVER",
+
+        # Unset values default to an empty string.
+        "LL_UNSET",
+    ]
+]
+
 # Toolchain Types.
 
 toolchain_type(name = "toolchain_type")
@@ -89,6 +110,33 @@ toolchain_type(name = "toolchain_type")
 
 ll_toolchain(
     name = "ll_toolchain_x86_64-unknown-linux-gnu",
+    LL_AMD_INCLUDES = select({
+        ":hip_amdgpu": ":LL_AMD_INCLUDES",
+        ":hip_nvptx": ":LL_AMD_INCLUDES",
+        "//conditions:default": ":LL_UNSET",
+    }),
+    LL_AMD_LIBRARIES = select({
+        ":hip_amdgpu": ":LL_AMD_LIBRARIES",
+        "//conditions:default": ":LL_UNSET",
+    }),
+    LL_CFLAGS = "@rules_ll//ll:LL_CFLAGS",
+    LL_CUDA_DRIVER = select({
+        ":hip_nvptx": ":LL_CUDA_DRIVER",
+        ":cuda_nvptx": ":LL_CUDA_DRIVER",
+        "//conditions:default": "LL_UNSET",
+    }),
+    LL_CUDA_RUNTIME = select({
+        ":hip_nvptx": ":LL_CUDA_RUNTIME",
+        ":cuda_nvptx": ":LL_CUDA_RUNTIME",
+        "//conditions:default": "LL_UNSET",
+    }),
+    LL_CUDA_TOOLKIT = select({
+        ":hip_nvptx": ":LL_CUDA_TOOLKIT",
+        ":cuda_nvptx": ":LL_CUDA_TOOLKIT",
+        "//conditions:default": ":LL_UNSET",
+    }),
+    LL_DYNAMIC_LINKER = ":LL_DYNAMIC_LINKER",
+    LL_LDFLAGS = "@rules_ll//ll:LL_LDFLAGS",
     address_sanitizer = select({
         ":bootstrap": [],
         "//conditions:default": [

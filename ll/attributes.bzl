@@ -51,6 +51,30 @@ DEFAULT_ATTRS = {
         Unavailable to downstream targets.
         """,
     ),
+    "compile_string_flags": attr.label_list(
+        doc = """Flags for the compiler in the form of `string_flag`s.
+
+        Splits the values of each `string_flag` along colons like so:
+
+        ```python
+        load("@bazel_skylib//rules:common_settings.bzl", "string_flag")
+
+        string_flag(
+            name = "myflags",
+            build_setting_default = "a:b:c",
+        )
+
+        ll_library(
+            # ...
+            # Equivalent to `compile_flags = ["a", "b", "c"]`
+            compile_string_flags = [":myflags"],
+        )
+        ```
+
+        Useful for externally configurable build attributes, such as generated
+        flags from Nix environments.
+        """,
+    ),
     "experimental_device_intrinsics": attr.label_list(
         doc = """Custom intrinsics for device compilation.
 
@@ -266,6 +290,15 @@ LIBRARY_ATTRS = {
         Used if `emit` includes `"shared_object"`.
         """,
     ),
+    "shared_object_link_string_flags": attr.label_list(
+        doc = """Flags for the linker when emitting shared objects in the form
+        of `string_flag`s.
+
+        See `compile_string_flags` for semantics.
+
+        Used if `emit` includes `"shared_object"`.
+        """,
+    ),
 }
 
 BINARY_ATTRS = {
@@ -284,6 +317,15 @@ BINARY_ATTRS = {
         Assuming you have a library `/some/path/libmylib.a` on your host system,
         you can make `mylib.a` available to the linker by passing
         `["-L/some/path", "-lmylib"]` to this attribute.
+
+        Prefer the `libraries` attribute for library files already present
+        within the Bazel build graph.
+        """,
+    ),
+    "link_string_flags": attr.label_list(
+        doc = """Flags for the linker in the form of `string_flag`s.
+
+        See `compile_string_flags` for semantics.
 
         Prefer the `libraries` attribute for library files already present
         within the Bazel build graph.
@@ -516,6 +558,48 @@ LL_TOOLCHAIN_ATTRS = {
     ),
     "_allowlist_function_transition": attr.label(
         default = "@bazel_tools//tools/allowlists/function_transition_allowlist",
+    ),
+    # These values are intended to be set via string_flags. For instance,
+    # `ll_cflags` should be set to `@rules_ll//ll:LL_CFLAGS`. This is done in
+    # the ll_toolchain instantiation in `ll/BUILD.bazel`.
+    "LL_CFLAGS": attr.label(
+        doc = "Arbitrary flags added to all compile actions.",
+    ),
+    "LL_LDFLAGS": attr.label(
+        doc = "Arbitrary flags added to all link actions.",
+    ),
+    "LL_DYNAMIC_LINKER": attr.label(
+        doc = "The linker from the glibc we compile and link against.",
+    ),
+    "LL_AMD_INCLUDES": attr.label(
+        doc = """System includes for dependencies making use of AMD toolchains.
+
+        Affects the `hip_amdgpu` and `hip_nvptx` toolchains.
+        """,
+    ),
+    "LL_AMD_LIBRARIES": attr.label(
+        doc = """Link search paths for dependencies making use of AMD toolchains.
+
+        Affects the `hip_amdgpu` toolchain.
+        """,
+    ),
+    "LL_CUDA_TOOLKIT": attr.label(
+        doc = """The path to the CUDA toolkit.
+
+        Affects the `cuda_nvptx` and `hip_nvptx` toolchains.
+        """,
+    ),
+    "LL_CUDA_RUNTIME": attr.label(
+        doc = """The path to the CUDA runtime.
+
+        Affects the `cuda_nvptx` and `hip_nvptx` toolchains.
+        """,
+    ),
+    "LL_CUDA_DRIVER": attr.label(
+        doc = """The path to the CUDA driver.
+
+        Affects the `cuda_nvptx` and `hip_nvptx` toolchains.
+        """,
     ),
 }
 

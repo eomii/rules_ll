@@ -23,8 +23,7 @@
       inputs.flake-utils.follows = "flake-utils";
     };
     nativelink = {
-      # url = "github:TraceMachina/nativelink/64ed20a40964b8c606c7d65f76af840bcfc837fd";
-      url = "github:aaronmondal/nativelink/lre-flake-module";
+      url = "github:TraceMachina/nativelink/75105df746c626da76f74e412764e6755296a8ab";
       inputs.flake-utils.follows = "flake-utils";
       inputs.flake-parts.follows = "flake-parts";
       inputs.pre-commit-hooks.follows = "pre-commit-hooks";
@@ -70,7 +69,7 @@
             openssl = (pkgs.openssl.override { static = true; });
           in
           {
-            rules_ll.settings.actionEnv = rules_ll.lib.action-env {
+            rules_ll.settings.llEnv = rules_ll.lib.defaultLlEnv {
               inherit pkgs;
               LL_CFLAGS = "-I${openssl.dev}/include";
               LL_LDFLAGS = "-L${openssl.out}/lib";

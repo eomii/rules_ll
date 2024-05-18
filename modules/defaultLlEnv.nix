@@ -59,18 +59,16 @@ in
   ]}"
   "LL_AMD_LIBRARIES=${lib.concatStringsSep ":" [
     "-L${pkgs.libdrm}/lib"
-    "-L${pkgs.numactl}/lib"
-    "-L${pkgs.libglvnd}/lib"
-    "-L${pkgs.elfutils.out}/lib"
-    "-L${pkgs.libglvnd}/lib"
-    "-L${pkgs.xorg.libX11}/lib"
-  ]}"
-  "LL_AMD_RPATHS=${lib.concatStringsSep ":" [
     "-rpath=${pkgs.libdrm}/lib"
+    "-L${pkgs.numactl}/lib"
     "-rpath=${pkgs.numactl}/lib"
+    "-L${pkgs.libglvnd}/lib"
     "-rpath=${pkgs.libglvnd}/lib"
+    "-L${pkgs.elfutils.out}/lib"
     "-rpath=${pkgs.elfutils.out}/lib"
+    "-L${pkgs.libglvnd}/lib"
     "-rpath=${pkgs.libglvnd}/lib"
+    "-L${pkgs.xorg.libX11}/lib"
     "-rpath=${pkgs.xorg.libX11}/lib"
   ]}"
 
@@ -78,26 +76,4 @@ in
   "LL_CUDA_TOOLKIT=${lib.strings.optionalString pkgs.config.cudaSupport "${cudatoolkit}"}"
   "LL_CUDA_RUNTIME=${lib.strings.optionalString pkgs.config.cudaSupport "${cudatoolkit.lib}"}"
   "LL_CUDA_DRIVER=${lib.strings.optionalString pkgs.config.cudaSupport "${nvidia_x11}"}"
-
-  # Only used by rules_cc
-  "BAZEL_CXXOPTS=${lib.concatStringsSep ":" [
-    "-std=c++20"
-    "-O3"
-    "-nostdinc++"
-    "-nostdlib++"
-    "-isystem${llvmPackages.libcxx.dev}/include/c++/v1"
-  ]}"
-
-  # TODO: This somehow works without explicitly adding glibc to the
-  #       library search path. That shouldn't be the case. Maybe it's
-  #       the clang wrapper, but apparently that doesn't add the rpath.
-  #       Find a better solution.
-  "BAZEL_LINKOPTS=${lib.concatStringsSep ":" [
-    "-L${llvmPackages.libcxx}/lib"
-    "-lc++"
-    ("-Wl," +
-      "-rpath,${llvmPackages.libcxx}/lib," +
-      "-rpath,${pkgs.glibc}/lib"
-    )
-  ]}"
 ]

@@ -37,9 +37,9 @@ share caches.
    and set `comment.allowUnfree` and `config.cudaSupport` in `flake.nix`.
 
 > [!WARNING]
-> Don't use the tags or releases from the GitHub repository. They're an artifact
-> from old versions of `rules_ll` and probably in a broken state. We'll remove
-> them at some point. Use a pinned commit instead.
+> Don't use the tags or releases from the GitHub repository. They were used in
+> old versions of `rules_ll` and probably in a broken state. Use a pinned commit
+> instead.
 
 3. Enter the `rules_ll` development shell:
 
