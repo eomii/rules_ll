@@ -3,6 +3,7 @@
 This file declares the `ll_toolchain` rule.
 """
 
+load("@bazel_skylib//rules:common_settings.bzl", "BuildSettingInfo")
 load("//ll:attributes.bzl", "LL_TOOLCHAIN_ATTRS")
 load("//ll:providers.bzl", "LlInfo")
 
@@ -63,6 +64,14 @@ def _ll_toolchain_impl(ctx):
             machine_code_tool = ctx.executable.machine_code_tool,
             hip_libraries = ctx.files.hip_libraries,
             hip_runtime = ctx.files.hip_runtime,
+            LL_CFLAGS = ctx.attr.LL_CFLAGS[BuildSettingInfo].value,
+            LL_LDFLAGS = ctx.attr.LL_LDFLAGS[BuildSettingInfo].value,
+            LL_DYNAMIC_LINKER = ctx.attr.LL_DYNAMIC_LINKER[BuildSettingInfo].value,
+            LL_AMD_INCLUDES = ctx.attr.LL_AMD_INCLUDES[BuildSettingInfo].value,
+            LL_AMD_LIBRARIES = ctx.attr.LL_AMD_LIBRARIES[BuildSettingInfo].value,
+            LL_CUDA_TOOLKIT = ctx.attr.LL_CUDA_TOOLKIT[BuildSettingInfo].value,
+            LL_CUDA_RUNTIME = ctx.attr.LL_CUDA_RUNTIME[BuildSettingInfo].value,
+            LL_CUDA_DRIVER = ctx.attr.LL_CUDA_DRIVER[BuildSettingInfo].value,
         ),
     ]
 

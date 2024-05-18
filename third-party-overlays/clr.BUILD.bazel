@@ -134,6 +134,7 @@ ll_library(
         "-Wno-inconsistent-missing-override",
         "-Wno-parentheses",  # This one looks like an actual bug.
     ],
+    compile_string_flags = ["@rules_ll//ll:LL_AMD_INCLUDES"],
     visibility = ["//visibility:public"],
 )
 
@@ -221,12 +222,14 @@ ll_library(
         # "-fvisibility=hidden",  # TODO: Enable after verifying with the tests.
         "-Wno-delete-abstract-non-virtual-dtor",  # TODO: Fix this.
     ],
+    compile_string_flags = ["@rules_ll//ll:LL_AMD_INCLUDES"],
     visibility = ["//visibility:public"],
     depends_on_llvm = 1,
     emit = select({
         ":shared": ["shared_object"],
         "//conditions:default": ["archive"],
     }),
+    shared_object_link_string_flags = ["@rules_ll//ll:LL_AMD_LIBRARIES"],
     shared_object_link_flags = select({
         ":shared": [
             "--no-undefined",

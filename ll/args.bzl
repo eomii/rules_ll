@@ -4,6 +4,7 @@ The functions that create `Args` for use in rule actions.
 """
 
 load("@bazel_skylib//lib:paths.bzl", "paths")
+load("@bazel_skylib//rules:common_settings.bzl", "BuildSettingInfo")
 load("//ll:llvm_project_deps.bzl", "LINUX_DEFINES")
 
 def llvm_bindir_path(ctx):
@@ -224,11 +225,8 @@ def compile_object_args(
     ]:
         args.add("-Wno-unknown-cuda-version")  # Will always be unknown.
         args.add("-xcuda")
-        if ctx.configuration.default_shell_env.get("LL_CUDA_TOOLKIT") != "":
-            args.add(
-                ctx.configuration.default_shell_env["LL_CUDA_TOOLKIT"],
-                format = "--cuda-path=%s",
-            )
+        if toolchain.LL_CUDA_TOOLKIT != "":
+            args.add(toolchain.LL_CUDA_TOOLKIT, format = "--cuda-path=%s")
     if ctx.attr.compilation_mode in ["hip_nvptx", "hip_amdgpu"]:
         args.add_all(
             [
@@ -294,11 +292,15 @@ def compile_object_args(
             # become system includes.
             format_each = "-isystem%s",
         )
-        for flags in ["LL_CFLAGS", "LL_AMD_INCLUDES"]:
-            if ctx.configuration.default_shell_env.get(flags) != "":
-                args.add_all(
-                    ctx.configuration.default_shell_env[flags].split(":"),
-                )
+        if toolchain.LL_CFLAGS != "":
+            args.add_all(toolchain.LL_CFLAGS.split(":"))
+
+        if ctx.attr.compilation_mode in [
+            "hip_amdgpu",
+            "hip_nvptx",
+        ]:
+            if toolchain.LL_AMD_INCLUDES != "":
+                args.add_all(toolchain.LL_AMD_INCLUDES.split(":"))
 
         # 4. Search directories specified via -idirafter for quoted and angled
         #    includes. Since most users will not need this flag, there is no
@@ -349,6 +351,8 @@ def compile_object_args(
 
     # Additional compile flags.
     args.add_all(ctx.attr.compile_flags)
+    for flags in ctx.attr.compile_string_flags:
+        args.add_all(flags[BuildSettingInfo].value.split(":"))
 
     # Load modules conditionally by declaring the module name.
     args.add_all(
@@ -392,12 +396,9 @@ def link_executable_args(ctx, in_files, out_file, mode):
     args = ctx.actions.args()
 
     # Provide host and device linker info to clang-linker-wrapper.
-    if ctx.configuration.default_shell_env.get("LL_CUDA_TOOLKIT") != "":
+    if toolchain.LL_CUDA_TOOLKIT != "":
         # TODO: Incorrectly sets this even when the cuda path is empty.
-        args.add(
-            ctx.configuration.default_shell_env["LL_CUDA_TOOLKIT"],
-            format = "--cuda-path=%s",
-        )
+        args.add(toolchain.LL_CUDA_TOOLKIT, format = "--cuda-path=%s")
 
     args.add("--host-triple=x86_64-pc-linux-gnu")
     args.add("--linker-path={}".format(toolchain.linker.path))
@@ -411,11 +412,12 @@ def link_executable_args(ctx, in_files, out_file, mode):
     if ctx.var["COMPILATION_MODE"] == "dbg":
         args.add("--verbose")
 
-    for flags in ["LL_LDFLAGS", "LL_AMD_LIBRARIES", "LL_AMD_RPATHS"]:
-        if flags in ctx.configuration.default_shell_env.keys():
-            args.add_all(
-                ctx.configuration.default_shell_env[flags].split(":"),
-            )
+    if toolchain.LL_LDFLAGS != "":
+        args.add_all(toolchain.LL_LDFLAGS.split(":"))
+
+    if ctx.attr.compilation_mode in ["hip_amdgpu"]:
+        if toolchain.LL_AMD_LIBRARIES != "":
+            args.add_all(toolchain.LL_AMD_LIBRARIES.split(":"))
 
     # Startup files.
     if mode == "executable":
@@ -458,11 +460,8 @@ def link_executable_args(ctx, in_files, out_file, mode):
         args.add("--no-whole-archive")
 
     # Add dynamic linker. When in a nix env, make sure to use the nix variant.
-    if ctx.configuration.default_shell_env.get("LL_DYNAMIC_LINKER") != "":
-        args.add(
-            ctx.configuration.default_shell_env["LL_DYNAMIC_LINKER"],
-            format = "--dynamic-linker=%s",
-        )
+    if toolchain.LL_DYNAMIC_LINKER != "":
+        args.add(toolchain.LL_DYNAMIC_LINKER, format = "--dynamic-linker=%s")
     else:
         args.add("-dynamic-linker=/lib64/ld-linux-x86-64.so.2")
 
@@ -485,27 +484,15 @@ def link_executable_args(ctx, in_files, out_file, mode):
         "cuda_nvptx",
         "hip_nvptx",
     ]:
-        for location in ["LL_CUDA_TOOLKIT", "LL_CUDA_RUNTIME", "LL_CUDA_DRIVER"]:
-            if ctx.configuration.default_shell_env.get(location) != "":
-                args.add(
-                    ctx.configuration.default_shell_env[location],
-                    format = "-rpath=%s/lib",
-                )
-                args.add(
-                    ctx.configuration.default_shell_env[location],
-                    format = "-L%s/lib",
-                )
+        for location in [toolchain.LL_CUDA_TOOLKIT, toolchain.LL_CUDA_RUNTIME]:
+            if location != "":
+                args.add(location, format = "-rpath=%s/lib")
+                args.add(location, format = "-L%s/lib")
 
                 # TODO: Not pretty. With the right nix packages we can probably
                 #       do this more elegantly.
-                args.add(
-                    ctx.configuration.default_shell_env[location],
-                    format = "-rpath=%s/lib/stubs",
-                )
-                args.add(
-                    ctx.configuration.default_shell_env[location],
-                    format = "-L%s/lib/stubs",
-                )
+                args.add(location, format = "-rpath=%s/lib/stubs")
+                args.add(location, format = "-L%s/lib/stubs")
 
         args.add("-lcuda")
         args.add("-lcudart_static")
@@ -532,8 +519,12 @@ def link_executable_args(ctx, in_files, out_file, mode):
     # Target-specific flags.
     if mode == "executable":
         args.add_all(ctx.attr.link_flags)
+        for flags in ctx.attr.link_string_flags:
+            args.add_all(flags[BuildSettingInfo].value.split(":"))
     elif mode == "shared_object":
         args.add_all(ctx.attr.shared_object_link_flags)
+        for flags in ctx.attr.shared_object_link_string_flags:
+            args.add_all(flags[BuildSettingInfo].value.split(":"))
     else:
         fail("Invalid linking mode")
 

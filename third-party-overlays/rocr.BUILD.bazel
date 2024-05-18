@@ -158,6 +158,7 @@ ll_library(
         "src/loader/AMDHSAKernelDescriptor.h",
     ]),
     compile_flags = HSA_CXX_FLAGS,
+    compile_string_flags = ["@rules_ll//ll:LL_AMD_INCLUDES"],
     defines = CORE_RUNTIME_TARGET_DEFINES + [
         # Workaround for bug https://github.com/RadeonOpenCompute/ROCm/issues/1880#issuecomment-1416759759.
         "NDEBUG",

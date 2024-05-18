@@ -46,6 +46,7 @@ ll_library(
         "$(GENERATED)/",
         # "include",
     ],
+    compile_string_flags = ["@rules_ll//ll:LL_AMD_INCLUDES"],
     hdrs = [
         "src/fmm.h",
         "src/libhsakmt.h",

@@ -16,5 +16,5 @@ dependency graph.
 - [Examples](https://github.com/eomii/rules_ll/tree/main/examples)
 - [Guides](guides/index.md)
 
-If you have questions regarding remote execution, consider asking for help in
+If you have questions about remote execution, consider asking for help in
 the [NativeLink Slack](https://nativelink.slack.com/join/shared_invite/zt-281qk1ho0-krT7HfTUIYfQMdwflRuq7A#/shared-invite/email).
