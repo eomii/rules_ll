@@ -1734,10 +1734,10 @@ index f8448fb0e726..7540cd9f8495 100644
 +)
 diff --git a/utils/bazel/llvm-project-overlay/openmp/BUILD.bazel b/utils/bazel/llvm-project-overlay/openmp/BUILD.bazel
 new file mode 100644
-index 000000000000..2f102026ebc1
+index 000000000000..178242f197c5
 --- /dev/null
 +++ b/utils/bazel/llvm-project-overlay/openmp/BUILD.bazel
-@@ -0,0 +1,166 @@
+@@ -0,0 +1,167 @@
 +load("@bazel_skylib//rules:copy_file.bzl", "copy_file")
 +load("@bazel_skylib//rules:expand_template.bzl", "expand_template")
 +load("@rules_ll//ll:defs.bzl", "ll_library")
@@ -1887,6 +1887,7 @@ index 000000000000..2f102026ebc1
 +        ":ompx_header",
 +    ],
 +    compile_flags = [
++        "-O3",
 +        "-std=c++17",
 +        "-Wno-switch",
 +    ],

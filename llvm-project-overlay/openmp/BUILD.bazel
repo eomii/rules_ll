@@ -147,6 +147,7 @@ ll_library(
         ":ompx_header",
     ],
     compile_flags = [
+        "-O3",
         "-std=c++17",
         "-Wno-switch",
     ],
