@@ -94,7 +94,6 @@ string_flag(
         "LL_AMD_INCLUDES",
         "LL_AMD_LIBRARIES",
         "LL_CUDA_TOOLKIT",
-        "LL_CUDA_RUNTIME",
         "LL_CUDA_DRIVER",
 
         # Unset values default to an empty string.
@@ -123,11 +122,6 @@ ll_toolchain(
     LL_CUDA_DRIVER = select({
         ":hip_nvptx": ":LL_CUDA_DRIVER",
         ":cuda_nvptx": ":LL_CUDA_DRIVER",
-        "//conditions:default": "LL_UNSET",
-    }),
-    LL_CUDA_RUNTIME = select({
-        ":hip_nvptx": ":LL_CUDA_RUNTIME",
-        ":cuda_nvptx": ":LL_CUDA_RUNTIME",
         "//conditions:default": "LL_UNSET",
     }),
     LL_CUDA_TOOLKIT = select({
