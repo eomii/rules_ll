@@ -74,6 +74,5 @@ in
 
   # Flags for CUDA dependencies.
   "LL_CUDA_TOOLKIT=${lib.strings.optionalString pkgs.config.cudaSupport "${cudatoolkit}"}"
-  "LL_CUDA_RUNTIME=${lib.strings.optionalString pkgs.config.cudaSupport "${cudatoolkit.lib}"}"
   "LL_CUDA_DRIVER=${lib.strings.optionalString pkgs.config.cudaSupport "${nvidia_x11}"}"
 ]

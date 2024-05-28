@@ -589,12 +589,6 @@ LL_TOOLCHAIN_ATTRS = {
         Affects the `cuda_nvptx` and `hip_nvptx` toolchains.
         """,
     ),
-    "LL_CUDA_RUNTIME": attr.label(
-        doc = """The path to the CUDA runtime.
-
-        Affects the `cuda_nvptx` and `hip_nvptx` toolchains.
-        """,
-    ),
     "LL_CUDA_DRIVER": attr.label(
         doc = """The path to the CUDA driver.
 

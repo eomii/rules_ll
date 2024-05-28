@@ -49,9 +49,7 @@ in
         - `LL_DYNAMIC_LINKER`
         - `LL_AMD_INCLUDES`
         - `LL_AMD_LIBRARIES`
-        - `LL_AMD_RPATHS`
         - `LL_CUDA_TOOLKIT`
-        - `LL_CUDA_RUNTIME`
         - `LL_CUDA_DRIVER`
 
         Attempting to set any other value will result in Bazel errors.

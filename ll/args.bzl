@@ -484,15 +484,16 @@ def link_executable_args(ctx, in_files, out_file, mode):
         "cuda_nvptx",
         "hip_nvptx",
     ]:
-        for location in [toolchain.LL_CUDA_TOOLKIT, toolchain.LL_CUDA_RUNTIME]:
-            if location != "":
-                args.add(location, format = "-rpath=%s/lib")
-                args.add(location, format = "-L%s/lib")
+        # Both the CUDA driver and the CUDA toolkit contain `libcuda.so`.
+        # Link against `<cudatoolkit>/lib/libcuda.so` at build time, but make
+        # sure that `<cudadriver>/lib/libcuda.so` takes precedence at runtime.
+        if toolchain.LL_CUDA_DRIVER != "":
+            args.add(toolchain.LL_CUDA_DRIVER, format = "-rpath=%s/lib")
 
-                # TODO: Not pretty. With the right nix packages we can probably
-                #       do this more elegantly.
-                args.add(location, format = "-rpath=%s/lib/stubs")
-                args.add(location, format = "-L%s/lib/stubs")
+        if toolchain.LL_CUDA_TOOLKIT != "":
+            args.add(toolchain.LL_CUDA_TOOLKIT, format = "-rpath=%s/lib")
+            args.add(toolchain.LL_CUDA_TOOLKIT, format = "-L%s/lib")
+            args.add(toolchain.LL_CUDA_TOOLKIT, format = "-L%s/lib/stubs")
 
         args.add("-lcuda")
         args.add("-lcudart_static")
