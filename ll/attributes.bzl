@@ -8,6 +8,7 @@ load("//ll:llvm_project_deps.bzl", "LLVM_PROJECT_DEPS")
 load("//ll:providers.bzl", "LlInfo")
 load(
     "//ll:transitions.bzl",
+    "COMPILATION_MODES",
     "transition_to_bootstrap",
     "transition_to_cpp",
 )
@@ -31,14 +32,7 @@ DEFAULT_ATTRS = {
         the `ll_toolchain`.
         """,
         default = "cpp",
-        # TODO: hip_amd, sycl_amd
-        values = [
-            "cpp",
-            "cuda_nvptx",
-            "hip_amdgpu",
-            "hip_nvptx",
-            "bootstrap",
-        ],
+        values = COMPILATION_MODES,
     ),
     "compile_flags": attr.string_list(
         doc = """Flags for the compiler.
