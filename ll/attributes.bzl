@@ -26,6 +26,8 @@ DEFAULT_ATTRS = {
 
         `"cuda_nvptx"` The CUDA toolchain.
 
+        `"cuda_nvptx_nvcc"` The CUDA toolchain with `nvcc` as device compiler.
+
         `"hip_nvptx"` The HIP toolchain.
 
         `"bootstrap"` The bootstrap toolchain used by internal dependencies of
@@ -588,6 +590,19 @@ LL_TOOLCHAIN_ATTRS = {
 
         Affects the `cuda_nvptx` and `hip_nvptx` toolchains.
         """,
+    ),
+    "LL_CUDA_NVCC": attr.label(
+        doc = """The path to the `nvcc` compiler.
+
+        Affects the `cuda_nvptx_nvcc` toolchain. Other `*_nvptx` toolchains use
+        the `c_driver` or `cpp_driver` as device compiler.
+        """,
+    ),
+    "LL_CUDA_NVCC_CFLAGS": attr.label(
+        doc = "Compile flags used by the `cuda_nvptx_nvcc` toolchain.",
+    ),
+    "LL_CUDA_NVCC_LDFLAGS": attr.label(
+        doc = "Link flags used by the `cuda_nvptx_nvcc` toolchain.",
     ),
 }
 

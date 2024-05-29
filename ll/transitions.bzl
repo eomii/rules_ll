@@ -8,6 +8,7 @@ COMPILATION_MODES = [
     "bootstrap",
     "cpp",
     "cuda_nvptx",
+    "cuda_nvptx_nvcc",
     "hip_amdgpu",
     "hip_nvptx",
 ]

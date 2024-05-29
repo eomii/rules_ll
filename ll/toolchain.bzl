@@ -71,6 +71,9 @@ def _ll_toolchain_impl(ctx):
             LL_AMD_LIBRARIES = ctx.attr.LL_AMD_LIBRARIES[BuildSettingInfo].value,
             LL_CUDA_TOOLKIT = ctx.attr.LL_CUDA_TOOLKIT[BuildSettingInfo].value,
             LL_CUDA_DRIVER = ctx.attr.LL_CUDA_DRIVER[BuildSettingInfo].value,
+            LL_CUDA_NVCC = ctx.attr.LL_CUDA_NVCC[BuildSettingInfo].value,
+            LL_CUDA_NVCC_CFLAGS = ctx.attr.LL_CUDA_NVCC_CFLAGS[BuildSettingInfo].value,
+            LL_CUDA_NVCC_LDFLAGS = ctx.attr.LL_CUDA_NVCC_LDFLAGS[BuildSettingInfo].value,
         ),
     ]
 

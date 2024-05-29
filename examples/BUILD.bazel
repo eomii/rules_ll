@@ -12,7 +12,7 @@ ll_compilation_database(
     config = ":clang_tidy_config",
     targets = [
         # "//clang_tidy_example",  # This one runs separately.
-        "//cuda_example",
+        "//cuda_example:nvptx",
         "//format_example",
         "//frontend_action_example",
         "//external_dependency_example",
@@ -35,6 +35,7 @@ test_suite(
         ":amdgpu",
         ":cpp",
         ":nvptx",
+        ":nvptx_nvcc",
     ],
 )
 
@@ -79,13 +80,20 @@ test_suite(
     name = "nvptx",
     tags = ["nvptx"],
     tests = [
-        "//cuda_example:test",
+        "//cuda_example:nvptx_test",
         "//hip_example:nvptx_test",
         "//hip_modules_example:nvptx_test",
         "//hip_rdc_example:nvptx_test",
     ],
 )
 
+test_suite(
+    name = "nvptx_nvcc",
+    tags = ["nvptx_nvcc"],
+    tests = [
+        "//cuda_example:nvptx_nvcc_test",
+    ],
+)
 # AMDGPU tests.
 
 test_suite(

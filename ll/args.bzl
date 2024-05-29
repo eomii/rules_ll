@@ -120,6 +120,11 @@ def compile_object_args(
 
     args = ctx.actions.args()
 
+    if ctx.attr.compilation_mode == "cuda_nvptx_nvcc":
+        args.add("--forward-unknown-to-host-compiler")
+        args.add("--compiler-bindir")
+        args.add(toolchain.cpp_driver)
+
     args.add("-fcolor-diagnostics")
 
     # Reproducibility.
@@ -227,7 +232,24 @@ def compile_object_args(
         args.add("-xcuda")
         if toolchain.LL_CUDA_TOOLKIT != "":
             args.add(toolchain.LL_CUDA_TOOLKIT, format = "--cuda-path=%s")
-    if ctx.attr.compilation_mode in ["hip_nvptx", "hip_amdgpu"]:
+
+    if ctx.attr.compilation_mode == "cuda_nvptx_nvcc":
+        args.add("--x")
+        args.add("cu")
+
+        # Upstream Clang is always "unsupported".
+        args.add("--allow-unsupported-compiler")
+
+        # Ensure clang doesn't build device code.
+        args.add("--cuda-host-only")
+
+        if toolchain.LL_CUDA_TOOLKIT != "":
+            args.add(toolchain.LL_CUDA_TOOLKIT, format = "-I%s/include")
+
+    if ctx.attr.compilation_mode in [
+        "hip_nvptx",
+        "hip_amdgpu",
+    ]:
         args.add_all(
             [
                 Label("@hip").workspace_root,
@@ -275,6 +297,14 @@ def compile_object_args(
 
         # 3. Search directories specified via -isystem for quoted and angled
         #    includes. This is not exposed via target attributes.
+
+        if ctx.attr.compilation_mode == "cuda_nvptx_nvcc":
+            if toolchain.LL_CUDA_NVCC_CFLAGS != "":
+                args.add_all(
+                    toolchain.LL_CUDA_NVCC_CFLAGS.split(":"),
+                    omit_if_empty = True,
+                )
+
         llvm_workspace_root = Label("@llvm-project").workspace_root
         args.add_all(
             [
@@ -292,6 +322,7 @@ def compile_object_args(
             # become system includes.
             format_each = "-isystem%s",
         )
+
         if toolchain.LL_CFLAGS != "":
             args.add_all(toolchain.LL_CFLAGS.split(":"))
 
@@ -482,6 +513,7 @@ def link_executable_args(ctx, in_files, out_file, mode):
 
     if ctx.attr.compilation_mode in [
         "cuda_nvptx",
+        "cuda_nvptx_nvcc",
         "hip_nvptx",
     ]:
         # Both the CUDA driver and the CUDA toolkit contain `libcuda.so`.
@@ -530,29 +562,21 @@ def link_executable_args(ctx, in_files, out_file, mode):
         fail("Invalid linking mode")
 
     # Add archives and objects.
-    # if ctx.attr.depends_on_llvm:
-    link_files = [
-        file
-        for file in in_files.to_list()
-        if file.extension in ["a", "o"]
-    ]
-    # else:
-    #     link_files = [
-    #         file
-    #         for file in in_files.to_list()
-    #         if file.extension == "o"
-    #     ] + [
-    #         file
-    #         for file in ctx.files.deps
-    #         if file.extension == "a"
-    #     ]
-    # link_files = [
-    #     file
-    #     for file in in_files.to_list()
-    #     if file.extension in ["a", "o"]
-    # ]
+    args.add_all(
+        [
+            file
+            for file in in_files.to_list()
+            if file.extension in ["a", "o"]
+        ],
+        omit_if_empty = True,
+    )
 
-    args.add_all(link_files)
+    if ctx.attr.compilation_mode == "cuda_nvptx_nvcc":
+        if toolchain.LL_CUDA_NVCC_LDFLAGS != "":
+            args.add_all(
+                toolchain.LL_CUDA_NVCC_LDFLAGS.split(":"),
+                omit_if_empty = True,
+            )
 
     # Link shared libraries in a way that is accessible via `bazel run` and
     # via manual execution, as long as the relative paths to the shared

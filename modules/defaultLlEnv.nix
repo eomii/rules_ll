@@ -6,7 +6,7 @@
   # variants don't work.
 , llvmPackages ? pkgs.llvmPackages_17
 , nvidia_x11 ? pkgs.linuxKernel.packages.linux_latest_libre.nvidia_x11
-, cudatoolkit ? pkgs.cudaPackages.cudatoolkit
+, cudaPackages ? pkgs.cudaPackages
 , ...
 }:
 
@@ -23,6 +23,9 @@ let
     "-rpath=${pkgs.glibc}/lib"
     "-L${pkgs.libxcrypt}/lib"
   ];
+
+  cudatoolkit = cudaPackages.cudatoolkit;
+  nvcc = cudaPackages.cuda_nvcc;
 in
 
 [
@@ -75,4 +78,17 @@ in
   # Flags for CUDA dependencies.
   "LL_CUDA_TOOLKIT=${lib.strings.optionalString pkgs.config.cudaSupport "${cudatoolkit}"}"
   "LL_CUDA_DRIVER=${lib.strings.optionalString pkgs.config.cudaSupport "${nvidia_x11}"}"
+  "LL_CUDA_NVCC=${lib.strings.optionalString pkgs.config.cudaSupport "${nvcc}"}/bin/nvcc"
+
+  # TODO(aaronmondal): At the moment `nvcc` doesn't properly work with `libc++`.
+  #                    Attempt to get it to work and remove this or integrate it
+  #                    more elegantly.
+  "LL_CUDA_NVCC_CFLAGS=${lib.strings.optionalString pkgs.config.cudaSupport (lib.concatStringsSep ":" [
+    "-isystem${pkgs.gcc.cc}/include/c++/13.2.0"
+    "-isystem${pkgs.gcc.cc}/include/c++/13.2.0/x86_64-unknown-linux-gnu"
+  ])}"
+  "LL_CUDA_NVCC_LDFLAGS=${lib.strings.optionalString pkgs.config.cudaSupport (lib.concatStringsSep ":" [
+    "-L${pkgs.gcc.cc}/lib"
+    "-lstdc++"
+  ])}"
 ]
