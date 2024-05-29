@@ -131,6 +131,9 @@ def link_shared_object_inputs(ctx, in_files):
         in_files +
         ctx.files.data +
         ctx.files.deps +
+        (
+            [ctx.file.version_script] if ctx.file.version_script != None else []
+        ) +
         toolchain.compiler_runtime +
         toolchain.cpp_abilib +
         toolchain.cpp_stdlib +

@@ -100,7 +100,7 @@ TODO
            <a href="#ll_library-compile_string_flags">compile_string_flags</a>, <a href="#ll_library-defines">defines</a>, <a href="#ll_library-depends_on_llvm">depends_on_llvm</a>, <a href="#ll_library-emit">emit</a>, <a href="#ll_library-experimental_device_intrinsics">experimental_device_intrinsics</a>,
            <a href="#ll_library-exposed_angled_includes">exposed_angled_includes</a>, <a href="#ll_library-exposed_defines">exposed_defines</a>, <a href="#ll_library-exposed_hdrs">exposed_hdrs</a>, <a href="#ll_library-exposed_includes">exposed_includes</a>,
            <a href="#ll_library-exposed_interfaces">exposed_interfaces</a>, <a href="#ll_library-includes">includes</a>, <a href="#ll_library-interfaces">interfaces</a>, <a href="#ll_library-sanitize">sanitize</a>, <a href="#ll_library-shared_object_link_flags">shared_object_link_flags</a>,
-           <a href="#ll_library-shared_object_link_string_flags">shared_object_link_string_flags</a>, <a href="#ll_library-toolchain_configuration">toolchain_configuration</a>)</code></pre>
+           <a href="#ll_library-shared_object_link_string_flags">shared_object_link_string_flags</a>, <a href="#ll_library-toolchain_configuration">toolchain_configuration</a>, <a href="#ll_library-version_script">version_script</a>)</code></pre>
 Creates a static archive.
 
 Example:
@@ -138,6 +138,7 @@ Example:
 | <a id="ll_library-shared_object_link_flags"></a>`shared_object_link_flags` | <code>List of strings</code>, optional, defaults to <code>[]</code>.<br><br> Flags for the linker when emitting shared objects.<br><br>Used if `emit` includes `"shared_object"`.   |
 | <a id="ll_library-shared_object_link_string_flags"></a>`shared_object_link_string_flags` | <code><a href="https://bazel.build/concepts/labels">List of labels</a></code>, optional, defaults to <code>[]</code>.<br><br> Flags for the linker when emitting shared objects in the form of `string_flag`s.<br><br>See `compile_string_flags` for semantics.<br><br>Used if `emit` includes `"shared_object"`.   |
 | <a id="ll_library-toolchain_configuration"></a>`toolchain_configuration` | <code><a href="https://bazel.build/concepts/labels">Label</a></code>, optional, defaults to <code>"@rules_ll//ll:current_ll_toolchain_configuration"</code>.<br><br> TODO   |
+| <a id="ll_library-version_script"></a>`version_script` | <code><a href="https://bazel.build/concepts/labels">Label</a></code>, optional, defaults to <code>None</code>.<br><br> Optional version script used during shared object linking.<br><br>Used if `emit` includes `"shared_object"`.   |
 
 
 <a id="ll_test"></a>
