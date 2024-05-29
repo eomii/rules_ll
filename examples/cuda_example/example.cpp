@@ -1,5 +1,6 @@
 #include <array>
 #include <cassert>
+#include <cstdint>
 #include <iostream>
 
 #include "cuda_runtime.h"
@@ -9,8 +10,6 @@ constexpr float kInputB = 2.0F;
 constexpr float kExpectedOutput = 3.0F;
 constexpr int kDimension = 1 << 20;
 constexpr auto kThreadsPerBlockX = 128;
-constexpr auto kThreadsPerBlockY = 1;
-constexpr auto kThreadsPerBlockZ = 1;
 
 template <typename T>
 constexpr void cuda_assert(const T value) {
@@ -30,7 +29,8 @@ void print_device_info() {
   int count = 0;
   const cudaError_t err = cudaGetDeviceCount(&count);
   if (err == cudaErrorInvalidDevice) {
-    std::cout << "FAIL: invalid device" << '\n';
+    std::cerr << "FAIL: invalid device" << '\n';
+    return;
   }
   std::cout << "Number of devices is " << count << '\n';
 
@@ -38,11 +38,7 @@ void print_device_info() {
   cuda_assert(cudaGetDeviceProperties(&device_prop, 0));
   std::cout << "System major: " << device_prop.major << '\n';
   std::cout << "System minor: " << device_prop.minor << '\n';
-  std::cout << "Device name : ";
-  for (auto character : device_prop.name) {
-    std::cout << character;
-  }
-  std::cout << '\n';
+  std::cout << "Device name : " << device_prop.name << '\n';
 }
 
 auto count_errors(const float *result) -> int {
@@ -92,8 +88,8 @@ auto main() -> int {
   cuda_assert(cudaMemcpy(device_input_b, host_input_b,
                          kDimension * sizeof(float), cudaMemcpyHostToDevice));
 
-  const dim3 grid_dim = dim3(kDimension / kThreadsPerBlockX);
-  const dim3 block_dim = dim3(kThreadsPerBlockX);
+  const dim3 grid_dim(kDimension / kThreadsPerBlockX);
+  const dim3 block_dim(kThreadsPerBlockX);
 
   // This is not pretty, but it is close to the HIP implementation.
   // NOLINTBEGIN cppcoreguidelines-pro-type-reinterpret-cast

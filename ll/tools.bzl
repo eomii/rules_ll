@@ -16,6 +16,8 @@ def compile_object_tools(ctx):
 
     return [
         toolchain.bitcode_linker,
+        toolchain.c_driver,
+        toolchain.cpp_driver,
         toolchain.linker,
         toolchain.linker_executable,
         toolchain.linker_wrapper,

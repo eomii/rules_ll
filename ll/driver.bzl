@@ -16,7 +16,10 @@ def compiler_driver(ctx, in_file):
     toolchain = ctx.toolchains["//ll:toolchain_type"]
 
     driver = None
-    if in_file.extension in ["c", "S"]:
+
+    if ctx.attr.compilation_mode == "cuda_nvptx_nvcc":
+        driver = toolchain.LL_CUDA_NVCC
+    elif in_file.extension in ["c", "S"]:
         driver = toolchain.c_driver
     elif in_file.extension in [
         "cc",

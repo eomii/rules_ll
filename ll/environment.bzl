@@ -20,7 +20,7 @@ def compile_object_environment(ctx):
     config = ctx.attr.toolchain_configuration[BuildSettingInfo].value
     toolchain = ctx.toolchains["//ll:toolchain_type"]
 
-    if config in ["cpp"]:
+    if config in ["cpp", "cuda_nvptx_nvcc"]:
         return {
             "LINK": toolchain.bitcode_linker.path,
             "LLD": toolchain.linker.path,
