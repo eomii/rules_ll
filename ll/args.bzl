@@ -556,8 +556,12 @@ def link_executable_args(ctx, in_files, out_file, mode):
             args.add_all(flags[BuildSettingInfo].value.split(":"))
     elif mode == "shared_object":
         args.add_all(ctx.attr.shared_object_link_flags)
+
         for flags in ctx.attr.shared_object_link_string_flags:
             args.add_all(flags[BuildSettingInfo].value.split(":"))
+
+        if ctx.file.version_script != None:
+            args.add(ctx.file.version_script, format = "--version-script=%s")
     else:
         fail("Invalid linking mode")
 

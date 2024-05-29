@@ -295,6 +295,13 @@ LIBRARY_ATTRS = {
         Used if `emit` includes `"shared_object"`.
         """,
     ),
+    "version_script": attr.label(
+        doc = """Optional version script used during shared object linking.
+
+        Used if `emit` includes `"shared_object"`.
+        """,
+        allow_single_file = True,
+    ),
 }
 
 BINARY_ATTRS = {
