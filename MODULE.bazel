@@ -11,11 +11,11 @@ bazel_dep(name = "platforms", version = "0.0.10")
 bazel_dep(name = "rules_cc", version = "0.0.9")
 
 # Various utility functions such as path manipulations and templating.
-bazel_dep(name = "bazel_skylib", version = "1.6.1")
+bazel_dep(name = "bazel_skylib", version = "1.7.0")
 
 # Documentation. These should be dev_dependencies, but that doesn't work at the
 # moment. This is a bug.
-bazel_dep(name = "rules_java", version = "7.5.0", dev_dependency = False)
+bazel_dep(name = "rules_java", version = "7.6.1", dev_dependency = False)
 bazel_dep(name = "stardoc", version = "0.6.2", dev_dependency = False)
 
 # The LLVM project. We override the specific commit below.
@@ -27,7 +27,7 @@ llvm_project_overlay = use_extension(
     "llvm_project_overlay",
 )
 llvm_project_overlay.configure(
-    commit = "5bde8017a1109128d011510dcf4ba79140a224fe",
+    commit = "196dca7561b4c3865ef7d5e45c22d215619d7385",
     patches = [
         "@rules_ll//patches:mallinfo2_patch.diff",
         "@rules_ll//patches:rules_ll_overlay_patch.diff",
@@ -35,7 +35,7 @@ llvm_project_overlay.configure(
         "@rules_ll//patches:llvm-add-missing-cuda-cmath-header.diff",
         "@rules_ll//patches:llvm-project-bundle-with-bash.diff",
     ],
-    sha256 = "1627942a74a7397968cf251dde9485080ccf3d8a0de6a40340033fe6d00e3103",
+    sha256 = "7d097fe703ca41f5458ca5809f21fdb8ca13e2e6c28b3d3de85c700e43ccc7ed",
     targets = [
         "AMDGPU",
         "NVPTX",
