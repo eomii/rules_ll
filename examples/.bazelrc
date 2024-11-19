@@ -49,7 +49,7 @@ build --remote_instance_name=main
 try-import %workspace%/../.bazelrc.ll
 
 # Nix-generated flags for LRE.
-try-import %workspace%/../.bazelrc.lre
+try-import %workspace%/../lre.bazelrc
 
 # Allow user-side customization.
 try-import %workspace%/.bazelrc.user
