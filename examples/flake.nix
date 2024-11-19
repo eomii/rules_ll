@@ -23,7 +23,7 @@
       inputs.flake-utils.follows = "flake-utils";
     };
     nativelink = {
-      url = "github:TraceMachina/nativelink/75105df746c626da76f74e412764e6755296a8ab";
+      url = "github:TraceMachina/nativelink/481226be52a84ad5a6b990cc48e9f97512d8ccd2";
       inputs.flake-utils.follows = "flake-utils";
       inputs.flake-parts.follows = "flake-parts";
       inputs.pre-commit-hooks.follows = "pre-commit-hooks";
@@ -55,7 +55,7 @@
           "x86_64-linux"
         ];
         imports = [
-          inputs.nativelink.flakeModule
+          inputs.nativelink.flakeModule.local-remote-execution
           inputs.rules_ll.flakeModule
         ];
         perSystem =
