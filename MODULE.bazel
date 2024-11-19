@@ -11,7 +11,7 @@ bazel_dep(name = "platforms", version = "0.0.10")
 bazel_dep(name = "rules_cc", version = "0.0.9")
 
 # Various utility functions such as path manipulations and templating.
-bazel_dep(name = "bazel_skylib", version = "1.7.0")
+bazel_dep(name = "bazel_skylib", version = "1.7.1")
 
 # Documentation. These should be dev_dependencies, but that doesn't work at the
 # moment. This is a bug.
