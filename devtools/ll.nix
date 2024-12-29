@@ -15,7 +15,7 @@ let
   opt = (string: "\\E[33m" + string + "\\033[0m");
 
 
-  ll_up = import ./up.nix { inherit pkgs native; };
+  ll_up = pkgs.callPackage ./up.nix { inherit native; };
   ll_docs = llScript "docs" ./docs.sh;
   ll_patch = llScript "overlay" ./overlay.sh;
   ll_release = llScript "module" ./module.sh;
@@ -33,7 +33,7 @@ elif [[ "$1" == "module" ]]; then
 elif [[ "$1" == "up" ]]; then
   ${ll_up}/bin/up
 elif [[ "$1" == "down" ]]; then
-  native down
+  ${native}/bin/native down
 else
 
 printf '

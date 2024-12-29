@@ -22,11 +22,18 @@
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.flake-utils.follows = "flake-utils";
     };
+    # TODO(aaronmondal): This is currently required by LRE even if we don't use
+    #                    Rust. Fix this upstream.
+    rust-overlay = {
+      url = "github:oxalica/rust-overlay";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     nativelink = {
-      url = "github:TraceMachina/nativelink/481226be52a84ad5a6b990cc48e9f97512d8ccd2";
+      url = "github:TraceMachina/nativelink/b1df876fd64d60d5d1b6cb15a50e934923ab82bf";
       inputs.flake-utils.follows = "flake-utils";
       inputs.flake-parts.follows = "flake-parts";
       inputs.pre-commit-hooks.follows = "pre-commit-hooks";
+      inputs.rust-overlay.follows = "rust-overlay";
     };
     rules_ll = {
       # If you use this file as template, substitute the line below with this,
@@ -39,6 +46,7 @@
       inputs.flake-parts.follows = "flake-parts";
       inputs.nativelink.follows = "nativelink";
       inputs.pre-commit-hooks.follows = "pre-commit-hooks";
+      inputs.rust-overlay.follows = "rust-overlay";
     };
   };
 
@@ -47,6 +55,7 @@
     , rules_ll
     , flake-parts
     , nativelink
+    , rust-overlay
     , ...
     } @ inputs:
     flake-parts.lib.mkFlake { inherit inputs; }
@@ -69,6 +78,20 @@
             openssl = (pkgs.openssl.override { static = true; });
           in
           {
+            _module.args.pkgs = import self.inputs.nixpkgs {
+              inherit system;
+              overlays = [
+                nativelink.overlays.lre
+                (import ../patches/nixpkgs-disable-ratehammering-pulumi-tests.nix)
+                (import rust-overlay)
+              ];
+              # CUDA support
+              config.allowUnfree = true;
+              config.cudaSupport = true;
+            };
+            local-remote-execution.settings = {
+              inherit (pkgs.lre.lre-cc.meta) Env;
+            };
             rules_ll.settings.llEnv = rules_ll.lib.defaultLlEnv {
               inherit pkgs;
               LL_CFLAGS = "-I${openssl.dev}/include";
@@ -94,15 +117,6 @@
                 # Has no effect in the examples as it's already handled by the
                 # top-level flake.
                 ${config.local-remote-execution.installationScript}
-
-                # Prevent rules_cc from using anything other than clang.
-                export CC=clang
-
-                # Probably a bug in nix. Setting LD=ld.lld here doesn't work.
-                export LD=${pkgs.llvmPackages_17.lld}/bin/ld.lld
-
-                # Java needs to be the same version as in the Bazel wrapper.
-                export JAVA_HOME=${pkgs.jdk17_headless}/lib/openjdk
               '';
             };
           };

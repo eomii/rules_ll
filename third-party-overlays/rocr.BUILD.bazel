@@ -156,7 +156,7 @@ ll_library(
         "src/core/runtime/amd_blit_shaders_v2.h",
         "src/loader/executable.hpp",
         "src/loader/AMDHSAKernelDescriptor.h",
-    ]),
+    ], allow_empty = True),
     compile_flags = HSA_CXX_FLAGS,
     compile_string_flags = ["@rules_ll//ll:LL_AMD_INCLUDES"],
     defines = CORE_RUNTIME_TARGET_DEFINES + [
