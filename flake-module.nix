@@ -33,7 +33,7 @@ in
             };
             installationScript = mkOption {
               type = types.str;
-              description = lib.mdDoc "A .bazelrc.ll generator for rules_ll.";
+              description = lib.mdDoc "A ll.bazelrc generator for rules_ll.";
               default = cfg.settings.installationScript;
               defaultText = lib.literalMD "bazelrc contents";
               readOnly = true;

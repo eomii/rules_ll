@@ -92,10 +92,12 @@
             local-remote-execution.settings = {
               inherit (pkgs.lre.lre-cc.meta) Env;
             };
-            rules_ll.settings.llEnv = rules_ll.lib.defaultLlEnv {
-              inherit pkgs;
-              LL_CFLAGS = "-I${openssl.dev}/include";
-              LL_LDFLAGS = "-L${openssl.out}/lib";
+            rules_ll.settings = {
+              Env = rules_ll.lib.defaultLlEnv {
+                inherit pkgs;
+                LL_CFLAGS = "-I${openssl.dev}/include";
+                LL_LDFLAGS = "-L${openssl.out}/lib";
+              };
             };
             devShells.default = pkgs.mkShell {
               nativeBuildInputs =
