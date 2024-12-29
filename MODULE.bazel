@@ -8,15 +8,19 @@ register_toolchains("@rules_ll//ll:ll_toolchain")
 
 # Platform support.
 bazel_dep(name = "platforms", version = "0.0.10")
-bazel_dep(name = "rules_cc", version = "0.0.9")
+bazel_dep(name = "rules_cc", version = "0.0.17")
 
 # Various utility functions such as path manipulations and templating.
-bazel_dep(name = "bazel_skylib", version = "1.7.0")
+bazel_dep(name = "bazel_skylib", version = "1.7.1")
 
 # Documentation. These should be dev_dependencies, but that doesn't work at the
 # moment. This is a bug.
 bazel_dep(name = "rules_java", version = "7.6.1", dev_dependency = False)
-bazel_dep(name = "stardoc", version = "0.6.2", dev_dependency = False)
+bazel_dep(name = "stardoc", version = "0.7.2", dev_dependency = False)
+
+# TODO(aaronmondal): We don't actually use this. Fix LRE upstream to make this
+#                    import optional.
+bazel_dep(name = "rules_rust", version = "0.56.0")
 
 # The LLVM project. We override the specific commit below.
 bazel_dep(name = "llvm-project-overlay", version = "17-init-bcr.3")
