@@ -44,9 +44,9 @@ build --noexperimental_profile_include_primary_output
 build --remote_instance_name=main
 
 # Nix-generated action env for rules_ll. Usually this would be
-# `%workspace%/.bazelrc.ll`, but since this example flake is in the rules_ll
+# `%workspace%/ll.bazelrc`, but since this example flake is in the rules_ll
 # repository we need to reference the file from the parent directory.
-try-import %workspace%/../.bazelrc.ll
+try-import %workspace%/../ll.bazelrc
 
 # Nix-generated flags for LRE.
 try-import %workspace%/../lre.bazelrc

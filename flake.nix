@@ -93,15 +93,17 @@
             pre-commit.settings = {
               hooks = import ./pre-commit-hooks.nix { inherit pkgs; };
             };
-            rules_ll.settings.llEnv =
-              let
-                openssl = (pkgs.openssl.override { static = true; });
-              in
-              self.lib.defaultLlEnv {
-                inherit pkgs;
-                LL_CFLAGS = "-I${openssl.dev}/include";
-                LL_LDFLAGS = "-L${openssl.out}/lib";
-              };
+            rules_ll.settings = {
+              Env =
+                let
+                  openssl = (pkgs.openssl.override { static = true; });
+                in
+                self.lib.defaultLlEnv {
+                  inherit pkgs;
+                  LL_CFLAGS = "-I${openssl.dev}/include";
+                  LL_LDFLAGS = "-L${openssl.out}/lib";
+                };
+            };
             packages = {
               ll = import ./devtools/ll.nix {
                 inherit pkgs;
@@ -145,11 +147,11 @@
                 # development shell.
                 ${config.pre-commit.installationScript}
 
-                # Generate .bazelrc.ll which contains Bazel configuration
+                # Generate ll.bazelrc which contains Bazel configuration
                 # when rules_ll is run from a nix environment.
                 ${config.rules_ll.installationScript}
 
-                # Generate .bazelrc.lre which configures the LRE toolchains.
+                # Generate lre.bazelrc which configures the LRE toolchains.
                 ${config.local-remote-execution.installationScript}
 
                 # Ensure that the ll command points to our ll binary.
