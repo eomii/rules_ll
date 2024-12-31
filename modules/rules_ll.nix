@@ -12,6 +12,8 @@ let
     # Add try-import %%workspace%%/ll.bazelrc to your .bazelrc to
     # include these flags when running Bazel in a nix environment.
 
+    build --extra_toolchains=@rules_ll//ll:ll_toolchain
+
     ${lib.concatLines processedActionEnvs}' >$out
   '';
 in
