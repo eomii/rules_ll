@@ -4,8 +4,6 @@ module(
     compatibility_level = 0,
 )
 
-register_toolchains("@rules_ll//ll:ll_toolchain")
-
 # Platform support.
 bazel_dep(name = "platforms", version = "0.0.10")
 bazel_dep(name = "rules_cc", version = "0.0.17")
@@ -14,7 +12,10 @@ bazel_dep(name = "rules_cc", version = "0.0.17")
 bazel_dep(name = "bazel_skylib", version = "1.7.1")
 
 # Documentation.
-bazel_dep(name = "stardoc", version = "0.7.2", dev_dependency = True)
+#
+# TODO(aaronmondal): This should be a dev_dependency, but that currently breaks
+#                    the examples.
+bazel_dep(name = "stardoc", version = "0.7.2", dev_dependency = False)
 
 # TODO(aaronmondal): We don't actually use this. Fix LRE upstream to make this
 #                    import optional.
