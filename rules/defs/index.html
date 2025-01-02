@@ -1,0 +1,1868 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://ll.eomii.org/rules/defs/">
+      
+      
+        <link rel="prev" href="../../setup/remote_execution/">
+      
+      
+        <link rel="next" href="../../guides/">
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.15">
+    
+    
+      
+        <title>Rules - rules_ll</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.7e359304.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fira+Sans:300,300i,400,400i,700,700i%7CFira+Code:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Fira Sans";--md-code-font:"Fira Code"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="eomii" data-md-color-primary="white" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#lldefsbzl" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="rules_ll" class="md-header__button md-logo" aria-label="rules_ll" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12 21.35-1.45-1.32C5.4 15.36 2 12.27 2 8.5 2 5.41 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.08C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.41 22 8.5c0 3.77-3.4 6.86-8.55 11.53L12 21.35Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            rules_ll
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Rules
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/eomii/rules_ll/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    eomii/rules_ll
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../.." class="md-tabs__link">
+          
+  
+    
+  
+  Home
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../setup/setup/" class="md-tabs__link">
+          
+  
+    
+  
+  Setup
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+    
+  
+  
+    <li class="md-tabs__item md-tabs__item--active">
+      <a href="./" class="md-tabs__link">
+        
+  
+    
+  
+  Rules
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../guides/" class="md-tabs__link">
+          
+  
+    
+  
+  Guides
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../reference/" class="md-tabs__link">
+          
+  
+    
+  
+  Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="rules_ll" class="md-nav__button md-logo" aria-label="rules_ll" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12 21.35-1.45-1.32C5.4 15.36 2 12.27 2 8.5 2 5.41 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.08C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.41 22 8.5c0 3.77-3.4 6.86-8.55 11.53L12 21.35Z"/></svg>
+
+    </a>
+    rules_ll
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/eomii/rules_ll/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    eomii/rules_ll
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../.." class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Home
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_1" id="__nav_1_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_1">
+            <span class="md-nav__icon md-icon"></span>
+            Home
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../CODE_OF_CONDUCT/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Code of conduct
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../CONTRIBUTING/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Contributing
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../SECURITY/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Security
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Setup
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Setup
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../setup/setup/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Setup
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../setup/remote_execution/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Remote execution
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Rules
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Rules
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#ll_binary" class="md-nav__link">
+    <span class="md-ellipsis">
+      ll_binary
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ll_compilation_database" class="md-nav__link">
+    <span class="md-ellipsis">
+      ll_compilation_database
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ll_coverage_test" class="md-nav__link">
+    <span class="md-ellipsis">
+      ll_coverage_test
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ll_library" class="md-nav__link">
+    <span class="md-ellipsis">
+      ll_library
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ll_test" class="md-nav__link">
+    <span class="md-ellipsis">
+      ll_test
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../guides/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Guides
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Guides
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/clang_tidy/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Clang-tidy
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/modules/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    C++ Modules
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/cuda_and_hip/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    CUDA and HIP
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/external_dependencies/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    External dependencies
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/sanitizers/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Sanitizers
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../reference/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Reference
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Reference
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/actions/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    //ll:actions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/args/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    //ll:args
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/attributes/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    //ll:attributes
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/compilation_database/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    //ll:compilation_database
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/coverage/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    //ll:coverage
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/defs/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    //ll:defs
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/driver/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    //ll:driver
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/environment/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    //ll:environment
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/inputs/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    //ll:inputs
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/ll/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    //ll:ll
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/llvm_project_deps/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    //ll:llvm_project_deps
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/outputs/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    //ll:outputs
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/providers/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    //ll:providers
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/resolve_rule_inputs/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    //ll:resolve_rule_inputs
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/toolchain/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    //ll:toolchain
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/tools/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    //ll:tools
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/transitions/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    //ll:transitions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#ll_binary" class="md-nav__link">
+    <span class="md-ellipsis">
+      ll_binary
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ll_compilation_database" class="md-nav__link">
+    <span class="md-ellipsis">
+      ll_compilation_database
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ll_coverage_test" class="md-nav__link">
+    <span class="md-ellipsis">
+      ll_coverage_test
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ll_library" class="md-nav__link">
+    <span class="md-ellipsis">
+      ll_library
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ll_test" class="md-nav__link">
+    <span class="md-ellipsis">
+      ll_test
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+<h1 id="lldefsbzl"><code>//ll:defs.bzl</code></h1>
+<p>Import these rules in your <code>BUILD.bazel</code> files.</p>
+<p>To load for example the <code>ll_binary</code> rule:</p>
+<div class="highlight"><pre><span></span><code><span class="n">load</span><span class="p">(</span><span class="s2">&quot;@rules_ll//ll:defs.bzl&quot;</span><span class="p">,</span> <span class="s2">&quot;ll_binary&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p><a id="ll_binary"></a></p>
+<h2 id="ll_binary"><code>ll_binary</code></h2>
+<pre><code>ll_binary(<a href="#ll_binary-name">name</a>, <a href="#ll_binary-deps">deps</a>, <a href="#ll_binary-srcs">srcs</a>, <a href="#ll_binary-data">data</a>, <a href="#ll_binary-hdrs">hdrs</a>, <a href="#ll_binary-angled_includes">angled_includes</a>, <a href="#ll_binary-compilation_mode">compilation_mode</a>, <a href="#ll_binary-compile_flags">compile_flags</a>,
+          <a href="#ll_binary-compile_string_flags">compile_string_flags</a>, <a href="#ll_binary-defines">defines</a>, <a href="#ll_binary-depends_on_llvm">depends_on_llvm</a>, <a href="#ll_binary-experimental_device_intrinsics">experimental_device_intrinsics</a>,
+          <a href="#ll_binary-exposed_angled_includes">exposed_angled_includes</a>, <a href="#ll_binary-exposed_defines">exposed_defines</a>, <a href="#ll_binary-exposed_hdrs">exposed_hdrs</a>, <a href="#ll_binary-exposed_includes">exposed_includes</a>,
+          <a href="#ll_binary-exposed_interfaces">exposed_interfaces</a>, <a href="#ll_binary-includes">includes</a>, <a href="#ll_binary-interfaces">interfaces</a>, <a href="#ll_binary-libraries">libraries</a>, <a href="#ll_binary-link_flags">link_flags</a>, <a href="#ll_binary-link_string_flags">link_string_flags</a>,
+          <a href="#ll_binary-sanitize">sanitize</a>, <a href="#ll_binary-toolchain_configuration">toolchain_configuration</a>)</code></pre>
+<p>Creates an executable.</p>
+<p>Example:</p>
+<p><div class="highlight"><pre><span></span><code><span class="n">ll_binary</span><span class="p">(</span>
+    <span class="n">srcs</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;my_executable.cpp&quot;</span><span class="p">],</span>
+<span class="p">)</span>
+</code></pre></div>
+<code>attributes</code></p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><a id="ll_binary-name"></a><code>name</code></td>
+<td style="text-align: left;"><code><a href="https://bazel.build/concepts/labels#target-names">Name</a></code>, required.<br><br> A unique name for this target.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a id="ll_binary-deps"></a><code>deps</code></td>
+<td style="text-align: left;"><code><a href="https://bazel.build/concepts/labels">List of labels</a></code>, optional, defaults to <code>[]</code>.<br><br> The dependencies for this target.<br><br>Use <code>ll_library</code> targets here. Other targets won't work.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a id="ll_binary-srcs"></a><code>srcs</code></td>
+<td style="text-align: left;"><code><a href="https://bazel.build/concepts/labels">List of labels</a></code>, optional, defaults to <code>[]</code>.<br><br> Compilable source files for this target.<br><br>Allowed file extensions: <code>[".ll", ".o", ".S", ".c", ".cl", ".cpp"]</code>.<br><br>Place headers in the <code>hdrs</code> attribute.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a id="ll_binary-data"></a><code>data</code></td>
+<td style="text-align: left;"><code><a href="https://bazel.build/concepts/labels">List of labels</a></code>, optional, defaults to <code>[]</code>.<br><br> Extra files made available to compilation and linking steps.<br><br>Not appended to the default command line arguments, but available to actions. Reference these files manually for instance in the <code>includes</code>, and <code>compile_flags</code> attributes.<br><br>Use this attribute to make intermediary outputs from non-ll targets, for example from <code>rules_cc</code> or <code>filegroup</code>, available to the rule.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a id="ll_binary-hdrs"></a><code>hdrs</code></td>
+<td style="text-align: left;"><code><a href="https://bazel.build/concepts/labels">List of labels</a></code>, optional, defaults to <code>[]</code>.<br><br> Header files for this target.<br><br>When including a header file with a nested path, for instance <code>#include "some/path/myheader.h"</code>, add <code>"some/path"</code> to <code>includes</code> to make it visible to the rule.<br><br>Unavailable to downstream targets.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a id="ll_binary-angled_includes"></a><code>angled_includes</code></td>
+<td style="text-align: left;"><code>List of strings</code>, optional, defaults to <code>[]</code>.<br><br> Angled include paths, relative to the target workspace.<br><br>Useful if you require include prefix stripping for dynamic paths, for instance the ones generated by <code>bzlmod</code>. Instead of <code>compile_flags = ["-Iexternal/mydep.someversion/include"]</code>, use <code>angled_includes = ["include"]</code> to add the path to the workspace automatically.<br><br>Expands paths starting with <code>$(GENERATED)</code> to the workspace location in the <code>GENDIR</code> path.<br><br>Unavailable to downstream targets.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a id="ll_binary-compilation_mode"></a><code>compilation_mode</code></td>
+<td style="text-align: left;"><code>String</code>, optional, defaults to <code>"cpp"</code>.<br><br> Enables compilation of heterogeneous single source files.<br><br>Prefer this attribute over adding SYCL/HIP/CUDA flags manually in the <code>compile_flags</code> and <code>link_flags</code>.<br><br>See <a href="../../guides/cuda_and_hip/">CUDA and HIP</a>.<br><br><code>"cpp"</code> The default C++ toolchain.<br><br><code>"cuda_nvptx"</code> The CUDA toolchain.<br><br><code>"cuda_nvptx_nvcc"</code> The CUDA toolchain with <code>nvcc</code> as device compiler.<br><br><code>"hip_nvptx"</code> The HIP toolchain.<br><br><code>"bootstrap"</code> The bootstrap toolchain used by internal dependencies of the <code>ll_toolchain</code>.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a id="ll_binary-compile_flags"></a><code>compile_flags</code></td>
+<td style="text-align: left;"><code>List of strings</code>, optional, defaults to <code>[]</code>.<br><br> Flags for the compiler.<br><br>Pass a list of strings here. For instance <code>["-O3", "-std=c++20"]</code>.<br><br>Split flag pairs <code>-Xclang -somearg</code> into separate flags <code>["-Xclang", "-somearg"]</code>.<br><br>Unavailable to downstream targets.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a id="ll_binary-compile_string_flags"></a><code>compile_string_flags</code></td>
+<td style="text-align: left;"><code><a href="https://bazel.build/concepts/labels">List of labels</a></code>, optional, defaults to <code>[]</code>.<br><br> Flags for the compiler in the form of <code>string_flag</code>s.<br><br>Splits the values of each <code>string_flag</code> along colons like so:<br><br><pre><code class="language-python">load("@bazel_skylib//rules:common_settings.bzl", "string_flag")&#10;&#10;string_flag(&#10;    name = "myflags",&#10;    build_setting_default = "a:b:c",&#10;)&#10;&#10;ll_library(&#10;    # ...&#10;    # Equivalent to <code>compile_flags = ["a", "b", "c"]</code>&#10;    compile_string_flags = [":myflags"],&#10;)</code></pre><br><br>Useful for externally configurable build attributes, such as generated flags from Nix environments.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a id="ll_binary-defines"></a><code>defines</code></td>
+<td style="text-align: left;"><code>List of strings</code>, optional, defaults to <code>[]</code>.<br><br> Defines for this target.<br><br>Pass a list of strings here. For instance <code>["MYDEFINE_1", "MYDEFINE_2"]</code>.<br><br>Unavailable to downstream targets.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a id="ll_binary-depends_on_llvm"></a><code>depends_on_llvm</code></td>
+<td style="text-align: left;"><code>Boolean</code>, optional, defaults to <code>False</code>.<br><br> Whether this target directly depends on targets from the <code>llvm-project-overlay</code>.<br><br>Setting this to <code>True</code> makes the <code>cc_library</code> targets from the LLVM project overlay available to this target.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a id="ll_binary-experimental_device_intrinsics"></a><code>experimental_device_intrinsics</code></td>
+<td style="text-align: left;"><code><a href="https://bazel.build/concepts/labels">List of labels</a></code>, optional, defaults to <code>[]</code>.<br><br> Custom intrinsics for device compilation.<br><br>Adds <code>-Xarch_device -include&lt;thefile&gt;</code> to the compile commands for this target.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a id="ll_binary-exposed_angled_includes"></a><code>exposed_angled_includes</code></td>
+<td style="text-align: left;"><code>List of strings</code>, optional, defaults to <code>[]</code>.<br><br> Exposed angled include paths, relative to the original target workspace.<br><br>Expands paths starting with <code>$(GENERATED)</code> to the workspace location in the <code>GENDIR</code> path.<br><br>Added to the compile command line arguments of direct dependents.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a id="ll_binary-exposed_defines"></a><code>exposed_defines</code></td>
+<td style="text-align: left;"><code>List of strings</code>, optional, defaults to <code>[]</code>.<br><br> Exposed defines for this target.<br><br>Added to the compile command line arguments of direct dependents.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a id="ll_binary-exposed_hdrs"></a><code>exposed_hdrs</code></td>
+<td style="text-align: left;"><code><a href="https://bazel.build/concepts/labels">List of labels</a></code>, optional, defaults to <code>[]</code>.<br><br> Exposed headers for this target.<br><br>Direct dependents can see exposed headers. Put the public API headers for libraries here.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a id="ll_binary-exposed_includes"></a><code>exposed_includes</code></td>
+<td style="text-align: left;"><code>List of strings</code>, optional, defaults to <code>[]</code>.<br><br> Exposed include paths, relative to the original target workspace.<br><br>Expands paths starting with <code>$(GENERATED)</code> to the workspace location in the <code>GENDIR</code> path.<br><br>Added to the compile command line arguments of direct dependents.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a id="ll_binary-exposed_interfaces"></a><code>exposed_interfaces</code></td>
+<td style="text-align: left;"><code><a href="https://bazel.build/rules/lib/dict">Dictionary: Label -&gt; String</a></code>, optional, defaults to <code>{}</code>.<br><br> Transitive interfaces for this target.<br><br>See <a href="../../guides/modules/">C++ modules</a> for a guide.<br><br>Makes precompiled modules and compiled objects visible to direct dependents. Files in this attribute can see BMIs from modules in <code>interfaces</code>.<br><br>Primary module interfaces go here.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a id="ll_binary-includes"></a><code>includes</code></td>
+<td style="text-align: left;"><code>List of strings</code>, optional, defaults to <code>[]</code>.<br><br> Include paths, relative to the target workspace.<br><br>Uses <code>-iquote</code>.<br><br>Useful if you need custom include prefix stripping for dynamic paths, for instance the ones generated by <code>bzlmod</code>. Instead of <code>compile_flags = ["-iquoteexternal/mydep.someversion/include"]</code>, use <code>includes = ["include"]</code> to add the path to the workspace automatically.<br><br>Expands paths starting with <code>$(GENERATED)</code> to the workspace location in the <code>GENDIR</code> path.<br><br>Unavailable to downstream targets.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a id="ll_binary-interfaces"></a><code>interfaces</code></td>
+<td style="text-align: left;"><code><a href="https://bazel.build/rules/lib/dict">Dictionary: Label -&gt; String</a></code>, optional, defaults to <code>{}</code>.<br><br> Module interfaces for this target.<br><br>See <a href="../../guides/modules/">C++ modules</a> for a guide.<br><br>Makes precompiled modules and compiled objects visible to direct dependents and to <code>exposed_interfaces</code>.<br><br>For instance, you can put module partitions in <code>interfaces</code> and the primary module interface in <code>exposed_interfaces</code>.<br><br>Files in the same <code>interfaces</code> attribute can't see each other's BMIs.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a id="ll_binary-libraries"></a><code>libraries</code></td>
+<td style="text-align: left;"><code><a href="https://bazel.build/concepts/labels">List of labels</a></code>, optional, defaults to <code>[]</code>.<br><br> Libraries linked to the final executable.<br><br>Adds these libraries to the command line arguments for the linker.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a id="ll_binary-link_flags"></a><code>link_flags</code></td>
+<td style="text-align: left;"><code>List of strings</code>, optional, defaults to <code>[]</code>.<br><br> Flags for the linker.<br><br>Place library search paths and external link targets here.<br><br>Assuming you have a library <code>/some/path/libmylib.a</code> on your host system, you can make <code>mylib.a</code> available to the linker by passing <code>["-L/some/path", "-lmylib"]</code> to this attribute.<br><br>Prefer the <code>libraries</code> attribute for library files already present within the Bazel build graph.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a id="ll_binary-link_string_flags"></a><code>link_string_flags</code></td>
+<td style="text-align: left;"><code><a href="https://bazel.build/concepts/labels">List of labels</a></code>, optional, defaults to <code>[]</code>.<br><br> Flags for the linker in the form of <code>string_flag</code>s.<br><br>See <code>compile_string_flags</code> for semantics.<br><br>Prefer the <code>libraries</code> attribute for library files already present within the Bazel build graph.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a id="ll_binary-sanitize"></a><code>sanitize</code></td>
+<td style="text-align: left;"><code>List of strings</code>, optional, defaults to <code>[]</code>.<br><br> Enable sanitizers for this target.<br><br>See the <a href="../../guides/sanitizers/">Sanitizers</a> guide.<br><br>Some sanitizers come with heavy performance penalties. Enabling several sanitizers at the same time often breaks builds. If possible, use just one at a time.<br><br>Sanitizers produce nondeterministic error reports. Run sanitized executables several times and build them with different optimization levels to maximize coverage.<br><br><code>"address"</code>: Enable AddressSanitizer to detect memory errors.<br><br><code>"leak"</code>: Enable LeakSanitizer to detect memory leaks.<br><br><code>"memory"</code>: Enable MemorySanitizer to detect uninitialized reads.<br><br><code>"undefined_behavior"</code>: Enable UndefinedBehaviorSanitizer to detect     undefined behavior.<br><br><code>"thread"</code>: Enable ThreadSanitizer to detect data races.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a id="ll_binary-toolchain_configuration"></a><code>toolchain_configuration</code></td>
+<td style="text-align: left;"><code><a href="https://bazel.build/concepts/labels">Label</a></code>, optional, defaults to <code>"@rules_ll//ll:current_ll_toolchain_configuration"</code>.<br><br> TODO</td>
+</tr>
+</tbody>
+</table>
+<p><a id="ll_compilation_database"></a></p>
+<h2 id="ll_compilation_database"><code>ll_compilation_database</code></h2>
+<pre><code>ll_compilation_database(<a href="#ll_compilation_database-name">name</a>, <a href="#ll_compilation_database-config">config</a>, <a href="#ll_compilation_database-exclude">exclude</a>, <a href="#ll_compilation_database-targets">targets</a>)</code></pre>
+<p>Executable target for building a
+<a href="https://clang.llvm.org/docs/JSONCompilationDatabase.html">compilation database</a>
+and running <a href="https://clang.llvm.org/extra/clang-tidy/">clang-tidy</a> on it.</p>
+<p>For a full guide see <a href="../../guides/clang_tidy/">Clang-Tidy</a>.</p>
+<p>See <a href="https://github.com/eomii/rules_ll/tree/main/examples"><code>rules_ll/examples</code></a> for examples.
+<code>attributes</code></p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><a id="ll_compilation_database-name"></a><code>name</code></td>
+<td style="text-align: left;"><code><a href="https://bazel.build/concepts/labels#target-names">Name</a></code>, required.<br><br> A unique name for this target.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a id="ll_compilation_database-config"></a><code>config</code></td>
+<td style="text-align: left;"><code><a href="https://bazel.build/concepts/labels">Label</a></code>, required.<br><br> The label of a <code>.clang-tidy</code> configuration file.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a id="ll_compilation_database-exclude"></a><code>exclude</code></td>
+<td style="text-align: left;"><code>List of strings</code>, optional, defaults to <code>[]</code>.<br><br> Exclude all targets whose path includes one at least one of the provided strings.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a id="ll_compilation_database-targets"></a><code>targets</code></td>
+<td style="text-align: left;"><code><a href="https://bazel.build/concepts/labels">List of labels</a></code>, required.<br><br> The labels added to the compilation database.</td>
+</tr>
+</tbody>
+</table>
+<p><a id="ll_coverage_test"></a></p>
+<h2 id="ll_coverage_test"><code>ll_coverage_test</code></h2>
+<pre><code>ll_coverage_test(<a href="#ll_coverage_test-name">name</a>, <a href="#ll_coverage_test-target">target</a>)</code></pre>
+<p>TODO
+<code>attributes</code></p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><a id="ll_coverage_test-name"></a><code>name</code></td>
+<td style="text-align: left;"><code><a href="https://bazel.build/concepts/labels#target-names">Name</a></code>, required.<br><br> A unique name for this target.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a id="ll_coverage_test-target"></a><code>target</code></td>
+<td style="text-align: left;"><code><a href="https://bazel.build/concepts/labels">Label</a></code>, required.<br><br> The executable to run and collect coverage data from.</td>
+</tr>
+</tbody>
+</table>
+<p><a id="ll_library"></a></p>
+<h2 id="ll_library"><code>ll_library</code></h2>
+<pre><code>ll_library(<a href="#ll_library-name">name</a>, <a href="#ll_library-deps">deps</a>, <a href="#ll_library-srcs">srcs</a>, <a href="#ll_library-data">data</a>, <a href="#ll_library-hdrs">hdrs</a>, <a href="#ll_library-angled_includes">angled_includes</a>, <a href="#ll_library-compilation_mode">compilation_mode</a>, <a href="#ll_library-compile_flags">compile_flags</a>,
+           <a href="#ll_library-compile_string_flags">compile_string_flags</a>, <a href="#ll_library-defines">defines</a>, <a href="#ll_library-depends_on_llvm">depends_on_llvm</a>, <a href="#ll_library-emit">emit</a>, <a href="#ll_library-experimental_device_intrinsics">experimental_device_intrinsics</a>,
+           <a href="#ll_library-exposed_angled_includes">exposed_angled_includes</a>, <a href="#ll_library-exposed_defines">exposed_defines</a>, <a href="#ll_library-exposed_hdrs">exposed_hdrs</a>, <a href="#ll_library-exposed_includes">exposed_includes</a>,
+           <a href="#ll_library-exposed_interfaces">exposed_interfaces</a>, <a href="#ll_library-includes">includes</a>, <a href="#ll_library-interfaces">interfaces</a>, <a href="#ll_library-sanitize">sanitize</a>, <a href="#ll_library-shared_object_link_flags">shared_object_link_flags</a>,
+           <a href="#ll_library-shared_object_link_string_flags">shared_object_link_string_flags</a>, <a href="#ll_library-toolchain_configuration">toolchain_configuration</a>, <a href="#ll_library-version_script">version_script</a>)</code></pre>
+<p>Creates a static archive.</p>
+<p>Example:</p>
+<p><div class="highlight"><pre><span></span><code><span class="n">ll_library</span><span class="p">(</span>
+    <span class="n">srcs</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;my_library.cpp&quot;</span><span class="p">],</span>
+<span class="p">)</span>
+</code></pre></div>
+<code>attributes</code></p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><a id="ll_library-name"></a><code>name</code></td>
+<td style="text-align: left;"><code><a href="https://bazel.build/concepts/labels#target-names">Name</a></code>, required.<br><br> A unique name for this target.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a id="ll_library-deps"></a><code>deps</code></td>
+<td style="text-align: left;"><code><a href="https://bazel.build/concepts/labels">List of labels</a></code>, optional, defaults to <code>[]</code>.<br><br> The dependencies for this target.<br><br>Use <code>ll_library</code> targets here. Other targets won't work.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a id="ll_library-srcs"></a><code>srcs</code></td>
+<td style="text-align: left;"><code><a href="https://bazel.build/concepts/labels">List of labels</a></code>, optional, defaults to <code>[]</code>.<br><br> Compilable source files for this target.<br><br>Allowed file extensions: <code>[".ll", ".o", ".S", ".c", ".cl", ".cpp"]</code>.<br><br>Place headers in the <code>hdrs</code> attribute.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a id="ll_library-data"></a><code>data</code></td>
+<td style="text-align: left;"><code><a href="https://bazel.build/concepts/labels">List of labels</a></code>, optional, defaults to <code>[]</code>.<br><br> Extra files made available to compilation and linking steps.<br><br>Not appended to the default command line arguments, but available to actions. Reference these files manually for instance in the <code>includes</code>, and <code>compile_flags</code> attributes.<br><br>Use this attribute to make intermediary outputs from non-ll targets, for example from <code>rules_cc</code> or <code>filegroup</code>, available to the rule.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a id="ll_library-hdrs"></a><code>hdrs</code></td>
+<td style="text-align: left;"><code><a href="https://bazel.build/concepts/labels">List of labels</a></code>, optional, defaults to <code>[]</code>.<br><br> Header files for this target.<br><br>When including a header file with a nested path, for instance <code>#include "some/path/myheader.h"</code>, add <code>"some/path"</code> to <code>includes</code> to make it visible to the rule.<br><br>Unavailable to downstream targets.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a id="ll_library-angled_includes"></a><code>angled_includes</code></td>
+<td style="text-align: left;"><code>List of strings</code>, optional, defaults to <code>[]</code>.<br><br> Angled include paths, relative to the target workspace.<br><br>Useful if you require include prefix stripping for dynamic paths, for instance the ones generated by <code>bzlmod</code>. Instead of <code>compile_flags = ["-Iexternal/mydep.someversion/include"]</code>, use <code>angled_includes = ["include"]</code> to add the path to the workspace automatically.<br><br>Expands paths starting with <code>$(GENERATED)</code> to the workspace location in the <code>GENDIR</code> path.<br><br>Unavailable to downstream targets.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a id="ll_library-compilation_mode"></a><code>compilation_mode</code></td>
+<td style="text-align: left;"><code>String</code>, optional, defaults to <code>"cpp"</code>.<br><br> Enables compilation of heterogeneous single source files.<br><br>Prefer this attribute over adding SYCL/HIP/CUDA flags manually in the <code>compile_flags</code> and <code>link_flags</code>.<br><br>See <a href="../../guides/cuda_and_hip/">CUDA and HIP</a>.<br><br><code>"cpp"</code> The default C++ toolchain.<br><br><code>"cuda_nvptx"</code> The CUDA toolchain.<br><br><code>"cuda_nvptx_nvcc"</code> The CUDA toolchain with <code>nvcc</code> as device compiler.<br><br><code>"hip_nvptx"</code> The HIP toolchain.<br><br><code>"bootstrap"</code> The bootstrap toolchain used by internal dependencies of the <code>ll_toolchain</code>.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a id="ll_library-compile_flags"></a><code>compile_flags</code></td>
+<td style="text-align: left;"><code>List of strings</code>, optional, defaults to <code>[]</code>.<br><br> Flags for the compiler.<br><br>Pass a list of strings here. For instance <code>["-O3", "-std=c++20"]</code>.<br><br>Split flag pairs <code>-Xclang -somearg</code> into separate flags <code>["-Xclang", "-somearg"]</code>.<br><br>Unavailable to downstream targets.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a id="ll_library-compile_string_flags"></a><code>compile_string_flags</code></td>
+<td style="text-align: left;"><code><a href="https://bazel.build/concepts/labels">List of labels</a></code>, optional, defaults to <code>[]</code>.<br><br> Flags for the compiler in the form of <code>string_flag</code>s.<br><br>Splits the values of each <code>string_flag</code> along colons like so:<br><br><pre><code class="language-python">load("@bazel_skylib//rules:common_settings.bzl", "string_flag")&#10;&#10;string_flag(&#10;    name = "myflags",&#10;    build_setting_default = "a:b:c",&#10;)&#10;&#10;ll_library(&#10;    # ...&#10;    # Equivalent to <code>compile_flags = ["a", "b", "c"]</code>&#10;    compile_string_flags = [":myflags"],&#10;)</code></pre><br><br>Useful for externally configurable build attributes, such as generated flags from Nix environments.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a id="ll_library-defines"></a><code>defines</code></td>
+<td style="text-align: left;"><code>List of strings</code>, optional, defaults to <code>[]</code>.<br><br> Defines for this target.<br><br>Pass a list of strings here. For instance <code>["MYDEFINE_1", "MYDEFINE_2"]</code>.<br><br>Unavailable to downstream targets.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a id="ll_library-depends_on_llvm"></a><code>depends_on_llvm</code></td>
+<td style="text-align: left;"><code>Boolean</code>, optional, defaults to <code>False</code>.<br><br> Whether this target directly depends on targets from the <code>llvm-project-overlay</code>.<br><br>Setting this to <code>True</code> makes the <code>cc_library</code> targets from the LLVM project overlay available to this target.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a id="ll_library-emit"></a><code>emit</code></td>
+<td style="text-align: left;"><code>List of strings</code>, optional, defaults to <code>["archive"]</code>.<br><br> Sets the output mode.<br><br>You can enable several output types at the same time.<br><br><code>"archive"</code> invokes the archiver and adds an archive with a <code>.a</code> extension to the outputs.<br><br><code>"shared_object"</code> invokes the linker and adds a shared object with a <code>.so</code> extension to the outputs.<br><br><code>"objects"</code> adds loose object files to the outputs.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a id="ll_library-experimental_device_intrinsics"></a><code>experimental_device_intrinsics</code></td>
+<td style="text-align: left;"><code><a href="https://bazel.build/concepts/labels">List of labels</a></code>, optional, defaults to <code>[]</code>.<br><br> Custom intrinsics for device compilation.<br><br>Adds <code>-Xarch_device -include&lt;thefile&gt;</code> to the compile commands for this target.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a id="ll_library-exposed_angled_includes"></a><code>exposed_angled_includes</code></td>
+<td style="text-align: left;"><code>List of strings</code>, optional, defaults to <code>[]</code>.<br><br> Exposed angled include paths, relative to the original target workspace.<br><br>Expands paths starting with <code>$(GENERATED)</code> to the workspace location in the <code>GENDIR</code> path.<br><br>Added to the compile command line arguments of direct dependents.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a id="ll_library-exposed_defines"></a><code>exposed_defines</code></td>
+<td style="text-align: left;"><code>List of strings</code>, optional, defaults to <code>[]</code>.<br><br> Exposed defines for this target.<br><br>Added to the compile command line arguments of direct dependents.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a id="ll_library-exposed_hdrs"></a><code>exposed_hdrs</code></td>
+<td style="text-align: left;"><code><a href="https://bazel.build/concepts/labels">List of labels</a></code>, optional, defaults to <code>[]</code>.<br><br> Exposed headers for this target.<br><br>Direct dependents can see exposed headers. Put the public API headers for libraries here.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a id="ll_library-exposed_includes"></a><code>exposed_includes</code></td>
+<td style="text-align: left;"><code>List of strings</code>, optional, defaults to <code>[]</code>.<br><br> Exposed include paths, relative to the original target workspace.<br><br>Expands paths starting with <code>$(GENERATED)</code> to the workspace location in the <code>GENDIR</code> path.<br><br>Added to the compile command line arguments of direct dependents.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a id="ll_library-exposed_interfaces"></a><code>exposed_interfaces</code></td>
+<td style="text-align: left;"><code><a href="https://bazel.build/rules/lib/dict">Dictionary: Label -&gt; String</a></code>, optional, defaults to <code>{}</code>.<br><br> Transitive interfaces for this target.<br><br>See <a href="../../guides/modules/">C++ modules</a> for a guide.<br><br>Makes precompiled modules and compiled objects visible to direct dependents. Files in this attribute can see BMIs from modules in <code>interfaces</code>.<br><br>Primary module interfaces go here.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a id="ll_library-includes"></a><code>includes</code></td>
+<td style="text-align: left;"><code>List of strings</code>, optional, defaults to <code>[]</code>.<br><br> Include paths, relative to the target workspace.<br><br>Uses <code>-iquote</code>.<br><br>Useful if you need custom include prefix stripping for dynamic paths, for instance the ones generated by <code>bzlmod</code>. Instead of <code>compile_flags = ["-iquoteexternal/mydep.someversion/include"]</code>, use <code>includes = ["include"]</code> to add the path to the workspace automatically.<br><br>Expands paths starting with <code>$(GENERATED)</code> to the workspace location in the <code>GENDIR</code> path.<br><br>Unavailable to downstream targets.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a id="ll_library-interfaces"></a><code>interfaces</code></td>
+<td style="text-align: left;"><code><a href="https://bazel.build/rules/lib/dict">Dictionary: Label -&gt; String</a></code>, optional, defaults to <code>{}</code>.<br><br> Module interfaces for this target.<br><br>See <a href="../../guides/modules/">C++ modules</a> for a guide.<br><br>Makes precompiled modules and compiled objects visible to direct dependents and to <code>exposed_interfaces</code>.<br><br>For instance, you can put module partitions in <code>interfaces</code> and the primary module interface in <code>exposed_interfaces</code>.<br><br>Files in the same <code>interfaces</code> attribute can't see each other's BMIs.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a id="ll_library-sanitize"></a><code>sanitize</code></td>
+<td style="text-align: left;"><code>List of strings</code>, optional, defaults to <code>[]</code>.<br><br> Enable sanitizers for this target.<br><br>See the <a href="../../guides/sanitizers/">Sanitizers</a> guide.<br><br>Some sanitizers come with heavy performance penalties. Enabling several sanitizers at the same time often breaks builds. If possible, use just one at a time.<br><br>Sanitizers produce nondeterministic error reports. Run sanitized executables several times and build them with different optimization levels to maximize coverage.<br><br><code>"address"</code>: Enable AddressSanitizer to detect memory errors.<br><br><code>"leak"</code>: Enable LeakSanitizer to detect memory leaks.<br><br><code>"memory"</code>: Enable MemorySanitizer to detect uninitialized reads.<br><br><code>"undefined_behavior"</code>: Enable UndefinedBehaviorSanitizer to detect     undefined behavior.<br><br><code>"thread"</code>: Enable ThreadSanitizer to detect data races.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a id="ll_library-shared_object_link_flags"></a><code>shared_object_link_flags</code></td>
+<td style="text-align: left;"><code>List of strings</code>, optional, defaults to <code>[]</code>.<br><br> Flags for the linker when emitting shared objects.<br><br>Used if <code>emit</code> includes <code>"shared_object"</code>.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a id="ll_library-shared_object_link_string_flags"></a><code>shared_object_link_string_flags</code></td>
+<td style="text-align: left;"><code><a href="https://bazel.build/concepts/labels">List of labels</a></code>, optional, defaults to <code>[]</code>.<br><br> Flags for the linker when emitting shared objects in the form of <code>string_flag</code>s.<br><br>See <code>compile_string_flags</code> for semantics.<br><br>Used if <code>emit</code> includes <code>"shared_object"</code>.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a id="ll_library-toolchain_configuration"></a><code>toolchain_configuration</code></td>
+<td style="text-align: left;"><code><a href="https://bazel.build/concepts/labels">Label</a></code>, optional, defaults to <code>"@rules_ll//ll:current_ll_toolchain_configuration"</code>.<br><br> TODO</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a id="ll_library-version_script"></a><code>version_script</code></td>
+<td style="text-align: left;"><code><a href="https://bazel.build/concepts/labels">Label</a></code>, optional, defaults to <code>None</code>.<br><br> Optional version script used during shared object linking.<br><br>Used if <code>emit</code> includes <code>"shared_object"</code>.</td>
+</tr>
+</tbody>
+</table>
+<p><a id="ll_test"></a></p>
+<h2 id="ll_test"><code>ll_test</code></h2>
+<pre><code>ll_test(<a href="#ll_test-name">name</a>, <a href="#ll_test-deps">deps</a>, <a href="#ll_test-srcs">srcs</a>, <a href="#ll_test-data">data</a>, <a href="#ll_test-hdrs">hdrs</a>, <a href="#ll_test-angled_includes">angled_includes</a>, <a href="#ll_test-compilation_mode">compilation_mode</a>, <a href="#ll_test-compile_flags">compile_flags</a>,
+        <a href="#ll_test-compile_string_flags">compile_string_flags</a>, <a href="#ll_test-defines">defines</a>, <a href="#ll_test-depends_on_llvm">depends_on_llvm</a>, <a href="#ll_test-experimental_device_intrinsics">experimental_device_intrinsics</a>,
+        <a href="#ll_test-exposed_angled_includes">exposed_angled_includes</a>, <a href="#ll_test-exposed_defines">exposed_defines</a>, <a href="#ll_test-exposed_hdrs">exposed_hdrs</a>, <a href="#ll_test-exposed_includes">exposed_includes</a>, <a href="#ll_test-exposed_interfaces">exposed_interfaces</a>,
+        <a href="#ll_test-includes">includes</a>, <a href="#ll_test-interfaces">interfaces</a>, <a href="#ll_test-libraries">libraries</a>, <a href="#ll_test-link_flags">link_flags</a>, <a href="#ll_test-link_string_flags">link_string_flags</a>, <a href="#ll_test-sanitize">sanitize</a>,
+        <a href="#ll_test-toolchain_configuration">toolchain_configuration</a>)</code></pre>
+<p>Testable wrapper around <code>ll_binary</code>.</p>
+<p>Consider using this rule over skylib's <code>native_test</code> targets to propagate shared
+libraries to the test invocations.</p>
+<p>Example:</p>
+<p><div class="highlight"><pre><span></span><code><span class="n">ll_test</span><span class="p">(</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;amdgpu_test&quot;</span><span class="p">,</span>
+    <span class="n">srcs</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;my_executable.cpp&quot;</span><span class="p">],</span>
+    <span class="n">compilation_mode</span> <span class="o">=</span> <span class="s2">&quot;hip_amdgpu&quot;</span><span class="p">,</span>
+    <span class="n">compile_flags</span> <span class="o">=</span> <span class="n">OFFLOAD_ALL_AMDGPU</span> <span class="o">+</span> <span class="p">[</span>
+        <span class="s2">&quot;-std=c++20&quot;</span><span class="p">,</span>
+    <span class="p">],</span>
+    <span class="n">tags</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;amdgpu&quot;</span><span class="p">],</span>  <span class="c1"># Not required, but makes grouping tests easier.</span>
+<span class="p">)</span>
+</code></pre></div>
+<code>attributes</code></p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><a id="ll_test-name"></a><code>name</code></td>
+<td style="text-align: left;"><code><a href="https://bazel.build/concepts/labels#target-names">Name</a></code>, required.<br><br> A unique name for this target.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a id="ll_test-deps"></a><code>deps</code></td>
+<td style="text-align: left;"><code><a href="https://bazel.build/concepts/labels">List of labels</a></code>, optional, defaults to <code>[]</code>.<br><br> The dependencies for this target.<br><br>Use <code>ll_library</code> targets here. Other targets won't work.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a id="ll_test-srcs"></a><code>srcs</code></td>
+<td style="text-align: left;"><code><a href="https://bazel.build/concepts/labels">List of labels</a></code>, optional, defaults to <code>[]</code>.<br><br> Compilable source files for this target.<br><br>Allowed file extensions: <code>[".ll", ".o", ".S", ".c", ".cl", ".cpp"]</code>.<br><br>Place headers in the <code>hdrs</code> attribute.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a id="ll_test-data"></a><code>data</code></td>
+<td style="text-align: left;"><code><a href="https://bazel.build/concepts/labels">List of labels</a></code>, optional, defaults to <code>[]</code>.<br><br> Extra files made available to compilation and linking steps.<br><br>Not appended to the default command line arguments, but available to actions. Reference these files manually for instance in the <code>includes</code>, and <code>compile_flags</code> attributes.<br><br>Use this attribute to make intermediary outputs from non-ll targets, for example from <code>rules_cc</code> or <code>filegroup</code>, available to the rule.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a id="ll_test-hdrs"></a><code>hdrs</code></td>
+<td style="text-align: left;"><code><a href="https://bazel.build/concepts/labels">List of labels</a></code>, optional, defaults to <code>[]</code>.<br><br> Header files for this target.<br><br>When including a header file with a nested path, for instance <code>#include "some/path/myheader.h"</code>, add <code>"some/path"</code> to <code>includes</code> to make it visible to the rule.<br><br>Unavailable to downstream targets.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a id="ll_test-angled_includes"></a><code>angled_includes</code></td>
+<td style="text-align: left;"><code>List of strings</code>, optional, defaults to <code>[]</code>.<br><br> Angled include paths, relative to the target workspace.<br><br>Useful if you require include prefix stripping for dynamic paths, for instance the ones generated by <code>bzlmod</code>. Instead of <code>compile_flags = ["-Iexternal/mydep.someversion/include"]</code>, use <code>angled_includes = ["include"]</code> to add the path to the workspace automatically.<br><br>Expands paths starting with <code>$(GENERATED)</code> to the workspace location in the <code>GENDIR</code> path.<br><br>Unavailable to downstream targets.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a id="ll_test-compilation_mode"></a><code>compilation_mode</code></td>
+<td style="text-align: left;"><code>String</code>, optional, defaults to <code>"cpp"</code>.<br><br> Enables compilation of heterogeneous single source files.<br><br>Prefer this attribute over adding SYCL/HIP/CUDA flags manually in the <code>compile_flags</code> and <code>link_flags</code>.<br><br>See <a href="../../guides/cuda_and_hip/">CUDA and HIP</a>.<br><br><code>"cpp"</code> The default C++ toolchain.<br><br><code>"cuda_nvptx"</code> The CUDA toolchain.<br><br><code>"cuda_nvptx_nvcc"</code> The CUDA toolchain with <code>nvcc</code> as device compiler.<br><br><code>"hip_nvptx"</code> The HIP toolchain.<br><br><code>"bootstrap"</code> The bootstrap toolchain used by internal dependencies of the <code>ll_toolchain</code>.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a id="ll_test-compile_flags"></a><code>compile_flags</code></td>
+<td style="text-align: left;"><code>List of strings</code>, optional, defaults to <code>[]</code>.<br><br> Flags for the compiler.<br><br>Pass a list of strings here. For instance <code>["-O3", "-std=c++20"]</code>.<br><br>Split flag pairs <code>-Xclang -somearg</code> into separate flags <code>["-Xclang", "-somearg"]</code>.<br><br>Unavailable to downstream targets.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a id="ll_test-compile_string_flags"></a><code>compile_string_flags</code></td>
+<td style="text-align: left;"><code><a href="https://bazel.build/concepts/labels">List of labels</a></code>, optional, defaults to <code>[]</code>.<br><br> Flags for the compiler in the form of <code>string_flag</code>s.<br><br>Splits the values of each <code>string_flag</code> along colons like so:<br><br><pre><code class="language-python">load("@bazel_skylib//rules:common_settings.bzl", "string_flag")&#10;&#10;string_flag(&#10;    name = "myflags",&#10;    build_setting_default = "a:b:c",&#10;)&#10;&#10;ll_library(&#10;    # ...&#10;    # Equivalent to <code>compile_flags = ["a", "b", "c"]</code>&#10;    compile_string_flags = [":myflags"],&#10;)</code></pre><br><br>Useful for externally configurable build attributes, such as generated flags from Nix environments.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a id="ll_test-defines"></a><code>defines</code></td>
+<td style="text-align: left;"><code>List of strings</code>, optional, defaults to <code>[]</code>.<br><br> Defines for this target.<br><br>Pass a list of strings here. For instance <code>["MYDEFINE_1", "MYDEFINE_2"]</code>.<br><br>Unavailable to downstream targets.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a id="ll_test-depends_on_llvm"></a><code>depends_on_llvm</code></td>
+<td style="text-align: left;"><code>Boolean</code>, optional, defaults to <code>False</code>.<br><br> Whether this target directly depends on targets from the <code>llvm-project-overlay</code>.<br><br>Setting this to <code>True</code> makes the <code>cc_library</code> targets from the LLVM project overlay available to this target.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a id="ll_test-experimental_device_intrinsics"></a><code>experimental_device_intrinsics</code></td>
+<td style="text-align: left;"><code><a href="https://bazel.build/concepts/labels">List of labels</a></code>, optional, defaults to <code>[]</code>.<br><br> Custom intrinsics for device compilation.<br><br>Adds <code>-Xarch_device -include&lt;thefile&gt;</code> to the compile commands for this target.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a id="ll_test-exposed_angled_includes"></a><code>exposed_angled_includes</code></td>
+<td style="text-align: left;"><code>List of strings</code>, optional, defaults to <code>[]</code>.<br><br> Exposed angled include paths, relative to the original target workspace.<br><br>Expands paths starting with <code>$(GENERATED)</code> to the workspace location in the <code>GENDIR</code> path.<br><br>Added to the compile command line arguments of direct dependents.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a id="ll_test-exposed_defines"></a><code>exposed_defines</code></td>
+<td style="text-align: left;"><code>List of strings</code>, optional, defaults to <code>[]</code>.<br><br> Exposed defines for this target.<br><br>Added to the compile command line arguments of direct dependents.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a id="ll_test-exposed_hdrs"></a><code>exposed_hdrs</code></td>
+<td style="text-align: left;"><code><a href="https://bazel.build/concepts/labels">List of labels</a></code>, optional, defaults to <code>[]</code>.<br><br> Exposed headers for this target.<br><br>Direct dependents can see exposed headers. Put the public API headers for libraries here.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a id="ll_test-exposed_includes"></a><code>exposed_includes</code></td>
+<td style="text-align: left;"><code>List of strings</code>, optional, defaults to <code>[]</code>.<br><br> Exposed include paths, relative to the original target workspace.<br><br>Expands paths starting with <code>$(GENERATED)</code> to the workspace location in the <code>GENDIR</code> path.<br><br>Added to the compile command line arguments of direct dependents.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a id="ll_test-exposed_interfaces"></a><code>exposed_interfaces</code></td>
+<td style="text-align: left;"><code><a href="https://bazel.build/rules/lib/dict">Dictionary: Label -&gt; String</a></code>, optional, defaults to <code>{}</code>.<br><br> Transitive interfaces for this target.<br><br>See <a href="../../guides/modules/">C++ modules</a> for a guide.<br><br>Makes precompiled modules and compiled objects visible to direct dependents. Files in this attribute can see BMIs from modules in <code>interfaces</code>.<br><br>Primary module interfaces go here.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a id="ll_test-includes"></a><code>includes</code></td>
+<td style="text-align: left;"><code>List of strings</code>, optional, defaults to <code>[]</code>.<br><br> Include paths, relative to the target workspace.<br><br>Uses <code>-iquote</code>.<br><br>Useful if you need custom include prefix stripping for dynamic paths, for instance the ones generated by <code>bzlmod</code>. Instead of <code>compile_flags = ["-iquoteexternal/mydep.someversion/include"]</code>, use <code>includes = ["include"]</code> to add the path to the workspace automatically.<br><br>Expands paths starting with <code>$(GENERATED)</code> to the workspace location in the <code>GENDIR</code> path.<br><br>Unavailable to downstream targets.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a id="ll_test-interfaces"></a><code>interfaces</code></td>
+<td style="text-align: left;"><code><a href="https://bazel.build/rules/lib/dict">Dictionary: Label -&gt; String</a></code>, optional, defaults to <code>{}</code>.<br><br> Module interfaces for this target.<br><br>See <a href="../../guides/modules/">C++ modules</a> for a guide.<br><br>Makes precompiled modules and compiled objects visible to direct dependents and to <code>exposed_interfaces</code>.<br><br>For instance, you can put module partitions in <code>interfaces</code> and the primary module interface in <code>exposed_interfaces</code>.<br><br>Files in the same <code>interfaces</code> attribute can't see each other's BMIs.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a id="ll_test-libraries"></a><code>libraries</code></td>
+<td style="text-align: left;"><code><a href="https://bazel.build/concepts/labels">List of labels</a></code>, optional, defaults to <code>[]</code>.<br><br> Libraries linked to the final executable.<br><br>Adds these libraries to the command line arguments for the linker.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a id="ll_test-link_flags"></a><code>link_flags</code></td>
+<td style="text-align: left;"><code>List of strings</code>, optional, defaults to <code>[]</code>.<br><br> Flags for the linker.<br><br>Place library search paths and external link targets here.<br><br>Assuming you have a library <code>/some/path/libmylib.a</code> on your host system, you can make <code>mylib.a</code> available to the linker by passing <code>["-L/some/path", "-lmylib"]</code> to this attribute.<br><br>Prefer the <code>libraries</code> attribute for library files already present within the Bazel build graph.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a id="ll_test-link_string_flags"></a><code>link_string_flags</code></td>
+<td style="text-align: left;"><code><a href="https://bazel.build/concepts/labels">List of labels</a></code>, optional, defaults to <code>[]</code>.<br><br> Flags for the linker in the form of <code>string_flag</code>s.<br><br>See <code>compile_string_flags</code> for semantics.<br><br>Prefer the <code>libraries</code> attribute for library files already present within the Bazel build graph.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a id="ll_test-sanitize"></a><code>sanitize</code></td>
+<td style="text-align: left;"><code>List of strings</code>, optional, defaults to <code>[]</code>.<br><br> Enable sanitizers for this target.<br><br>See the <a href="../../guides/sanitizers/">Sanitizers</a> guide.<br><br>Some sanitizers come with heavy performance penalties. Enabling several sanitizers at the same time often breaks builds. If possible, use just one at a time.<br><br>Sanitizers produce nondeterministic error reports. Run sanitized executables several times and build them with different optimization levels to maximize coverage.<br><br><code>"address"</code>: Enable AddressSanitizer to detect memory errors.<br><br><code>"leak"</code>: Enable LeakSanitizer to detect memory leaks.<br><br><code>"memory"</code>: Enable MemorySanitizer to detect uninitialized reads.<br><br><code>"undefined_behavior"</code>: Enable UndefinedBehaviorSanitizer to detect     undefined behavior.<br><br><code>"thread"</code>: Enable ThreadSanitizer to detect data races.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a id="ll_test-toolchain_configuration"></a><code>toolchain_configuration</code></td>
+<td style="text-align: left;"><code><a href="https://bazel.build/concepts/labels">Label</a></code>, optional, defaults to <code>"@rules_ll//ll:current_ll_toolchain_configuration"</code>.<br><br> TODO</td>
+</tr>
+</tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright 2022 eomii
+    </div>
+  
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.instant", "navigation.tabs", "navigation.sections", "navigation.indexes"], "search": "../../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.bd41221c.min.js"></script>
+      
+    
+  </body>
+</html>
