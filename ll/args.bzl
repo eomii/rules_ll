@@ -228,6 +228,11 @@ def compile_object_args(
         "cuda_nvptx",
         "hip_nvptx",
     ]:
+        # Enable the use of libc++ for the clang-based device compilation.
+        # This is only used with the clang-based device compilation. The
+        # cuda_nvptx_nvcc toolchain uses libstdc++ from Nix.
+        args.add("-D_ALLOW_UNSUPPORTED_LIBCPP")
+
         args.add("-Wno-unknown-cuda-version")  # Will always be unknown.
         args.add("-xcuda")
         if toolchain.LL_CUDA_TOOLKIT != "":
@@ -528,8 +533,8 @@ def link_executable_args(ctx, in_files, out_file, mode):
             args.add(toolchain.LL_CUDA_TOOLKIT, format = "-L%s/lib/stubs")
 
         args.add("-lcuda")
-        args.add("-lcudart_static")
-        args.add("-lcupti_static")
+        args.add("-lcudart")
+        args.add("-lcupti")
     if ctx.attr.compilation_mode == "hip_amdgpu":
         args.add(toolchain.hip_runtime[0].dirname, format = "-L%s")
         args.add(toolchain.hip_runtime[0].basename, format = "-l:%s")
